@@ -1,0 +1,18 @@
+{
+  "features": {
+    "comfy_top_bar_menu": {
+      "enabled": false
+    },
+    "group_header_fast_toggle": {
+      "enabled": true,
+      "show": "always"
+    },
+    "import_individual_nodes": {
+      "enabled": false
+    },
+    "menu_auto_nest": {
+      "subdirs": true,
+      "threshold": 2
+    }
+  }
+}
