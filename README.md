@@ -31,8 +31,8 @@ Installation typically takes 2-3 minutes, depending on your download speed.
 * seamless-tiling
 
 ## How to Use
-- Download and Extract [ComfyUI-Easy-Install](https://github.com/Tavris1/ComfyUI-Easy-Install/archive/refs/tags/0.17.0.zip) in a folder where ComfyUI will be installed and run '**ComfyUI-Easy-Install.bat**'.
-  - ***Optionally*** if you have a previous installation and wish to retain your settings, place these files alongside the installer.\
+- Download and Extract [ComfyUI-Easy-Install](https://github.com/Tavris1/ComfyUI-Easy-Install/archive/refs/tags/0.17.0.zip) to the desired folder and run **ComfyUI-Easy-Install.bat**.
+  - If you have a previous installation and wish to retain your settings, place these files alongside the installer.\
   They will be automatically copied into the appropriate '**ComfyUI**' folders.
     - **run_nvidia_gpu.bat**
     - **extra_model_paths.yaml**
