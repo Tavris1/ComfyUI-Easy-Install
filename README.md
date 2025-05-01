@@ -42,9 +42,11 @@
 - KayTool  
 
 ---
-
-## Installation Steps for Windows:  
-
+## Windows
+<details>
+  <summary>Installation Steps</summary>  
+&nbsp;
+  
 1. Download the latest release [>> HERE <<](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip).  
 2. Extract the ZIP file into a new folder.  
 **Important:** Do **not** extract to system folders such as **`Program Files`**, **`Windows`**, or directly to **`C:\`**.  
@@ -52,7 +54,7 @@
 > - This installation won't affect existing ComfyUI installs. Multiple ComfyUIs are supported.
 > - After installation, you can rename or move **`ComfyUI-Easy-Install`** folder if needed.
 
-### Tips for Existing Installations:  
+### Tips for Existing Installations:    
 - To preserve settings from other ComfyUI installations, place the following files in the same folder as the installer.  
 They will be copied automatically to the appropriate folders:  
       - `run_nvidia_gpu.bat`  
@@ -71,10 +73,15 @@ They will be copied automatically to the appropriate folders:
        - This allows ComfyUI to use your existing model files without additional downloads.  
 
 > - Some folders like **LLM** and **llm_gguf** cannot be redirected this way.  
+</details>
 
 ---
 
-## macOS Installation and Optimization
+## macOS
+<details>
+  <summary>Installation and Optimization</summary>  
+&nbsp;
+  
 *(thanks to [@VenimK](https://github.com/VenimK))*
 
 ### Installation Steps for macOS
@@ -180,6 +187,8 @@ echo "You can now copy this file to your ComfyUI folder."
    ```
 
 > This allows ComfyUI to use your existing model files without duplicating them.
+</details>
+
 ---
 
 ## Screenshot  
