@@ -1,6 +1,6 @@
 #!/bin/bash
 # ComfyUI Easy Install by ivo - macOS ARM version
-# Adapted from the Windows version v0.45.2 (Ep45)
+# Adapted from the Windows version  v0.45.2 (Ep45)
 # Pixaroma Community Edition
 
 # Set colors
@@ -175,6 +175,70 @@ install_comfyui
 # Install Pixaroma's Related Nodes
 get_node https://github.com/Comfy-Org/ComfyUI-Manager
 get_node https://github.com/WASasquatch/was-node-suite-comfyui
+
+# Configure WAS Node Suite ffmpeg
+echo -e "${yellow}Configuring WAS Node Suite ffmpeg...${reset}"
+# Install ffmpeg if not already installed
+if ! command -v ffmpeg &> /dev/null; then
+    echo -e "${yellow}Installing ffmpeg...${reset}"
+    brew install ffmpeg
+fi
+
+# Get ffmpeg path
+FFMPEG_PATH=$(which ffmpeg)
+if [ ! -z "$FFMPEG_PATH" ]; then
+    echo -e "${green}Found ffmpeg at: $FFMPEG_PATH${reset}"
+    
+    # Check if WAS Node Suite is installed and config exists
+    WAS_CONFIG_FILE="ComfyUI/custom_nodes/was-node-suite-comfyui/was_suite_config.json"
+    
+    if [ -f "$WAS_CONFIG_FILE" ]; then
+        # Config file exists, update it
+        echo -e "${yellow}Updating existing WAS Node Suite config file...${reset}"
+        # Make a backup
+        cp "$WAS_CONFIG_FILE" "${WAS_CONFIG_FILE}.bak"
+        # Update ffmpeg path
+        sed -i '' "s|\"ffmpeg_bin_path\": \".*\"|\"ffmpeg_bin_path\": \"$FFMPEG_PATH\"|g" "$WAS_CONFIG_FILE"
+        echo -e "${green}Updated WAS Node Suite config with ffmpeg path: $FFMPEG_PATH${reset}"
+    else
+        # Config file doesn't exist, create it
+        echo -e "${yellow}Creating new WAS Node Suite config file...${reset}"
+        mkdir -p "ComfyUI/custom_nodes/was-node-suite-comfyui"
+        cat > "$WAS_CONFIG_FILE" << EOF
+{
+    "run_requirements": true,
+    "suppress_uncomfy_warnings": true,
+    "show_startup_junk": true,
+    "show_inspiration_quote": true,
+    "text_nodes_type": "STRING",
+    "webui_styles": null,
+    "webui_styles_persistent_update": true,
+    "sam_model_vith_url": "https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth",
+    "sam_model_vitl_url": "https://dl.fbaipublicfiles.com/segment_anything/sam_vit_l_0b3195.pth",
+    "sam_model_vitb_url": "https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth",
+    "history_display_limit": 36,
+    "use_legacy_ascii_text": false,
+    "ffmpeg_bin_path": "$FFMPEG_PATH",
+    "ffmpeg_extra_codecs": {
+        "avc1": ".mp4",
+        "h264": ".mkv"
+    },
+    "wildcards_path": "ComfyUI/custom_nodes/was-node-suite-comfyui/wildcards",
+    "wildcard_api": true
+}
+EOF
+        echo -e "${green}Created pre-configured WAS Node Suite config file${reset}"
+    fi
+fi
+
+# Install opencv with ffmpeg support
+echo -e "${yellow}Installing opencv-python with ffmpeg support...${reset}"
+source python_embedded/bin/activate
+# First uninstall any existing opencv installations
+python -m pip uninstall -y opencv-python opencv-python-headless
+# Install opencv-python with ffmpeg support
+python -m pip install opencv-python[ffmpeg] $silent
+echo -e "${green}Installed opencv-python with ffmpeg support${reset}"
 get_node https://github.com/yolain/ComfyUI-Easy-Use
 get_node https://github.com/Fannovel16/comfyui_controlnet_aux
 get_node https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes
