@@ -13,7 +13,7 @@
 - [**Git**](https://git-scm.com/)  
 - [**ComfyUI portable**](https://github.com/comfyanonymous/ComfyUI)  
 
-## Nodes from [▶ Pixaroma tutorials](https://www.youtube.com/@pixaroma) included  
+## Nodes from [:arrow_forward: Pixaroma tutorials](https://www.youtube.com/@pixaroma) included  
 - [ComfyUI-Manager](https://github.com/Comfy-Org/ComfyUI-Manager)  
 - [was-node-suite](https://github.com/WASasquatch/was-node-suite-comfyui)  
 - [Easy-Use](https://github.com/yolain/ComfyUI-Easy-Use)  
@@ -44,19 +44,19 @@
 
 ---
 ## Windows Installation in 3 Steps
-#### 1. Download the latest release [▶ HERE](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)  
-#### 2. Extract the ZIP file into a new folder.  
+1. Download the latest release [:arrow_forward: HERE](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)  
+2. Extract the ZIP file into a new folder.  
+3. Double-click **`ComfyUI-Easy-Install.bat`** to begin setup
 > [!IMPORTANT]
-> - Do **not** extract to system-protected folders such as **`Program Files`**, **`Windows`**, or directly to **`C:\`**
-> - Do **not** use **`Run as Аdministrator`** for the next step
-#### 3. Double-click **`ComfyUI-Easy-Install.bat`** to begin setup
+>> - Do **not** extract to system-protected folders such as **`Program Files`**, **`Windows`**, or directly to **`C:\`**
+>> - Do **not** use **`Run as Аdministrator`** when launching the installer
 
 > [!NOTE]
-> - This installation won't affect existing ComfyUI installs. Multiple ComfyUIs are supported.  
-> - After installation, you can rename or move **`ComfyUI-Easy-Install`** folder if needed.  
+>> - This installation won't affect existing ComfyUI installs. Multiple ComfyUIs are supported.  
+>> - After installation, you can rename or move **`ComfyUI-Easy-Install`** folder if needed.  
 
 > [!TIP]
-> - To keep settings from other ComfyUIs, place these files in the installer folder  
+>> - To keep settings from other ComfyUIs, place these files in the installer folder  
 > They will be copied automatically to the appropriate folders:  
 >       - `run_nvidia_gpu.bat`  
 >       - `extra_model_paths.yaml` (refer to **Extra Model Paths Maker 🔥**)  
@@ -74,7 +74,7 @@
        - This allows ComfyUI to use your existing model files without additional downloads.  
 
 > [!NOTE]
-> - Some folders like **LLM** and **llm_gguf** cannot be redirected this way.  
+>> - Some folders like **LLM** and **llm_gguf** cannot be redirected this way.  
 
 ---
 
