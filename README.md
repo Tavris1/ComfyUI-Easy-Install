@@ -13,7 +13,7 @@
 - [**Git**](https://git-scm.com/)  
 - [**ComfyUI portable**](https://github.com/comfyanonymous/ComfyUI)  
 
-## Nodes from [:arrow_forward: Pixaroma tutorials](https://www.youtube.com/@pixaroma) included  
+## Nodes from [:arrow_forward:Pixaroma tutorials](https://www.youtube.com/@pixaroma) included  
 - [ComfyUI-Manager](https://github.com/Comfy-Org/ComfyUI-Manager)  
 - [was-node-suite](https://github.com/WASasquatch/was-node-suite-comfyui)  
 - [Easy-Use](https://github.com/yolain/ComfyUI-Easy-Use)  
@@ -44,7 +44,7 @@
 
 ---
 ## Windows Installation in 3 Steps
-1. Download the latest release [:arrow_forward: HERE](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)  
+1. Download the latest release [:arrow_forward:HERE](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)  
 2. Extract the ZIP file into a new folder.  
 3. Double-click **`ComfyUI-Easy-Install.bat`** to begin setup
 > [!IMPORTANT]
