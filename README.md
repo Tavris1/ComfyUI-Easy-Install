@@ -59,19 +59,19 @@
 >> - To keep settings from other ComfyUIs, place these files in the installer folder  
 > They will be copied automatically to the appropriate folders:  
 >       - `run_nvidia_gpu.bat`  
->       - `extra_model_paths.yaml` (refer to **Extra Model Paths Maker 🔥**)  
+>       - `extra_model_paths.yaml` (refer to [**Extra Model Paths Maker**](https://github.com/Tavris1/ComfyUI-Easy-Install/tree/main#extra-model-paths-maker-open_file_folder) :open_file_folder:)  
 >       - `comfy.settings.json` (user/default)  
 >       - `was_suite_config.json` (custom_nodes/was-node-suite-comfyui)  
 >       - `rgthree_config.json` (custom_nodes/rgthree-comfy)  
 
 ---
 
-### Extra Model Paths Maker 🔥  
+### Extra Model Paths Maker :open_file_folder:  
 
 1. Place **Extra_Model_Paths_Maker.bat** in your existing **models** folder and run it.  
-       - This generates an organized `extra_model_paths.yaml` listing all subfolders in the directory.  
+This generates an organized `extra_model_paths.yaml` listing all subfolders in the directory.  
 2. Move `extra_model_paths.yaml` to your new **ComfyUI** folder.  
-       - This allows ComfyUI to use your existing model files without additional downloads.  
+This allows ComfyUI to use your existing model files without additional downloads.  
 
 > [!NOTE]
 >> - Some folders like **LLM** and **llm_gguf** cannot be redirected this way.  
