@@ -41,6 +41,7 @@
 - [Sonic](https://github.com/smthemex/ComfyUI_Sonic)  
 - [TeaCache](https://github.com/welltop-cn/ComfyUI-TeaCache)  
 - [KayTool](https://github.com/kk8bit/KayTool)  
+- [Tiled Diffusion & VAE](https://github.com/shiimizu/ComfyUI-TiledDiffusion)  
 
 ---
 ## Windows Installation in 3 Steps

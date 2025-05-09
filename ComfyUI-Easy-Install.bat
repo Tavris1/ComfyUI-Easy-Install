@@ -1,5 +1,5 @@
 @echo off
-Title ComfyUI Easy Install by ivo v0.45.2 (Ep45)
+Title ComfyUI Easy Install by ivo v0.46.0 (Ep46)
 :: Pixaroma Community Edition ::
 
 :: Set colors ::
@@ -101,6 +101,7 @@ call :get_node https://github.com/CY-CHENYUE/ComfyUI-Janus-Pro					janus-pro
 call :get_node https://github.com/smthemex/ComfyUI_Sonic						ComfyUI_Sonic
 call :get_node https://github.com/welltop-cn/ComfyUI-TeaCache					teacache
 call :get_node https://github.com/kk8bit/KayTool								kaytool
+call :get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion				ComfyUI-TiledDiffusion
 
 :: Install onnxruntime ::
 .\python_embeded\python.exe -m pip install onnxruntime-gpu %silent%
