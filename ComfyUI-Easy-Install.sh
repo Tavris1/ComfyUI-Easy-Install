@@ -1,6 +1,6 @@
 #!/bin/bash
 # ComfyUI Easy Install by ivo - macOS ARM version
-# Adapted from the Windows version  v0.45.2 (Ep45)
+# Title ComfyUI Easy Install by ivo v0.46.0 (Ep46)
 # Pixaroma Community Edition
 
 # Set colors
@@ -625,6 +625,7 @@ get_node https://github.com/CY-CHENYUE/ComfyUI-Janus-Pro
 get_node https://github.com/smthemex/ComfyUI_Sonic
 get_node https://github.com/welltop-cn/ComfyUI-TeaCache
 get_node https://github.com/kk8bit/KayTool
+get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion
 
 # Install onnxruntime for ARM Macs
 source python_embedded/bin/activate
