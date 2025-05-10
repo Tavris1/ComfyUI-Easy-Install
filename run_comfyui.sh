@@ -54,9 +54,8 @@ export PYTORCH_MPS_CONTIGUOUS_FORMAT=1  # Force contiguous memory format for ten
 echo "Running Python garbage collection..."
 python3 -c "import gc; gc.collect()" 2>/dev/null || true
 
-# Correct paths for ComfyUI-Easy-Install directory structure
+# Correct paths for nested ComfyUI-Easy-Install directory structure
 # Use the absolute path to python since the activate script might not be working correctly
-PYTHON="$(pwd)/python_embedded/bin/python"
-cd ./ComfyUI
+PYTHON="$(pwd)/ComfyUI-Easy-Install/python_embedded/bin/python"
+cd ./ComfyUI-Easy-Install/ComfyUI
 "$PYTHON" main.py --force-upcast-attention
-
