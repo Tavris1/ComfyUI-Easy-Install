@@ -711,9 +711,10 @@ source python_embedded/bin/activate
 
 # Run ComfyUI
 cd ComfyUI
-python main.py
+python main.py "$@"
 EOF
 chmod +x run_comfyui.sh
+echo -e "${green}Created executable run_comfyui.sh script${reset}"
 
 # Capture the end time
 end=$(date +%H:%M:%S)
