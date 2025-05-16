@@ -624,7 +624,7 @@ cd ../../..
 get_node https://github.com/CY-CHENYUE/ComfyUI-Janus-Pro
 get_node https://github.com/smthemex/ComfyUI_Sonic
 get_node https://github.com/welltop-cn/ComfyUI-TeaCache
-get_node https://github.com/kk8bit/KayTool
+get_node https://github.com/kk8bit/kaytool
 get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion
 
 # Install onnxruntime for ARM Macs
