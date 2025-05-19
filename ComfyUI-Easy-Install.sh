@@ -129,7 +129,8 @@ install_comfyui() {
     python -m pip install --upgrade pip $silent
     
     # Install PyTorch for M1/M2 Macs
-    python -m pip install torch torchvision torchaudio $silent
+    
+    python -m pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cpu $silent
     
     python -m pip install pygit2 $silent
     
