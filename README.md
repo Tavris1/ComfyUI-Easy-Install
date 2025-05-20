@@ -42,6 +42,8 @@
 - [TeaCache](https://github.com/welltop-cn/ComfyUI-TeaCache)  
 - [KayTool](https://github.com/kk8bit/KayTool)  
 - [Tiled Diffusion & VAE](https://github.com/shiimizu/ComfyUI-TiledDiffusion)  
+- [LTXVideo](https://github.com/Lightricks/ComfyUI-LTXVideo)  
+- [KJNodes](https://github.com/kijai/ComfyUI-KJNodes)
 
 ---
 ## Windows Installation in 3 Steps
