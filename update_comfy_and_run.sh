@@ -11,13 +11,14 @@ echo -e "${green}::::::::::::::: Updating ComfyUI :::::::::::::::${reset}"
 echo
 
 # Define paths
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PYTHON="$SCRIPT_DIR/python_embedded/bin/python"
-COMFYUI_DIR="$SCRIPT_DIR/ComfyUI"
+SCRIPT_DIR="$(dirname "$(realpath "$0")")"
+PYTHON="$SCRIPT_DIR/ComfyUI-Easy-Install/python_embedded/bin/python"
+COMFYUI_DIR="$SCRIPT_DIR/ComfyUI-Easy-Install/ComfyUI"
+UPDATE_DIR="$SCRIPT_DIR/ComfyUI-Easy-Install/update"
 
 # Create update directory if it doesn't exist
-mkdir -p "$SCRIPT_DIR/update"
-cd "$SCRIPT_DIR/update"
+mkdir -p "$UPDATE_DIR"
+cd "$UPDATE_DIR"
 
 # Download the update script if it doesn't exist
 if [ ! -f "update.py" ]; then

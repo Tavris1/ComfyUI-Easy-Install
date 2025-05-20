@@ -11,16 +11,19 @@ reset="\033[0m"
 # This is important because the script might be run from different locations
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 BASE_DIR="$SCRIPT_DIR"
-PYTHON_PATH="$BASE_DIR/python_embedded/bin/python"
-COMFYUI_DIR="$BASE_DIR/ComfyUI"
+UPDATE_DIR="$BASE_DIR/ComfyUI-Easy-Install/update"
+PYTHON_PATH="$BASE_DIR/ComfyUI-Easy-Install/python_embedded/bin/python"
+COMFYUI_DIR="$BASE_DIR/ComfyUI-Easy-Install/ComfyUI"
+
+export COMFYUI_PATH="$COMFYUI_DIR"
 
 echo -e "${green}::::::::::::::: Updating ComfyUI :::::::::::::::${reset}"
 echo
 
 # Check if update directory exists
-if [ -d "$BASE_DIR/update" ]; then
-    cd "$BASE_DIR/update"
-    
+if [ -d "$UPDATE_DIR" ]; then
+    cd "$UPDATE_DIR"
+
     # Run the Python update script
     "$PYTHON_PATH" update.py "$COMFYUI_DIR"
 
@@ -30,10 +33,10 @@ if [ -d "$BASE_DIR/update" ]; then
         echo "Running updater again since it got updated."
         "$PYTHON_PATH" update.py "$COMFYUI_DIR" --skip_self_update
     fi
-    
+
     cd "$BASE_DIR"
 else
-    echo "Update directory not found at $BASE_DIR/update. Skipping ComfyUI update."
+    echo "Update directory not found at $UPDATE_DIR. Skipping ComfyUI update."
 fi
 
 echo
