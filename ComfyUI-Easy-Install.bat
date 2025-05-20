@@ -1,5 +1,5 @@
 @echo off
-Title ComfyUI Easy Install by ivo v0.46.0 (Ep46)
+Title ComfyUI Easy Install by ivo v0.48.0 (Ep48)
 :: Pixaroma Community Edition ::
 
 :: Set colors ::
@@ -91,9 +91,10 @@ call :get_node https://github.com/PowerHouseMan/ComfyUI-AdvancedLivePortrait	com
 call :get_node https://github.com/Yanick112/ComfyUI-ToSVG						ComfyUI-ToSVG
 
 :: Install pylatexenc for kokoro ::
-curl.exe -OL https://www.piwheels.org/simple/pylatexenc/pylatexenc-3.0a32-py3-none-any.whl --ssl-no-revoke
-.\python_embeded\python.exe -m pip install pylatexenc-3.0a32-py3-none-any.whl %silent%
-if exist pylatexenc-3.0a32-py3-none-any.whl erase pylatexenc-3.0a32-py3-none-any.whl
+REM curl.exe -OL https://www.piwheels.org/simple/pylatexenc/pylatexenc-3.0a32-py3-none-any.whl --ssl-no-revoke
+REM .\python_embeded\python.exe -m pip install pylatexenc-3.0a32-py3-none-any.whl %silent%
+REM if exist pylatexenc-3.0a32-py3-none-any.whl erase pylatexenc-3.0a32-py3-none-any.whl
+.\python_embeded\python.exe -m pip install https://www.piwheels.org/simple/pylatexenc/pylatexenc-3.0a32-py3-none-any.whl %silent%
 Echo.
 
 call :get_node https://github.com/stavsap/comfyui-kokoro						comfyui-kokoro
@@ -102,6 +103,8 @@ call :get_node https://github.com/smthemex/ComfyUI_Sonic						ComfyUI_Sonic
 call :get_node https://github.com/welltop-cn/ComfyUI-TeaCache					teacache
 call :get_node https://github.com/kk8bit/KayTool								kaytool
 call :get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion				ComfyUI-TiledDiffusion
+call :get_node https://github.com/Lightricks/ComfyUI-LTXVideo					ComfyUI-LTXVideo
+call :get_node https://github.com/kijai/ComfyUI-KJNodes							comfyui-kjnodes
 
 :: Install onnxruntime ::
 .\python_embeded\python.exe -m pip install onnxruntime-gpu %silent%
