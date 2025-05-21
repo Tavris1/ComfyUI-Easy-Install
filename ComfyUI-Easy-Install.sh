@@ -1,6 +1,6 @@
 #!/bin/bash
 # ComfyUI Easy Install by ivo - macOS ARM version
-# Title ComfyUI Easy Install by ivo v0.46.0 (Ep46)
+# Title ComfyUI Easy Install by ivo v0.48.0 (Ep48)
 # Pixaroma Community Edition
 
 # Set colors
@@ -627,6 +627,8 @@ get_node https://github.com/smthemex/ComfyUI_Sonic
 get_node https://github.com/welltop-cn/ComfyUI-TeaCache
 get_node https://github.com/kk8bit/kaytool
 get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion
+get_node https://github.com/Lightricks/ComfyUI-LTXVideo
+get_node https://github.com/kijai/ComfyUI-KJNodes
 
 # Install onnxruntime for ARM Macs
 source python_embedded/bin/activate
@@ -735,11 +737,33 @@ else
 fi
 diff=$((end_seconds - start_seconds))
 
+# Create a launcher script in the parent directory
+cd ..
+cat > run_comfyui.sh << 'EOF'
+#!/bin/bash
+# ComfyUI Easy Launcher
+
+# Change to the ComfyUI-Easy-Install directory
+cd "$(dirname "$0")/ComfyUI-Easy-Install"
+
+# Check if run_comfyui.sh exists
+if [ -f "./run_comfyui.sh" ]; then
+    # Run the actual script with any provided arguments
+    ./run_comfyui.sh "$@"
+else
+    echo "Error: ComfyUI startup script not found."
+    echo "Please make sure the installation completed successfully."
+    exit 1
+fi
+EOF
+chmod +x run_comfyui.sh
+echo -e "${green}Created launcher script in parent directory${reset}"
+
 # Final Messages
 echo
 echo -e "${green}::::::::::::::: Installation Complete ::::::::::::::${reset}"
 echo -e "${green}::::::::::::::: Total Running Time:${reset}${red} $diff ${reset}${green}seconds${reset}"
-echo -e "${yellow}::::::::::::::: To run ComfyUI, use ./run_comfyui.sh ::::::::::::::${reset}"
+echo -e "${yellow}::::::::::::::: To run ComfyUI, just use ./run_comfyui.sh from this directory ::::::::::::::${reset}"
 echo -e "${yellow}::::::::::::::: Press any key to exit ::::::::::::::${reset}"
 read -n 1
     
