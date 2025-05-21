@@ -1,5 +1,5 @@
 @echo off
-Title ComfyUI Easy Install by ivo v0.48.0 (Ep48)
+Title ComfyUI Easy Install by ivo v0.48.1 (Ep48)
 :: Pixaroma Community Edition ::
 
 :: Set colors ::
@@ -8,7 +8,7 @@ call :set_colors
 :: Set No Warnings ::
 set "silent=--no-cache-dir --no-warn-script-location"
 
-:: Set Local Paths ::
+:: Set Local Paths (if broken) ::
 if exist %windir%\system32 set path=%PATH%;%windir%\System32
 if exist %windir%\system32\WindowsPowerShell\v1.0 set path=%PATH%;%windir%\system32\WindowsPowerShell\v1.0
 if exist %localappdata%\Microsoft\WindowsApps set path=%PATH%;%localappdata%\Microsoft\WindowsApps
@@ -89,14 +89,6 @@ call :get_node https://github.com/kaibioinfo/ComfyUI_AdvancedRefluxControl		Comf
 call :get_node https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite			comfyui-videohelpersuite
 call :get_node https://github.com/PowerHouseMan/ComfyUI-AdvancedLivePortrait	comfyui-advancedliveportrait
 call :get_node https://github.com/Yanick112/ComfyUI-ToSVG						ComfyUI-ToSVG
-
-:: Install pylatexenc for kokoro ::
-REM curl.exe -OL https://www.piwheels.org/simple/pylatexenc/pylatexenc-3.0a32-py3-none-any.whl --ssl-no-revoke
-REM .\python_embeded\python.exe -m pip install pylatexenc-3.0a32-py3-none-any.whl %silent%
-REM if exist pylatexenc-3.0a32-py3-none-any.whl erase pylatexenc-3.0a32-py3-none-any.whl
-.\python_embeded\python.exe -m pip install https://www.piwheels.org/simple/pylatexenc/pylatexenc-3.0a32-py3-none-any.whl %silent%
-Echo.
-
 call :get_node https://github.com/stavsap/comfyui-kokoro						comfyui-kokoro
 call :get_node https://github.com/CY-CHENYUE/ComfyUI-Janus-Pro					janus-pro
 call :get_node https://github.com/smthemex/ComfyUI_Sonic						ComfyUI_Sonic
@@ -106,8 +98,14 @@ call :get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion				ComfyUI-Til
 call :get_node https://github.com/Lightricks/ComfyUI-LTXVideo					ComfyUI-LTXVideo
 call :get_node https://github.com/kijai/ComfyUI-KJNodes							comfyui-kjnodes
 
+echo %green%::::::::::::::: Installing %yellow%Required Dependencies%green% :::::::::::::::%reset%
+echo.
+:: Install pylatexenc for kokoro ::
+.\python_embeded\python.exe -m pip install https://www.piwheels.org/simple/pylatexenc/pylatexenc-3.0a32-py3-none-any.whl %silent%
 :: Install onnxruntime ::
 .\python_embeded\python.exe -m pip install onnxruntime-gpu %silent%
+:: Install flet ::
+.\python_embeded\python.exe -m pip install flet %silent%
 
 :: Extract 'update' folder ::
 cd ..\
@@ -157,11 +155,11 @@ goto :eof
 echo %green%::::::::::::::: Installing%yellow% ComfyUI %green%:::::::::::::::%reset%
 echo.
 git clone https://github.com/comfyanonymous/ComfyUI ComfyUI
-curl -OL https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip --ssl-no-revoke
+curl -OL https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip
 md python_embeded&&cd python_embeded
 tar -xf ..\python-3.11.9-embed-amd64.zip
 erase ..\python-3.11.9-embed-amd64.zip
-curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py --ssl-no-revoke
+curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 .\python.exe get-pip.py %silent%
 Echo ../ComfyUI> python311._pth
 Echo python311.zip>> python311._pth
@@ -177,7 +175,7 @@ goto :eof
 
 :get_node
 set git_url=%~1
-:: for %%x in (%git_url:/= %) do set git_folder=%%x
+REM for %%x in (%git_url:/= %) do set git_folder=%%x
 set git_folder=%~2
 echo %green%::::::::::::::: Installing%yellow% %git_folder% %green%:::::::::::::::%reset%
 echo.
