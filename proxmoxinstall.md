@@ -27,7 +27,7 @@
 
 ---
 
-## 1. 🛠️ Fix Storage if needed
+## 1. 🛠️ Fix Storage (if needed)
 
 <details>
 <summary>Click to expand storage configuration steps</summary>
@@ -36,10 +36,12 @@
 https://youtu.be/_u8qTN3cCnQ?si=jtQ-zHKzAUoKvjRC&t=899
 https://youtu.be/_u8qTN3cCnQ?si=PBvabV3ARh_c71xY&t=1236
 
+</details>
+
 
 ## 2. 🖥️ Proxmox Host Preparation
 
-### Initial Setup
+### 2.1 Initial Setup
 
 Login to your Proxmox Host Machine
 
@@ -57,7 +59,7 @@ https://digitalspaceport.com/wp-content/uploads/2025/03/proxmox-ollama-openwebui
 
 It will need a reboot after this step.
 
-Install NVIDIA Driver on Proxmox Host
+### 2.2 Install NVIDIA Driver on Proxmox Host
 
 First you need to update the Proxmox Host system. Please follow all these steps in this order or you will have to rerun the initramfs install portion later after you have a new kernel installed from proxmox. I do NOT recommend installing from the debian sources as that is an older version of the nvidia driver which can and will have issues with some newer cards and can and will have lower performance.
 
@@ -234,6 +236,14 @@ Now we need to create a crontab that will fire at reboot so the LXC container ca
 https://digitalspaceport.com/wp-content/uploads/2025/03/proxmox-ollama-openwebui-ai-server-031.jpg
 
 ### 3.6 💾 Mount NVMe Drive
+
+## 4. 🎨 ComfyUI Installation
+
+## 5. 🚀 Running ComfyUI
+
+## 6. 🔧 Troubleshooting
+
+## 7. 🔄 Maintenance
 
 > 💡 **Note**: This step is crucial for storing your models and outputs
 ```bash
