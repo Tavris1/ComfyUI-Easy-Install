@@ -3,7 +3,7 @@
 ### Complete guide for setting up ComfyUI with NVIDIA GPU support on Proxmox
 
 # ComfyUI-Easy-Install  
-> Portable installation of ComfyUI for **Windows** and **macOS** and **Linux**  🔹 Pixaroma Community Edition 🔹  
+> Portable **ComfyUI** for **Windows**, **macOS** and **Linux**  🔹 Pixaroma Community Edition 🔹  
 > [![GitHub Release](https://img.shields.io/github/v/release/Tavris1/ComfyUI-Easy-Install)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
 > [![GitHun Release Date](https://img.shields.io/github/release-date/Tavris1/ComfyUI-Easy-Install?style=flat)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
 > [![Github All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)]()
@@ -115,7 +115,7 @@ pveam download local ubuntu-22.04-standard_22.04-1_amd64.tar.gz
 
 ### 3.2 🏗️ Create LXC Container
 
-> ⚙️ **Container Configuration**: Adjust resources based on your needs
+> 🔑 **Authentication**: You can use SSH keys instead of a password for better security
 
 #### Option 1: Using Debian 12 (Recommended)
 ```bash
@@ -127,7 +127,7 @@ pct create 100 local:vztmpl/debian-12-standard_12.2-1_amd64.tar.gz \
   --rootfs local-lvm:100 \
   --net0 name=eth0,bridge=vmbr0,ip=dhcp \
   --ostype debian \
-  --password yourpassword \
+  --ssh-public-keys /root/.ssh/id_rsa.pub \
   --unprivileged 0
 ```
 
@@ -141,7 +141,7 @@ pct create 100 local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.gz \
   --rootfs local-lvm:100 \
   --net0 name=eth0,bridge=vmbr0,ip=dhcp \
   --ostype ubuntu \
-  --password yourpassword \
+  --ssh-public-keys /root/.ssh/id_rsa.pub \
   --unprivileged 0
 ```
 
@@ -189,7 +189,7 @@ Enter the LXC container: pct enter 100
 
 Grant exec privilege inside the container: chmod +x NVIDIA-Linux-x86_64-570.133.07.run
 
-Install with flags: ./NV* –-no-kernel-modules
+Install with flags: ./NVIDIA-Linux-x86_64-570.133.07.run–-no-kernel-modules
 
 Type: shutdown now after it completeshttps://digitalspaceport.com/wp-content/uploads/2025/03/proxmox-ollama-openwebui-ai-server-024.jpg
 
@@ -301,12 +301,20 @@ apt update && apt install -y python3-pip python3-venv git wget curl
 
 ### 4.2 Install ComfyUI
 ```bash
+# Clone the repository
 cd /root
 git clone https://github.com/Tavris1/ComfyUI-Easy-Install.git
 cd ComfyUI-Easy-Install
+
+# Switch to the MAC-Linux branch
+git checkout MAC-Linux
+
+# Make the script executable and run it
 chmod +x ComfyUI-Easy-Install-Linux.sh
 ./ComfyUI-Easy-Install-Linux.sh --proxmox
 ```
+
+> 💡 **Note**: The installation script is in the `MAC-Linux` branch, which contains specific fixes and optimizations for Linux and macOS systems.
 
 ### 4.3 Configure Model Paths
 ```bash
