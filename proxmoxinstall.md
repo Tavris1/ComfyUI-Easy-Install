@@ -245,7 +245,7 @@ https://digitalspaceport.com/wp-content/uploads/2025/03/proxmox-ollama-openwebui
 
 > ⚠️ **Important**: Always activate the virtual environment before installing Python packages:
 ```bash
-cd /opt/ComfyUI-Easy-Install/ComfyUI
+cd /root/ComfyUI-Easy-Install/ComfyUI
 source venv/bin/activate
 ```
 
@@ -300,7 +300,7 @@ apt update && apt install -y python3-pip python3-venv git wget curl
 
 ### 4.2 Install ComfyUI
 ```bash
-cd /opt
+cd /root
 git clone https://github.com/Tavris1/ComfyUI-Easy-Install.git
 cd ComfyUI-Easy-Install
 chmod +x ComfyUI-Easy-Install-Linux.sh
@@ -321,7 +321,7 @@ cp extra_model_paths.yaml /opt/ComfyUI-Easy-Install/ComfyUI/
 
 ### 5.1 Start ComfyUI
 ```bash
-cd /opt/ComfyUI-Easy-Install/ComfyUI
+cd /root/ComfyUI-Easy-Install/ComfyUI
 ./run_comfyui.sh --listen 0.0.0.0 --port 8188
 ```
 
