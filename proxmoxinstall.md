@@ -312,7 +312,7 @@ chmod +x ComfyUI-Easy-Install-Linux.sh
 cd /mnt/models
 chmod +x Extra_Model_Paths_Maker.sh
 ./Extra_Model_Paths_Maker.sh
-cp extra_model_paths.yaml /opt/ComfyUI-Easy-Install/ComfyUI/
+cp extra_model_paths.yaml /root/ComfyUI-Easy-Install/ComfyUI/
 ```
 
 ## 5. 🚀 Running ComfyUI
@@ -355,6 +355,20 @@ python3 -c "import torch; print(torch.cuda.is_available())"
 - If CUDA is not found: Verify NVIDIA driver installation
 - If models aren't visible: Check mount points and permissions
 - If web interface is inaccessible: Check firewall settings
+
+### 6.5 Git Issues
+
+#### Unicode Encoding on macOS
+If you encounter this error:
+```
+fatal: iconv_open(UTF-8,UTF-8-MAC) failed, but needed:
+    precomposed unicode is not supported.
+```
+
+Run this command to fix it:
+```bash
+git config core.precomposeunicode false
+```
 
 ## 7. 🔄 Maintenance
 
