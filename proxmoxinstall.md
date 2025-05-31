@@ -202,6 +202,8 @@ https://digitalspaceport.com/wp-content/uploads/2025/03/proxmox-ollama-openwebui
 
 On my own system it was:
 
+![alt text](<Scherm­afbeelding 2025-05-31 om 07.07.12.png>)
+
 ls -l /dev/nvidia*
 crw-rw-rw- 1 root root 195,   0 May 29 19:19 /dev/nvidia0
 crw-rw-rw- 1 root root 195, 255 May 29 19:19 /dev/nvidiactl
