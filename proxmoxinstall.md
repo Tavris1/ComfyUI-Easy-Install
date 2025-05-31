@@ -197,22 +197,21 @@ Passthrough GPU/s to the LXC container
 
 In the proxmox HOST terminal type: ls -la /dev/nvidia* and it will print your devices. They will read something like this:
 
-https://digitalspaceport.com/wp-content/uploads/2025/03/proxmox-ollama-openwebui-ai-server-025.jpg
+![NVIDIA Devices Example](images/nvidia-devices.png)
 
+Example output of `ls -l /dev/nvidia*`:
 
-On my own system it was:
-
-![alt text](<Scherm­afbeelding 2025-05-31 om 07.07.12.png>)
-
-ls -l /dev/nvidia*
+```bash
 crw-rw-rw- 1 root root 195,   0 May 29 19:19 /dev/nvidia0
 crw-rw-rw- 1 root root 195, 255 May 29 19:19 /dev/nvidiactl
 crw-rw-rw- 1 root root 234,   0 May 29 19:19 /dev/nvidia-uvm
 crw-rw-rw- 1 root root 234,   1 May 29 19:19 /dev/nvidia-uvm-tools
 
+# Device capabilities
 /dev/nvidia-caps:
 total 0
 cr-------- 1 root root 237, 1 May 29 19:19 nvidia-cap1
+cr--r--r-- 1 root root 237, 2 May 29 19:19 nvidia-cap2
 cr--r--r-- 1 root root 237, 2 May 29 19:19 nvidia-cap2
 
 Add to `/etc/pve/lxc/100.conf`:
