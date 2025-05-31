@@ -1,5 +1,3 @@
-<div align="center">
-
 # 🚀 Proxmox ComfyUI Installation Guide
 
 ### Complete guide for setting up ComfyUI with NVIDIA GPU support on Proxmox
@@ -243,6 +241,36 @@ https://digitalspaceport.com/wp-content/uploads/2025/03/proxmox-ollama-openwebui
 
 ## 6. 🔧 Troubleshooting
 
+### 6.1 Common Module Errors
+
+> ⚠️ **Important**: Always activate the virtual environment before installing Python packages:
+```bash
+cd /opt/ComfyUI-Easy-Install/ComfyUI
+source venv/bin/activate
+```
+
+#### Missing LPIPS Module
+If you encounter: `ModuleNotFoundError: No module named 'lpips'`
+
+```bash
+# Make sure you're in the virtual environment first
+pip install lpips
+```
+
+#### Missing DLIB Module
+If you encounter: `ModuleNotFoundError: No module named 'dlib'`
+
+```bash
+# Install system dependencies first (outside venv)
+apt update
+apt install -y cmake build-essential libboost-all-dev
+
+# Install dlib (inside venv)
+pip install dlib
+```
+
+> 💡 **Note**: Make sure to run these commands inside your ComfyUI container (use `pct enter 100` first)
+
 ## 7. 🔄 Maintenance
 
 > 💡 **Note**: This step is crucial for storing your models and outputs
@@ -334,12 +362,26 @@ python3 -c "import torch; print(torch.cuda.is_available())"
 
 ### 7.1 Update ComfyUI
 ```bash
-cd /opt/ComfyUI-Easy-Install/ComfyUI
+# Navigate to ComfyUI directory
+cd /root/ComfyUI-Easy-Install/
+
+# Activate virtual environment
+source venv/bin/activate
+
+# Update ComfyUI
 git pull
+
+# Update pip packages if needed
+pip install -r requirements.txt
 ```
 
 ### 7.2 Update Custom Nodes
 ```bash
-cd /opt/ComfyUI-Easy-Install
+# Make sure you're in the virtual environment
+cd /root/ComfyUI-Easy-Install/
+source venv/bin/activate
+
+# Run the update script
+cd ComfyUI
 ./update_custom_nodes.sh
 ```
