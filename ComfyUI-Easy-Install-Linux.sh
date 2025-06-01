@@ -1,6 +1,6 @@
 #!/bin/bash
 # ComfyUI Easy Install by ivo - Linux version
-# Title ComfyUI Easy Install by ivo v0.48.0 (Ep48)
+# Title ComfyUI Easy Install by ivo v0.48.1 (Ep48)
 # Pixaroma Community Edition
 
 # Set colors
