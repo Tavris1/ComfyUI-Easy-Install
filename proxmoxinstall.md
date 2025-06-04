@@ -5,7 +5,7 @@
 # ComfyUI-Easy-Install  
 > Portable **ComfyUI** for **Windows**, **macOS** and **Linux**  🔹 Pixaroma Community Edition 🔹  
 > [![GitHub Release](https://img.shields.io/github/v/release/Tavris1/ComfyUI-Easy-Install)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
-> [![GitHun Release Date](https://img.shields.io/github/release-date/Tavris1/ComfyUI-Easy-Install?style=flat)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
+> [![GitHub Release Date](https://img.shields.io/github/release-date/Tavris1/ComfyUI-Easy-Install?style=flat)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
 > [![Github All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)]()
 > [![GitHub Downloads latest)](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=downloads%40latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
 >
@@ -61,7 +61,7 @@ It will need a reboot after this step.
 
 First you need to update the Proxmox Host system. Please follow all these steps in this order or you will have to rerun the initramfs install portion later after you have a new kernel installed from proxmox. I do NOT recommend installing from the debian sources as that is an older version of the nvidia driver which can and will have issues with some newer cards and can and will have lower performance.
 
-apt update && apt upgrade -y && apt install pve-headers-$(uname -r) build-essential software-properties-common make nvtop htop gcc cmake -y
+apt update && apt upgrade -y && apt install pve-headers-$(uname -r) build-essential software-properties-common make nvtop htop -y
 update-initramfs -u
 
 https://digitalspaceport.com/wp-content/uploads/2025/03/proxmox-ollama-openwebui-ai-server-007.jpg
@@ -189,7 +189,7 @@ Enter the LXC container: pct enter 100
 
 Grant exec privilege inside the container: chmod +x NVIDIA-Linux-x86_64-570.133.07.run
 
-Install with flags: ./NVIDIA-Linux-x86_64-570.133.07.run–-no-kernel-modules
+Install with flags: ./NVIDIA-Linux-x86_64-570.153.02.run --no-kernel-modules
 
 Type: shutdown now after it completeshttps://digitalspaceport.com/wp-content/uploads/2025/03/proxmox-ollama-openwebui-ai-server-024.jpg
 
