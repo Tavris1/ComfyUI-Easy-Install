@@ -1,5 +1,5 @@
 @echo off
-Title ComfyUI Easy Install by ivo v0.48.1 (Ep48)
+Title ComfyUI Easy Install by ivo v0.48.2 (Ep48)
 :: Pixaroma Community Edition ::
 
 :: Set colors ::
@@ -155,11 +155,11 @@ goto :eof
 echo %green%::::::::::::::: Installing%yellow% ComfyUI %green%:::::::::::::::%reset%
 echo.
 git clone https://github.com/comfyanonymous/ComfyUI ComfyUI
-curl -OL https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip
+curl -OL https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip --ssl-no-revoke
 md python_embeded&&cd python_embeded
 tar -xf ..\python-3.11.9-embed-amd64.zip
 erase ..\python-3.11.9-embed-amd64.zip
-curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py --ssl-no-revoke
 .\python.exe get-pip.py %silent%
 Echo ../ComfyUI> python311._pth
 Echo python311.zip>> python311._pth
