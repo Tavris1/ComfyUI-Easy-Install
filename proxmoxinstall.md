@@ -269,6 +269,8 @@ apt install -y cmake build-essential libboost-all-dev
 # Install dlib (inside venv)
 pip install dlib
 ```
+# Install the pre-built dlib wheel
+pip install dlib-bin==19.24.6
 
 > 💡 **Note**: Make sure to run these commands inside your ComfyUI container (use `pct enter 100` first)
 
