@@ -52,10 +52,15 @@
 ### Installation Steps for macOS
 
 1. Clone or download this repository
+
    git clone --single-branch --branch MAC-Linux https://github.com/Tavris1/ComfyUI-Easy-Install.git
+
    cd ComfyUI-Easy-Install
+
 2. Run `chmod +x ComfyUI-Easy-Install-Linux.sh` to make the installation script executable
+
 3. Execute `./ComfyUI-Easy-Install-Linux.sh` to install ComfyUI and its dependencies
+
 4. After installation completes, run `./run_comfyui.sh` to start ComfyUI
 
 ### Mac M1/M2 Optimization
