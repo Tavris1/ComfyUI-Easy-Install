@@ -57,15 +57,15 @@
 
    cd ComfyUI-Easy-Install
 
-2. Run `chmod +x ComfyUI-Easy-Install-Linux.sh` to make the installation script executable
+2. Run `chmod +x OSXComfyUI-Easy-Install.sh` to make the installation script executable
 
-3. Execute `./ComfyUI-Easy-Install-Linux.sh` to install ComfyUI and its dependencies
+3. Execute `./OSXComfyUI-Easy-Install.sh` to install ComfyUI and its dependencies
 
-4. After installation completes, run `./run_comfyui.sh` to start ComfyUI
+4. After installation completes, run `./OSXrun_comfyui.sh` to start ComfyUI
 
 ### Mac M1/M2 Optimization
 
-The `run_comfyui.sh` script includes several optimizations specifically for Apple Silicon (M1/M2) Macs:
+The `OSXrun_comfyui.sh` script includes several optimizations specifically for Apple Silicon (M1/M2) Macs:
 
 #### Memory Management
 - Memory clearing before startup to ensure maximum available RAM
