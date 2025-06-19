@@ -9,11 +9,11 @@
 > [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Join%20Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)  
 ---
 
-## Basic software included  
-- [**Git**](https://git-scm.com/)  
+## What will be installed  
+- [**Git**](https://git-scm.com/) will be installed/updated if required  
 - [**ComfyUI portable**](https://github.com/comfyanonymous/ComfyUI)  
 
-## Nodes from [:arrow_forward:Pixaroma tutorials](https://www.youtube.com/@pixaroma) included  
+## Nodes from [:arrow_forward:Pixaroma tutorials](https://www.youtube.com/@pixaroma)  
 - [ComfyUI-Manager](https://github.com/Comfy-Org/ComfyUI-Manager)  
 - [was-node-suite](https://github.com/WASasquatch/was-node-suite-comfyui)  
 - [Easy-Use](https://github.com/yolain/ComfyUI-Easy-Use)  
@@ -48,8 +48,8 @@
 ---
 ## Windows Installation in 3 Steps
 1. Download the latest release [:arrow_forward:HERE](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)  
-2. Extract the ZIP file into a new folder.  
-3. Double-click **`ComfyUI-Easy-Install.bat`** to begin setup
+2. Extract the ZIP file into a new folder  
+3. Double-click **`ComfyUI-Easy-Install.bat`** to start the setup
 > [!IMPORTANT]
 >> - Do **not** extract to system-protected folders such as **`Program Files`**, **`Windows`**, or directly to **`C:\`**
 >> - Do **not** use **`Run as Аdministrator`** when launching the installer
