@@ -116,23 +116,49 @@ echo
 
 # Sort by MD5 hash and find duplicates
 print_yellow "\nAnalyzing results..."
+echo "SIZE    MD5     FILES"
+
+# Create a temporary file for duplicate groups
+DUP_GROUPS="/tmp/duplicate_groups_$$.txt"
+
+# Find duplicates and write to temporary file
 sort "$TEMP_FILE" | awk '
-    BEGIN { print "SIZE\tMD5\tFILES" }
     {
         hash = $1
         file = substr($0, index($0, $2))
-        files[hash] = files[hash] ? files[hash] "\n\t\t" file : file
+        files[hash] = files[hash] ? files[hash] "\n" file : file
         count[hash]++
     }
     END {
         for (hash in files) {
             if (count[hash] > 1) {
-                cmd = "ls -lh \"" files[hash] "\" | awk \"{ print \\$5 }\" | head -1"
-                cmd | getline size
-                close(cmd)
-                print size "\t" hash "\t" files[hash]
-                print ""
+                print hash "\t" files[hash]
             }
         }
     }
-'
+' > "$DUP_GROUPS"
+
+# Process each duplicate group in Bash
+while IFS=$'\t' read -r hash files; do
+    # Get first file that exists and its size
+    size="N/A"
+    first_file=""
+    
+    # Read each file path
+    echo "$files" | while IFS= read -r file; do
+        if [[ -n "$file" && -f "$file" ]]; then
+            # Get size of first existing file
+            size=$(ls -lh "$file" | awk '{print $5}')
+            first_file="$file"
+            break
+        fi
+    done
+    
+    # Print the duplicate group
+    echo "$size    $hash        $files" | sed 's/^/        /;s/\n/\n\t\t/g'
+    echo
+    
+done < "$DUP_GROUPS"
+
+# Clean up
+rm -f "$DUP_GROUPS"
