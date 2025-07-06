@@ -50,7 +50,7 @@
 ---
 ## Windows Installation in 3 Steps
 
-1. Download the latest release [:arrow_forward:HERE](https://github.com/user-attachments/files/21091262/ComfyUI-Nunchaku.zip)  
+1. Download the Nunchaku release [:arrow_forward:HERE](https://github.com/user-attachments/files/21091262/ComfyUI-Nunchaku.zip)  
 2. Extract the ZIP file into a new folder  
 3. Double-click **`ComfyUI-Easy-Install.bat`** to start the setup
 > [!IMPORTANT]
