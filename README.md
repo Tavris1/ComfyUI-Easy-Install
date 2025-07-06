@@ -45,6 +45,7 @@
 - [Tiled Diffusion & VAE](https://github.com/shiimizu/ComfyUI-TiledDiffusion)  
 - [LTXVideo](https://github.com/Lightricks/ComfyUI-LTXVideo)  
 - [KJNodes](https://github.com/kijai/ComfyUI-KJNodes)
+- [Nunchaku](https://github.com/mit-han-lab/ComfyUI-nunchaku)
 
 ---
 ## Windows Installation in 3 Steps
@@ -79,10 +80,6 @@ This allows ComfyUI to use your existing model files without additional download
 
 > [!NOTE]
 >> - Some folders like **LLM** and **llm_gguf** cannot be redirected this way.  
-
----
-
-## macOS / Linux - click [:arrow_forward:HERE](https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux)
 
 ---
 
