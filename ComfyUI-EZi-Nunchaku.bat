@@ -112,7 +112,7 @@ echo.
 :: Install flet ::
 .\python_embeded\python.exe -m pip install flet %silent%
 :: Install Nunchaku wheel ::
-.\python_embeded\python.exe -m pip install https://github.com/mit-han-lab/nunchaku/releases/download/v0.3.2dev20250707/nunchaku-0.3.2.dev20250707+torch2.7-cp311-cp311-win_amd64.whl
+.\python_embeded\python.exe -m pip install https://github.com/mit-han-lab/nunchaku/releases/download/v0.3.2dev20250708/nunchaku-0.3.2.dev20250708+torch2.7-cp311-cp311-win_amd64.whl
 
 
 :: Extract 'update' folder ::
