@@ -20,7 +20,7 @@ if [ ! -d "checkpoints" ]; then
     echo
     echo "Press any key to Exit..."
     read -n 1
-    exit 1
+    exit 1  
 fi
 
 modelsfolder="$script_dir"

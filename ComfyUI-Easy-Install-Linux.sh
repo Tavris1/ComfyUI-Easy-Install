@@ -276,7 +276,7 @@ get_node "https://github.com/kijai/ComfyUI-KJNodes" "comfyui-kjnodes"
 # Install onnxruntime
 echo -e "${green}::::::::::::::: Installing onnxruntime ${green}::::::::::::::${reset}"
 source venv/bin/activate
-python3 -m pip install --no-cache-dir onnxruntime $silent
+python3 -m pip install --no-cache-dir onnxruntime-gpu $silent
 
 # Create run_comfyui.sh script
 echo -e "${green}::::::::::::::: Creating Startup Script ${green}::::::::::::::${reset}"
