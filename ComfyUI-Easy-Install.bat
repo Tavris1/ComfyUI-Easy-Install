@@ -1,14 +1,16 @@
 @echo off
-Title ComfyUI Easy Install by ivo v0.48.2 (Ep48)
+Title ComfyUI Easy Install by ivo v0.52.0 (Ep52)
 :: Pixaroma Community Edition ::
 
 :: Set colors ::
 call :set_colors
 
-:: Set No Warnings ::
-set "silent=--no-cache-dir --no-warn-script-location"
+:: Set arguments ::
+set "PIPargs=--no-cache-dir --no-warn-script-location --timeout=1000 --resume-retries 20 --retries 50"
+set "CURLargs=--retry 20 --retry-all-errors"
 
-:: Set Local Paths (if broken) ::
+:: Set local path only (temporarily) ::
+set path=
 if exist %windir%\system32 set path=%PATH%;%windir%\System32
 if exist %windir%\system32\WindowsPowerShell\v1.0 set path=%PATH%;%windir%\system32\WindowsPowerShell\v1.0
 if exist %localappdata%\Microsoft\WindowsApps set path=%PATH%;%localappdata%\Microsoft\WindowsApps
@@ -101,11 +103,11 @@ call :get_node https://github.com/kijai/ComfyUI-KJNodes							comfyui-kjnodes
 echo %green%::::::::::::::: Installing %yellow%Required Dependencies%green% :::::::::::::::%reset%
 echo.
 :: Install pylatexenc for kokoro ::
-.\python_embeded\python.exe -m pip install https://www.piwheels.org/simple/pylatexenc/pylatexenc-3.0a32-py3-none-any.whl %silent%
+.\python_embeded\python.exe -m pip install https://www.piwheels.org/simple/pylatexenc/pylatexenc-3.0a32-py3-none-any.whl %PIPargs%
 :: Install onnxruntime ::
-.\python_embeded\python.exe -m pip install onnxruntime-gpu %silent%
+.\python_embeded\python.exe -m pip install onnxruntime-gpu %PIPargs%
 :: Install flet ::
-.\python_embeded\python.exe -m pip install flet %silent%
+.\python_embeded\python.exe -m pip install flet %PIPargs%
 
 :: Extract 'update' folder ::
 cd ..\
@@ -155,33 +157,33 @@ goto :eof
 echo %green%::::::::::::::: Installing%yellow% ComfyUI %green%:::::::::::::::%reset%
 echo.
 git clone https://github.com/comfyanonymous/ComfyUI ComfyUI
-curl -OL https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip --ssl-no-revoke
+curl -OL https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip --ssl-no-revoke %CURLargs%
 md python_embeded&&cd python_embeded
 tar -xf ..\python-3.11.9-embed-amd64.zip
 erase ..\python-3.11.9-embed-amd64.zip
-curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py --ssl-no-revoke
-.\python.exe get-pip.py %silent%
+curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py --ssl-no-revoke %CURLargs%
+.\python.exe get-pip.py %PIPargs%
 Echo ../ComfyUI> python311._pth
 Echo python311.zip>> python311._pth
+Echo.>> python311._pth
 Echo .>> python311._pth
 Echo import site>> python311._pth
-.\python.exe -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128 %silent%
-.\python.exe -m pip install pygit2 %silent%
+.\python.exe -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128 %PIPargs%
+.\python.exe -m pip install pygit2 %PIPargs%
 cd ..\ComfyUI
-..\python_embeded\python.exe -m pip install -r requirements.txt %silent%
+..\python_embeded\python.exe -m pip install -r requirements.txt %PIPargs%
 cd ..\
 echo.
 goto :eof
 
 :get_node
 set git_url=%~1
-REM for %%x in (%git_url:/= %) do set git_folder=%%x
 set git_folder=%~2
 echo %green%::::::::::::::: Installing%yellow% %git_folder% %green%:::::::::::::::%reset%
 echo.
 git clone %git_url% ComfyUI/custom_nodes/%git_folder%
 if exist .\ComfyUI\custom_nodes\%git_folder%\requirements.txt (
-	.\python_embeded\python.exe -m pip install -r .\ComfyUI\custom_nodes\%git_folder%\requirements.txt --use-pep517 %silent%
+	.\python_embeded\python.exe -m pip install -r .\ComfyUI\custom_nodes\%git_folder%\requirements.txt --use-pep517 %PIPargs%
 )
 if exist .\ComfyUI\custom_nodes\%git_folder%\install.py (
 	.\python_embeded\python.exe .\ComfyUI\custom_nodes\%git_folder%\install.py
