@@ -12,7 +12,7 @@
 ## What will be installed  
 - [**Git**](https://git-scm.com/) will be installed/updated if required  
 - [**ComfyUI portable**](https://github.com/comfyanonymous/ComfyUI)  
-- [**Python 3.10.11 Embedded**](https://www.python.org/downloads/release/python-31011/)
+- [**Python 3.11.9 Embedded**](https://www.python.org/downloads/release/python-31011/)
 
 ## Nodes from [:arrow_forward:Pixaroma tutorials](https://www.youtube.com/@pixaroma)  
 - [ComfyUI-Manager](https://github.com/Comfy-Org/ComfyUI-Manager)  
