@@ -10,6 +10,7 @@ set "PIPargs=--no-cache-dir --no-warn-script-location --timeout=1000 --resume-re
 set "CURLargs=--retry 20 --retry-all-errors"
 
 :: Set local path only (temporarily) ::
+set path=
 if exist %windir%\system32 set path=%PATH%;%windir%\System32
 if exist %windir%\system32\WindowsPowerShell\v1.0 set path=%PATH%;%windir%\system32\WindowsPowerShell\v1.0
 if exist %localappdata%\Microsoft\WindowsApps set path=%PATH%;%localappdata%\Microsoft\WindowsApps
