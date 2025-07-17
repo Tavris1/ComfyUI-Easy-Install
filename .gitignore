@@ -227,3 +227,5 @@ cython_debug/
 # Custom
 ComfyUI-Easy-Install/
 Scripts/prepared_images/
+Resized/
+prepared_images/*
