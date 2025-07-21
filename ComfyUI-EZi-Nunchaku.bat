@@ -6,7 +6,7 @@ Title ComfyUI Easy Install by ivo - Nunchaku version
 call :set_colors
 
 :: Set arguments ::
-set "PIPargs=--no-cache-dir --no-warn-script-location --timeout=1000 --resume-retries 20 --retries 50"
+set "PIPargs=--no-cache-dir --no-warn-script-location --timeout=1000 --retries 50"
 set "CURLargs=--retry 20 --retry-all-errors"
 
 :: Set local path only (temporarily) ::
