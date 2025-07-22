@@ -12,7 +12,7 @@
 ## What will be installed  
 - [**Git**](https://git-scm.com/) will be installed/updated if required  
 - [**ComfyUI portable**](https://github.com/comfyanonymous/ComfyUI)  
-- [**Python 3.11.9 Embedded**](https://www.python.org/downloads/release/python-31011/)
+- [**Python 3.11.9 Embedded**](https://www.python.org/downloads/release/python-3119/)
 
 ## Nodes from [:arrow_forward:Pixaroma tutorials](https://www.youtube.com/@pixaroma)  
 - [ComfyUI-Manager](https://github.com/Comfy-Org/ComfyUI-Manager)  
@@ -89,8 +89,9 @@ This allows ComfyUI to use your existing model files without additional download
 ## Screenshot  
 ![End](https://github.com/user-attachments/assets/da090bd5-0e13-41e1-8a81-bf2d24a8632c)  
 
-<div align="center">
+---
+Thank you for using **ComfyUI-Easy-Install (Nunchaku Edition)**!  
+Questions or feedback? Reach out on [Pixaroma Discord](https://discord.com/invite/gggpkVgBf3)
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)  
-</div>
