@@ -1,14 +1,16 @@
 # ComfyUI-Easy-Install  
-> Portable **ComfyUI** **Nunchaku** edition for **Windows** 🔹 Pixaroma Community Edition 🔹  
+> Portable **ComfyUI** (Nunchaku Edition) for **Windows** 🔹 Pixaroma Community Edition 🔹
 >
 > Dedicated to the **Pixaroma** team  
 > [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Join%20Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)  
----
+
+## Watch the full setup tutorial on [Pixaroma's YouTube channel](https://www.youtube.com/watch?v=eATIu4lkOl0)
+
 
 ## What will be installed  
 - [**Git**](https://git-scm.com/) will be installed/updated if required  
 - [**ComfyUI portable**](https://github.com/comfyanonymous/ComfyUI)  
-- [**Python 3.11.9 Embedded**](https://www.python.org/downloads/release/python-31011/)
+- [**Python 3.11.9 Embedded**](https://www.python.org/downloads/release/python-3119/)
 
 ## Nodes from [:arrow_forward:Pixaroma tutorials](https://www.youtube.com/@pixaroma)  
 - [ComfyUI-Manager](https://github.com/Comfy-Org/ComfyUI-Manager)  
@@ -83,8 +85,9 @@ This allows ComfyUI to use your existing model files without additional download
 ## Screenshot  
 ![End](https://github.com/user-attachments/assets/da090bd5-0e13-41e1-8a81-bf2d24a8632c)  
 
-<div align="center">
+---
+Thank you for using **ComfyUI-Easy-Install (Nunchaku Edition)**!  
+Questions or feedback? Reach out on [Pixaroma Discord](https://discord.com/invite/gggpkVgBf3)
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)  
-</div>
