@@ -90,7 +90,7 @@ This allows ComfyUI to use your existing model files without additional download
 ![End](https://github.com/user-attachments/assets/da090bd5-0e13-41e1-8a81-bf2d24a8632c)  
 
 ---
-Thank you for using **ComfyUI-Easy-Install (Nunchaku Edition)**!  
+Thank you for using **ComfyUI-Easy-Install**!  
 Questions or feedback? Reach out on [Pixaroma Discord](https://discord.com/invite/gggpkVgBf3)
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
