@@ -6,13 +6,13 @@ Title ComfyUI Easy Install by ivo - Nunchaku version
 call :set_colors
 
 :: Set arguments ::
-set "PIPargs=--no-cache-dir --no-warn-script-location --timeout=1000 --retries 50"
-set "CURLargs=--retry 20 --retry-all-errors"
+set "PIPargs=--no-cache-dir --no-warn-script-location --timeout=1000 --retries 200"
+set "CURLargs=--retry 200 --retry-all-errors"
 
 :: Set local path only (temporarily) ::
 set path=
-if exist %windir%\system32 set path=%PATH%;%windir%\System32
-if exist %windir%\system32\WindowsPowerShell\v1.0 set path=%PATH%;%windir%\system32\WindowsPowerShell\v1.0
+if exist %windir%\System32 set path=%PATH%;%windir%\System32
+if exist %windir%\System32\WindowsPowerShell\v1.0 set path=%PATH%;%windir%\System32\WindowsPowerShell\v1.0
 if exist %localappdata%\Microsoft\WindowsApps set path=%PATH%;%localappdata%\Microsoft\WindowsApps
 
 :: Check for Existing ComfyUI Folder ::
@@ -101,7 +101,7 @@ call :get_node https://github.com/Lightricks/ComfyUI-LTXVideo					ComfyUI-LTXVid
 call :get_node https://github.com/kijai/ComfyUI-KJNodes							comfyui-kjnodes
 echo %green%::::::::::::::: Installing%yellow% ComfyUI-nunchaku %green%:::::::::::::::%reset%
 echo.
-git clone https://github.com/mit-han-lab/ComfyUI-nunchaku						ComfyUI/custom_nodes/ComfyUI-nunchaku
+git.exe clone https://github.com/mit-han-lab/ComfyUI-nunchaku						ComfyUI/custom_nodes/ComfyUI-nunchaku
 echo.
 
 
@@ -114,11 +114,11 @@ echo.
 :: Install flet ::
 .\python_embeded\python.exe -m pip install flet %PIPargs%
 :: Install Nunchaku wheel ::
-.\python_embeded\python.exe -m pip install https://github.com/mit-han-lab/nunchaku/releases/download/v0.3.2dev20250709/nunchaku-0.3.2.dev20250709+torch2.7-cp311-cp311-win_amd64.whl
+.\python_embeded\python.exe -m pip install https://github.com/nunchaku-tech/nunchaku/releases/download/v0.3.2dev20250715/nunchaku-0.3.2.dev20250715+torch2.7-cp311-cp311-win_amd64.whl %PIPargs%
 
 :: Extract 'update' folder ::
 cd ..\
-tar -xf .\Helper-CEI.zip
+tar.exe -xf .\Helper-CEI.zip
 cd ComfyUI-Easy-Install
 
 :: Copy additional files if they exist ::
@@ -154,7 +154,20 @@ goto :eof
 :: https://git-scm.com/
 echo %green%::::::::::::::: Installing/Updating%yellow% Git %green%:::::::::::::::%reset%
 echo.
-winget install --id Git.Git -e --source winget
+
+:: Check if Winget is installed ::
+where winget.exe >nul 2>&1
+if %errorlevel% NEQ 0 (
+    cls
+    echo %warning%App Installer ^(winget^) is NOT installed.
+	echo %green%Install it first and then run this script again.%reset%
+	start ms-windows-store://pdp/?productid=9NBLGGH4NNS1
+	echo.
+	echo Press any key to exit&Pause>nul
+	exit
+)
+
+winget.exe install --id Git.Git -e --source winget
 set path=%PATH%;%ProgramFiles%\Git\cmd
 echo.
 goto :eof
@@ -163,12 +176,12 @@ goto :eof
 :: https://github.com/comfyanonymous/ComfyUI
 echo %green%::::::::::::::: Installing%yellow% ComfyUI %green%:::::::::::::::%reset%
 echo.
-git clone https://github.com/comfyanonymous/ComfyUI ComfyUI
-curl -OL https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip --ssl-no-revoke %CURLargs%
+git.exe clone https://github.com/comfyanonymous/ComfyUI ComfyUI
+curl.exe -OL https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip --ssl-no-revoke %CURLargs%
 md python_embeded&&cd python_embeded
-tar -xf ..\python-3.11.9-embed-amd64.zip
+tar.exe -xf ..\python-3.11.9-embed-amd64.zip
 erase ..\python-3.11.9-embed-amd64.zip
-curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py --ssl-no-revoke %CURLargs%
+curl.exe -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py --ssl-no-revoke %CURLargs%
 .\python.exe get-pip.py %PIPargs%
 Echo ../ComfyUI> python311._pth
 Echo python311.zip>> python311._pth
@@ -188,7 +201,7 @@ set git_url=%~1
 set git_folder=%~2
 echo %green%::::::::::::::: Installing%yellow% %git_folder% %green%:::::::::::::::%reset%
 echo.
-git clone %git_url% ComfyUI/custom_nodes/%git_folder%
+git.exe clone %git_url% ComfyUI/custom_nodes/%git_folder%
 if exist .\ComfyUI\custom_nodes\%git_folder%\requirements.txt (
 	.\python_embeded\python.exe -m pip install -r .\ComfyUI\custom_nodes\%git_folder%\requirements.txt --use-pep517 %PIPargs%
 )
