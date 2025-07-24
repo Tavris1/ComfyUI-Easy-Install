@@ -48,7 +48,7 @@
 ---
 ## Windows Installation in 3 Steps
 
-1. Download **ComfyUI-Easy-Install** with **Nunchaku** [:arrow_forward:HERE](https://github.com/user-attachments/files/21400643/ComfyUI-Nunchaku.zip)  
+1. Download **ComfyUI-Easy-Install** with **Nunchaku** [:arrow_forward:HERE](https://github.com/user-attachments/files/21401288/ComfyUI-Nunchaku.zip)  
 2. Extract the ZIP file into a new folder  
 3. Double-click **`ComfyUI-EZi-Nunchaku.bat`** to start the setup
 > [!IMPORTANT]
