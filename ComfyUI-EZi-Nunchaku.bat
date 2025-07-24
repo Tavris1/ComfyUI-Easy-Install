@@ -10,7 +10,8 @@ set "PIPargs=--no-cache-dir --no-warn-script-location --timeout=1000 --retries 2
 set "CURLargs=--retry 200 --retry-all-errors"
 
 :: Set local path only (temporarily) ::
-set path=
+for /f "delims=" %%G in ('cmd /c "where git.exe 2>nul"') do (set "GIT_PATH=%%~dpG")
+set path=%GIT_PATH%
 if exist %windir%\System32 set path=%PATH%;%windir%\System32
 if exist %windir%\System32\WindowsPowerShell\v1.0 set path=%PATH%;%windir%\System32\WindowsPowerShell\v1.0
 if exist %localappdata%\Microsoft\WindowsApps set path=%PATH%;%localappdata%\Microsoft\WindowsApps
