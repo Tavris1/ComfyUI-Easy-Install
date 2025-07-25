@@ -9,6 +9,14 @@ call :set_colors
 set "PIPargs=--no-cache-dir --no-warn-script-location --timeout=1000 --retries 200"
 set "CURLargs=--retry 200 --retry-all-errors"
 
+:: Clear environment variables that might interfere ::
+set PYTHONHOME=
+set PYTHONPATH=
+set PYTHONSTARTUP=
+set PYTHONUSERBASE=
+set PYTHONBREAKPOINT=
+set VIRTUAL_ENV=
+
 :: Set local path only (temporarily) ::
 for /f "delims=" %%G in ('cmd /c "where git.exe 2>nul"') do (set "GIT_PATH=%%~dpG")
 set path=%GIT_PATH%
@@ -176,12 +184,14 @@ md python_embeded&&cd python_embeded
 tar.exe -xf ..\python-3.11.9-embed-amd64.zip
 erase ..\python-3.11.9-embed-amd64.zip
 curl.exe -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py --ssl-no-revoke %CURLargs%
-.\python.exe get-pip.py %PIPargs%
+
 Echo ../ComfyUI> python311._pth
 Echo python311.zip>> python311._pth
-Echo.>> python311._pth
 Echo .>> python311._pth
-Echo import site>> python311._pth
+Echo Lib/site-packages>> python311._pth
+Echo # import site>> python311._pth
+
+.\python.exe get-pip.py %PIPargs%
 .\python.exe -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128 %PIPargs%
 .\python.exe -m pip install pygit2 %PIPargs%
 cd ..\ComfyUI
