@@ -14,7 +14,7 @@
 - [**ComfyUI portable**](https://github.com/comfyanonymous/ComfyUI)  
 - [**Python 3.11.9 Embedded**](https://www.python.org/downloads/release/python-3119/)
 
-## Nodes from [:arrow_forward:Pixaroma tutorials](https://www.youtube.com/@pixaroma)  
+## Nodes from Pixaroma tutorials [:arrow_forward:YouTube](https://www.youtube.com/@pixaroma)  
 - [ComfyUI-Manager](https://github.com/Comfy-Org/ComfyUI-Manager)  
 - [was-node-suite](https://github.com/WASasquatch/was-node-suite-comfyui)  
 - [Easy-Use](https://github.com/yolain/ComfyUI-Easy-Use)  
@@ -46,11 +46,17 @@
 - [LTXVideo](https://github.com/Lightricks/ComfyUI-LTXVideo)  
 - [KJNodes](https://github.com/kijai/ComfyUI-KJNodes)
 
+## Optional modules (**Add-ons** subfolder)  
+- [Nunchaku](https://github.com/mit-han-lab/ComfyUI-nunchaku)
+- [SageAttention 2.2.0](https://github.com/thu-ml/SageAttention)
+
 ---
 ## Windows Installation in 3 Steps
 1. Download the latest release [:arrow_forward:HERE](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)  
 2. Extract the ZIP file into a new folder  
 3. Double-click **`ComfyUI-Easy-Install.bat`** to start the setup
+- After installation, run the desired **`.bat`** file in the **`Add-ons`** folder to install optional modules  
+
 > [!IMPORTANT]
 >> - Do **not** extract to system-protected folders such as **`Program Files`**, **`Windows`**, or directly to **`C:\`**
 >> - Do **not** use **`Run as Аdministrator`** when launching the installer
