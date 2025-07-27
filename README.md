@@ -46,7 +46,7 @@
 - [LTXVideo](https://github.com/Lightricks/ComfyUI-LTXVideo)  
 - [KJNodes](https://github.com/kijai/ComfyUI-KJNodes)
 
-## Optional modules (**Add-ons** subfolder)  
+## Optional **Add-ons**  
 - [Nunchaku](https://github.com/mit-han-lab/ComfyUI-nunchaku)
 - [SageAttention 2.2.0](https://github.com/thu-ml/SageAttention)
 
