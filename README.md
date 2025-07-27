@@ -55,7 +55,7 @@
 1. Download the latest release [:arrow_forward:HERE](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)  
 2. Extract the ZIP file into a new folder  
 3. Double-click **`ComfyUI-Easy-Install.bat`** to start the setup
-- After installation, run the desired **`.bat`** file in the **`Add-ons`** folder to install optional modules  
+- After installation, run the appropriate **`.bat`** file in the **`Add-ons`** folder to install optional modules  
 
 > [!IMPORTANT]
 >> - Do **not** extract to system-protected folders such as **`Program Files`**, **`Windows`**, or directly to **`C:\`**
