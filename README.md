@@ -58,7 +58,7 @@
 - After installation, run the appropriate **`.bat`** file in the **`Add-ons`** folder to install optional modules  
 
 > [!IMPORTANT]
->> - Do **not** extract to system-protected folders such as **`Program Files`**, **`Windows`**, or the root of the **`C:`** drive  
+>> - Do **not** extract to system-protected folders like **`Program Files`**, **`Windows`**, or the **root** of the **`C:`** drive  
 >> - Do **not** use **`Run as Аdministrator`** when launching the installer
 
 > [!NOTE]
