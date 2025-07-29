@@ -157,17 +157,17 @@ goto :eof
 echo %green%::::::::::::::: Installing/Updating%yellow% Git %green%:::::::::::::::%reset%
 echo.
 
-:: Check if Winget is installed ::
-where winget.exe >nul 2>&1
-if %errorlevel% NEQ 0 (
-    cls
-    echo %warning%App Installer ^(winget^) is NOT installed.
-	echo %green%Install it first and then run this script again.%reset%
-	start ms-windows-store://pdp/?productid=9NBLGGH4NNS1
-	echo.
-	echo Press any key to exit&Pause>nul
-	exit
-)
+REM :: Check if Winget is installed ::
+REM where winget.exe >nul 2>&1
+REM if %errorlevel% NEQ 0 (
+    REM cls
+    REM echo %warning%App Installer ^(winget^) is NOT installed.
+	REM echo %green%Install it first and then run this script again.%reset%
+	REM start ms-windows-store://pdp/?productid=9NBLGGH4NNS1
+	REM echo.
+	REM echo Press any key to exit&Pause>nul
+	REM exit
+REM )
 
 winget.exe install --id Git.Git -e --source winget
 set path=%PATH%;%ProgramFiles%\Git\cmd
