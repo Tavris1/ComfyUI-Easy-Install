@@ -196,6 +196,8 @@ Echo ../ComfyUI> python311._pth
 Echo python311.zip>> python311._pth
 Echo .>> python311._pth
 Echo Lib/site-packages>> python311._pth
+Echo Lib>> python311._pth
+Echo Scripts>> python311._pth
 Echo # import site>> python311._pth
 
 .\python.exe get-pip.py %PIPargs%
