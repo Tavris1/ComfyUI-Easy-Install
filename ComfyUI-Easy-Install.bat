@@ -1,5 +1,5 @@
 @echo off
-Title ComfyUI Easy Install by ivo v0.55.0 (Ep55)
+Title ComfyUI Easy Install by ivo v0.55.1 (Ep55)
 :: Pixaroma Community Edition ::
 
 :: Set colors ::
@@ -189,6 +189,8 @@ Echo ../ComfyUI> python311._pth
 Echo python311.zip>> python311._pth
 Echo .>> python311._pth
 Echo Lib/site-packages>> python311._pth
+Echo Lib>> python311._pth
+Echo Scripts>> python311._pth
 Echo # import site>> python311._pth
 
 .\python.exe get-pip.py %PIPargs%
