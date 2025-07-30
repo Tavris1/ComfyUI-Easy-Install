@@ -9,14 +9,6 @@ call :set_colors
 set "PIPargs=--no-cache-dir --no-warn-script-location --timeout=1000 --retries 200"
 set "CURLargs=--retry 200 --retry-all-errors"
 
-:: Clear environment variables that might interfere ::
-set PYTHONHOME=
-set PYTHONPATH=
-set PYTHONSTARTUP=
-set PYTHONUSERBASE=
-set PYTHONBREAKPOINT=
-set VIRTUAL_ENV=
-
 :: Set local path only (temporarily) ::
 for /f "delims=" %%G in ('cmd /c "where git.exe 2>nul"') do (set "GIT_PATH=%%~dpG")
 set path=%GIT_PATH%
@@ -117,13 +109,13 @@ echo.
 echo %green%::::::::::::::: Installing %yellow%Required Dependencies%green% :::::::::::::::%reset%
 echo.
 :: Install pylatexenc for kokoro ::
-.\python_embeded\python.exe -m pip install https://www.piwheels.org/simple/pylatexenc/pylatexenc-3.0a32-py3-none-any.whl %PIPargs%
+.\python_embeded\python.exe -I -m pip install https://www.piwheels.org/simple/pylatexenc/pylatexenc-3.0a32-py3-none-any.whl %PIPargs%
 :: Install onnxruntime ::
-.\python_embeded\python.exe -m pip install onnxruntime-gpu %PIPargs%
+.\python_embeded\python.exe -I -m pip install onnxruntime-gpu %PIPargs%
 :: Install flet ::
-.\python_embeded\python.exe -m pip install flet %PIPargs%
+.\python_embeded\python.exe -I -m pip install flet %PIPargs%
 :: Install Nunchaku wheel ::
-.\python_embeded\python.exe -m pip install https://github.com/nunchaku-tech/nunchaku/releases/download/v0.3.2dev20250715/nunchaku-0.3.2.dev20250715+torch2.7-cp311-cp311-win_amd64.whl %PIPargs%
+.\python_embeded\python.exe -I -m pip install https://github.com/nunchaku-tech/nunchaku/releases/download/v0.3.2dev20250715/nunchaku-0.3.2.dev20250715+torch2.7-cp311-cp311-win_amd64.whl %PIPargs%
 
 :: Extract 'update' folder ::
 cd ..\
@@ -200,11 +192,11 @@ Echo Lib>> python311._pth
 Echo Scripts>> python311._pth
 Echo # import site>> python311._pth
 
-.\python.exe get-pip.py %PIPargs%
-.\python.exe -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128 %PIPargs%
-.\python.exe -m pip install pygit2 %PIPargs%
+.\python.exe -I get-pip.py %PIPargs%
+.\python.exe -I -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128 %PIPargs%
+.\python.exe -I -m pip install pygit2 %PIPargs%
 cd ..\ComfyUI
-..\python_embeded\python.exe -m pip install -r requirements.txt %PIPargs%
+..\python_embeded\python.exe -I -m pip install -r requirements.txt %PIPargs%
 cd ..\
 echo.
 goto :eof
@@ -216,10 +208,10 @@ echo %green%::::::::::::::: Installing%yellow% %git_folder% %green%:::::::::::::
 echo.
 git.exe clone %git_url% ComfyUI/custom_nodes/%git_folder%
 if exist .\ComfyUI\custom_nodes\%git_folder%\requirements.txt (
-	.\python_embeded\python.exe -m pip install -r .\ComfyUI\custom_nodes\%git_folder%\requirements.txt --use-pep517 %PIPargs%
+	.\python_embeded\python.exe -I -m pip install -r .\ComfyUI\custom_nodes\%git_folder%\requirements.txt --use-pep517 %PIPargs%
 )
 if exist .\ComfyUI\custom_nodes\%git_folder%\install.py (
-	.\python_embeded\python.exe .\ComfyUI\custom_nodes\%git_folder%\install.py
+	.\python_embeded\python.exe -I .\ComfyUI\custom_nodes\%git_folder%\install.py
 )
 echo.
 goto :eof
