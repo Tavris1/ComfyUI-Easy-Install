@@ -1,25 +1,26 @@
 @Echo off
+Title Extra Model Paths Maker by ivo v0.55.0
+:: Pixaroma Community Edition ::
 
-Title Extra Model Paths Maker by ivo v0.26.0
-
-set yaml=extra_model_paths.yaml
+set "yaml=extra_model_paths.yaml"
 
 cd /d %~dp0
 
 if not exist checkpoints (
 	Echo.
-	Echo [33mWARNING:[0m [92mPlace this file in shared 'models' folder and rerun it.[0m
+	Echo [33mWARNING:[0m [92mPlace this file in shared 'models' folder and run it again.[0m
 	Echo.
 	Echo Press any key to Exit...&Pause>nul
 	goto :eof
 )
 
-set modelsfolder=%~dp0
-for /f "delims=" %%A in ('cd') do set modelsname=%%~nxA
+set "modelsfolder=%~dp0"
+
+for /f "delims=" %%A in ('cd') do set "modelsname=%%~nxA"
 
 Echo comfyui:>%yaml%
 cd ..\
-Echo     base_path: %cd%\>>%modelsfolder%\%yaml%
+Echo     base_path: %cd%\>>"%modelsfolder%%yaml%"
 cd %modelsfolder%
 Echo     is_default: true>>%yaml%
 Echo.>>%yaml%
