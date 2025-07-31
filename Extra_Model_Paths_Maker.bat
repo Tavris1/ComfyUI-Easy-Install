@@ -1,5 +1,5 @@
 @Echo off
-Title Extra Model Paths Maker by ivo v0.55.0
+Title Extra Model Paths Maker by ivo v0.55.3
 :: Pixaroma Community Edition ::
 
 set "yaml=extra_model_paths.yaml"
