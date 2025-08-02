@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Extra Model Paths Maker for macOS by ivo v0.26.0 (macOS adaptation)
+# Extra Model Paths Maker by ivo v0.55.3
 
 # Set colors
 warning="\033[33m"

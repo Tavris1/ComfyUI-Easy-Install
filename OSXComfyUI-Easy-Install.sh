@@ -1,6 +1,6 @@
 #!/bin/bash
 # ComfyUI Easy Install by ivo - macOS ARM version
-# ComfyUI Easy Install by ivo v0.48.2 (Ep48)
+# ComfyUI Easy Install by ivo v0.55.1 (Ep55)
 # Pixaroma Community Edition
 
 # Set colors
