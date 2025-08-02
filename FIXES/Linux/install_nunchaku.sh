@@ -6,7 +6,7 @@ yellow="\033[93m"
 reset="\033[0m"
 
 # Navigate to ComfyUI-Easy-Install directory
-cd /root/ComfyUI-Easy-Install
+cd /root/ComfyUI-Easy-Install/ComfyUI-Easy-Install
 
 echo -e "${green}::::::::::::::: Installing ${yellow}ComfyUI-nunchaku ${green}::::::::::::::${reset}"
 echo ""
