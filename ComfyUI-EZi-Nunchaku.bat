@@ -102,9 +102,8 @@ call :get_node https://github.com/Lightricks/ComfyUI-LTXVideo					ComfyUI-LTXVid
 call :get_node https://github.com/kijai/ComfyUI-KJNodes							comfyui-kjnodes
 echo %green%::::::::::::::: Installing%yellow% ComfyUI-nunchaku %green%:::::::::::::::%reset%
 echo.
-git.exe clone https://github.com/mit-han-lab/ComfyUI-nunchaku						ComfyUI/custom_nodes/ComfyUI-nunchaku
+git.exe clone https://github.com/mit-han-lab/ComfyUI-nunchaku					ComfyUI/custom_nodes/ComfyUI-nunchaku
 echo.
-
 
 echo %green%::::::::::::::: Installing %yellow%Required Dependencies%green% :::::::::::::::%reset%
 echo.
@@ -193,7 +192,7 @@ Echo Scripts>> python311._pth
 Echo # import site>> python311._pth
 
 .\python.exe -I get-pip.py %PIPargs%
-.\python.exe -I -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128 %PIPargs%
+.\python.exe -I -m pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu128 %PIPargs%
 .\python.exe -I -m pip install pygit2 %PIPargs%
 cd ..\ComfyUI
 ..\python_embeded\python.exe -I -m pip install -r requirements.txt %PIPargs%
