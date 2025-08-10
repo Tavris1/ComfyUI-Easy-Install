@@ -192,7 +192,7 @@ Echo Scripts>> python311._pth
 Echo # import site>> python311._pth
 
 .\python.exe -I get-pip.py %PIPargs%
-.\python.exe -I -m pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu128 %PIPargs%
+.\python.exe -I -m pip install torch==2.8.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128 %PIPargs%
 .\python.exe -I -m pip install pygit2 %PIPargs%
 cd ..\ComfyUI
 ..\python_embeded\python.exe -I -m pip install -r requirements.txt %PIPargs%
