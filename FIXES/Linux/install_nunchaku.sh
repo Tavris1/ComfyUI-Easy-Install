@@ -1,79 +1,135 @@
 #!/bin/bash
+# Script to install ComfyUI-nunchaku and its dependencies
 
 # Set colors
 green="\033[92m"
 yellow="\033[93m"
+red="\033[91m"
 reset="\033[0m"
 
-# Navigate to ComfyUI-Easy-Install directory
-cd /root/ComfyUI-Easy-Install/ComfyUI-Easy-Install
+# Create a temporary script with the exact commands that work
+cat > /tmp/install_nunchaku_inside.sh << 'EOF'
+#!/bin/bash
+# Colors
+green="\033[92m"
+yellow="\033[93m"
+red="\033[91m"
+reset="\033[0m"
 
-echo -e "${green}::::::::::::::: Installing ${yellow}ComfyUI-nunchaku ${green}::::::::::::::${reset}"
-echo ""
-git clone https://github.com/mit-han-lab/ComfyUI-nunchaku /root/ComfyUI-Easy-Install/ComfyUI-Easy-Install/ComfyUI/custom_nodes/ComfyUI-nunchaku
-echo ""
+# Change to the correct directory
+cd /ComfyUI-Easy-Install/ComfyUI-Easy-Install || {
+    echo -e "\033[91mFailed to change directory to /ComfyUI-Easy-Install/ComfyUI-Easy-Install\033[0m"
+    exit 1
+}
 
-echo -e "${green}::::::::::::::: Installing ${yellow}Required Dependencies${green} ::::::::::::::${reset}"
-echo ""
+echo -e "\033[92mCurrent directory: $(pwd)\033[0m"
 
-# Check if Python 3 is installed
-if ! command -v python3 &> /dev/null; then
-    echo -e "${yellow}Python 3 not found. Installing Python 3...${reset}"
-    apt update
-    apt install -y python3 python3-pip python3-venv
+# Activate the virtual environment
+echo -e "\033[92mActivating virtual environment...\033[0m"
+source venv/bin/activate
+
+# Verify activation
+if [ -z "$VIRTUAL_ENV" ]; then
+    echo -e "\033[91mFailed to activate virtual environment\033[0m"
+    exit 1
+fi
+echo -e "\033[92mVirtual environment activated: $VIRTUAL_ENV\033[0m"
+
+# Define paths
+COMFYUI_DIR="$(pwd)/ComfyUI"
+CUSTOM_NODES_DIR="$COMFYUI_DIR/custom_nodes"
+NUNCHAKU_DIR="$CUSTOM_NODES_DIR/ComfyUI-nunchaku"
+
+# Create custom_nodes directory if it doesn't exist
+if [ ! -d "$CUSTOM_NODES_DIR" ]; then
+    echo -e "\033[92mCreating custom_nodes directory\033[0m"
+    mkdir -p "$CUSTOM_NODES_DIR"
 fi
 
-# Install pylatexenc for kokoro
-echo "Installing pylatexenc..."
-python3 -m pip install pylatexenc
+# Clone or update the repository
+if [ ! -d "$NUNCHAKU_DIR" ]; then
+    echo -e "\033[92mCloning ComfyUI-nunchaku repository\033[0m"
+    git clone https://github.com/mit-han-lab/ComfyUI-nunchaku "$NUNCHAKU_DIR"
+else
+    echo -e "\033[92mUpdating existing ComfyUI-nunchaku repository\033[0m"
+    cd "$NUNCHAKU_DIR" && git pull
+    cd - > /dev/null
+fi
 
-# Install onnxruntime
-echo "Installing onnxruntime..."
-python3 -m pip install onnxruntime
+# Install dependencies
+echo -e "\033[92mInstalling dependencies...\033[0m"
+pip install pylatexenc
+pip install onnxruntime
+pip install flet
 
-# Install flet
-echo "Installing flet..."
-python3 -m pip install flet
-
-# Install Nunchaku
-echo "Installing Nunchaku..."
-# For Linux, we need to find the appropriate wheel or install from source
-# First, try to find a compatible wheel
-TORCH_VERSION=$(python3 -c "import torch; print(torch.__version__.split('+')[0])" 2>/dev/null || echo "unknown")
-PYTHON_VERSION=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+# Install Nunchaku Python package
+echo -e "\033[92mInstalling Nunchaku Python package...\033[0m"
 ARCH=$(uname -m)
+PYTHON_VERSION=$(python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+echo -e "\033[92mDetected: Python ${PYTHON_VERSION}, Architecture ${ARCH}\033[0m"
 
-echo "Detected: Python ${PYTHON_VERSION}, PyTorch ${TORCH_VERSION}, Architecture ${ARCH}"
-
-# Try to install the latest version from GitHub
 if [ "$ARCH" = "x86_64" ]; then
-    # Try to find a compatible wheel for x86_64 Linux
-    echo "Attempting to install Nunchaku from wheel..."
-    python3 -m pip install https://github.com/nunchaku-tech/nunchaku/releases/download/v0.3.2dev20250715/nunchaku-0.3.2.dev20250715+torch2.7-cp311-cp311-linux_x86_64.whl || \
-    python3 -m pip install https://github.com/nunchaku-tech/nunchaku/releases/download/v0.3.2dev20250715/nunchaku-0.3.2.dev20250715+torch2.7-cp310-cp310-linux_x86_64.whl || \
-    python3 -m pip install https://github.com/nunchaku-tech/nunchaku/releases/download/v0.3.2dev20250715/nunchaku-0.3.2.dev20250715+torch2.7-cp39-cp39-linux_x86_64.whl || \
-    echo "Could not find a compatible wheel. You may need to build from source."
+    pip install https://github.com/nunchaku-tech/nunchaku/releases/download/v0.3.2dev20250715/nunchaku-0.3.2.dev20250715+torch2.7-cp311-cp311-linux_x86_64.whl || \
+    pip install https://github.com/nunchaku-tech/nunchaku/releases/download/v0.3.2dev20250715/nunchaku-0.3.2.dev20250715+torch2.7-cp310-cp310-linux_x86_64.whl || \
+    pip install https://github.com/nunchaku-tech/nunchaku/releases/download/v0.3.2dev20250715/nunchaku-0.3.2.dev20250715+torch2.7-cp39-cp39-linux_x86_64.whl || \
+    echo -e "\033[93mCould not find a compatible wheel\033[0m"
 elif [ "$ARCH" = "aarch64" ]; then
-    # Try to find a compatible wheel for ARM64 Linux
-    echo "Attempting to install Nunchaku from wheel for ARM64..."
-    python3 -m pip install https://github.com/nunchaku-tech/nunchaku/releases/download/v0.3.2dev20250715/nunchaku-0.3.2.dev20250715+torch2.7-cp311-cp311-linux_aarch64.whl || \
-    python3 -m pip install https://github.com/nunchaku-tech/nunchaku/releases/download/v0.3.2dev20250715/nunchaku-0.3.2.dev20250715+torch2.7-cp310-cp310-linux_aarch64.whl || \
-    python3 -m pip install https://github.com/nunchaku-tech/nunchaku/releases/download/v0.3.2dev20250715/nunchaku-0.3.2.dev20250715+torch2.7-cp39-cp39-linux_aarch64.whl || \
-    echo "Could not find a compatible wheel. You may need to build from source."
-else
-    echo "Unsupported architecture: ${ARCH}. You may need to build from source."
+    pip install https://github.com/nunchaku-tech/nunchaku/releases/download/v0.3.2dev20250715/nunchaku-0.3.2.dev20250715+torch2.7-cp311-cp311-linux_aarch64.whl || \
+    pip install https://github.com/nunchaku-tech/nunchaku/releases/download/v0.3.2dev20250715/nunchaku-0.3.2.dev20250715+torch2.7-cp310-cp310-linux_aarch64.whl || \
+    pip install https://github.com/nunchaku-tech/nunchaku/releases/download/v0.3.2dev20250715/nunchaku-0.3.2.dev20250715+torch2.7-cp39-cp39-linux_aarch64.whl || \
+    echo -e "\033[93mCould not find a compatible wheel\033[0m"
 fi
 
-# Check if nunchaku was installed successfully
-if python3 -c "import nunchaku" &> /dev/null; then
-    echo -e "${green}Nunchaku installed successfully!${reset}"
+# Install the ComfyUI-nunchaku node
+echo -e "\033[92mInstalling ComfyUI-nunchaku node...\033[0m"
+if [ -d "$NUNCHAKU_DIR" ]; then
+    cd "$NUNCHAKU_DIR"
+    
+    # Install any requirements for the node
+    if [ -f "requirements.txt" ]; then
+        echo -e "\033[92mInstalling node requirements...\033[0m"
+        pip install -r requirements.txt --use-pep517
+    fi
+    
+    # Run any setup script if it exists
+    if [ -f "setup.py" ]; then
+        echo -e "\033[92mRunning setup.py...\033[0m"
+        pip install -e .
+    fi
+    
+    # Return to the original directory
+    cd - > /dev/null
+    
+    echo -e "\033[92mComfyUI-nunchaku node installed successfully!\033[0m"
 else
-    echo -e "${yellow}Warning: Nunchaku may not have been installed correctly.${reset}"
-    echo "You may need to build it from source or find a compatible wheel."
-    echo "Check the Nunchaku GitHub repository for more information: https://github.com/nunchaku-tech/nunchaku"
+    echo -e "\033[91mFailed to find ComfyUI-nunchaku directory\033[0m"
 fi
 
-echo ""
-echo -e "${green}Installation complete!${reset}"
-echo "You may need to restart ComfyUI for the changes to take effect."
-echo ""
+# Check if Nunchaku was installed
+if python -c "import nunchaku" 2>/dev/null; then
+    echo -e "\033[92mNunchaku Python package was installed successfully!\033[0m"
+else
+    echo -e "\033[93mWarning: Nunchaku Python package may not have been installed correctly\033[0m"
+fi
+
+# Deactivate the virtual environment
+deactivate
+
+echo -e "\033[92mInstallation complete!\033[0m"
+echo -e "\033[92mYou may need to restart ComfyUI for the changes to take effect.\033[0m"
+EOF
+
+# Make the temporary script executable
+chmod +x /tmp/install_nunchaku_inside.sh
+
+# Copy the script to the container
+echo -e "${green}Copying installation script to container...${reset}"
+pct push 100 /tmp/install_nunchaku_inside.sh /root/install_nunchaku_inside.sh --perms 755
+
+# Execute the script inside the container
+echo -e "${green}Executing installation script inside container...${reset}"
+pct exec 100 -- bash -c '/root/install_nunchaku_inside.sh'
+
+# Clean up
+rm /tmp/install_nunchaku_inside.sh
+echo -e "${green}Installation process completed.${reset}"
