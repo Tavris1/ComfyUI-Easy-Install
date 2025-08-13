@@ -76,7 +76,7 @@ source "\$VENV_DIR/bin/activate"
 cd "\$COMFYUI_DIR"
 
 # Use --listen to allow access from other computers on the network
-python main.py --use-sage-attention --listen
+python main.py --use-sage-attention --listen 
 EOL
 
 chmod +x "$LAUNCHER_SCRIPT_PATH"
