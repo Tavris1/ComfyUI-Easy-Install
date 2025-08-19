@@ -54,8 +54,8 @@
 3. Double-click **`ComfyUI-EZi-Nunchaku.bat`** to start the setup  
     - **SageAttention** is optional and can be installed from **Add-ons** folder after the installation is complete  
 > [!IMPORTANT]
->> - Do **not** extract to system-protected folders such as **`Program Files`**, **`Windows`**, or directly to **`C:\`**
->> - Do **not** use **`Run as Аdministrator`** when launching the installer
+>> - Do **not** run the installer as **Administrator**
+>> - Avoid system folders (**Program Files**, **Windows**, **C:\\** root)  
 
 > [!NOTE]
 >> - This installation won't affect existing ComfyUI installs. Multiple ComfyUIs are supported.  
@@ -93,6 +93,7 @@ Questions or feedback? Reach out on [Pixaroma Discord](https://discord.com/invit
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)  
+
 
 
 
