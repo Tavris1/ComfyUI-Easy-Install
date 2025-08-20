@@ -1,0 +1,47 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+LICENSE
+*.md
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Docker files (except Dockerfile)
+docker-compose.yml
+.dockerignore
+
+# Scripts (keep only the main installation script)
+Scripts/
+FIXES/
+Update/
+*.bat
+*.sh
+!ComfyUI-Easy-Install-Linux.sh
+
+# Images
+images/
+
+# OS specific installers
+OSX*.sh
+LinuxUpdate*.sh
+
+# Backup and helper files
+Helper-CEI.zip

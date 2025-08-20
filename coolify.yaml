@@ -1,0 +1,55 @@
+# Coolify Configuration for ComfyUI Easy Install
+# This file contains deployment settings for Coolify
+
+application:
+  name: comfyui-easy-install
+  type: docker-compose
+  repository:
+    url: https://github.com/your-username/ComfyUI-Easy-Install.git
+    branch: main
+    type: git
+
+build:
+  dockerfile: Dockerfile
+  context: .
+  args: {}
+
+deploy:
+  port: 8188
+  protocol: http
+  healthcheck:
+    path: /
+    interval: 30s
+    timeout: 10s
+    retries: 3
+    start_period: 120s
+
+resources:
+  memory:
+    limit: 8G
+    reservation: 4G
+  cpu:
+    limit: 4
+    reservation: 2
+
+environment:
+  - PYTHONUNBUFFERED=1
+  - PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
+
+volumes:
+  - ./models:/app/ComfyUI-Easy-Install/ComfyUI/models
+  - ./output:/app/ComfyUI-Easy-Install/ComfyUI/output
+  - ./input:/app/ComfyUI-Easy-Install/ComfyUI/input
+  - ./temp:/app/ComfyUI-Easy-Install/ComfyUI/temp
+  - ./user:/app/ComfyUI-Easy-Install/ComfyUI/user
+  - ./custom_nodes:/app/ComfyUI-Easy-Install/ComfyUI/custom_nodes
+
+restart_policy: unless-stopped
+
+# GPU Configuration (uncomment if using GPU)
+# gpu:
+#   runtime: nvidia
+#   devices: all
+#   capabilities:
+#     - compute
+#     - utility

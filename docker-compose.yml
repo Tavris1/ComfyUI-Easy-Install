@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  comfyui-easy-install:
+    build: .
+    container_name: comfyui-easy-install
+    ports:
+      - "8188:8188"
+    volumes:
+      # Persist models and outputs
+      - ./models:/app/ComfyUI-Easy-Install/ComfyUI/models
+      - ./output:/app/ComfyUI-Easy-Install/ComfyUI/output
+      - ./input:/app/ComfyUI-Easy-Install/ComfyUI/input
+      - ./temp:/app/ComfyUI-Easy-Install/ComfyUI/temp
+      - ./user:/app/ComfyUI-Easy-Install/ComfyUI/user
+      # Optional: Mount custom nodes
+      - ./custom_nodes:/app/ComfyUI-Easy-Install/ComfyUI/custom_nodes
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
+      # GPU settings (uncomment if using GPU)
+      # - NVIDIA_VISIBLE_DEVICES=all
+      # - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8188/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 4G
+    # Uncomment for GPU support
+    # runtime: nvidia
