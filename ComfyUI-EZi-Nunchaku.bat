@@ -114,7 +114,7 @@ echo.
 :: Install flet ::
 .\python_embeded\python.exe -I -m pip install flet %PIPargs%
 :: Install Nunchaku wheel ::
-.\python_embeded\python.exe -I -m pip install https://github.com/nunchaku-tech/nunchaku/releases/download/v0.3.2/nunchaku-0.3.2+torch2.8-cp311-cp311-win_amd64.whl %PIPargs%
+.\python_embeded\python.exe -I -m pip install https://github.com/nunchaku-tech/nunchaku/releases/download/v1.0.0dev20250823/nunchaku-1.0.0.dev20250823+torch2.8-cp311-cp311-win_amd64.whl %PIPargs%
 .\python_embeded\python.exe -I -m pip uninstall numpy -y
 .\python_embeded\python.exe -I -m pip install numpy==1.26.4 --no-color %PIPargs%
 
