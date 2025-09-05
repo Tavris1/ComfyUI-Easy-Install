@@ -1,5 +1,5 @@
 @echo off
-Title ComfyUI Easy Install by ivo v0.58.0 (Ep58)
+Title ComfyUI Easy Install by ivo v0.60.0 (Ep60)
 :: Pixaroma Community Edition ::
 
 :: Set colors ::
