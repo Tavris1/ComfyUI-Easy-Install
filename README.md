@@ -45,6 +45,7 @@
 - [Tiled Diffusion & VAE](https://github.com/shiimizu/ComfyUI-TiledDiffusion)  
 - [LTXVideo](https://github.com/Lightricks/ComfyUI-LTXVideo)  
 - [KJNodes](https://github.com/kijai/ComfyUI-KJNodes)
+- [WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideoWrapper)
 
 ## Optional **Add-ons**  
 - [Nunchaku](https://github.com/mit-han-lab/ComfyUI-nunchaku)
@@ -101,6 +102,7 @@ Questions or feedback? Reach out on [Pixaroma Discord](https://discord.com/invit
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)  
+
 
 
 
