@@ -1,5 +1,5 @@
 @echo off
-Title ComfyUI Easy Install by ivo v0.60.0 (Ep60)
+Title ComfyUI Easy Install by ivo v0.61.0 (Ep61)
 :: Pixaroma Community Edition ::
 
 :: Set colors ::
@@ -100,6 +100,7 @@ call :get_node https://github.com/kk8bit/KayTool								kaytool
 call :get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion				ComfyUI-TiledDiffusion
 call :get_node https://github.com/Lightricks/ComfyUI-LTXVideo					ComfyUI-LTXVideo
 call :get_node https://github.com/kijai/ComfyUI-KJNodes							comfyui-kjnodes
+call :get_node https://github.com/kijai/ComfyUI-WanVideoWrapper					ComfyUI-WanVideoWrapper
 
 echo %green%::::::::::::::: Installing %yellow%Required Dependencies%green% :::::::::::::::%reset%
 echo.
