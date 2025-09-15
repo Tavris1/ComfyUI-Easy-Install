@@ -1,5 +1,5 @@
 @echo off
-Title ComfyUI Easy Install by ivo v0.61.0 (Ep61)
+Title ComfyUI Easy Install by ivo v0.62.0 (Ep62)
 :: Pixaroma Community Edition ::
 
 :: Set colors ::
@@ -87,10 +87,10 @@ call :get_node https://github.com/spinagon/ComfyUI-seamless-tiling				comfyui-se
 call :get_node https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch		comfyui-inpaint-cropandstitch
 call :get_node https://github.com/Lerc/canvas_tab								canvas_tab
 call :get_node https://github.com/1038lab/ComfyUI-OmniGen						comfyui-omnigen
-call :get_node https://github.com/john-mnz/ComfyUI-Inspyrenet-Rembg				comfyui-inspyrenet-rembg
+REM call :get_node https://github.com/john-mnz/ComfyUI-Inspyrenet-Rembg				comfyui-inspyrenet-rembg
 call :get_node https://github.com/kaibioinfo/ComfyUI_AdvancedRefluxControl		ComfyUI_AdvancedRefluxControl
 call :get_node https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite			comfyui-videohelpersuite
-call :get_node https://github.com/PowerHouseMan/ComfyUI-AdvancedLivePortrait	comfyui-advancedliveportrait
+REM call :get_node https://github.com/PowerHouseMan/ComfyUI-AdvancedLivePortrait	comfyui-advancedliveportrait
 call :get_node https://github.com/Yanick112/ComfyUI-ToSVG						ComfyUI-ToSVG
 call :get_node https://github.com/stavsap/comfyui-kokoro						comfyui-kokoro
 call :get_node https://github.com/CY-CHENYUE/ComfyUI-Janus-Pro					janus-pro
@@ -108,8 +108,13 @@ echo.
 .\python_embeded\python.exe -I -m pip install https://www.piwheels.org/simple/pylatexenc/pylatexenc-3.0a32-py3-none-any.whl %PIPargs%
 :: Install onnxruntime ::
 .\python_embeded\python.exe -I -m pip install onnxruntime-gpu %PIPargs%
-:: Install flet ::
-.\python_embeded\python.exe -I -m pip install flet %PIPargs%
+:: Install others ::
+.\python_embeded\python.exe -I -m pip install onnx %PIPargs%
+.\python_embeded\python.exe -I -m pip install dill %PIPargs%
+.\python_embeded\python.exe -I -m pip install ultralytics %PIPargs%
+
+REM .\python_embeded\python.exe -I -m pip install flet %PIPargs%
+REM .\python_embeded\python.exe -I -m pip install transparent_background %PIPargs%
 
 :: Extract 'update' folder ::
 cd ..\
@@ -189,6 +194,7 @@ Echo # import site>> python311._pth
 .\python.exe -I get-pip.py %PIPargs%
 .\python.exe -I -m pip install torch==2.8.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128 %PIPargs%
 .\python.exe -I -m pip install pygit2 %PIPargs%
+.\python.exe -I -m pip install setuptools %PIPargs%
 cd ..\ComfyUI
 ..\python_embeded\python.exe -I -m pip install -r requirements.txt %PIPargs%
 cd ..\
