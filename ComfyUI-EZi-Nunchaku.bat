@@ -87,10 +87,10 @@ call :get_node https://github.com/spinagon/ComfyUI-seamless-tiling				comfyui-se
 call :get_node https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch		comfyui-inpaint-cropandstitch
 call :get_node https://github.com/Lerc/canvas_tab								canvas_tab
 call :get_node https://github.com/1038lab/ComfyUI-OmniGen						comfyui-omnigen
-call :get_node https://github.com/john-mnz/ComfyUI-Inspyrenet-Rembg				comfyui-inspyrenet-rembg
+REM call :get_node https://github.com/john-mnz/ComfyUI-Inspyrenet-Rembg				comfyui-inspyrenet-rembg
 call :get_node https://github.com/kaibioinfo/ComfyUI_AdvancedRefluxControl		ComfyUI_AdvancedRefluxControl
 call :get_node https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite			comfyui-videohelpersuite
-call :get_node https://github.com/PowerHouseMan/ComfyUI-AdvancedLivePortrait	comfyui-advancedliveportrait
+REM call :get_node https://github.com/PowerHouseMan/ComfyUI-AdvancedLivePortrait	comfyui-advancedliveportrait
 call :get_node https://github.com/Yanick112/ComfyUI-ToSVG						ComfyUI-ToSVG
 call :get_node https://github.com/stavsap/comfyui-kokoro						comfyui-kokoro
 call :get_node https://github.com/CY-CHENYUE/ComfyUI-Janus-Pro					janus-pro
@@ -98,8 +98,11 @@ call :get_node https://github.com/smthemex/ComfyUI_Sonic						ComfyUI_Sonic
 call :get_node https://github.com/welltop-cn/ComfyUI-TeaCache					teacache
 call :get_node https://github.com/kk8bit/KayTool								kaytool
 call :get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion				ComfyUI-TiledDiffusion
+set GIT_LFS_SKIP_SMUDGE=1
 call :get_node https://github.com/Lightricks/ComfyUI-LTXVideo					ComfyUI-LTXVideo
+set GIT_LFS_SKIP_SMUDGE=
 call :get_node https://github.com/kijai/ComfyUI-KJNodes							comfyui-kjnodes
+call :get_node https://github.com/kijai/ComfyUI-WanVideoWrapper					ComfyUI-WanVideoWrapper
 echo %green%::::::::::::::: Installing%yellow% ComfyUI-nunchaku %green%:::::::::::::::%reset%
 echo.
 git.exe clone https://github.com/mit-han-lab/ComfyUI-nunchaku					ComfyUI/custom_nodes/ComfyUI-nunchaku
@@ -111,8 +114,10 @@ echo.
 .\python_embeded\python.exe -I -m pip install https://www.piwheels.org/simple/pylatexenc/pylatexenc-3.0a32-py3-none-any.whl %PIPargs%
 :: Install onnxruntime ::
 .\python_embeded\python.exe -I -m pip install onnxruntime-gpu %PIPargs%
-:: Install flet ::
-.\python_embeded\python.exe -I -m pip install flet %PIPargs%
+:: Install others ::
+.\python_embeded\python.exe -I -m pip install onnx %PIPargs%
+.\python_embeded\python.exe -I -m pip install dill %PIPargs%
+.\python_embeded\python.exe -I -m pip install ultralytics %PIPargs%
 :: Install Nunchaku wheel ::
 .\python_embeded\python.exe -I -m pip install https://github.com/nunchaku-tech/nunchaku/releases/download/v1.0.0/nunchaku-1.0.0+torch2.8-cp311-cp311-win_amd64.whl %PIPargs%
 .\python_embeded\python.exe -I -m pip uninstall numpy -y
