@@ -1,4 +1,12 @@
-# ComfyUI-Easy-Install  
+<br/>
+
+> [!NOTE]
+> ⚠️ This branch is deprecated. Please use the Windows branch:  
+> https://github.com/Tavris1/ComfyUI-Easy-Install/tree/Windows  
+
+<br/>
+
+# ComfyUI-Easy-Install (Nunchaku Edition)  
 > Portable **ComfyUI** (Nunchaku Edition) for **Windows** 🔹 Pixaroma Community Edition 🔹
 >
 > Dedicated to the **Pixaroma** team  
@@ -93,6 +101,7 @@ Questions or feedback? Reach out on [Pixaroma Discord](https://discord.com/invit
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)  
+
 
 
 
