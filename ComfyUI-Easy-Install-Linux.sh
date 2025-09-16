@@ -274,13 +274,11 @@ get_node "https://github.com/welltop-cn/ComfyUI-TeaCache" "teacache"
 get_node "https://github.com/kk8bit/KayTool" "kaytool"
 get_node "https://github.com/shiimizu/ComfyUI-TiledDiffusion" "ComfyUI-TiledDiffusion"
 set GIT_LFS_SKIP_SMUDGE=1
-# get_node "https://github.com/Lightricks/ComfyUI-LTXVideo" "ComfyUI-LTXVideo"
+get_node "https://github.com/Lightricks/ComfyUI-LTXVideo" "ComfyUI-LTXVideo"
 set GIT_LFS_SKIP_SMUDGE=
 get_node "https://github.com/kijai/ComfyUI-KJNodes" "comfyui-kjnodes"
 get_node "https://github.com/kijai/ComfyUI-WanVideoWrapper" "ComfyUI-WanVideoWrapper"
 
-
-.\python_embeded\python.exe -I -m pip install  stringzilla==3.12.6
 
 # Install onnxruntime
 echo -e "${green}::::::::::::::: Installing onnxruntime ${green}::::::::::::::${reset}"
