@@ -1,6 +1,6 @@
 #!/bin/bash
 # ComfyUI Easy Install by ivo - Linux version
-# ComfyUI Easy Install by ivo v0.55.1 (Ep55)
+# ComfyUI Easy Install by ivo v0.62.3 (Ep62)
 # Pixaroma Community Edition
 
 # Set colors
@@ -270,8 +270,9 @@ get_node "https://github.com/smthemex/ComfyUI_Sonic" "ComfyUI_Sonic"
 get_node "https://github.com/welltop-cn/ComfyUI-TeaCache" "teacache"
 get_node "https://github.com/kk8bit/KayTool" "kaytool"
 get_node "https://github.com/shiimizu/ComfyUI-TiledDiffusion" "ComfyUI-TiledDiffusion"
-get_node "https://github.com/Lightricks/ComfyUI-LTXVideo" "ComfyUI-LTXVideo"
+# get_node "https://github.com/Lightricks/ComfyUI-LTXVideo" "ComfyUI-LTXVideo"
 get_node "https://github.com/kijai/ComfyUI-KJNodes" "comfyui-kjnodes"
+get_node "https://github.com/kijai/ComfyUI-WanVideoWrapper" "ComfyUI-WanVideoWrapper"
 
 # Install onnxruntime
 echo -e "${green}::::::::::::::: Installing onnxruntime ${green}::::::::::::::${reset}"
