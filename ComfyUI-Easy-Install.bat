@@ -1,5 +1,5 @@
 @echo off
-Title ComfyUI Easy Install by ivo v0.62.3 (Ep62)
+Title ComfyUI Easy Install by ivo v0.62.5 (Ep62)
 :: Pixaroma Community Edition ::
 
 :: Set colors ::
@@ -71,9 +71,12 @@ call :install_comfyui
 
 :: Install Pixaroma's Related Nodes ::
 call :get_node https://github.com/Comfy-Org/ComfyUI-Manager						comfyui-manager
+:: Install working version of stringzilla (damn it) ::
+.\python_embeded\python.exe -I -m pip install  stringzilla==3.12.6 %PIPargs%
+::~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 call :get_node https://github.com/WASasquatch/was-node-suite-comfyui			was-node-suite-comfyui
 call :get_node https://github.com/yolain/ComfyUI-Easy-Use						ComfyUI-Easy-Use
-REM call :get_node https://github.com/Fannovel16/comfyui_controlnet_aux				comfyui_controlnet_aux
+call :get_node https://github.com/Fannovel16/comfyui_controlnet_aux				comfyui_controlnet_aux
 call :get_node https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes			ComfyUI_Comfyroll_CustomNodes
 call :get_node https://github.com/crystian/ComfyUI-Crystools					ComfyUI-Crystools
 call :get_node https://github.com/rgthree/rgthree-comfy							rgthree-comfy
@@ -87,10 +90,10 @@ call :get_node https://github.com/spinagon/ComfyUI-seamless-tiling				comfyui-se
 call :get_node https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch		comfyui-inpaint-cropandstitch
 call :get_node https://github.com/Lerc/canvas_tab								canvas_tab
 call :get_node https://github.com/1038lab/ComfyUI-OmniGen						comfyui-omnigen
-REM call :get_node https://github.com/john-mnz/ComfyUI-Inspyrenet-Rembg				comfyui-inspyrenet-rembg
+call :get_node https://github.com/john-mnz/ComfyUI-Inspyrenet-Rembg				comfyui-inspyrenet-rembg
 call :get_node https://github.com/kaibioinfo/ComfyUI_AdvancedRefluxControl		ComfyUI_AdvancedRefluxControl
 call :get_node https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite			comfyui-videohelpersuite
-REM call :get_node https://github.com/PowerHouseMan/ComfyUI-AdvancedLivePortrait	comfyui-advancedliveportrait
+call :get_node https://github.com/PowerHouseMan/ComfyUI-AdvancedLivePortrait	comfyui-advancedliveportrait
 call :get_node https://github.com/Yanick112/ComfyUI-ToSVG						ComfyUI-ToSVG
 call :get_node https://github.com/stavsap/comfyui-kokoro						comfyui-kokoro
 call :get_node https://github.com/CY-CHENYUE/ComfyUI-Janus-Pro					janus-pro
@@ -111,11 +114,11 @@ echo.
 :: Install onnxruntime ::
 .\python_embeded\python.exe -I -m pip install onnxruntime-gpu %PIPargs%
 :: Install others ::
-.\python_embeded\python.exe -I -m pip install mediapipe --no-color %PIPargs%
-.\python_embeded\python.exe -I -m pip install onnx %PIPargs%
-.\python_embeded\python.exe -I -m pip install dill %PIPargs%
-.\python_embeded\python.exe -I -m pip install ultralytics %PIPargs%
-.\python_embeded\python.exe -I -m pip install flet %PIPargs%
+REM .\python_embeded\python.exe -I -m pip install mediapipe --no-color %PIPargs%
+REM .\python_embeded\python.exe -I -m pip install onnx %PIPargs%
+REM .\python_embeded\python.exe -I -m pip install dill %PIPargs%
+REM .\python_embeded\python.exe -I -m pip install ultralytics %PIPargs%
+REM .\python_embeded\python.exe -I -m pip install flet %PIPargs%
 
 :: Extract 'update' folder ::
 cd ..\
