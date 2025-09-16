@@ -236,6 +236,9 @@ install_comfyui
 
 # Install Pixaroma's Related Nodes
 get_node "https://github.com/Comfy-Org/ComfyUI-Manager" "comfyui-manager"
+:: Install working version of stringzilla (damn it) ::
+python3 -m pip install --no-cache-dir stringzilla==3.12.6 $silent
+:: Install WAS Node Suite ::
 get_node "https://github.com/WASasquatch/was-node-suite-comfyui" "was-node-suite-comfyui"
 get_node "https://github.com/yolain/ComfyUI-Easy-Use" "ComfyUI-Easy-Use"
 get_node "https://github.com/Fannovel16/comfyui_controlnet_aux" "comfyui_controlnet_aux"
@@ -275,6 +278,9 @@ set GIT_LFS_SKIP_SMUDGE=1
 set GIT_LFS_SKIP_SMUDGE=
 get_node "https://github.com/kijai/ComfyUI-KJNodes" "comfyui-kjnodes"
 get_node "https://github.com/kijai/ComfyUI-WanVideoWrapper" "ComfyUI-WanVideoWrapper"
+
+
+.\python_embeded\python.exe -I -m pip install  stringzilla==3.12.6
 
 # Install onnxruntime
 echo -e "${green}::::::::::::::: Installing onnxruntime ${green}::::::::::::::${reset}"
