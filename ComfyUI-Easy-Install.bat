@@ -1,5 +1,5 @@
 @echo off
-Title ComfyUI Easy Install by ivo v0.62.1 (Ep62)
+Title ComfyUI Easy Install by ivo v0.62.2 (Ep62)
 :: Pixaroma Community Edition ::
 
 :: Set colors ::
@@ -98,9 +98,9 @@ call :get_node https://github.com/smthemex/ComfyUI_Sonic						ComfyUI_Sonic
 call :get_node https://github.com/welltop-cn/ComfyUI-TeaCache					teacache
 call :get_node https://github.com/kk8bit/KayTool								kaytool
 call :get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion				ComfyUI-TiledDiffusion
-set GIT_LFS_SKIP_SMUDGE=1
-call :get_node https://github.com/Lightricks/ComfyUI-LTXVideo					ComfyUI-LTXVideo
-set GIT_LFS_SKIP_SMUDGE=
+REM set GIT_LFS_SKIP_SMUDGE=1
+REM call :get_node https://github.com/Lightricks/ComfyUI-LTXVideo					ComfyUI-LTXVideo
+REM set GIT_LFS_SKIP_SMUDGE=
 call :get_node https://github.com/kijai/ComfyUI-KJNodes							comfyui-kjnodes
 call :get_node https://github.com/kijai/ComfyUI-WanVideoWrapper					ComfyUI-WanVideoWrapper
 
