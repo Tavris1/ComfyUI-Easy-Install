@@ -1,5 +1,5 @@
 @echo off
-Title ComfyUI Easy Install by ivo v0.62.2 (Ep62)
+Title ComfyUI Easy Install by ivo v0.62.3 (Ep62)
 :: Pixaroma Community Edition ::
 
 :: Set colors ::
@@ -73,7 +73,7 @@ call :install_comfyui
 call :get_node https://github.com/Comfy-Org/ComfyUI-Manager						comfyui-manager
 call :get_node https://github.com/WASasquatch/was-node-suite-comfyui			was-node-suite-comfyui
 call :get_node https://github.com/yolain/ComfyUI-Easy-Use						ComfyUI-Easy-Use
-call :get_node https://github.com/Fannovel16/comfyui_controlnet_aux				comfyui_controlnet_aux
+REM call :get_node https://github.com/Fannovel16/comfyui_controlnet_aux				comfyui_controlnet_aux
 call :get_node https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes			ComfyUI_Comfyroll_CustomNodes
 call :get_node https://github.com/crystian/ComfyUI-Crystools					ComfyUI-Crystools
 call :get_node https://github.com/rgthree/rgthree-comfy							rgthree-comfy
@@ -98,9 +98,9 @@ call :get_node https://github.com/smthemex/ComfyUI_Sonic						ComfyUI_Sonic
 call :get_node https://github.com/welltop-cn/ComfyUI-TeaCache					teacache
 call :get_node https://github.com/kk8bit/KayTool								kaytool
 call :get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion				ComfyUI-TiledDiffusion
-REM set GIT_LFS_SKIP_SMUDGE=1
-REM call :get_node https://github.com/Lightricks/ComfyUI-LTXVideo					ComfyUI-LTXVideo
-REM set GIT_LFS_SKIP_SMUDGE=
+set GIT_LFS_SKIP_SMUDGE=1
+call :get_node https://github.com/Lightricks/ComfyUI-LTXVideo					ComfyUI-LTXVideo
+set GIT_LFS_SKIP_SMUDGE=
 call :get_node https://github.com/kijai/ComfyUI-KJNodes							comfyui-kjnodes
 call :get_node https://github.com/kijai/ComfyUI-WanVideoWrapper					ComfyUI-WanVideoWrapper
 
@@ -111,12 +111,11 @@ echo.
 :: Install onnxruntime ::
 .\python_embeded\python.exe -I -m pip install onnxruntime-gpu %PIPargs%
 :: Install others ::
+.\python_embeded\python.exe -I -m pip install mediapipe --no-color %PIPargs%
 .\python_embeded\python.exe -I -m pip install onnx %PIPargs%
 .\python_embeded\python.exe -I -m pip install dill %PIPargs%
 .\python_embeded\python.exe -I -m pip install ultralytics %PIPargs%
-
-REM .\python_embeded\python.exe -I -m pip install flet %PIPargs%
-REM .\python_embeded\python.exe -I -m pip install transparent_background %PIPargs%
+.\python_embeded\python.exe -I -m pip install flet %PIPargs%
 
 :: Extract 'update' folder ::
 cd ..\
