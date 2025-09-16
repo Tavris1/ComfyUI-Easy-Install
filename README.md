@@ -57,7 +57,7 @@
 ## Windows Installation in 3 Steps
 [ ](https://github.com/user-attachments/files/22187257/ComfyUI-Easy-Install.zip)
 
-1. Download **ComfyUI-Easy-Install** with **Nunchaku** [:arrow_forward:HERE](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/Nunchaku(1.0.0)/ComfyUI-Nunchaku.zip)  
+1. Download **ComfyUI-Easy-Install** with **Nunchaku** [:arrow_forward:HERE](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/Nunchaku(1.0.2)/ComfyUI-Nunchaku.zip)  
 2. Extract the ZIP file into a new folder  
 3. Double-click **`ComfyUI-EZi-Nunchaku.bat`** to start the setup  
     - **SageAttention** is optional and can be installed from **Add-ons** folder after the installation is complete  
@@ -101,6 +101,7 @@ Questions or feedback? Reach out on [Pixaroma Discord](https://discord.com/invit
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)  
+
 
 
 
