@@ -31,9 +31,11 @@
 - [seamless-tiling](https://github.com/spinagon/ComfyUI-seamless-tiling)  
 - [Inpaint-CropAndStitch](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch)  
 - [canvas_tab](https://github.com/Lerc/canvas_tab)  
-- [OmniGen](https://github.com/1038lab/ComfyUI-OmniGen)  <!-- - [Inspyrenet-Rembg](https://github.com/john-mnz/ComfyUI-Inspyrenet-Rembg)  -->
+- [OmniGen](https://github.com/1038lab/ComfyUI-OmniGen)  
+- [Inspyrenet-Rembg](https://github.com/john-mnz/ComfyUI-Inspyrenet-Rembg)  
 - [AdvancedReduxControl](https://github.com/kaibioinfo/ComfyUI_AdvancedRefluxControl)  
-- [VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite)  <!-- - [AdvancedLivePortrait](https://github.com/PowerHouseMan/ComfyUI-AdvancedLivePortrait)  -->
+- [VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite)  
+- [AdvancedLivePortrait](https://github.com/PowerHouseMan/ComfyUI-AdvancedLivePortrait)  
 - [ComfyUI-ToSVG](https://github.com/Yanick112/ComfyUI-ToSVG)  
 - [Kokoro](https://github.com/stavsap/comfyui-kokoro)  
 - [Janus-Pro](https://github.com/CY-CHENYUE/ComfyUI-Janus-Pro)  
@@ -100,6 +102,7 @@ Questions or feedback? Reach out on [Pixaroma Discord](https://discord.com/invit
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)  
+
 
 
 
