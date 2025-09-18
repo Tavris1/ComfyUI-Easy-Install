@@ -236,9 +236,9 @@ install_comfyui
 
 # Install Pixaroma's Related Nodes
 get_node "https://github.com/Comfy-Org/ComfyUI-Manager" "comfyui-manager"
-:: Install working version of stringzilla (damn it) ::
+# Install working version of stringzilla (damn it)
 python3 -m pip install --no-cache-dir stringzilla==3.12.6 $silent
-:: Install WAS Node Suite ::
+# Install WAS Node Suite
 get_node "https://github.com/WASasquatch/was-node-suite-comfyui" "was-node-suite-comfyui"
 get_node "https://github.com/yolain/ComfyUI-Easy-Use" "ComfyUI-Easy-Use"
 get_node "https://github.com/Fannovel16/comfyui_controlnet_aux" "comfyui_controlnet_aux"
