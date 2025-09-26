@@ -57,7 +57,7 @@
 1. Download the latest release [:arrow_forward:HERE](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)  
 2. Extract the ZIP file into a new folder  
 3. Double-click **`ComfyUI-Easy-Install.bat`** to start the setup  
-    - **Nunchaku** and **SageAttention** are optional and can be installed from **Add-ons** folder after the installation is complete
+    - **Nunchaku**, **SageAttention** and **InsightFace** are optional and can be installed from **Add-ons** folder after the installation is complete
 
 > [!IMPORTANT]
 >> - Do **not** run the installer as **Administrator**
@@ -103,6 +103,7 @@ Questions or feedback? Reach out on [Pixaroma Discord](https://discord.com/invit
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)  
+
 
 
 
