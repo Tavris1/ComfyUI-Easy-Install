@@ -1,4 +1,4 @@
-# ComfyUI-Easy-Install  
+# ComfyUI-Easy-Install (NEXT version)   
 > One-click Portable **ComfyUI** for **Windows** 🔹 Pixaroma Community Edition 🔹  
 > [![GitHub Release](https://img.shields.io/github/v/release/Tavris1/ComfyUI-Easy-Install)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
 > [![GitHun Release Date](https://img.shields.io/github/release-date/Tavris1/ComfyUI-Easy-Install?style=flat)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
@@ -12,7 +12,7 @@
 ## What will be installed  
 - [**Git**](https://git-scm.com/) will be installed/updated if required  
 - [**ComfyUI portable**](https://github.com/comfyanonymous/ComfyUI)  
-- [**Python 3.11.9 Embedded**](https://www.python.org/downloads/release/python-3119/)
+- [**Python 3.12.10 Embedded**](https://www.python.org/downloads/release/python-31210/)
 
 ## Nodes from Pixaroma tutorials [:arrow_forward:YouTube](https://www.youtube.com/@pixaroma)  
 - [ComfyUI-Manager](https://github.com/Comfy-Org/ComfyUI-Manager)  
@@ -48,8 +48,9 @@
 - [WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideoWrapper)
 
 ## Optional **Add-ons**  
-- [Nunchaku](https://github.com/mit-han-lab/ComfyUI-nunchaku)
+- [Nunchaku](https://github.com/mit-han-lab/ComfyUI-nunchaku) (Stable and Dev versions)
 - [SageAttention 2.2.0](https://github.com/thu-ml/SageAttention)
+- [InsightFace](https://github.com/deepinsight/insightface) (MIT; pretrained models for non-commercial research only)
 
 ---
 ## Windows Installation in 3 Steps
@@ -94,7 +95,7 @@ This allows ComfyUI to use your existing model files without additional download
 ---
 
 ## Screenshot  
-![End](https://github.com/user-attachments/assets/da090bd5-0e13-41e1-8a81-bf2d24a8632c)  
+<img width="1264" height="442" alt="NEXT-1 6 3" src="https://github.com/user-attachments/assets/7ee461bc-8a94-475a-897a-b90e91022ec0" />  
 
 ---
 Thank you for using **ComfyUI-Easy-Install**!  
@@ -102,6 +103,7 @@ Questions or feedback? Reach out on [Pixaroma Discord](https://discord.com/invit
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)  
+
 
 
 
