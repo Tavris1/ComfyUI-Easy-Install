@@ -1,13 +1,29 @@
-@echo off
-Title ComfyUI Easy Install by ivo v0.62.5 (Ep62)
+@Echo off&&cd /D %~dp0
+Title ComfyUI-Easy-Install NEXT by ivo v1.63.0 (Ep63)
 :: Pixaroma Community Edition ::
+
+:: Set the Python version here (3.11 or 3.12 only) ::
+set "PYTHON_VERSION=3.12"
 
 :: Set colors ::
 call :set_colors
 
+:: Check the Python version ::
+if not "%PYTHON_VERSION%"=="3.11" if not "%PYTHON_VERSION%"=="3.12" (
+    echo.
+    echo %warning%WARNING: %red%Python %PYTHON_VERSION% is not supported. %green%Supported versions: 3.11, 3.12%reset%
+    echo.
+    echo %red%::::::::::::::: Press any key to exit%reset%&Pause>nul
+    exit
+)
+
+:: Set Ignoring Large File Storage ::
+set GIT_LFS_SKIP_SMUDGE=1
+
 :: Set arguments ::
 set "PIPargs=--no-cache-dir --no-warn-script-location --timeout=1000 --retries 200"
 set "CURLargs=--retry 200 --retry-all-errors"
+set "UVargs=--no-cache"
 
 :: Set local path only (temporarily) ::
 for /f "delims=" %%G in ('cmd /c "where git.exe 2>nul"') do (set "GIT_PATH=%%~dpG")
@@ -24,9 +40,10 @@ if exist ComfyUI-Easy-Install (
 	goto :eof
 )
 
-:: Check for Existing Helper-CEI.zip ::
-if not exist Helper-CEI.zip (
-	echo %warning%WARNING:%reset% '%bold%Helper-CEI.zip%reset%' not exists!
+:: Check for Existing Helper-CEI ::
+set "HLPR_NAME=Helper-CEI-NEXT.zip"
+if not exist %HLPR_NAME% (
+	echo %warning%WARNING:%reset% '%bold%%HLPR_NAME%%reset%' not exists!
 	echo %green%Unzip the entire package and try again.%reset%
 	echo Press any key to Exit...&Pause>nul
 	goto :eof
@@ -35,10 +52,8 @@ if not exist Helper-CEI.zip (
 :: Capture the start time ::
 for /f %%i in ('powershell -command "Get-Date -Format HH:mm:ss"') do set start=%%i
 
-:: Clear Pip Cache ::
-if exist "%localappdata%\pip\cache" rd /s /q "%localappdata%\pip\cache"&&md "%localappdata%\pip\cache"
-echo %green%::::::::::::::: Clearing Pip Cache %yellow%Done%green% :::::::::::::::%reset%
-echo.
+:: Clear Pip and uv Cache ::
+call :clear_pip_uv_cache
 
 :: Install/Update Git ::
 call :install_git
@@ -69,11 +84,12 @@ cd ComfyUI-Easy-Install
 :: Install ComfyUI ::
 call :install_comfyui
 
+:: Install working version of stringzilla (damn it) ::
+.\python_embeded\python.exe -I -m uv pip install stringzilla==3.12.6 %UVargs%
+echo.
+
 :: Install Pixaroma's Related Nodes ::
 call :get_node https://github.com/Comfy-Org/ComfyUI-Manager						comfyui-manager
-:: Install working version of stringzilla (damn it) ::
-.\python_embeded\python.exe -I -m pip install  stringzilla==3.12.6 %PIPargs%
-::~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 call :get_node https://github.com/WASasquatch/was-node-suite-comfyui			was-node-suite-comfyui
 call :get_node https://github.com/yolain/ComfyUI-Easy-Use						ComfyUI-Easy-Use
 call :get_node https://github.com/Fannovel16/comfyui_controlnet_aux				comfyui_controlnet_aux
@@ -82,6 +98,7 @@ call :get_node https://github.com/crystian/ComfyUI-Crystools					ComfyUI-Crystoo
 call :get_node https://github.com/rgthree/rgthree-comfy							rgthree-comfy
 call :get_node https://github.com/city96/ComfyUI-GGUF							ComfyUI-GGUF
 call :get_node https://github.com/kijai/ComfyUI-Florence2						ComfyUI-Florence2
+if "%PYTHON_VERSION%"=="3.11" (call :get_node https://github.com/SeargeDP/ComfyUI_Searge_LLM ComfyUI_Searge_LLM)
 call :get_node https://github.com/SeargeDP/ComfyUI_Searge_LLM					ComfyUI_Searge_LLM
 call :get_node https://github.com/gseth/ControlAltAI-Nodes						controlaltai-nodes
 call :get_node https://github.com/stavsap/comfyui-ollama						comfyui-ollama
@@ -101,29 +118,39 @@ call :get_node https://github.com/smthemex/ComfyUI_Sonic						ComfyUI_Sonic
 call :get_node https://github.com/welltop-cn/ComfyUI-TeaCache					teacache
 call :get_node https://github.com/kk8bit/KayTool								kaytool
 call :get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion				ComfyUI-TiledDiffusion
-set GIT_LFS_SKIP_SMUDGE=1
 call :get_node https://github.com/Lightricks/ComfyUI-LTXVideo					ComfyUI-LTXVideo
-set GIT_LFS_SKIP_SMUDGE=
 call :get_node https://github.com/kijai/ComfyUI-KJNodes							comfyui-kjnodes
 call :get_node https://github.com/kijai/ComfyUI-WanVideoWrapper					ComfyUI-WanVideoWrapper
 
 echo %green%::::::::::::::: Installing %yellow%Required Dependencies%green% :::::::::::::::%reset%
 echo.
-:: Install pylatexenc for kokoro ::
-.\python_embeded\python.exe -I -m pip install https://www.piwheels.org/simple/pylatexenc/pylatexenc-3.0a32-py3-none-any.whl %PIPargs%
-:: Install onnxruntime ::
-.\python_embeded\python.exe -I -m pip install onnxruntime-gpu %PIPargs%
-:: Install others ::
-REM .\python_embeded\python.exe -I -m pip install mediapipe --no-color %PIPargs%
-REM .\python_embeded\python.exe -I -m pip install onnx %PIPargs%
-REM .\python_embeded\python.exe -I -m pip install dill %PIPargs%
-REM .\python_embeded\python.exe -I -m pip install ultralytics %PIPargs%
-REM .\python_embeded\python.exe -I -m pip install flet %PIPargs%
 
-:: Extract 'update' folder ::
+:: Install llama-cpp-python for Searge ::
+if "%PYTHON_VERSION%"=="3.12" (.\python_embeded\python.exe -I -m uv pip install https://github.com/abetlen/llama-cpp-python/releases/download/v0.3.4-cu124/llama_cpp_python-0.3.4-cp312-cp312-win_amd64.whl %UVargs%)
+:: Install pylatexenc for kokoro ::
+.\python_embeded\python.exe -I -m uv pip install https://www.piwheels.org/simple/pylatexenc/pylatexenc-3.0a32-py3-none-any.whl %UVargs%
+:: Install onnxruntime ::
+.\python_embeded\python.exe -I -m uv pip install onnxruntime-gpu %UVargs%
+.\python_embeded\python.exe -I -m uv pip install onnx %UVargs%
+:: Install flet for REMBG ::
+.\python_embeded\python.exe -I -m uv pip install flet %UVargs%
+
+:: Extracting helper folders ::
 cd ..\
-tar.exe -xf .\Helper-CEI.zip
+tar.exe -xf .\%HLPR_NAME%
 cd ComfyUI-Easy-Install
+if "%PYTHON_VERSION%"=="3.11" (xcopy "python_embeded_3.11\*" "python_embeded\" /E /Y /I /Q)
+if "%PYTHON_VERSION%"=="3.12" (xcopy "python_embeded_3.12\*" "python_embeded\" /E /Y /I /Q)
+if exist "python_embeded_3.11" rmdir /s /q "python_embeded_3.11"
+if exist "python_embeded_3.12" rmdir /s /q "python_embeded_3.12"
+
+:: INSTALLING Add-Ons :::
+:: Installing Nunchaku ::
+REM pushd %CD%&&echo.&&call Add-Ons\Nunchaku-NEXT.bat NoPause&&popd
+:: Installing Insightface ::
+REM pushd %CD%&&echo.&&call Add-Ons\Insightface-NEXT.bat NoPause&&popd
+:: Installing SageAttention ::
+REM pushd %CD%&&echo.&&call Add-Ons\SageAttention-NEXT.bat NoPause&&popd
 
 :: Copy additional files if they exist ::
 call :copy_files run_nvidia_gpu.bat		.\
@@ -154,23 +181,19 @@ set    bold=[1m
 set   reset=[0m
 goto :eof
 
+:clear_pip_uv_cache
+if exist "%localappdata%\pip\cache" rd /s /q "%localappdata%\pip\cache"&&md "%localappdata%\pip\cache"
+if exist "%localappdata%\uv\cache" rd /s /q "%localappdata%\uv\cache"&&md "%localappdata%\uv\cache"
+echo %green%::::::::::::::: Clearing Pip and uv Cache %yellow%Done%green% :::::::::::::::%reset%
+echo.
+goto :eof
+
 :install_git
 :: https://git-scm.com/
 echo %green%::::::::::::::: Installing/Updating%yellow% Git %green%:::::::::::::::%reset%
 echo.
 
-REM :: Check if Winget is installed ::
-REM where winget.exe >nul 2>&1
-REM if %errorlevel% NEQ 0 (
-    REM cls
-    REM echo %warning%App Installer ^(winget^) is NOT installed.
-	REM echo %green%Install it first and then run this script again.%reset%
-	REM start ms-windows-store://pdp/?productid=9NBLGGH4NNS1
-	REM echo.
-	REM echo Press any key to exit&Pause>nul
-	REM exit
-REM )
-
+:: Winget Install: ms-windows-store://pdp/?productid=9NBLGGH4NNS1 ::
 winget.exe install --id Git.Git -e --source winget
 set path=%PATH%;%ProgramFiles%\Git\cmd
 echo.
@@ -181,26 +204,37 @@ goto :eof
 echo %green%::::::::::::::: Installing%yellow% ComfyUI %green%:::::::::::::::%reset%
 echo.
 git.exe clone https://github.com/comfyanonymous/ComfyUI ComfyUI
-curl.exe -OL https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip --ssl-no-revoke %CURLargs%
+
+if "%PYTHON_VERSION%"=="3.11" (set "PYTHON_VER=3.11.9")
+if "%PYTHON_VERSION%"=="3.12" (set "PYTHON_VER=3.12.10")
+
 md python_embeded&&cd python_embeded
-tar.exe -xf ..\python-3.11.9-embed-amd64.zip
-erase ..\python-3.11.9-embed-amd64.zip
+curl.exe -OL https://www.python.org/ftp/python/%PYTHON_VER%/python-%PYTHON_VER%-embed-amd64.zip --ssl-no-revoke %CURLargs%
+tar.exe -xf python-%PYTHON_VER%-embed-amd64.zip
+erase python-%PYTHON_VER%-embed-amd64.zip
 curl.exe -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py --ssl-no-revoke %CURLargs%
 
 Echo ../ComfyUI> python311._pth
+Echo ../ComfyUI> python312._pth
 Echo python311.zip>> python311._pth
+Echo python312.zip>> python312._pth
 Echo .>> python311._pth
+Echo .>> python312._pth
 Echo Lib/site-packages>> python311._pth
+Echo Lib/site-packages>> python312._pth
 Echo Lib>> python311._pth
+Echo Lib>> python312._pth
 Echo Scripts>> python311._pth
+Echo Scripts>> python312._pth
 Echo # import site>> python311._pth
+Echo # import site>> python312._pth
 
 .\python.exe -I get-pip.py %PIPargs%
+.\python.exe -I -m pip install uv %PIPargs%
 .\python.exe -I -m pip install torch==2.8.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128 %PIPargs%
-.\python.exe -I -m pip install pygit2 %PIPargs%
-.\python.exe -I -m pip install setuptools %PIPargs%
+.\python.exe -I -m uv pip install pygit2 %UVargs%
 cd ..\ComfyUI
-..\python_embeded\python.exe -I -m pip install -r requirements.txt %PIPargs%
+..\python_embeded\python.exe -I -m uv pip install -r requirements.txt %UVargs%
 cd ..\
 echo.
 goto :eof
@@ -212,7 +246,7 @@ echo %green%::::::::::::::: Installing%yellow% %git_folder% %green%:::::::::::::
 echo.
 git.exe clone %git_url% ComfyUI/custom_nodes/%git_folder%
 if exist .\ComfyUI\custom_nodes\%git_folder%\requirements.txt (
-	.\python_embeded\python.exe -I -m pip install -r .\ComfyUI\custom_nodes\%git_folder%\requirements.txt --use-pep517 %PIPargs%
+	.\python_embeded\python.exe -I -m uv pip install -r .\ComfyUI\custom_nodes\%git_folder%\requirements.txt %UVargs%
 )
 if exist .\ComfyUI\custom_nodes\%git_folder%\install.py (
 	.\python_embeded\python.exe -I .\ComfyUI\custom_nodes\%git_folder%\install.py

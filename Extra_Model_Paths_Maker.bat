@@ -1,10 +1,8 @@
-@Echo off
+@Echo off&&cd /D %~dp0
 Title Extra Model Paths Maker by ivo v0.55.3
 :: Pixaroma Community Edition ::
 
 set "yaml=extra_model_paths.yaml"
-
-cd /d %~dp0
 
 if not exist checkpoints (
 	Echo.
