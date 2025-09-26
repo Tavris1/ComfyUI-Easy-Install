@@ -23,7 +23,7 @@ set GIT_LFS_SKIP_SMUDGE=1
 :: Set arguments ::
 set "PIPargs=--no-cache-dir --no-warn-script-location --timeout=1000 --retries 200"
 set "CURLargs=--retry 200 --retry-all-errors"
-set "UVargs=--no-cache"
+set "UVargs=--no-cache --link-mode=copy"
 
 :: Set local path only (temporarily) ::
 for /f "delims=" %%G in ('cmd /c "where git.exe 2>nul"') do (set "GIT_PATH=%%~dpG")
