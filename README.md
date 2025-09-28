@@ -48,9 +48,11 @@
 - [WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideoWrapper)
 
 ## Optional **Add-ons**  
-- [Nunchaku](https://github.com/mit-han-lab/ComfyUI-nunchaku) (Stable and Dev versions)
+- [Nunchaku](https://github.com/mit-han-lab/ComfyUI-nunchaku)  
+  - Stable and Dev versions. Install the Dev version first. Use Stable if problems occur.
 - [SageAttention 2.2.0](https://github.com/thu-ml/SageAttention)
-- [InsightFace](https://github.com/deepinsight/insightface) (MIT; pretrained models for non-commercial research only)
+- [InsightFace](https://github.com/deepinsight/insightface)  
+  - MIT License - pretrained models for non-commercial research only.
 
 ---
 ## Windows Installation in 3 Steps
@@ -103,6 +105,7 @@ Questions or feedback? Reach out on [Pixaroma Discord](https://discord.com/invit
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)  
+
 
 
 
