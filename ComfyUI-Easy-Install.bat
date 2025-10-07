@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-Title ComfyUI-Easy-Install NEXT by ivo v1.63.0 (Ep63)
+Title ComfyUI-Easy-Install NEXT by ivo v1.65.0 (Ep65)
 :: Pixaroma Community Edition ::
 
 :: Set the Python version here (3.11 or 3.12 only) ::
@@ -121,6 +121,7 @@ call :get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion				ComfyUI-Til
 call :get_node https://github.com/Lightricks/ComfyUI-LTXVideo					ComfyUI-LTXVideo
 call :get_node https://github.com/kijai/ComfyUI-KJNodes							comfyui-kjnodes
 call :get_node https://github.com/kijai/ComfyUI-WanVideoWrapper					ComfyUI-WanVideoWrapper
+call :get_node https://github.com/Enemyx-net/VibeVoice-ComfyUI					VibeVoice-ComfyUI
 
 echo %green%::::::::::::::: Installing %yellow%Required Dependencies%green% :::::::::::::::%reset%
 echo.
@@ -134,6 +135,8 @@ if "%PYTHON_VERSION%"=="3.12" (.\python_embeded\python.exe -I -m uv pip install 
 .\python_embeded\python.exe -I -m uv pip install onnx %UVargs%
 :: Install flet for REMBG ::
 .\python_embeded\python.exe -I -m uv pip install flet %UVargs%
+:: Install ffmpeg ::
+.\python_embeded\python.exe -I -m uv pip install python-ffmpeg %UVargs%
 
 :: Extracting helper folders ::
 cd ..\
