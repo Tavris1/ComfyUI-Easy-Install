@@ -1,6 +1,6 @@
 #!/bin/bash
 # ComfyUI Easy Install by ivo - Linux version
-# ComfyUI Easy Install by ivo v0.62.3 (Ep62)
+# ComfyUI Easy Install by ivo v1.65.0 (Ep65)
 # Pixaroma Community Edition
 
 # Set colors
@@ -12,8 +12,8 @@ blue="\033[94m"
 bold="\033[1m"
 reset="\033[0m"
 
-# Set No Warnings
-silent="--no-cache-dir --no-warn-script-location"
+# Set No Warnings and timeout/retry parameters
+silent="--no-cache-dir --no-warn-script-location --timeout=1000 --retries 200"
 
 # Fix pip cache permissions for root
 if [ "$(id -u)" -eq 0 ]; then
@@ -195,7 +195,7 @@ install_comfyui() {
     
     # Install PyTorch with appropriate backend
     echo -e "${green}Installing PyTorch...${reset}"
-    python3 -m pip install --no-cache-dir torch torchvision torchaudio $silent
+    python3 -m pip install --no-cache-dir torch==2.8.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128 $silent
 }
 
 # Function to get custom nodes
@@ -248,6 +248,10 @@ get_node "https://github.com/rgthree/rgthree-comfy" "rgthree-comfy"
 get_node "https://github.com/city96/ComfyUI-GGUF" "ComfyUI-GGUF"
 get_node "https://github.com/kijai/ComfyUI-Florence2" "ComfyUI-Florence2"
 get_node "https://github.com/SeargeDP/ComfyUI_Searge_LLM" "ComfyUI_Searge_LLM"
+# Install llama-cpp-python for Searge LLM
+echo -e "${green}Installing llama-cpp-python for Searge LLM...${reset}"
+source venv/bin/activate
+python3 -m pip install --no-cache-dir llama-cpp-python $silent
 get_node "https://github.com/gseth/ControlAltAI-Nodes" "controlaltai-nodes"
 get_node "https://github.com/stavsap/comfyui-ollama" "comfyui-ollama"
 get_node "https://github.com/MohammadAboulEla/ComfyUI-iTools" "comfyui-itools"
@@ -273,17 +277,24 @@ get_node "https://github.com/smthemex/ComfyUI_Sonic" "ComfyUI_Sonic"
 get_node "https://github.com/welltop-cn/ComfyUI-TeaCache" "teacache"
 get_node "https://github.com/kk8bit/KayTool" "kaytool"
 get_node "https://github.com/shiimizu/ComfyUI-TiledDiffusion" "ComfyUI-TiledDiffusion"
-set GIT_LFS_SKIP_SMUDGE=1
+export GIT_LFS_SKIP_SMUDGE=1
 get_node "https://github.com/Lightricks/ComfyUI-LTXVideo" "ComfyUI-LTXVideo"
-set GIT_LFS_SKIP_SMUDGE=
+unset GIT_LFS_SKIP_SMUDGE
 get_node "https://github.com/kijai/ComfyUI-KJNodes" "comfyui-kjnodes"
 get_node "https://github.com/kijai/ComfyUI-WanVideoWrapper" "ComfyUI-WanVideoWrapper"
+get_node "https://github.com/Enemyx-net/VibeVoice-ComfyUI" "VibeVoice-ComfyUI"
 
 
-# Install onnxruntime
-echo -e "${green}::::::::::::::: Installing onnxruntime ${green}::::::::::::::${reset}"
+# Install additional dependencies
+echo -e "${green}::::::::::::::: Installing Required Dependencies ${green}::::::::::::::${reset}"
 source venv/bin/activate
+# Install onnxruntime and onnx
 python3 -m pip install --no-cache-dir onnxruntime-gpu $silent
+python3 -m pip install --no-cache-dir onnx $silent
+# Install flet for REMBG
+python3 -m pip install --no-cache-dir flet $silent
+# Install ffmpeg
+python3 -m pip install --no-cache-dir python-ffmpeg $silent
 
 # Create run_comfyui.sh script
 echo -e "${green}::::::::::::::: Creating Startup Script ${green}::::::::::::::${reset}"
@@ -317,9 +328,13 @@ chmod +x run_comfyui.sh
 
 # Calculate installation time
 end=$(date +%H:%M:%S)
+start_seconds=$(date -d "$start" +%s)
+end_seconds=$(date -d "$end" +%s)
+diff=$((end_seconds - start_seconds))
 
 # Display completion message
 echo -e "\n${green}::::::::::::::: Installation Complete ${green}::::::::::::::${reset}"
+echo -e "${green}::::::::::::::: Total Running Time:${red} $diff ${green}seconds${reset}"
 echo -e "Start time: $start"
 echo -e "End time:   $end"
 echo -e "\nTo start ComfyUI, run:"
