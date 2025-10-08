@@ -13,7 +13,7 @@
 - [**Git**](https://git-scm.com/)  
 - [**ComfyUI portable**](https://github.com/comfyanonymous/ComfyUI)  
 
-## Nodes from [:arrow_forward:Pixaroma tutorials](https://www.youtube.com/@pixaroma) included  
+# Nodes from Pixaroma tutorials [:arrow_forward:YouTube](https://www.youtube.com/@pixaroma)  
 - [ComfyUI-Manager](https://github.com/Comfy-Org/ComfyUI-Manager)  
 - [was-node-suite](https://github.com/WASasquatch/was-node-suite-comfyui)  
 - [Easy-Use](https://github.com/yolain/ComfyUI-Easy-Use)  
@@ -44,6 +44,15 @@
 - [Tiled Diffusion & VAE](https://github.com/shiimizu/ComfyUI-TiledDiffusion)  
 - [LTXVideo](https://github.com/Lightricks/ComfyUI-LTXVideo)  
 - [KJNodes](https://github.com/kijai/ComfyUI-KJNodes)
+- [WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideoWrapper)
+- [VibeVoice](https://github.com/Enemyx-net/VibeVoice-ComfyUI)
+
+## Optional **Add-ons**  
+- [Nunchaku](https://github.com/mit-han-lab/ComfyUI-nunchaku)  
+  - Stable and Dev versions. Install the Dev version first. Use Stable if problems occur.
+- [SageAttention 2.2.0](https://github.com/thu-ml/SageAttention)
+- [InsightFace](https://github.com/deepinsight/insightface)  
+  - MIT License - pretrained models for non-commercial research only.
 
 ---
 
