@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-Title ComfyUI-Easy-Install NEXT by ivo v1.65.1 (Ep65)
+Title ComfyUI-Easy-Install NEXT by ivo v1.66.0 (Ep66)
 :: Pixaroma Community Edition ::
 
 :: Set the Python version here (3.11 or 3.12 only) ::
@@ -50,7 +50,7 @@ if not exist %HLPR_NAME% (
 )
 
 :: Capture the start time ::
-for /f %%i in ('powershell -command "Get-Date -Format HH:mm:ss"') do set start=%%i
+for /f "delims=" %%i in ('powershell -command "Get-Date -Format yyyy-MM-dd_HH:mm:ss"') do set start=%%i
 
 :: Clear Pip and uv Cache ::
 call :clear_pip_uv_cache
@@ -85,8 +85,8 @@ cd ComfyUI-Easy-Install
 call :install_comfyui
 
 :: Install working version of stringzilla (damn it) ::
-.\python_embeded\python.exe -I -m uv pip install stringzilla==3.12.6 %UVargs%
-echo.
+REM .\python_embeded\python.exe -I -m uv pip install stringzilla==3.12.6 %UVargs%
+REM echo.
 
 :: Install Pixaroma's Related Nodes ::
 call :get_node https://github.com/Comfy-Org/ComfyUI-Manager						comfyui-manager
@@ -157,14 +157,16 @@ REM pushd %CD%&&echo.&&call Add-Ons\SageAttention-NEXT.bat NoPause&&popd
 
 :: Copy additional files if they exist ::
 call :copy_files run_nvidia_gpu.bat		.\
+call :copy_files run_nvidia_gpu_SageAttention.bat	.\
 call :copy_files extra_model_paths.yaml	ComfyUI
 call :copy_files comfy.settings.json	ComfyUI\user\default
 call :copy_files was_suite_config.json	ComfyUI\custom_nodes\was-node-suite-comfyui
 call :copy_files rgthree_config.json	ComfyUI\custom_nodes\rgthree-comfy
 
 :: Capture the end time ::
-for /f %%i in ('powershell -command "Get-Date -Format HH:mm:ss"') do set end=%%i
-for /f %%i in ('powershell -command "(New-TimeSpan -Start (Get-Date '%start%') -End (Get-Date '%end%')).TotalSeconds"') do set diff=%%i
+for /f "delims=" %%i in ('powershell -command "Get-Date -Format yyyy-MM-dd_HH:mm:ss"') do set end=%%i
+
+for /f "delims=" %%i in ('powershell -command "$s=[datetime]::ParseExact('%start%','yyyy-MM-dd_HH:mm:ss',$null); $e=[datetime]::ParseExact('%end%','yyyy-MM-dd_HH:mm:ss',$null); if($e -lt $s){$e=$e.AddDays(1)}; ($e-$s).TotalSeconds"') do set diff=%%i
 
 :: Final Messages ::
 echo.
@@ -248,12 +250,27 @@ set git_folder=%~2
 echo %green%::::::::::::::: Installing%yellow% %git_folder% %green%:::::::::::::::%reset%
 echo.
 git.exe clone %git_url% ComfyUI/custom_nodes/%git_folder%
-if exist .\ComfyUI\custom_nodes\%git_folder%\requirements.txt (
-	.\python_embeded\python.exe -I -m uv pip install -r .\ComfyUI\custom_nodes\%git_folder%\requirements.txt %UVargs%
+
+REM if exist .\ComfyUI\custom_nodes\%git_folder%\requirements.txt (
+	REM .\python_embeded\python.exe -I -m uv pip install -r .\ComfyUI\custom_nodes\%git_folder%\requirements.txt %UVargs%
+REM )
+
+setlocal enabledelayedexpansion
+if exist ".\ComfyUI\custom_nodes\%git_folder%\requirements.txt" (
+    for %%F in (".\ComfyUI\custom_nodes\%git_folder%\requirements.txt") do set filesize=%%~zF
+    if not !filesize! equ 0 (
+        .\python_embeded\python.exe -I -m uv pip install -r ".\ComfyUI\custom_nodes\%git_folder%\requirements.txt" %UVargs%
+    )
 )
+
 if exist .\ComfyUI\custom_nodes\%git_folder%\install.py (
+    for %%F in (".\ComfyUI\custom_nodes\%git_folder%\install.py") do set filesize=%%~zF
+    if not !filesize! equ 0 (
 	.\python_embeded\python.exe -I .\ComfyUI\custom_nodes\%git_folder%\install.py
+	)
 )
+endlocal
+
 echo.
 goto :eof
 
