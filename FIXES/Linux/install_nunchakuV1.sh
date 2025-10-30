@@ -210,7 +210,7 @@ else
 fi
 
 echo -e "${green}::::::::::::::: Installing wheel: $NUNCHAKU_WHL${reset}"
-$PYTHON_PATH -m pip install "https://github.com/nunchaku-tech/nunchaku/releases/download/v1.0.1/$NUNCHAKU_WHL" $PIPargs
+$PYTHON_PATH -m pip install "https://github.com/nunchaku-tech/nunchaku/releases/download/v1.0.2/$NUNCHAKU_WHL" $PIPargs
 
 # Create nunchaku_versions.json
 create_nunchaku_versions
