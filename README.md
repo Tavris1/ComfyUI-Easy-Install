@@ -74,7 +74,7 @@ This allows ComfyUI to use your existing model files without additional download
 
 ---
 
-### macOS / Linux - click [:arrow_forward:HERE](https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux)
+### [macOS / Linux Installation](https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux)
 
 ---
 
@@ -87,6 +87,7 @@ Questions or feedback? Reach out on [Pixaroma Discord](https://discord.com/invit
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)  
+
 
 
 
