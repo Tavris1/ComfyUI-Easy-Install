@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-Title ComfyUI-Easy-Install NEXT by ivo v1.68.0 (Ep68)
+Title ComfyUI-Easy-Install NEXT by ivo v1.68.1 (Ep68)
 :: Pixaroma Community Edition ::
 
 :: Set the Python version here (3.11 or 3.12 only) ::
@@ -235,7 +235,7 @@ Echo # import site>> python311._pth
 Echo # import site>> python312._pth
 
 .\python.exe -I get-pip.py %PIPargs%
-.\python.exe -I -m pip install uv %PIPargs%
+.\python.exe -I -m pip install uv==0.9.7 %PIPargs%
 .\python.exe -I -m pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cu128 %PIPargs%
 .\python.exe -I -m uv pip install pygit2 %UVargs%
 cd ..\ComfyUI
