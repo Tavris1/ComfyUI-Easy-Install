@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-Title ComfyUI-Easy-Install NEXT by ivo v1.68.1 (Ep68)
+Title ComfyUI-Easy-Install NEXT by ivo v1.70.0 (Ep70)
 :: Pixaroma Community Edition ::
 
 :: Set the Python version here (3.11 or 3.12 only) ::
@@ -122,6 +122,7 @@ call :get_node https://github.com/Lightricks/ComfyUI-LTXVideo					ComfyUI-LTXVid
 call :get_node https://github.com/kijai/ComfyUI-KJNodes							comfyui-kjnodes
 call :get_node https://github.com/kijai/ComfyUI-WanVideoWrapper					ComfyUI-WanVideoWrapper
 call :get_node https://github.com/Enemyx-net/VibeVoice-ComfyUI					VibeVoice-ComfyUI
+call :get_node https://github.com/ussoewwin/ComfyUI-QwenImageLoraLoader			ComfyUI-QwenImageLoraLoader
 
 echo %green%::::::::::::::: Installing %yellow%Required Dependencies%green% :::::::::::::::%reset%
 echo.
