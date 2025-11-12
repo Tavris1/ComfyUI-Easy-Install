@@ -68,7 +68,7 @@
 
 2. Run `chmod +x ComfyUI-Easy-Install.sh` to make the installation script executable
 
-3. Execute `./OSXComfyUI-Easy-Install.sh` to install ComfyUI and its dependencies
+3. Execute `./ComfyUI-Easy-Install.sh` to install ComfyUI and its dependencies
 
 4. After installation completes, run `./run_mac_mps.sh` to start ComfyUI (On M1/M2 Macs)
 
