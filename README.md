@@ -27,6 +27,7 @@
 |21. [AdvancedLivePortrait](https://github.com/PowerHouseMan/ComfyUI-AdvancedLivePortrait)|22. [ComfyUI-ToSVG](https://github.com/Yanick112/ComfyUI-ToSVG)|23. [Kokoro](https://github.com/stavsap/comfyui-kokoro)|24. [Janus-Pro](https://github.com/CY-CHENYUE/ComfyUI-Janus-Pro)|
 |25. [Sonic](https://github.com/smthemex/ComfyUI_Sonic)|26. [TeaCache](https://github.com/welltop-cn/ComfyUI-TeaCache)|27. [KayTool](https://github.com/kk8bit/KayTool)|28. [Tiled Diffusion & VAE](https://github.com/shiimizu/ComfyUI-TiledDiffusion)|
 |29. [LTXVideo](https://github.com/Lightricks/ComfyUI-LTXVideo)|30. [KJNodes](https://github.com/kijai/ComfyUI-KJNodes)|31. [WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideoWrapper)|32. [VibeVoice](https://github.com/Enemyx-net/VibeVoice-ComfyUI)|
+|33. [QwenImageLoraLoader](https://github.com/ussoewwin/ComfyUI-QwenImageLoraLoader)|
 |Optional **Add-ons**|
 |01. [Nunchaku](https://github.com/mit-han-lab/ComfyUI-nunchaku)|02. [SageAttention 2.2.0](https://github.com/thu-ml/SageAttention)|03. [InsightFace](https://github.com/deepinsight/insightface)|Easy-Models-Linker :fire:|
 
@@ -87,6 +88,7 @@ Questions or feedback? Reach out on [Pixaroma Discord](https://discord.com/invit
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)  
+
 
 
 
