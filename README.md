@@ -33,16 +33,22 @@
 
 ## Optional **Add-ons**  
 Optionally, after setup is complete, install the following from the **Add-ons** folder:
-    - **Nunchaku** _- v1.0.2_
-    - **SageAttention** _- v2.2.0_
-    - **InsightFace**
-      - _MIT License. Pretrained models for non-commercial research only._
-    - **Easy-Models-Linker :fire:**
-      - _Creates **`extra_model_paths.yaml`** so you can use your existing **`MODELS`** folder without re-downloading._
-      - _Some folders like **LLM** and **llm_gguf** cannot be redirected this way._
-    - **Backup ComfyUI**
-      - _Backup ComfyUI to a safe location._
-      # Backup_ComfyUI
+
+- **Nunchaku** _- v1.0.2_
+
+- **SageAttention** _- v2.2.0_
+
+- **InsightFace**
+  - _MIT License. Pretrained models for non-commercial research only._
+
+- **Easy-Models-Linker :fire:**
+  - _Creates **`extra_model_paths.yaml`** so you can use your existing **`MODELS`** folder without re-downloading._
+  - _Some folders like **LLM** and **llm_gguf** cannot be redirected this way._
+
+- **Backup ComfyUI**
+  - _Backup ComfyUI to a safe location._
+
+### Backup_ComfyUI
 
 A small interactive utility to back up, restore, and manage your ComfyUI data folders.
 
