@@ -32,11 +32,71 @@
 ---
 
 ## Optional **Add-ons**  
-- [Nunchaku](https://github.com/mit-han-lab/ComfyUI-nunchaku)  
-  - Stable and Dev versions. Install the Dev version first. Use Stable if problems occur.
-- [SageAttention 2.2.0](https://github.com/thu-ml/SageAttention)
-- [InsightFace](https://github.com/deepinsight/insightface)  
-  - MIT License - pretrained models for non-commercial research only.
+Optionally, after setup is complete, install the following from the **Add-ons** folder:
+    - **Nunchaku** _- v1.0.2_
+    - **SageAttention** _- v2.2.0_
+    - **InsightFace**
+      - _MIT License. Pretrained models for non-commercial research only._
+    - **Easy-Models-Linker :fire:**
+      - _Creates **`extra_model_paths.yaml`** so you can use your existing **`MODELS`** folder without re-downloading._
+      - _Some folders like **LLM** and **llm_gguf** cannot be redirected this way._
+    - **Backup ComfyUI**
+      - _Backup ComfyUI to a safe location._
+      # Backup_ComfyUI
+
+A small interactive utility to back up, restore, and manage your ComfyUI data folders.
+
+- **Script**: `Add-Ons/backup_comfyui.sh`
+- **Version**: 1.2 (Pixaroma Community Edition, macOS/Linux by VenimK)
+- **Backup location**: `~/ComfyUI_Backups/ComfyUI_backup_YYYYMMDD_HHMMSS`
+
+## What gets backed up
+- **Always**: `user`, `input`, `output`
+- **Optional**: `models` (can be very large)
+
+The script assumes ComfyUI is located at: `ComfyUI-Easy-Install/ComfyUI` (relative to the script’s folder).
+
+## Requirements
+- macOS or Linux shell
+- Core utilities: `cp`, `find`, `sort`, `du`
+- Optional for zipping: `zip`
+
+## How to run
+From the project root or the `Add-Ons` folder:
+
+```bash
+bash Add-Ons/backup_comfyui.sh
+```
+
+You will see a menu with the following options:
+
+1) Create new backup
+2) Restore from backup
+3) Manage backups
+4) Exit
+
+## Create new backup
+- Prompts whether to include the `models` folder.
+- Creates a timestamped folder under `~/ComfyUI_Backups`.
+- After copying, offers to create a `.zip` archive (requires `zip`).
+
+## Restore from backup
+- Lists available backups with size and date.
+- Prompts for which backup to restore.
+- Warns before overwriting files in your `ComfyUI` directory.
+- Restores only directories that exist inside the selected backup.
+
+## Manage backups
+- Lists existing backups.
+- Options to:
+  - **Delete a specific backup** by number.
+  - **Delete all but the most recent** backup.
+
+## Notes
+- The script uses colored output; if full color support is unavailable, it falls back to basic colors.
+- Backup size depends heavily on whether you include the `models` directory.
+- If your ComfyUI folder is in a different location than `Add-Ons/../ComfyUI`, move the script accordingly or adjust the path inside the script.
+
 
 ---
 
