@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title: ComfyUI-Easy-Install NEXT by ivo v1.68.0 (Ep68)
+# Title: ComfyUI-Easy-Install NEXT by ivo v1.70.0 (Ep70)
 # Pixaroma Community Edition
 # macOS and Linux conversion
 
@@ -225,7 +225,7 @@ get_node https://github.com/Lightricks/ComfyUI-LTXVideo ComfyUI-LTXVideo
 get_node https://github.com/kijai/ComfyUI-KJNodes comfyui-kjnodes
 get_node https://github.com/kijai/ComfyUI-WanVideoWrapper ComfyUI-WanVideoWrapper
 get_node https://github.com/Enemyx-net/VibeVoice-ComfyUI VibeVoice-ComfyUI
-
+get_node https://github.com/ussoewwin/ComfyUI-QwenImageLoraLoader ComfyUI-QwenImageLoraLoader
 # INSTALLING Add-Ons :::
 # Installing Nunchaku ::
 bash Add-Ons/Nunchaku-NEXT.sh NoPause
