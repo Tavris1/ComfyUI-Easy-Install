@@ -121,9 +121,11 @@ You will see a menu with the following options:
 
 3. Execute `./ComfyUI-Easy-Install.sh` to install ComfyUI and its dependencies
 
-4. After installation completes, run `./run_mac_mps.sh` to start ComfyUI (On M1/M2 Macs)
+4. cd ComfyUI-Easy-Install
 
-5. After installation completes, run `./run_nvidia_gpu.sh` to start ComfyUI (On Linux)
+5. After installation completes, run `./run_mac_mps.sh` to start ComfyUI (On M1/M2 Macs)
+
+6. After installation completes, run `./run_nvidia_gpu.sh` to start ComfyUI (On Linux)
 
 ### Mac M1/M2 Optimization
 
