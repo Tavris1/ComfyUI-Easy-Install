@@ -181,6 +181,14 @@ copy_files() {
     fi
 }
 
+# Install system dependencies for OpenCV (required by many custom nodes)
+if command -v apt-get &> /dev/null; then
+    echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}OpenCV system dependencies${GREEN} :::::::::::::::${RESET}"
+    pm_run apt-get update
+    pm_run apt-get install -y libglib2.0-0 libsm6 libxext6 libxrender-dev libgomp1 || true
+    echo ""
+fi
+
 # Main script execution
 clear_pip_uv_cache
 install_comfyui
@@ -245,25 +253,13 @@ echo -e "${GREEN}::::::::::::::: Add-Ons extracted. Skipping automatic Add-Ons i
 echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}Required Dependencies${GREEN} :::::::::::::::${RESET}"
 echo ""
 
-# Install llama-cpp-python for Searge_LLM
-# Try prebuilt wheel for common platforms, fall back to source build
+# Install llama-cpp-python for Searge_LLM (Python 3.12 only, matches Windows installer)
 PY_VER=$(python -c 'import sys; print(f"cp{sys.version_info.major}{sys.version_info.minor}")')
-if [[ "$(uname)" == "Darwin" ]]; then
-    # macOS - build from source (no official wheels)
-    python -m pip install --no-cache-dir llama-cpp-python || true
-elif [[ "$PY_VER" == "cp311" ]]; then
-    # Linux Python 3.11 - try official CUDA wheel
-    python -m pip install --no-cache-dir \
-      https://github.com/abetlen/llama-cpp-python/releases/download/v0.3.4-cu124/llama_cpp_python-0.3.4-cp311-cp311-linux_x86_64.whl \
-      || python -m pip install --no-cache-dir llama-cpp-python
-elif [[ "$PY_VER" == "cp312" ]]; then
-    # Linux Python 3.12 - try official CUDA wheel
-    python -m pip install --no-cache-dir \
+if [[ "$PY_VER" == "cp312" ]]; then
+    # Linux Python 3.12 - install CUDA wheel via uv
+    python -m uv pip install \
       https://github.com/abetlen/llama-cpp-python/releases/download/v0.3.4-cu124/llama_cpp_python-0.3.4-cp312-cp312-linux_x86_64.whl \
-      || python -m pip install --no-cache-dir llama-cpp-python
-else
-    # Other versions - build from source
-    python -m pip install --no-cache-dir llama-cpp-python || true
+      $UV_ARGS || true
 fi
 
 # Install pylatexenc for kokoro
