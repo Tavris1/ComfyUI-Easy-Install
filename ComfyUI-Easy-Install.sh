@@ -100,14 +100,33 @@ install_comfyui() {
         PYTHON_VER="3.12.10"
     fi
 
-    # Check for python
-    if ! command -v python"$PYTHON_VERSION" &> /dev/null; then
-        echo -e "${WARNING}WARNING:${RESET} ${BOLD}'python${PYTHON_VERSION}'${RESET} is NOT installed"
-        echo -e "Please install ${BOLD}'python${PYTHON_VERSION}'${RESET} manually and run this installer again"
+    # Resolve Python command (prefer system python3 >= 3.11, else fall back to configured version)
+    if command -v python3 &> /dev/null; then
+        PYTHON_CMD="python3"
+        PYV=$($PYTHON_CMD -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
+        case "$PYV" in
+            3.1[1-9]|3.[2-9]*) ;;  # >= 3.11
+            *)
+                echo -e "${WARNING}WARNING:${RESET} Detected python3 version ${BOLD}${PYV}${RESET}. ${GREEN}Python >= 3.11 is required.${RESET}"
+                echo -e "Install a newer Python or adjust PATH, then rerun."
+                read -p "Press any key to Exit..."
+                exit 1
+                ;;
+        esac
+    elif command -v python"$PYTHON_VERSION" &> /dev/null; then
+        PYTHON_CMD="python${PYTHON_VERSION}"
+    else
+        echo -e "${WARNING}WARNING:${RESET} ${BOLD}'python3'${RESET} or ${BOLD}'python${PYTHON_VERSION}'${RESET} is NOT installed"
+        echo -e "Please install an appropriate Python (>=3.11) and run this installer again"
         read -p "Press any key to Exit..."
         exit 1
-    else
-        PYTHON_CMD="python${PYTHON_VERSION}"
+    fi
+
+    # Ensure venv module is available on Debian-based systems
+    if ! $PYTHON_CMD -m venv -h > /dev/null 2>&1; then
+        if command -v apt-get &> /dev/null; then
+            sudo apt-get update && sudo apt-get install -y python3-venv || true
+        fi
     fi
 
     "$PYTHON_CMD" -m venv python_embeded
