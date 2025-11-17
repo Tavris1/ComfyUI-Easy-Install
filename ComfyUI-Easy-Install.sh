@@ -102,14 +102,10 @@ install_comfyui() {
 
     # Check for python
     if ! command -v python"$PYTHON_VERSION" &> /dev/null; then
-        if ! command -v python3 &> /dev/null; then
-            echo -e "${WARNING}WARNING:${RESET} ${BOLD}'python${PYTHON_VERSION}' or 'python3'${RESET} is NOT installed"
-            echo -e "Please install ${BOLD}'python${PYTHON_VERSION}'${RESET} manually and run this installer again"
-            read -p "Press any key to Exit..."
-            exit 1
-        else
-            PYTHON_CMD="python3"
-        fi
+        echo -e "${WARNING}WARNING:${RESET} ${BOLD}'python${PYTHON_VERSION}'${RESET} is NOT installed"
+        echo -e "Please install ${BOLD}'python${PYTHON_VERSION}'${RESET} manually and run this installer again"
+        read -p "Press any key to Exit..."
+        exit 1
     else
         PYTHON_CMD="python${PYTHON_VERSION}"
     fi
@@ -226,18 +222,33 @@ get_node https://github.com/kijai/ComfyUI-KJNodes comfyui-kjnodes
 get_node https://github.com/kijai/ComfyUI-WanVideoWrapper ComfyUI-WanVideoWrapper
 get_node https://github.com/Enemyx-net/VibeVoice-ComfyUI VibeVoice-ComfyUI
 get_node https://github.com/ussoewwin/ComfyUI-QwenImageLoraLoader ComfyUI-QwenImageLoraLoader
+# Extracting helper folders (to provide Add-Ons and other helpers)
+cd ../
+unzip -o ./"$HLPR_NAME" -d ./
+cd ComfyUI-Easy-Install
 # INSTALLING Add-Ons :::
 # Installing Nunchaku ::
-bash Add-Ons/Nunchaku-NEXT.sh NoPause
+if [ -f "Add-Ons/Nunchaku-NEXT.sh" ]; then bash Add-Ons/Nunchaku-NEXT.sh NoPause; else echo -e "${YELLOW}Skipping Nunchaku add-on:${RESET} script not found"; fi
 # Installing Insightface ::
-bash Add-Ons/Insightface-NEXT.sh NoPause
+if [ -f "Add-Ons/Insightface-NEXT.sh" ]; then bash Add-Ons/Insightface-NEXT.sh NoPause; else echo -e "${YELLOW}Skipping Insightface add-on:${RESET} script not found"; fi
 # Installing SageAttention ::
-bash Add-Ons/SageAttention-NEXT.sh NoPause
+if [ -f "Add-Ons/SageAttention-NEXT.sh" ]; then bash Add-Ons/SageAttention-NEXT.sh NoPause; else echo -e "${YELLOW}Skipping SageAttention add-on:${RESET} script not found"; fi
 
 echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}Required Dependencies${GREEN} :::::::::::::::${RESET}"
 echo ""
 
 # Install llama-cpp-python for Searge
+if [[ "$(uname)" == "Darwin" ]]; then
+    if command -v brew &> /dev/null; then brew install cmake; fi
+else
+    if command -v apt-get &> /dev/null; then
+        sudo apt-get update && sudo apt-get install -y build-essential cmake python3-dev
+    elif command -v dnf &> /dev/null; then
+        sudo dnf install -y gcc gcc-c++ cmake make python3-devel
+    elif command -v yum &> /dev/null; then
+        sudo yum install -y gcc gcc-c++ cmake make python3-devel
+    fi
+fi
 python -m uv pip install llama-cpp-python $UV_ARGS
 # Install pylatexenc for kokoro
 python -m uv pip install pylatexenc $UV_ARGS

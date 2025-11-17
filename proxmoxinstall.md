@@ -173,7 +173,7 @@ pct enter 100
 apt update && apt upgrade -y
 
 # Install basic utilities
-apt install -y curl wget git htop nano nvtop
+apt install -y curl wget git htop nano nvtop python3-venv
 ```
 
 
