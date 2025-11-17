@@ -217,6 +217,7 @@ get_node https://github.com/smthemex/ComfyUI_Sonic ComfyUI_Sonic
 get_node https://github.com/welltop-cn/ComfyUI-TeaCache teacache
 get_node https://github.com/kk8bit/KayTool kaytool
 get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion ComfyUI-TiledDiffusion
+get_node https://github.com/kijai/ComfyUI-KJNodes comfyui-kjnodes
 get_node https://github.com/kijai/ComfyUI-WanVideoWrapper ComfyUI-WanVideoWrapper
 get_node https://github.com/Enemyx-net/VibeVoice-ComfyUI VibeVoice-ComfyUI
 get_node https://github.com/ussoewwin/ComfyUI-QwenImageLoraLoader ComfyUI-QwenImageLoraLoader
@@ -243,6 +244,37 @@ echo -e "${GREEN}::::::::::::::: Add-Ons extracted. Skipping automatic Add-Ons i
 
 echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}Required Dependencies${GREEN} :::::::::::::::${RESET}"
 echo ""
+
+# Install llama-cpp-python for Searge_LLM
+# Try prebuilt wheel for common platforms, fall back to source build
+PY_VER=$(python -c 'import sys; print(f"cp{sys.version_info.major}{sys.version_info.minor}")')
+if [[ "$(uname)" == "Darwin" ]]; then
+    # macOS - build from source (no official wheels)
+    python -m pip install --no-cache-dir llama-cpp-python || true
+elif [[ "$PY_VER" == "cp311" ]]; then
+    # Linux Python 3.11 - try official CUDA wheel
+    python -m pip install --no-cache-dir \
+      https://github.com/abetlen/llama-cpp-python/releases/download/v0.3.4-cu124/llama_cpp_python-0.3.4-cp311-cp311-linux_x86_64.whl \
+      || python -m pip install --no-cache-dir llama-cpp-python
+elif [[ "$PY_VER" == "cp312" ]]; then
+    # Linux Python 3.12 - try official CUDA wheel
+    python -m pip install --no-cache-dir \
+      https://github.com/abetlen/llama-cpp-python/releases/download/v0.3.4-cu124/llama_cpp_python-0.3.4-cp312-cp312-linux_x86_64.whl \
+      || python -m pip install --no-cache-dir llama-cpp-python
+else
+    # Other versions - build from source
+    python -m pip install --no-cache-dir llama-cpp-python || true
+fi
+
+# Install pylatexenc for kokoro
+python -m uv pip install pylatexenc $UV_ARGS
+# Install onnxruntime and onnx
+python -m uv pip install onnxruntime $UV_ARGS
+python -m uv pip install onnx $UV_ARGS
+# Install flet for REMBG
+python -m uv pip install flet $UV_ARGS
+# Install ffmpeg
+python -m uv pip install python-ffmpeg $UV_ARGS
 
 # Remove all .bat files after extraction
 find . -type f -name "*.bat" -delete
