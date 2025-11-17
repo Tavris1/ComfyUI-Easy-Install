@@ -15,6 +15,15 @@ YELLOW='\033[93m'
 BOLD='\033[1m'
 RESET='\033[0m'
 
+# Helper: run package manager with or without sudo
+pm_run() {
+  if command -v sudo >/dev/null 2>&1; then
+    sudo "$@"
+  else
+    "$@"
+  fi
+}
+
 # Check the Python version
 if [ "$PYTHON_VERSION" != "3.11" ] && [ "$PYTHON_VERSION" != "3.12" ]; then
     echo ""
@@ -222,11 +231,11 @@ if ! command -v git-lfs &> /dev/null; then
     else
         # For Linux
         if command -v apt-get &> /dev/null; then
-            sudo apt-get update && sudo apt-get install -y git-lfs
+            pm_run apt-get update && pm_run apt-get install -y git-lfs
         elif command -v dnf &> /dev/null; then
-            sudo dnf install -y git-lfs
+            pm_run dnf install -y git-lfs
         elif command -v yum &> /dev/null; then
-            sudo yum install -y git-lfs
+            pm_run yum install -y git-lfs
         else
             echo -e "${RED}Error: Could not determine package manager to install Git LFS${RESET}"
             echo -e "Please install Git LFS manually: https://git-lfs.com/"
@@ -241,6 +250,20 @@ get_node https://github.com/kijai/ComfyUI-KJNodes comfyui-kjnodes
 get_node https://github.com/kijai/ComfyUI-WanVideoWrapper ComfyUI-WanVideoWrapper
 get_node https://github.com/Enemyx-net/VibeVoice-ComfyUI VibeVoice-ComfyUI
 get_node https://github.com/ussoewwin/ComfyUI-QwenImageLoraLoader ComfyUI-QwenImageLoraLoader
+# Ensure unzip exists, then extract helper folders (to provide Add-Ons and other helpers)
+if ! command -v unzip >/dev/null 2>&1; then
+    if command -v apt-get &> /dev/null; then
+        pm_run apt-get update && pm_run apt-get install -y unzip
+    elif command -v dnf &> /dev/null; then
+        pm_run dnf install -y unzip
+    elif command -v yum &> /dev/null; then
+        pm_run yum install -y unzip
+    else
+        echo -e "${RED}Error: 'unzip' not found and package manager not detected. Please install unzip and rerun.${RESET}"
+        read -p "Press any key to Exit..."
+        exit 1
+    fi
+fi
 # Extracting helper folders (to provide Add-Ons and other helpers)
 cd ../
 unzip -o ./"$HLPR_NAME" -d ./
@@ -261,11 +284,11 @@ if [[ "$(uname)" == "Darwin" ]]; then
     if command -v brew &> /dev/null; then brew install cmake; fi
 else
     if command -v apt-get &> /dev/null; then
-        sudo apt-get update && sudo apt-get install -y build-essential cmake python3-dev
+        pm_run apt-get update && pm_run apt-get install -y build-essential cmake python3-dev
     elif command -v dnf &> /dev/null; then
-        sudo dnf install -y gcc gcc-c++ cmake make python3-devel
+        pm_run dnf install -y gcc gcc-c++ cmake make python3-devel
     elif command -v yum &> /dev/null; then
-        sudo yum install -y gcc gcc-c++ cmake make python3-devel
+        pm_run yum install -y gcc gcc-c++ cmake make python3-devel
     fi
 fi
 python -m uv pip install llama-cpp-python $UV_ARGS
