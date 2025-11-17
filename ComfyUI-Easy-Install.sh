@@ -268,13 +268,7 @@ fi
 cd ../
 unzip -o ./"$HLPR_NAME" -d ./
 cd ComfyUI-Easy-Install
-# INSTALLING Add-Ons :::
-# Installing Nunchaku ::
-if [ -f "Add-Ons/Nunchaku-NEXT.sh" ]; then bash Add-Ons/Nunchaku-NEXT.sh NoPause; else echo -e "${YELLOW}Skipping Nunchaku add-on:${RESET} script not found"; fi
-# Installing Insightface ::
-if [ -f "Add-Ons/Insightface-NEXT.sh" ]; then bash Add-Ons/Insightface-NEXT.sh NoPause; else echo -e "${YELLOW}Skipping Insightface add-on:${RESET} script not found"; fi
-# Installing SageAttention ::
-if [ -f "Add-Ons/SageAttention-NEXT.sh" ]; then bash Add-Ons/SageAttention-NEXT.sh NoPause; else echo -e "${YELLOW}Skipping SageAttention add-on:${RESET} script not found"; fi
+echo -e "${GREEN}::::::::::::::: Add-Ons extracted. Skipping automatic Add-Ons installation :::::::::::::::${RESET}"
 
 echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}Required Dependencies${GREEN} :::::::::::::::${RESET}"
 echo ""
