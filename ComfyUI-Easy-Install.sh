@@ -273,42 +273,6 @@ echo -e "${GREEN}::::::::::::::: Add-Ons extracted. Skipping automatic Add-Ons i
 echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}Required Dependencies${GREEN} :::::::::::::::${RESET}"
 echo ""
 
-# Install llama-cpp-python for Searge
-if [[ "$(uname)" == "Darwin" ]]; then
-    if command -v brew &> /dev/null; then brew install cmake; fi
-else
-    if command -v apt-get &> /dev/null; then
-        pm_run apt-get update && pm_run apt-get install -y build-essential cmake python3-dev
-    elif command -v dnf &> /dev/null; then
-        pm_run dnf install -y gcc gcc-c++ cmake make python3-devel
-    elif command -v yum &> /dev/null; then
-        pm_run yum install -y gcc gcc-c++ cmake make python3-devel
-    fi
-fi
-python -m uv pip install llama-cpp-python $UV_ARGS
-# Install pylatexenc for kokoro
-python -m uv pip install pylatexenc $UV_ARGS
-# Install onnxruntime
-python -m uv pip install onnxruntime $UV_ARGS
-python -m uv pip install onnx $UV_ARGS
-# Install flet for REMBG
-python -m uv pip install flet $UV_ARGS
-# Install ffmpeg
-python -m uv pip install python-ffmpeg $UV_ARGS
-
-# Extracting helper folders
-cd ../
-unzip -o ./"$HLPR_NAME" -d ./
-cd ComfyUI-Easy-Install
-
-# Remove Windows-specific embedded Python directories
-if [ -d "python_embeded_3.11" ]; then
-    rm -rf "python_embeded_3.11"
-fi
-if [ -d "python_embeded_3.12" ]; then
-    rm -rf "python_embeded_3.12"
-fi
-
 # Remove all .bat files after extraction
 find . -type f -name "*.bat" -delete
 
