@@ -217,39 +217,10 @@ get_node https://github.com/smthemex/ComfyUI_Sonic ComfyUI_Sonic
 get_node https://github.com/welltop-cn/ComfyUI-TeaCache teacache
 get_node https://github.com/kk8bit/KayTool kaytool
 get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion ComfyUI-TiledDiffusion
-
-# Check and install git-lfs for ComfyUI-LTXVideo
-if ! command -v git-lfs &> /dev/null; then
-    echo -e "${YELLOW}Git LFS not found, installing...${RESET}"
-    if [[ "$(uname)" == "Darwin" ]]; then
-        if ! command -v brew &> /dev/null; then
-            echo -e "${RED}Error: Homebrew is required to install Git LFS on macOS.${RESET}"
-            echo -e "Please install Homebrew first: https://brew.sh/"
-            exit 1
-        fi
-        brew install git-lfs
-    else
-        # For Linux
-        if command -v apt-get &> /dev/null; then
-            pm_run apt-get update && pm_run apt-get install -y git-lfs
-        elif command -v dnf &> /dev/null; then
-            pm_run dnf install -y git-lfs
-        elif command -v yum &> /dev/null; then
-            pm_run yum install -y git-lfs
-        else
-            echo -e "${RED}Error: Could not determine package manager to install Git LFS${RESET}"
-            echo -e "Please install Git LFS manually: https://git-lfs.com/"
-            exit 1
-        fi
-    fi
-    git lfs install
-fi
-
-get_node https://github.com/Lightricks/ComfyUI-LTXVideo ComfyUI-LTXVideo
-get_node https://github.com/kijai/ComfyUI-KJNodes comfyui-kjnodes
 get_node https://github.com/kijai/ComfyUI-WanVideoWrapper ComfyUI-WanVideoWrapper
 get_node https://github.com/Enemyx-net/VibeVoice-ComfyUI VibeVoice-ComfyUI
 get_node https://github.com/ussoewwin/ComfyUI-QwenImageLoraLoader ComfyUI-QwenImageLoraLoader
+
 # Ensure unzip exists, then extract helper folders (to provide Add-Ons and other helpers)
 if ! command -v unzip >/dev/null 2>&1; then
     if command -v apt-get &> /dev/null; then

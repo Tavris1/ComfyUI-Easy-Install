@@ -230,3 +230,5 @@ Scripts/prepared_images/
 Resized/
 prepared_images/*
 FIXES/Linux/install_nunchakuV1.sh
+testinstaller
+testinstaller_linux.sh
