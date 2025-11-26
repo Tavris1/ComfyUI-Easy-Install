@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-Title ComfyUI-Easy-Install NEXT by ivo v1.70.0 (Ep70)
+Title ComfyUI-Easy-Install NEXT by ivo v1.71.0 (Ep71)
 :: Pixaroma Community Edition ::
 
 :: Set the Python version here (3.11 or 3.12 only) ::
@@ -52,6 +52,23 @@ if not exist %HLPR_NAME% (
 :: Capture the start time ::
 for /f "delims=" %%i in ('powershell -command "Get-Date -Format yyyy-MM-dd_HH:mm:ss"') do set start=%%i
 
+:: Show Logo ::
+set BGR=%yellow%
+set FGR=%green%
+echo.
+echo    %BGR%0000000000000000000000000000
+echo    %BGR%000000000000%FGR%0000%BGR%000000000000
+echo    %BGR%0000%FGR%0000000%BGR%0%FGR%0000%BGR%0%FGR%0000000%BGR%0000
+echo    %BGR%0000%FGR%0000000%BGR%0%FGR%0000%BGR%0%FGR%0000000%BGR%0000
+echo    %BGR%0000%FGR%0000%BGR%0000%FGR%0000%BGR%0000%FGR%0000%BGR%0000
+echo    %BGR%0000%FGR%0000%BGR%0000%FGR%0000%BGR%0000%FGR%0000%BGR%0000
+echo    %BGR%0000%FGR%0000%BGR%000000000000%FGR%0000%BGR%0000
+echo    %BGR%0000%FGR%00000000000000000000%BGR%0000
+echo    %BGR%0000%FGR%00000000000000000000%BGR%0000
+echo    %BGR%0000000000000000000000000000
+echo    %BGR%0000000000000000000000000000%reset%
+echo.
+
 :: Clear Pip and uv Cache ::
 call :clear_pip_uv_cache
 
@@ -98,7 +115,6 @@ call :get_node https://github.com/crystian/ComfyUI-Crystools					ComfyUI-Crystoo
 call :get_node https://github.com/rgthree/rgthree-comfy							rgthree-comfy
 call :get_node https://github.com/city96/ComfyUI-GGUF							ComfyUI-GGUF
 call :get_node https://github.com/kijai/ComfyUI-Florence2						ComfyUI-Florence2
-if "%PYTHON_VERSION%"=="3.11" (call :get_node https://github.com/SeargeDP/ComfyUI_Searge_LLM ComfyUI_Searge_LLM)
 call :get_node https://github.com/SeargeDP/ComfyUI_Searge_LLM					ComfyUI_Searge_LLM
 call :get_node https://github.com/gseth/ControlAltAI-Nodes						controlaltai-nodes
 call :get_node https://github.com/stavsap/comfyui-ollama						comfyui-ollama
@@ -123,6 +139,7 @@ call :get_node https://github.com/kijai/ComfyUI-KJNodes							comfyui-kjnodes
 call :get_node https://github.com/kijai/ComfyUI-WanVideoWrapper					ComfyUI-WanVideoWrapper
 call :get_node https://github.com/Enemyx-net/VibeVoice-ComfyUI					VibeVoice-ComfyUI
 call :get_node https://github.com/ussoewwin/ComfyUI-QwenImageLoraLoader			ComfyUI-QwenImageLoraLoader
+call :get_node https://github.com/1038lab/ComfyUI-QwenVL						ComfyUI-QwenVL
 
 echo %green%::::::::::::::: Installing %yellow%Required Dependencies%green% :::::::::::::::%reset%
 echo.
@@ -148,12 +165,12 @@ if "%PYTHON_VERSION%"=="3.12" (xcopy "python_embeded_3.12\*" "python_embeded\" /
 if exist "python_embeded_3.11" rmdir /s /q "python_embeded_3.11"
 if exist "python_embeded_3.12" rmdir /s /q "python_embeded_3.12"
 
-:: INSTALLING Add-Ons :::
-:: Installing Nunchaku ::
+REM :: INSTALLING Add-Ons :::
+REM :: Installing Nunchaku ::
 REM pushd %CD%&&echo.&&call Add-Ons\Nunchaku-NEXT.bat NoPause&&popd
-:: Installing Insightface ::
+REM :: Installing Insightface ::
 REM pushd %CD%&&echo.&&call Add-Ons\Insightface-NEXT.bat NoPause&&popd
-:: Installing SageAttention ::
+REM :: Installing SageAttention ::
 REM pushd %CD%&&echo.&&call Add-Ons\SageAttention-NEXT.bat NoPause&&popd
 
 :: Copy additional files if they exist ::
