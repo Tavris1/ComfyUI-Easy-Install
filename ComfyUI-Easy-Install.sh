@@ -229,6 +229,7 @@ get_node https://github.com/kijai/ComfyUI-KJNodes comfyui-kjnodes
 get_node https://github.com/kijai/ComfyUI-WanVideoWrapper ComfyUI-WanVideoWrapper
 get_node https://github.com/Enemyx-net/VibeVoice-ComfyUI VibeVoice-ComfyUI
 get_node https://github.com/ussoewwin/ComfyUI-QwenImageLoraLoader ComfyUI-QwenImageLoraLoader
+get_node https://github.com/1038lab/ComfyUI-QwenVL ComfyUI-QwenVL      
 
 # Ensure unzip exists, then extract helper folders (to provide Add-Ons and other helpers)
 if ! command -v unzip >/dev/null 2>&1; then
