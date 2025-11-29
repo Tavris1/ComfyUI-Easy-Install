@@ -18,15 +18,15 @@
 
 |||||
 |---|---|---|---|
-|01. [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager)|02. [WAS-Node-Suite](https://github.com/WASasquatch/was-node-suite-comfyui)|03. [Easy-Use](https://github.com/yolain/ComfyUI-Easy-Use)|04. [ControlNet Aux](https://github.com/Fannovel16/comfyui_controlnet_aux)|
-|05. [Comfyroll Studio](https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes)|06. [Crystools](https://github.com/crystian/ComfyUI-Crystools)|07. [rgthree](https://github.com/rgthree/rgthree-comfy)|08. [GGUF](https://github.com/city96/ComfyUI-GGUF)|
-|09. [Florence2](https://github.com/kijai/ComfyUI-Florence2)|10. [Searge_LLM](https://github.com/SeargeDP/ComfyUI_Searge_LLM)|11. [ControlAltAI-Nodes](https://github.com/gseth/ControlAltAI-Nodes)|12. [Ollama](https://github.com/stavsap/comfyui-ollama)|
-|13. [iTools](https://github.com/MohammadAboulEla/ComfyUI-iTools)|14. [seamless-tiling](https://github.com/spinagon/ComfyUI-seamless-tiling)|15. [Inpaint-CropAndStitch](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch)|16. [canvas_tab](https://github.com/Lerc/canvas_tab)|
-|17. [OmniGen](https://github.com/1038lab/ComfyUI-OmniGen)|18. [Inspyrenet-Rembg](https://github.com/john-mnz/ComfyUI-Inspyrenet-Rembg)|19. [AdvancedReduxControl](https://github.com/kaibioinfo/ComfyUI_AdvancedRefluxControl)|20. [VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite)|
-|21. [AdvancedLivePortrait](https://github.com/PowerHouseMan/ComfyUI-AdvancedLivePortrait)|22. [ComfyUI-ToSVG](https://github.com/Yanick112/ComfyUI-ToSVG)|23. [Kokoro](https://github.com/stavsap/comfyui-kokoro)|24. [Janus-Pro](https://github.com/CY-CHENYUE/ComfyUI-Janus-Pro)|
-|25. [Sonic](https://github.com/smthemex/ComfyUI_Sonic)|26. [TeaCache](https://github.com/welltop-cn/ComfyUI-TeaCache)|27. [KayTool](https://github.com/kk8bit/KayTool)|28. [Tiled Diffusion & VAE](https://github.com/shiimizu/ComfyUI-TiledDiffusion)|
-|29. [LTXVideo](https://github.com/Lightricks/ComfyUI-LTXVideo)|30. [KJNodes](https://github.com/kijai/ComfyUI-KJNodes)|31. [WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideoWrapper)|32. [VibeVoice](https://github.com/Enemyx-net/VibeVoice-ComfyUI)|
-|33. [QwenImageLoraLoader](https://github.com/ussoewwin/ComfyUI-QwenImageLoraLoader)34. [QwenVL](https://github.com/1038lab/ComfyUI-QwenVL)
+[🔗](https://github.com/Comfy-Org/ComfyUI-Manager)ComfyUI Manager | [🔗](https://github.com/WASasquatch/was-node-suite-comfyui)WAS-Node-Suite | [🔗](https://github.com/yolain/ComfyUI-Easy-Use)Easy-Use | [🔗](https://github.com/Fannovel16/comfyui_controlnet_aux)ControlNet Aux
+[🔗](https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes)Comfyroll Studio | [🔗](https://github.com/crystian/ComfyUI-Crystools)Crystools | [🔗](https://github.com/rgthree/rgthree-comfy)rgthree | [🔗](https://github.com/city96/ComfyUI-GGUF)GGUF
+[🔗](https://github.com/kijai/ComfyUI-Florence2)Florence2 | [🔗](https://github.com/SeargeDP/ComfyUI_Searge_LLM)Searge_LLM | [🔗](https://github.com/gseth/ControlAltAI-Nodes)ControlAltAI-Nodes | [🔗](https://github.com/stavsap/comfyui-ollama)Ollama
+[🔗](https://github.com/MohammadAboulEla/ComfyUI-iTools)iTools | [🔗](https://github.com/spinagon/ComfyUI-seamless-tiling)seamless-tiling | [🔗](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch)Inpaint-CropAndStitch | [🔗](https://github.com/Lerc/canvas_tab)canvas_tab
+[🔗](https://github.com/1038lab/ComfyUI-OmniGen)OmniGen | [🔗](https://github.com/john-mnz/ComfyUI-Inspyrenet-Rembg)Inspyrenet-Rembg | [🔗](https://github.com/kaibioinfo/ComfyUI_AdvancedRefluxControl)AdvancedReduxControl | [🔗](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite)VideoHelperSuite
+[🔗](https://github.com/PowerHouseMan/ComfyUI-AdvancedLivePortrait)AdvancedLivePortrait | [🔗](https://github.com/Yanick112/ComfyUI-ToSVG)ComfyUI-ToSVG | [🔗](https://github.com/stavsap/comfyui-kokoro)Kokoro | [🔗](https://github.com/CY-CHENYUE/ComfyUI-Janus-Pro)Janus-Pro
+[🔗](https://github.com/smthemex/ComfyUI_Sonic)Sonic | [🔗](https://github.com/welltop-cn/ComfyUI-TeaCache)TeaCache | [🔗](https://github.com/kk8bit/KayTool)KayTool | [🔗](https://github.com/shiimizu/ComfyUI-TiledDiffusion)Tiled Diffusion & VAE
+[🔗](https://github.com/Lightricks/ComfyUI-LTXVideo)LTXVideo | [🔗](https://github.com/kijai/ComfyUI-KJNodes)KJNodes | [🔗](https://github.com/kijai/ComfyUI-WanVideoWrapper)WanVideoWrapper | [🔗](https://github.com/Enemyx-net/VibeVoice-ComfyUI)VibeVoice
+[🔗](https://github.com/ussoewwin/ComfyUI-QwenImageLoraLoader)QwenImageLoraLoader | [🔗](https://github.com/1038lab/ComfyUI-QwenVL)QwenVL
 |Optional **Add-ons**|
 |01. [Nunchaku](https://github.com/mit-han-lab/ComfyUI-nunchaku)|02. [SageAttention 2.2.0](https://github.com/thu-ml/SageAttention)|03. [InsightFace](https://github.com/deepinsight/insightface)|Easy-Models-Linker :fire:|
 
