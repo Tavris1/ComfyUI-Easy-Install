@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-Title ComfyUI-Easy-Install NEXT by ivo v1.71.0 (Ep71)
+Title ComfyUI-Easy-Install NEXT by ivo v1.71.1 (Ep71)
 :: Pixaroma Community Edition ::
 
 :: Set the Python version here (3.11 or 3.12 only) ::
@@ -165,26 +165,22 @@ if "%PYTHON_VERSION%"=="3.12" (xcopy "python_embeded_3.12\*" "python_embeded\" /
 if exist "python_embeded_3.11" rmdir /s /q "python_embeded_3.11"
 if exist "python_embeded_3.12" rmdir /s /q "python_embeded_3.12"
 
-REM :: INSTALLING Add-Ons :::
-REM :: Installing Nunchaku ::
+:: Installing Nunchaku from the Add-ons ::
 REM pushd %CD%&&echo.&&call Add-Ons\Nunchaku-NEXT.bat NoPause&&popd
-REM :: Installing Insightface ::
-REM pushd %CD%&&echo.&&call Add-Ons\Insightface-NEXT.bat NoPause&&popd
-REM :: Installing SageAttention ::
+:: Installing SageAttention from the Add-ons ::
 REM pushd %CD%&&echo.&&call Add-Ons\SageAttention-NEXT.bat NoPause&&popd
-
-:: Copy additional files if they exist ::
-call :copy_files run_nvidia_gpu.bat		.\
-call :copy_files run_nvidia_gpu_SageAttention.bat	.\
-call :copy_files extra_model_paths.yaml	ComfyUI
-call :copy_files comfy.settings.json	ComfyUI\user\default
-call :copy_files was_suite_config.json	ComfyUI\custom_nodes\was-node-suite-comfyui
-call :copy_files rgthree_config.json	ComfyUI\custom_nodes\rgthree-comfy
+:: Installing Insightface from the Add-ons ::
+REM pushd %CD%&&echo.&&call Add-Ons\Insightface-NEXT.bat NoPause&&popd
 
 :: Capture the end time ::
 for /f "delims=" %%i in ('powershell -command "Get-Date -Format yyyy-MM-dd_HH:mm:ss"') do set end=%%i
 
 for /f "delims=" %%i in ('powershell -command "$s=[datetime]::ParseExact('%start%','yyyy-MM-dd_HH:mm:ss',$null); $e=[datetime]::ParseExact('%end%','yyyy-MM-dd_HH:mm:ss',$null); if($e -lt $s){$e=$e.AddDays(1)}; ($e-$s).TotalSeconds"') do set diff=%%i
+
+:: Create a shortcut on the desktop ::
+pushd %cd%
+call "ComfyUI\Desktop Shortcut.bat"
+popd
 
 :: Final Messages ::
 echo.
@@ -269,10 +265,6 @@ echo %green%::::::::::::::: Installing%yellow% %git_folder% %green%:::::::::::::
 echo.
 git.exe clone %git_url% ComfyUI/custom_nodes/%git_folder%
 
-REM if exist .\ComfyUI\custom_nodes\%git_folder%\requirements.txt (
-	REM .\python_embeded\python.exe -I -m uv pip install -r .\ComfyUI\custom_nodes\%git_folder%\requirements.txt %UVargs%
-REM )
-
 setlocal enabledelayedexpansion
 if exist ".\ComfyUI\custom_nodes\%git_folder%\requirements.txt" (
     for %%F in (".\ComfyUI\custom_nodes\%git_folder%\requirements.txt") do set filesize=%%~zF
@@ -290,8 +282,4 @@ if exist .\ComfyUI\custom_nodes\%git_folder%\install.py (
 endlocal
 
 echo.
-goto :eof
-
-:copy_files
-if exist ..\%~1 (if exist .\%~2 copy ..\%~1 .\%~2\>nul)
 goto :eof
