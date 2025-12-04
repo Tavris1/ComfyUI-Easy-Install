@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-Title ComfyUI-Easy-Install NEXT by ivo v1.71.1 (Ep71)
+Title ComfyUI-Easy-Install NEXT by ivo v1.71.2 (Ep71)
 :: Pixaroma Community Edition ::
 
 :: Set the Python version here (3.11 or 3.12 only) ::
@@ -102,8 +102,8 @@ cd ComfyUI-Easy-Install
 call :install_comfyui
 
 :: Install working version of stringzilla (damn it) ::
-REM .\python_embeded\python.exe -I -m uv pip install stringzilla==3.12.6 %UVargs%
-REM echo.
+.\python_embeded\python.exe -I -m uv pip install stringzilla==3.12.6 %UVargs%
+echo.
 
 :: Install Pixaroma's Related Nodes ::
 call :get_node https://github.com/Comfy-Org/ComfyUI-Manager						comfyui-manager
@@ -134,7 +134,7 @@ call :get_node https://github.com/smthemex/ComfyUI_Sonic						ComfyUI_Sonic
 call :get_node https://github.com/welltop-cn/ComfyUI-TeaCache					teacache
 call :get_node https://github.com/kk8bit/KayTool								kaytool
 call :get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion				ComfyUI-TiledDiffusion
-call :get_node https://github.com/Lightricks/ComfyUI-LTXVideo					ComfyUI-LTXVideo
+REM call :get_node https://github.com/Lightricks/ComfyUI-LTXVideo					ComfyUI-LTXVideo
 call :get_node https://github.com/kijai/ComfyUI-KJNodes							comfyui-kjnodes
 call :get_node https://github.com/kijai/ComfyUI-WanVideoWrapper					ComfyUI-WanVideoWrapper
 call :get_node https://github.com/Enemyx-net/VibeVoice-ComfyUI					VibeVoice-ComfyUI
