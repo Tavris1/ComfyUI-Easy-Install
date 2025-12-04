@@ -141,7 +141,7 @@ install_comfyui() {
     "$PYTHON_CMD" -m venv python_embeded
     source python_embeded/bin/activate
 
-    python -m uv pip install $UV_ARGS "stringzilla==3.12.6"
+    python -m pip install $UV_ARGS "stringzilla==3.12.6"
     python -m pip install $PIP_ARGS uv
     python -m pip install $PIP_ARGS torch torchvision torchaudio
     python -m uv pip install $UV_ARGS pygit2
