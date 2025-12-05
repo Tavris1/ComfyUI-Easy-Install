@@ -143,6 +143,7 @@ install_comfyui() {
 
     python -m pip install $PIP_ARGS "stringzilla==3.12.6"
     python -m pip install $PIP_ARGS "uv==0.9.7"
+    python -m pip install $PIP_ARGS "typing-extensions>=4.10.0"
     python -m pip install $PIP_ARGS "torch==2.8.0" "torchvision==0.23.0" "torchaudio==2.8.0" --index-url https://download.pytorch.org/whl/cu128
     python -m uv pip install $UV_ARGS pygit2
     cd ComfyUI
