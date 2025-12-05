@@ -142,8 +142,8 @@ install_comfyui() {
     source python_embeded/bin/activate
 
     python -m pip install $PIP_ARGS "stringzilla==3.12.6"
-    python -m pip install $PIP_ARGS uv
-    python -m pip install $PIP_ARGS torch torchvision torchaudio
+    python -m pip install $PIP_ARGS "uv==0.9.7"
+    python -m pip install $PIP_ARGS "torch==2.8.0" "torchvision==0.23.0" "torchaudio==2.8.0" --index-url https://download.pytorch.org/whl/cu128
     python -m uv pip install $UV_ARGS pygit2
     cd ComfyUI
     python -m uv pip install -r requirements.txt $UV_ARGS
