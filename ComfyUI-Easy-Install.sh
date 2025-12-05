@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title: ComfyUI-Easy-Install NEXT by ivo v1.72. (Ep70)
+# Title: ComfyUI-Easy-Install NEXT by ivo v1.71.2 (Ep71)
 # Pixaroma Community Edition
 # macOS and Linux conversion
 
