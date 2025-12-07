@@ -37,8 +37,8 @@ Easy-Models-Linker :fire: | Torch-Pack :sparkles: | model2GGUF :sparkles:
 
 ---
 ## Windows Installation
-<!-- 1. Download the [:arrow_forward:latest release here◀️](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip) --> 
-1. Download the [:arrow_forward:latest release here◀️](https://github.com/Tavris1/ComfyUI-Easy-Install/archive/refs/heads/Windows.zip)
+1. Download the [:arrow_forward:latest release here◀️](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+<!-- 1. Download the [:arrow_forward:latest release here◀️](https://github.com/Tavris1/ComfyUI-Easy-Install/archive/refs/heads/Windows.zip) --> 
 2. Extract the ZIP file to a new folder and run **`ComfyUI-Easy-Install.bat`** to start setup.
 3. After setup, you may optionally install or run the following components from the **Add-ons** folder:
     - **Nunchaku** _- v1.0.2_
@@ -101,5 +101,6 @@ Thank you for using **ComfyUI-Easy-Install**.
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)
+
 
 
