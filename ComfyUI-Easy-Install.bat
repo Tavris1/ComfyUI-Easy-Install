@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-Title ComfyUI-Easy-Install NEXT by ivo v1.71.2 (Ep71)
+Title ComfyUI-Easy-Install NEXT by ivo v1.71.3 (Ep71)
 :: Pixaroma Community Edition ::
 
 :: Set the Python version here (3.11 or 3.12 only) ::
@@ -101,8 +101,14 @@ cd ComfyUI-Easy-Install
 :: Install ComfyUI ::
 call :install_comfyui
 
+echo %green%::::::::::::::: %yellow%Pre-installation of required modules%green% :::::::::::::::%reset%
+echo.
+:: Install llama-cpp-python for Searge ::
+if "%PYTHON_VERSION%"=="3.12" (.\python_embeded\python.exe -I -m uv pip install https://github.com/abetlen/llama-cpp-python/releases/download/v0.3.4-cu124/llama_cpp_python-0.3.4-cp312-cp312-win_amd64.whl %UVargs%)
 :: Install working version of stringzilla (damn it) ::
 .\python_embeded\python.exe -I -m uv pip install stringzilla==3.12.6 %UVargs%
+:: Install scikit-build-core ::
+.\python_embeded\python.exe -I -m uv pip install scikit-build-core %UVargs%
 echo.
 
 :: Install Pixaroma's Related Nodes ::
@@ -134,18 +140,16 @@ call :get_node https://github.com/smthemex/ComfyUI_Sonic						ComfyUI_Sonic
 call :get_node https://github.com/welltop-cn/ComfyUI-TeaCache					teacache
 call :get_node https://github.com/kk8bit/KayTool								kaytool
 call :get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion				ComfyUI-TiledDiffusion
-REM call :get_node https://github.com/Lightricks/ComfyUI-LTXVideo					ComfyUI-LTXVideo
+call :get_node https://github.com/Lightricks/ComfyUI-LTXVideo					ComfyUI-LTXVideo
 call :get_node https://github.com/kijai/ComfyUI-KJNodes							comfyui-kjnodes
 call :get_node https://github.com/kijai/ComfyUI-WanVideoWrapper					ComfyUI-WanVideoWrapper
 call :get_node https://github.com/Enemyx-net/VibeVoice-ComfyUI					VibeVoice-ComfyUI
 call :get_node https://github.com/ussoewwin/ComfyUI-QwenImageLoraLoader			ComfyUI-QwenImageLoraLoader
 call :get_node https://github.com/1038lab/ComfyUI-QwenVL						ComfyUI-QwenVL
 
-echo %green%::::::::::::::: Installing %yellow%Required Dependencies%green% :::::::::::::::%reset%
+echo %green%::::::::::::::: Installing %yellow%Required Modules%green% :::::::::::::::%reset%
 echo.
 
-:: Install llama-cpp-python for Searge ::
-if "%PYTHON_VERSION%"=="3.12" (.\python_embeded\python.exe -I -m uv pip install https://github.com/abetlen/llama-cpp-python/releases/download/v0.3.4-cu124/llama_cpp_python-0.3.4-cp312-cp312-win_amd64.whl %UVargs%)
 :: Install pylatexenc for kokoro ::
 .\python_embeded\python.exe -I -m uv pip install https://www.piwheels.org/simple/pylatexenc/pylatexenc-3.0a32-py3-none-any.whl %UVargs%
 :: Install onnxruntime ::
