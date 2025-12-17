@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-Title ComfyUI-Easy-Install NEXT by ivo v1.71.4 (Ep71)
+Title ComfyUI-Easy-Install NEXT by ivo v1.72.0 (Ep72)
 :: Pixaroma Community Edition ::
 
 :: Set the Python version here (3.11 or 3.12 only) ::
@@ -26,11 +26,11 @@ set "CURLargs=--retry 200 --retry-all-errors"
 set "UVargs=--no-cache --link-mode=copy"
 
 :: Set local path only (temporarily) ::
-for /f "delims=" %%G in ('cmd /c "where git.exe 2>nul"') do (set "GIT_PATH=%%~dpG")
-set path=%GIT_PATH%
-if exist %windir%\System32 set path=%PATH%;%windir%\System32
-if exist %windir%\System32\WindowsPowerShell\v1.0 set path=%PATH%;%windir%\System32\WindowsPowerShell\v1.0
-if exist %localappdata%\Microsoft\WindowsApps set path=%PATH%;%localappdata%\Microsoft\WindowsApps
+for /f "delims=" %%G in ('cmd /c "where.exe git.exe 2>nul"') do (set "GIT_PATH=%%~dpG")
+set "path=%GIT_PATH%"
+if exist "%windir%\system32" set "path=%PATH%;%windir%\System32"
+if exist "%windir%\system32\WindowsPowerShell\v1.0" set "path=%PATH%;%windir%\system32\WindowsPowerShell\v1.0"
+if exist "%localappdata%\Microsoft\WindowsApps" set "path=%PATH%;%localappdata%\Microsoft\WindowsApps"
 
 :: Check for Existing ComfyUI Folder ::
 if exist ComfyUI-Easy-Install (
@@ -218,7 +218,7 @@ echo.
 
 :: Winget Install: ms-windows-store://pdp/?productid=9NBLGGH4NNS1 ::
 winget.exe install --id Git.Git -e --source winget
-set path=%PATH%;%ProgramFiles%\Git\cmd
+set "path=%PATH%;%ProgramFiles%\Git\cmd"
 echo.
 goto :eof
 
@@ -263,8 +263,8 @@ echo.
 goto :eof
 
 :get_node
-set git_url=%~1
-set git_folder=%~2
+set "git_url=%~1"
+set "git_folder=%~2"
 echo %green%::::::::::::::: Installing%yellow% %git_folder% %green%:::::::::::::::%reset%
 echo.
 git.exe clone %git_url% ComfyUI/custom_nodes/%git_folder%
