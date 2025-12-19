@@ -50,7 +50,7 @@ Easy-Models-Linker :sparkles: | Torch-Pack :sparkles: | model2GGUF :sparkles:
 - :small_orange_diamond: **Nunchaku :sparkles:** _Installs **Nunchaku**, the latest **transformers** (Nunchaku downgraded it) and **numpy 1.26.4**_  
   - _If you encounter problems with Nunchaku later, simply start **Nunchaku.bat** again_
 - :small_orange_diamond: **SageAttention :sparkles:** _Installs **Triton** and **SageAttention** v2.2.0 and creates **`run_nvidia_gpu_SageAttention`**_
-- :small_orange_diamond: **InsightFace :sparkles:** _Installs **InsightFace** with all required modules_
+- :small_orange_diamond: **InsightFace :sparkles:** _Installs **InsightFace** with all modules (Pretrained models for non-commercial research only)_
 - :small_orange_diamond: **Torch-Pack :sparkles:** _Switch between these Torch versions (reinstall **Nunchaku** & **SageAttention** afterwards):_
     - _**Torch 2.7.1+cu128**_
     - _**Torch 2.8.0+cu128 (default)**_
@@ -106,6 +106,7 @@ Thank you for using **ComfyUI-Easy-Install**.
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)
+
 
 
 
