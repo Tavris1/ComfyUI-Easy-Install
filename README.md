@@ -44,21 +44,14 @@ Easy-Models-Linker :sparkles: | Torch-Pack :sparkles: | model2GGUF :sparkles:
 :one: Download the [:arrow_forward:**latest release here**◀️](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)  
 :two: Extract the ZIP file to a new folder and run **`ComfyUI-Easy-Install.bat`** to start setup  
 :three: After setup, you may optionally install or run the following components from the **Add-ons** folder:  
-- :small_orange_diamond: **Easy-Models-Linker**  
+- :small_orange_diamond: **Easy-Models-Linker :sparkles:**  
   - _Creates **`extra_model_paths.yaml`** so you can use your existing **`MODELS`** folder without re-downloading_
   - _Some folders like **LLM** and **llm_gguf** cannot be redirected this way_
-- :small_orange_diamond: **Nunchaku**  
-  - _Installs **Nunchaku**_
-  - _Installs the latest version of **transformers** (Nunchaku may downgrade it)_
-  - _Installs **numpy 1.26.4**, which is compatible with Nunchaku_  
-  _TIP: If you encounter problems with Nunchaku later, simply reinstall it_
-- :small_orange_diamond: **SageAttention**
-  - _Installs **Triton** and **SageAttention** - v2.2.0_
-  - _Creates **`run_nvidia_gpu_SageAttention.bat`**_
-- :small_orange_diamond: **InsightFace** _- MIT License. Pretrained models for non-commercial research only_  
-  - _Installs **InsightFace** with all required modules_
-- :small_orange_diamond: **Torch-Pack :sparkles:** _(located in **Add-Ons\Torch-Pack**)_
-  - _Allows quick switching between these Torch versions (reinstall **Nunchaku** and **SageAttention** afterwards):_
+- :small_orange_diamond: **Nunchaku :sparkles:** _Installs **Nunchaku**, the latest **transformers** (Nunchaku downgraded it) and **numpy 1.26.4**_  
+  - _If you encounter problems with Nunchaku later, simply start **Nunchaku.bat** again_
+- :small_orange_diamond: **SageAttention :sparkles:** _Installs **Triton** and **SageAttention** v2.2.0 and creates **`run_nvidia_gpu_SageAttention`**_
+- :small_orange_diamond: **InsightFace :sparkles:** _Installs **InsightFace** with all required modules_
+- :small_orange_diamond: **Torch-Pack :sparkles:** _Switch between these Torch versions (reinstall **Nunchaku** & **SageAttention** afterwards):_
     - _**Torch 2.7.1+cu128**_
     - _**Torch 2.8.0+cu128 (default)**_
     - _**Torch 2.9.1+cu130** (requires NVIDIA driver v580 or higher)_
@@ -66,7 +59,7 @@ Easy-Models-Linker :sparkles: | Torch-Pack :sparkles: | model2GGUF :sparkles:
   - _Converts models (`.safetensors`, `.pth`, `.pt`) to **GGUF** format (FP16 or BF16)_
   - _Quantizes models with options from **Q8_0** (highest quality) to **Q2_K** (smaller size), default is **Q4_K_M**_
   - _Applies **5D tensor fixes** if available_  
-_Using this, **flux1-dev.safetensors** (23.8 GB) [🔗](https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/flux1-dev.safetensors?download=true) can be converted to **flux1-dev-Q4_K_M.gguf** (6.45 GB) in **5 min.**_
+_Using this, **flux1-dev.safetensors** (23.8 GB) [🔗](https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/flux1-dev.safetensors?download=true) can be converted to **flux1-dev-Q4_K_M.gguf** (6.45 GB) in **5 min.**_  
 <br>
 
 > [!IMPORTANT]
@@ -113,6 +106,7 @@ Thank you for using **ComfyUI-Easy-Install**.
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)
+
 
 
 
