@@ -37,25 +37,26 @@ Easy-Models-Linker :fire: | Torch-Pack :sparkles: | model2GGUF :sparkles:
 
 ---
 ## Windows Installation
-1. Download the [:arrow_forward:latest release here◀️](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
-<!-- 1. Download the [:arrow_forward:latest release here◀️](https://github.com/Tavris1/ComfyUI-Easy-Install/archive/refs/heads/Windows.zip) --> 
-2. Extract the ZIP file to a new folder and run **`ComfyUI-Easy-Install.bat`** to start setup.
-3. After setup, you may optionally install or run the following components from the **Add-ons** folder:
-    - **Nunchaku** _- v1.0.2_
-    - **SageAttention** _- v2.2.0_
-    - **InsightFace**
-      - _MIT License. Pretrained models for non-commercial research only._
-    - **Easy-Models-Linker :fire:**
-      - _Creates **`extra_model_paths.yaml`** so you can use your existing **`MODELS`** folder without re-downloading._
-        - _Some folders like **LLM** and **llm_gguf** cannot be redirected this way._
-    - **Torch-Pack :sparkles:** _(located in **Add-Ons\Torch-Pack**)_
-      - _Allows quick switching between these Torch versions:  
-      (reinstall **Nunchaku** and **SageAttention** afterwards)_
-        - _**Torch 2.7.1+cu128**_
-        - _**Torch 2.8.0+cu128 (default)**_
-        - _**Torch 2.9.1+cu130**_
-    - **model2GGUF :sparkles:** _(located in **Add-Ons\Tools**)_
-      - _Converts **safetensors/ckpt** models to **FP16/BF16 GGUF** (multiple quantization levels supported)._
+:one: Download the [:arrow_forward:**latest release here**◀️](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)  
+:two: Extract the ZIP file to a new folder and run **`ComfyUI-Easy-Install.bat`** to start setup.  
+:three: After setup, you may optionally install or run the following components from the **Add-ons** folder:  
+- :small_orange_diamond: **Nunchaku** _- v1.0.2_
+- :small_orange_diamond: **SageAttention** _- v2.2.0_
+- :small_orange_diamond: **InsightFace** _- MIT License. Pretrained models for non-commercial research only_
+- :small_orange_diamond: **Easy-Models-Linker :sparkles:**
+  - _Creates **`extra_model_paths.yaml`** so you can use your existing **`MODELS`** folder without re-downloading_
+    - _Some folders like **LLM** and **llm_gguf** cannot be redirected this way_
+- :small_orange_diamond: **Torch-Pack :sparkles:** _(located in **Add-Ons\Torch-Pack**)_
+  - _Allows quick switching between these Torch versions (reinstall **Nunchaku** and **SageAttention** afterwards):_
+    - _**Torch 2.7.1+cu128**_
+    - _**Torch 2.8.0+cu128 (default)**_
+    - _**Torch 2.9.1+cu130** (requires NVIDIA driver v580 or higher)_
+- :small_orange_diamond: **model2GGUF :sparkles:** _(located in **Add-Ons\Tools**)_
+  - _Converts models (`.safetensors`, `.pth`, `.pt`) to **GGUF** format (FP16 or BF16)_
+  - _Quantizes models with options from **Q8_0** (highest quality) to **Q2_K** (smaller size), default is **Q4_K_M**_
+  - _Applies **5D tensor fixes** if available_  
+_[🔗](https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/flux1-dev.safetensors?download=true) **flux1-dev.safetensors** (23.8 GB) can be converted to **flux1-dev-Q4_K_M.gguf** (6.45 GB) in **5 minutes**._  
+<br>
 
 > [!IMPORTANT]
 > - Do **not** run the installer as **Administrator**.
@@ -101,6 +102,7 @@ Thank you for using **ComfyUI-Easy-Install**.
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)
+
 
 
 
