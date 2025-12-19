@@ -66,7 +66,7 @@ Easy-Models-Linker :sparkles: | Torch-Pack :sparkles: | model2GGUF :sparkles:
   - _Converts models (`.safetensors`, `.pth`, `.pt`) to **GGUF** format (FP16 or BF16)_
   - _Quantizes models with options from **Q8_0** (highest quality) to **Q2_K** (smaller size), default is **Q4_K_M**_
   - _Applies **5D tensor fixes** if available_  
-_[🔗](https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/flux1-dev.safetensors?download=true) **flux1-dev.safetensors** (23.8 GB) can be converted to **flux1-dev-Q4_K_M.gguf** (6.45 GB) in **5 minutes**_  
+_Using this, **flux1-dev.safetensors** (23.8 GB) [🔗](https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/flux1-dev.safetensors?download=true) can be converted to **flux1-dev-Q4_K_M.gguf** (6.45 GB) in **5 min.**_
 <br>
 
 > [!IMPORTANT]
@@ -113,6 +113,7 @@ Thank you for using **ComfyUI-Easy-Install**.
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)
+
 
 
 
