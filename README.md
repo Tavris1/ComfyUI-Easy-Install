@@ -29,11 +29,15 @@
 [🔗](https://github.com/Lightricks/ComfyUI-LTXVideo)LTXVideo | [🔗](https://github.com/kijai/ComfyUI-KJNodes)KJNodes | [🔗](https://github.com/kijai/ComfyUI-WanVideoWrapper)WanVideoWrapper | [🔗](https://github.com/Enemyx-net/VibeVoice-ComfyUI)VibeVoice
 [🔗](https://github.com/ussoewwin/ComfyUI-QwenImageLoraLoader)QwenImageLoraLoader | [🔗](https://github.com/1038lab/ComfyUI-QwenVL)QwenVL  
 
-## Optional **Add-ons**
+## Optional Add-ons Nodes
 ||||
 |---|---|---|
-[🔗](https://github.com/mit-han-lab/ComfyUI-nunchaku)Nunchaku | [🔗](https://github.com/thu-ml/SageAttention)SageAttention 2.2.0 | [🔗](https://github.com/deepinsight/insightface)InsightFace
-Easy-Models-Linker :fire: | Torch-Pack :sparkles: | model2GGUF :sparkles:
+Nunchaku | SageAttention 2.2.0 | InsightFace
+
+## Add-ons Tools
+||||
+|---|---|---|
+Easy-Models-Linker :sparkles: | Torch-Pack :sparkles: | model2GGUF :sparkles:
 
 ---
 ## Windows Installation
@@ -102,6 +106,7 @@ Thank you for using **ComfyUI-Easy-Install**.
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)
+
 
 
 
