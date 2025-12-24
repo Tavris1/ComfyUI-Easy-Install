@@ -162,7 +162,15 @@ get_node() {
 
     if [ -f "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
         if [ -s "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
-            python -m uv pip install -r "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" $UV_ARGS
+            REQ_FILE="./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt"
+            if [[ "${OSTYPE}" == "msys"* || "${OSTYPE}" == "cygwin"* || "${OSTYPE}" == "win32"* ]]; then
+                python -m uv pip install -r "$REQ_FILE" $UV_ARGS
+            else
+                REQ_TMP="${REQ_FILE}.cei.tmp"
+                grep -v -E '^[[:space:]]*triton-windows([<>=!~ ].*)?$' "$REQ_FILE" > "$REQ_TMP" || true
+                python -m uv pip install -r "$REQ_TMP" $UV_ARGS
+                rm -f "$REQ_TMP" || true
+            fi
         fi
     fi
 
