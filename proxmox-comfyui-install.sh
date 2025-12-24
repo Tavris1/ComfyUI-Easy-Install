@@ -132,7 +132,7 @@ $STD bash ComfyUI-Easy-Install.sh
 msg_ok "ComfyUI Installation Complete"
 
 msg_info "Creating ComfyUI Service"
-WORKDIR="/root/temp/ComfyUI-Easy-Install/ComfyUI-Easy-Install"
+WORKDIR="/root/temp/ComfyUI-Easy-Install"
 PYTHON_VENV=""
 
 if [ -d "${WORKDIR}/python_embeded" ]; then
