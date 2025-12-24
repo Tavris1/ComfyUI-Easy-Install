@@ -292,14 +292,14 @@ echo -e "${BLUE}Creating systemd service...${NC}"
 
 # Detect which Python venv was created
 PYTHON_VENV=""
-WORKDIR="/root/temp/ComfyUI-Easy-Install"
+WORKDIR="/root/temp/ComfyUI-Easy-Install/ComfyUI-Easy-Install"
 
-if [ -d "${WORKDIR}/python_embeded_3.12" ]; then
+if [ -d "${WORKDIR}/python_embeded" ]; then
+    PYTHON_VENV="${WORKDIR}/python_embeded/bin/python"
+elif [ -d "${WORKDIR}/python_embeded_3.12" ]; then
     PYTHON_VENV="${WORKDIR}/python_embeded_3.12/bin/python"
 elif [ -d "${WORKDIR}/python_embeded_3.11" ]; then
     PYTHON_VENV="${WORKDIR}/python_embeded_3.11/bin/python"
-elif [ -d "${WORKDIR}/python_embeded" ]; then
-    PYTHON_VENV="${WORKDIR}/python_embeded/bin/python"
 else
     PYTHON_VENV="/usr/bin/python3"
 fi

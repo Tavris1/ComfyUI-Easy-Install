@@ -132,6 +132,19 @@ $STD bash ComfyUI-Easy-Install.sh
 msg_ok "ComfyUI Installation Complete"
 
 msg_info "Creating ComfyUI Service"
+WORKDIR="/root/temp/ComfyUI-Easy-Install/ComfyUI-Easy-Install"
+PYTHON_VENV=""
+
+if [ -d "${WORKDIR}/python_embeded" ]; then
+  PYTHON_VENV="${WORKDIR}/python_embeded/bin/python"
+elif [ -d "${WORKDIR}/python_embeded_3.12" ]; then
+  PYTHON_VENV="${WORKDIR}/python_embeded_3.12/bin/python"
+elif [ -d "${WORKDIR}/python_embeded_3.11" ]; then
+  PYTHON_VENV="${WORKDIR}/python_embeded_3.11/bin/python"
+else
+  PYTHON_VENV="/usr/bin/python3"
+fi
+
 cat <<EOF >/etc/systemd/system/comfyui.service
 [Unit]
 Description=ComfyUI - AI Image Generation
@@ -140,8 +153,8 @@ After=network.target
 [Service]
 Type=simple
 User=root
-WorkingDirectory=/root/temp/ComfyUI-Easy-Install/ComfyUI-Easy-Install
-ExecStart=/root/temp/ComfyUI-Easy-Install/ComfyUI-Easy-Install/python_embeded_3.12/bin/python ComfyUI/main.py --listen 0.0.0.0 --port 8188
+WorkingDirectory=${WORKDIR}
+ExecStart=${PYTHON_VENV} ComfyUI/main.py --listen 0.0.0.0 --port 8188
 Restart=on-failure
 RestartSec=10
 StandardOutput=journal
