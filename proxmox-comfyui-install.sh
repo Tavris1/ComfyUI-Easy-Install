@@ -72,6 +72,59 @@ $STD wget -O ComfyUI-Easy-Install.sh https://raw.githubusercontent.com/Tavris1/C
 chmod +x ComfyUI-Easy-Install.sh
 msg_ok "Downloaded ComfyUI-Easy-Install"
 
+msg_info "Patching ComfyUI-Easy-Install for Linux compatibility"
+python3 - <<'PY'
+from __future__ import annotations
+
+from pathlib import Path
+
+path = Path("ComfyUI-Easy-Install.sh")
+text = path.read_text(encoding="utf-8")
+
+needle = "# Main script execution\n"
+if needle in text and "triton-windows" not in text:
+    override = """
+get_node() {
+    GIT_URL=$1
+    GIT_FOLDER=$2
+    echo -e \"${GREEN}::::::::::::::: Installing${YELLOW} ${GIT_FOLDER} ${GREEN}:::::::::::::::${RESET}\"
+    echo \"\"
+    git clone \"$GIT_URL\" \"ComfyUI/custom_nodes/${GIT_FOLDER}\"
+
+    if [ -f \"./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt\" ]; then
+        if [ -s \"./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt\" ]; then
+            REQ_FILE=\"./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt\"
+            if [[ \"${OSTYPE}\" == \"msys\"* || \"${OSTYPE}\" == \"cygwin\"* || \"${OSTYPE}\" == \"win32\"* ]]; then
+                python -m uv pip install -r \"$REQ_FILE\" $UV_ARGS
+            else
+                if [ \"$GIT_FOLDER\" = \"ComfyUI-RMBG\" ]; then
+                    REQ_TMP=\"${REQ_FILE}.cei.tmp\"
+                    grep -v -E '^[[:space:]]*triton-windows([<>=!~ ].*)?$' \"$REQ_FILE\" > \"$REQ_TMP\" || true
+                    python -m uv pip install -r \"$REQ_TMP\" $UV_ARGS
+                    rm -f \"$REQ_TMP\" || true
+                else
+                    python -m uv pip install -r \"$REQ_FILE\" $UV_ARGS
+                fi
+            fi
+        fi
+    fi
+
+    if [ -f \"./ComfyUI/custom_nodes/${GIT_FOLDER}/install.py\" ]; then
+        if [ -s \"./ComfyUI/custom_nodes/${GIT_FOLDER}/install.py\" ]; then
+            python \"./ComfyUI/custom_nodes/${GIT_FOLDER}/install.py\"
+        fi
+    fi
+    echo \"\"
+}
+
+""".lstrip("\n")
+    text = text.replace(needle, override + needle)
+    path.write_text(text, encoding="utf-8")
+
+print("Patched")
+PY
+msg_ok "Patched ComfyUI-Easy-Install"
+
 msg_info "Running ComfyUI-Easy-Install (This may take 10-30 minutes)"
 # Run the installer non-interactively
 export DEBIAN_FRONTEND=noninteractive
