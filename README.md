@@ -197,9 +197,9 @@ To use models from existing folders on your Mac:
    ```bash
    chmod +x *.sh
    ```
-3. Install ComfyUI in the container:
+3. Setup Container - Install ComfyUI in the container - GPU Passthough:
    ```bash
-   ./ComfyUI-Easy-Install.sh
+   ./comfyui-lxc-standalone.sh
    ```
 
 ### Container Configuration
