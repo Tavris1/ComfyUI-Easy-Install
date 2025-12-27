@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-Title ComfyUI-Easy-Install NEXT by ivo v1.73.0 (Ep73)
+Title ComfyUI-Easy-Install NEXT by ivo v1.73.1 (Ep73)
 :: Pixaroma Community Edition ::
 
 :: Set the Python version here (3.11 or 3.12 only) ::
