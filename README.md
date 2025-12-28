@@ -19,25 +19,20 @@
 
 |||||
 |---|---|---|---|
-[🔗](https://github.com/Comfy-Org/ComfyUI-Manager)ComfyUI Manager | [🔗](https://github.com/WASasquatch/was-node-suite-comfyui)WAS-Node-Suite | [🔗](https://github.com/yolain/ComfyUI-Easy-Use)Easy-Use | [🔗](https://github.com/Fannovel16/comfyui_controlnet_aux)ControlNet Aux
-[🔗](https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes)Comfyroll Studio | [🔗](https://github.com/crystian/ComfyUI-Crystools)Crystools | [🔗](https://github.com/rgthree/rgthree-comfy)rgthree | [🔗](https://github.com/city96/ComfyUI-GGUF)GGUF
-[🔗](https://github.com/kijai/ComfyUI-Florence2)Florence2 | [🔗](https://github.com/SeargeDP/ComfyUI_Searge_LLM)Searge_LLM | [🔗](https://github.com/gseth/ControlAltAI-Nodes)ControlAltAI-Nodes | [🔗](https://github.com/stavsap/comfyui-ollama)Ollama
-[🔗](https://github.com/MohammadAboulEla/ComfyUI-iTools)iTools | [🔗](https://github.com/spinagon/ComfyUI-seamless-tiling)seamless-tiling | [🔗](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch)Inpaint-CropAndStitch | [🔗](https://github.com/Lerc/canvas_tab)canvas_tab
-[🔗](https://github.com/1038lab/ComfyUI-OmniGen)OmniGen | [🔗](https://github.com/john-mnz/ComfyUI-Inspyrenet-Rembg)Inspyrenet-Rembg | [🔗](https://github.com/kaibioinfo/ComfyUI_AdvancedRefluxControl)AdvancedReduxControl | [🔗](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite)VideoHelperSuite
-[🔗](https://github.com/PowerHouseMan/ComfyUI-AdvancedLivePortrait)AdvancedLivePortrait | [🔗](https://github.com/Yanick112/ComfyUI-ToSVG)ComfyUI-ToSVG | [🔗](https://github.com/stavsap/comfyui-kokoro)Kokoro | [🔗](https://github.com/CY-CHENYUE/ComfyUI-Janus-Pro)Janus-Pro
-[🔗](https://github.com/smthemex/ComfyUI_Sonic)Sonic | [🔗](https://github.com/welltop-cn/ComfyUI-TeaCache)TeaCache | [🔗](https://github.com/kk8bit/KayTool)KayTool | [🔗](https://github.com/shiimizu/ComfyUI-TiledDiffusion)Tiled Diffusion & VAE
-[🔗](https://github.com/Lightricks/ComfyUI-LTXVideo)LTXVideo | [🔗](https://github.com/kijai/ComfyUI-KJNodes)KJNodes | [🔗](https://github.com/kijai/ComfyUI-WanVideoWrapper)WanVideoWrapper | [🔗](https://github.com/Enemyx-net/VibeVoice-ComfyUI)VibeVoice
-[🔗](https://github.com/ussoewwin/ComfyUI-QwenImageLoraLoader)QwenImageLoraLoader | [🔗](https://github.com/1038lab/ComfyUI-QwenVL)QwenVL  
+[🔗](https://github.com/Comfy-Org/ComfyUI-Manager) ComfyUI Manager | [🔗](https://github.com/yolain/ComfyUI-Easy-Use) Easy-Use | [🔗](https://github.com/Fannovel16/comfyui_controlnet_aux) ControlNet Aux | [🔗](https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes) Comfyroll Studio
+ [🔗](https://github.com/rgthree/rgthree-comfy) rgthree | [🔗](https://github.com/city96/ComfyUI-GGUF) GGUF | [🔗](https://github.com/MohammadAboulEla/ComfyUI-iTools) iTools | [🔗](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch) Inpaint-CropAndStitch
+ [🔗](https://github.com/1038lab/ComfyUI-RMBG) RMBG | [🔗](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) VideoHelperSuite | [🔗](https://github.com/welltop-cn/ComfyUI-TeaCache) TeaCache | [🔗](https://github.com/shiimizu/ComfyUI-TiledDiffusion) Tiled Diffusion & VAE
+ [🔗](https://github.com/kijai/ComfyUI-KJNodes) KJNodes | [🔗](https://github.com/kijai/ComfyUI-WanVideoWrapper) WanVideoWrapper |  [🔗](https://github.com/1038lab/ComfyUI-QwenVL) QwenVL  
 
 ## Optional Add-ons Nodes
 ||||
 |---|---|---|
-Nunchaku | SageAttention 2.2.0 | InsightFace
+[🔗](https://github.com/nunchaku-tech/ComfyUI-nunchaku) Nunchaku | [🔗](https://github.com/thu-ml/SageAttention) SageAttention 2.2.0 | [🔗](https://github.com/deepinsight/insightface) InsightFace
 
 ## Add-ons Tools
-||||
-|---|---|---|
-Easy-Models-Linker :sparkles: | Torch-Pack :sparkles: | model2GGUF :sparkles:
+|||||
+|---|---|---|---|
+Easy-Models-Linker :sparkles: | Torch-Pack :sparkles: | Easy-model2GGUF :sparkles: | Long-Paths-Enabler :sparkles:
 
 ---
 ## Windows Installation
@@ -49,17 +44,26 @@ Easy-Models-Linker :sparkles: | Torch-Pack :sparkles: | model2GGUF :sparkles:
   - _Some folders like **LLM** and **llm_gguf** cannot be redirected this way_
 - :small_orange_diamond: **Nunchaku :sparkles:** _Installs **Nunchaku**, the latest **transformers** (Nunchaku downgraded it) and **numpy 1.26.4**_  
   - _If you encounter problems with Nunchaku later, simply start **Nunchaku.bat** again_
-- :small_orange_diamond: **SageAttention :sparkles:** _Installs **Triton** and **SageAttention** v2.2.0 and creates **`run_nvidia_gpu_SageAttention`**_
+- :small_orange_diamond: **SageAttention :sparkles:** _Installs **Triton** and **SageAttention** v2.2.0 and creates **`Start ComfyUI SageAttention.bat`**_
 - :small_orange_diamond: **InsightFace :sparkles:** _Installs **InsightFace** with all modules (Pretrained models for non-commercial research only)_
 - :small_orange_diamond: **Torch-Pack :sparkles:** _Switch between these Torch versions (reinstall **Nunchaku** & **SageAttention** afterwards):_
     - _**Torch 2.7.1+cu128**_
-    - _**Torch 2.8.0+cu128 (default)**_
-    - _**Torch 2.9.1+cu130** (requires NVIDIA driver v580 or higher)_
-- :small_orange_diamond: **model2GGUF :sparkles:** _(located in **Add-Ons\Tools**)_
+    - _**Torch 2.8.0+cu128**_
+    - _**Torch 2.9.1+cu130** (default, requires NVIDIA driver v580 or higher)_
+- :small_orange_diamond: **Easy-model2GGUF :sparkles:** _(located in **Add-Ons\Tools**)_
   - _Converts models (`.safetensors`, `.pth`, `.pt`) to **GGUF** format (FP16 or BF16)_
   - _Quantizes models with options from **Q8_0** (highest quality) to **Q2_K** (smaller size), default is **Q4_K_M**_
   - _Applies **5D tensor fixes** if available_  
   - _For example, **flux1-dev.safetensors** (23 GB) [🔗](https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/flux1-dev.safetensors?download=true) can be converted to **flux1-dev-Q4_K_M.gguf** (6.5 GB) in **5 min.**_  
+- :small_orange_diamond: **Long-Paths-Enabler :sparkles:** _(located in **Add-Ons\Tools**)_
+  - _Enables **Long Paths** in Windows 10/11 (from 260 to 32,767 characters)_
+  - _Prevents issues with models, custom nodes, and Python dependencies in ComfyUI_
+  - _Checks current state, requests **admin rights only if needed**, and notifies about a restart_
+- :small_orange_diamond: **Update Easy-Install.bat :sparkles:** _(located in **ComfyUI-Easy-Install** main folder)_
+  - _Renames batch files to more user-friendly names **(one-time operation, ComfyUI-Easy-Install v1.x only)**_
+  - _Adds all new features to **Add-ons**, **input folder**, **nodes folder**, and more_
+  - _Fixes errors if necessary (mainly in the nodes folder)_
+  - _Creates desktop shortcuts (custom icons by Ioan/Pixaroma) for starting ComfyUI and opening the output folder_
 <br>
 
 > [!IMPORTANT]
@@ -70,27 +74,6 @@ Easy-Models-Linker :sparkles: | Torch-Pack :sparkles: | model2GGUF :sparkles:
 > - This installation won't affect existing ComfyUI installs. Multiple ComfyUIs are supported.  
 > - After installation, you can rename or move **`ComfyUI-Easy-Install`** folder if needed.  
 
-<!-- > [!TIP]
->> - To keep settings from other ComfyUIs, place these files in the installer folder  
-> They will be copied automatically to the appropriate folders:  
->       - `ru_nvidia_gpu.bat`  
->       - `extra_model_paths.yaml` (refer to [**Extra Model Paths Maker**](https://github.com/Tavris1/ComfyUI-Easy-Install/tree/main#extra-model-paths-maker-open_file_folder) :open_file_folder:)  
->       - `comfy.settings.json` (user/default)  
->       - `was_suite_config.json` (custom_nodes/was-node-suite-comfyui)  
->       - `rgthree_config.json` (custom_nodes/rgthree-comfy)  
-
----
-
-### Easy-Models-Linker :fire:  
-
-1. Place **Extra_Model_Paths_Maker.bat** in your existing **models** folder and run it.  
-This generates an organized `extra_model_paths.yaml` listing all subfolders in the directory.  
-2. Move `extra_model_paths.yaml` to your new **ComfyUI** folder.  
-This allows ComfyUI to use your existing model files without additional downloads.  
-
-> [!NOTE]
->> - Some folders like **LLM** and **llm_gguf** cannot be redirected this way.  -->
-
 ---
 
 ### [macOS / Linux Installation](https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux)
@@ -99,22 +82,11 @@ This allows ComfyUI to use your existing model files without additional download
 
 ## Screenshots  
 <img width="1193" height="643" alt="model2GGUF" src="https://github.com/user-attachments/assets/45f608af-c4e1-4c44-84a4-d8a715409087" />
-<img width="1264" height="442" alt="NEXT-1 6 3" src="https://github.com/user-attachments/assets/7ee461bc-8a94-475a-897a-b90e91022ec0" />  
+<img width="1264" height="440" alt="CEI" src="https://github.com/user-attachments/assets/bfd4912a-3a77-40a5-9cc2-bb2a45097ec8" />
+
 
 ---
 Thank you for using **ComfyUI-Easy-Install**.  
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)
-
-
-
-
-
-
-
-
-
-
-
-
