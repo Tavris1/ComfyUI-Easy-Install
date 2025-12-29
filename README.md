@@ -69,6 +69,7 @@ Easy-Models-Linker :sparkles: | Torch-Pack :sparkles: | Easy-model2GGUF :sparkle
 > [!IMPORTANT]
 > - Do **not** run the installer as **Administrator**.
 > - Avoid system folders (**Program Files**, **Windows**, **C:\\** root).
+> - Make sure your NVIDIA drivers are up to date.
 
 > [!TIP]
 > - This installation won't affect existing ComfyUI installs. Multiple ComfyUIs are supported.  
@@ -90,4 +91,5 @@ Thank you for using **ComfyUI-Easy-Install**.
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)
+
 
