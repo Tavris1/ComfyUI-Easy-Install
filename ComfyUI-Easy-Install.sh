@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title: ComfyUI-Easy-Install NEXT by ivo v1.73.0 (Ep73)
+# Title: ComfyUI-Easy-Install by ivo v2.01.0
 # Pixaroma Community Edition
 # macOS and Linux conversion
 
@@ -144,7 +144,7 @@ install_comfyui() {
     python -m pip install $PIP_ARGS "stringzilla==3.12.6"
     python -m pip install $PIP_ARGS "uv==0.9.7"
     python -m pip install $PIP_ARGS "typing-extensions>=4.10.0"
-    python -m pip install $PIP_ARGS "torch==2.8.0" "torchvision==0.23.0" "torchaudio==2.8.0" --index-url https://download.pytorch.org/whl/cu128
+    python -m pip install $PIP_ARGS "torch==2.9.1" "torchvision==0.24.1" "torchaudio==2.9.1" --index-url https://download.pytorch.org/whl/cu130
     python -m uv pip install $UV_ARGS pygit2
     cd ComfyUI
     python -m uv pip install -r requirements.txt $UV_ARGS
@@ -207,44 +207,31 @@ fi
 clear_pip_uv_cache
 install_comfyui
 
+echo -e "${GREEN}::::::::::::::: ${YELLOW}Pre-installation of required modules${GREEN} :::::::::::::::${RESET}"
+echo ""
+python -m uv pip install scikit-build-core $UV_ARGS
+python -m uv pip install onnxruntime-gpu $UV_ARGS
+python -m uv pip install onnx $UV_ARGS
+python -m uv pip install flet $UV_ARGS
+# Install working version of stringzilla (already done in venv)
+echo ""
+
 # Install Pixaroma's Related Nodes
 get_node https://github.com/Comfy-Org/ComfyUI-Manager comfyui-manager
-get_node https://github.com/WASasquatch/was-node-suite-comfyui was-node-suite-comfyui
 get_node https://github.com/yolain/ComfyUI-Easy-Use ComfyUI-Easy-Use
 get_node https://github.com/Fannovel16/comfyui_controlnet_aux comfyui_controlnet_aux
-get_node https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes ComfyUI_Comfyroll_CustomNodes
-get_node https://github.com/crystian/ComfyUI-Crystools ComfyUI-Crystools
 get_node https://github.com/rgthree/rgthree-comfy rgthree-comfy
-get_node https://github.com/city96/ComfyUI-GGUF ComfyUI-GGUF
-get_node https://github.com/kijai/ComfyUI-Florence2 ComfyUI-Florence2
-if [ "$PYTHON_VERSION" == "3.11" ]; then
-    get_node https://github.com/SeargeDP/ComfyUI_Searge_LLM ComfyUI_Searge_LLM
-fi
-get_node https://github.com/SeargeDP/ComfyUI_Searge_LLM ComfyUI_Searge_LLM
-get_node https://github.com/gseth/ControlAltAI-Nodes controlaltai-nodes
-get_node https://github.com/stavsap/comfyui-ollama comfyui-ollama
 get_node https://github.com/MohammadAboulEla/ComfyUI-iTools comfyui-itools
-get_node https://github.com/spinagon/ComfyUI-seamless-tiling comfyui-seamless-tiling
+get_node https://github.com/city96/ComfyUI-GGUF ComfyUI-GGUF
+get_node https://github.com/gseth/ControlAltAI-Nodes controlaltai-nodes
 get_node https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch comfyui-inpaint-cropandstitch
-get_node https://github.com/Lerc/canvas_tab canvas_tab
-get_node https://github.com/1038lab/ComfyUI-OmniGen comfyui-omnigen
-get_node https://github.com/john-mnz/ComfyUI-Inspyrenet-Rembg comfyui-inspyrenet-rembg
-get_node https://github.com/kaibioinfo/ComfyUI_AdvancedRefluxControl ComfyUI_AdvancedRefluxControl
+get_node https://github.com/1038lab/ComfyUI-RMBG comfyui-rmbg
 get_node https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite comfyui-videohelpersuite
-get_node https://github.com/PowerHouseMan/ComfyUI-AdvancedLivePortrait comfyui-advancedliveportrait
-get_node https://github.com/Yanick112/ComfyUI-ToSVG ComfyUI-ToSVG
-get_node https://github.com/stavsap/comfyui-kokoro comfyui-kokoro
-get_node https://github.com/CY-CHENYUE/ComfyUI-Janus-Pro janus-pro
-get_node https://github.com/smthemex/ComfyUI_Sonic ComfyUI_Sonic
 get_node https://github.com/welltop-cn/ComfyUI-TeaCache teacache
-get_node https://github.com/kk8bit/KayTool kaytool
 get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion ComfyUI-TiledDiffusion
 get_node https://github.com/kijai/ComfyUI-KJNodes comfyui-kjnodes
 get_node https://github.com/kijai/ComfyUI-WanVideoWrapper ComfyUI-WanVideoWrapper
-get_node https://github.com/Enemyx-net/VibeVoice-ComfyUI VibeVoice-ComfyUI
-get_node https://github.com/ussoewwin/ComfyUI-QwenImageLoraLoader ComfyUI-QwenImageLoraLoader
-get_node https://github.com/1038lab/ComfyUI-QwenVL ComfyUI-QwenVL    
-get_node https://github.com/1038lab/ComfyUI-RMBG ComfyUI-RMBG
+get_node https://github.com/1038lab/ComfyUI-QwenVL ComfyUI-QwenVL
 
 # Ensure unzip exists, then extract helper folders (to provide Add-Ons and other helpers)
 if ! command -v unzip >/dev/null 2>&1; then
@@ -274,7 +261,7 @@ PY_VER=$(python -c 'import sys; print(f"cp{sys.version_info.major}{sys.version_i
 if [[ "$PY_VER" == "cp312" ]]; then
     # Linux Python 3.12 - install CUDA wheel via uv
     python -m uv pip install \
-      https://github.com/abetlen/llama-cpp-python/releases/download/v0.3.4-cu124/llama_cpp_python-0.3.4-cp312-cp312-linux_x86_64.whl \
+      https://github.com/abetlen/llama-cpp-python/releases/download/v0.3.16-cu124/llama_cpp_python-0.3.16-cp312-cp312-linux_x86_64.whl \
       $UV_ARGS || true
 fi
 
@@ -299,7 +286,6 @@ copy_files run_nvidia_gpu.sh .
 copy_files run_nvidia_gpu_SageAttention.sh .
 copy_files extra_model_paths.yaml ComfyUI
 copy_files comfy.settings.json ComfyUI/user/default
-copy_files was_suite_config.json ComfyUI/custom_nodes/was-node-suite-comfyui
 copy_files rgthree_config.json ComfyUI/custom_nodes/rgthree-comfy
 
 deactivate
