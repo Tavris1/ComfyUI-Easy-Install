@@ -25,14 +25,15 @@
  [🔗](https://github.com/kijai/ComfyUI-KJNodes) KJNodes | [🔗](https://github.com/kijai/ComfyUI-WanVideoWrapper) WanVideoWrapper |  [🔗](https://github.com/1038lab/ComfyUI-QwenVL) QwenVL  
 
 ## Optional Add-ons Nodes
-||||
-|---|---|---|
-[🔗](https://github.com/nunchaku-tech/ComfyUI-nunchaku) Nunchaku | [🔗](https://github.com/thu-ml/SageAttention) SageAttention 2.2.0 | [🔗](https://github.com/deepinsight/insightface) InsightFace
+||||||
+|---|---|---|---|---|
+[🔗](https://github.com/nunchaku-tech/ComfyUI-nunchaku) Nunchaku | [🔗](https://github.com/thu-ml/SageAttention) SageAttention 2.2.0 | [🔗](https://github.com/Dao-AILab/flash-attention) FlashAttention | [🔗](https://github.com/visualbruno/ComfyUI-Trellis2) Trellis 2.0 | [🔗](https://github.com/deepinsight/insightface) InsightFace
 
 ## Add-ons Tools
 |||||
 |---|---|---|---|
 Easy-Models-Linker :sparkles: | Torch-Pack :sparkles: | Easy-model2GGUF :sparkles: | Long-Paths-Enabler :sparkles:
+ComfyUI-Version-Switcher :sparkles:
 
 ---
 ## Windows Installation
@@ -45,7 +46,9 @@ Easy-Models-Linker :sparkles: | Torch-Pack :sparkles: | Easy-model2GGUF :sparkle
 - :small_orange_diamond: **Nunchaku :sparkles:** _Installs **Nunchaku**, the latest **transformers** (Nunchaku downgraded it) and **numpy 1.26.4**_  
   - _If you encounter problems with Nunchaku later, simply start **Nunchaku.bat** again_
 - :small_orange_diamond: **SageAttention :sparkles:** _Installs **Triton** and **SageAttention** v2.2.0 and creates **`Start ComfyUI SageAttention.bat`**_
+- :small_orange_diamond: **FlashAttention :sparkles:** _Installs **Triton** and **FlashAttention** and creates **`Start ComfyUI FlashAttention.bat`**_
 - :small_orange_diamond: **InsightFace :sparkles:** _Installs **InsightFace** with all modules (Pretrained models for non-commercial research only)_
+- :small_orange_diamond: **Trellis2 :sparkles:** _Installs **Trellis 2.0** and the model (requires **`Torch 2.8.0+cu128`** from the **Add-ons/Torch-Pack**)_
 - :small_orange_diamond: **Torch-Pack :sparkles:** _Switch between these Torch versions (reinstall **Nunchaku** & **SageAttention** afterwards):_
     - _**Torch 2.7.1+cu128**_
     - _**Torch 2.8.0+cu128**_
@@ -63,7 +66,9 @@ Easy-Models-Linker :sparkles: | Torch-Pack :sparkles: | Easy-model2GGUF :sparkle
   - _Renames batch files to more user-friendly names **(one-time operation, ComfyUI-Easy-Install v1.x only)**_
   - _Adds all new features to **Add-ons**, **input folder**, **nodes folder**, and more_
   - _Fixes errors if necessary (mainly in the nodes folder)_
-  - _Creates desktop shortcuts (custom icons by Ioan/Pixaroma) for starting ComfyUI and opening the output folder_
+  - _Creates desktop shortcuts (custom icons by Ioan/Pixaroma)_
+- :small_orange_diamond: **ComfyUI-Version-Switcher :sparkles:** _(located in **Add-Ons\Tools**)_
+  - _Quick, **reversible** rollback to the **previous** ComfyUI version when the **latest** one causes issues_
 <br>
 
 > [!IMPORTANT]
@@ -91,5 +96,3 @@ Thank you for using **ComfyUI-Easy-Install**.
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)
-
-
