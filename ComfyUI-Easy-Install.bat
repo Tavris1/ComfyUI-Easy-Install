@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.01.2"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.01.3"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -197,7 +197,8 @@ goto :eof
 echo %green%::::::::::::::: Installing%yellow% ComfyUI %green%:::::::::::::::%reset%
 echo.
 
-git.exe clone https://github.com/comfyanonymous/ComfyUI ComfyUI
+REM git.exe clone https://github.com/comfyanonymous/ComfyUI ComfyUI
+git.exe clone https://github.com/Comfy-Org/ComfyUI ComfyUI
 
 :: Disable only CRL/OCSP checks for SSL ::
 powershell -Command "[System.Net.ServicePointManager]::CheckCertificateRevocationList = $false"
