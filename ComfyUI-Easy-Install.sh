@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v2.01.2
+# Title ComfyUI-Easy-Install  NEXT by ivo v2.01.3
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -94,7 +94,7 @@ install_comfyui() {
         rm -rf ComfyUI
     fi
     git config --global credential.helper ""
-    git clone https://github.com/comfyanonymous/ComfyUI ComfyUI
+    git clone https://github.com/Comfy-Org/ComfyUI ComfyUI
     if [ ! -d "ComfyUI" ]; then
         echo -e "${RED}Failed to clone ComfyUI. Please check your internet connection and git setup.${RESET}"
         exit 1
