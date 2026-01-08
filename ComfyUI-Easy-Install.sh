@@ -1,11 +1,8 @@
 #!/bin/bash
 
-# Title: ComfyUI-Easy-Install by ivo v2.01.0
+# Title ComfyUI-Easy-Install  NEXT by ivo v2.01.2
 # Pixaroma Community Edition
-# macOS and Linux conversion
-
-# Set the Python version here (3.11 or 3.12 only)
-PYTHON_VERSION="3.12"
+# macOS and Linux conversion by VenimK
 
 # Set colors
 WARNING='\033[33m'
@@ -15,19 +12,11 @@ YELLOW='\033[93m'
 BOLD='\033[1m'
 RESET='\033[0m'
 
-# Helper: run package manager with or without sudo
-pm_run() {
-  if command -v sudo >/dev/null 2>&1; then
-    sudo "$@"
-  else
-    "$@"
-  fi
-}
-
-# Check the Python version
-if [ "$PYTHON_VERSION" != "3.11" ] && [ "$PYTHON_VERSION" != "3.12" ]; then
+PYTHON_VERSION="3.12"
+# And modify the version check to only allow 3.12
+if [ "$PYTHON_VERSION" != "3.12" ]; then
     echo ""
-    echo -e "${WARNING}WARNING: ${RED}Python ${PYTHON_VERSION} is not supported. ${GREEN}Supported versions: 3.11, 3.12${RESET}"
+    echo -e "${WARNING}WARNING: ${RED}Only Python 3.12 is supported.${RESET}"
     echo ""
     read -p "Press any key to exit"
     exit 1
@@ -35,9 +24,10 @@ fi
 
 # Set Ignoring Large File Storage
 export GIT_LFS_SKIP_SMUDGE=1
+export GIT_TERMINAL_PROMPT=0
 
 # Set arguments
-PIP_ARGS="--no-cache-dir --no-warn-script-location --timeout=1000 --retries 200"
+PIP_ARGS="--no-cache-dir --no-warn-script-location --timeout=1000 --retries 10"
 CURL_ARGS="--retry 200 --retry-all-errors"
 UV_ARGS="--no-cache --link-mode=copy"
 
@@ -100,54 +90,185 @@ cd ComfyUI-Easy-Install
 install_comfyui() {
     echo -e "${GREEN}::::::::::::::: Installing${YELLOW} ComfyUI ${GREEN}:::::::::::::::${RESET}"
     echo ""
+    if [ -d "ComfyUI" ]; then
+        rm -rf ComfyUI
+    fi
+    git config --global credential.helper ""
     git clone https://github.com/comfyanonymous/ComfyUI ComfyUI
-
-    if [ "$PYTHON_VERSION" == "3.11" ]; then
-        PYTHON_VER="3.11.9"
-    fi
-    if [ "$PYTHON_VERSION" == "3.12" ]; then
-        PYTHON_VER="3.12.10"
-    fi
-
-    # Resolve Python command (prefer system python3 >= 3.11, else fall back to configured version)
-    if command -v python3 &> /dev/null; then
-        PYTHON_CMD="python3"
-        PYV=$($PYTHON_CMD -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
-        case "$PYV" in
-            3.1[1-9]|3.[2-9]*) ;;  # >= 3.11
-            *)
-                echo -e "${WARNING}WARNING:${RESET} Detected python3 version ${BOLD}${PYV}${RESET}. ${GREEN}Python >= 3.11 is required.${RESET}"
-                echo -e "Install a newer Python or adjust PATH, then rerun."
-                read -p "Press any key to Exit..."
-                exit 1
-                ;;
-        esac
-    elif command -v python"$PYTHON_VERSION" &> /dev/null; then
-        PYTHON_CMD="python${PYTHON_VERSION}"
-    else
-        echo -e "${WARNING}WARNING:${RESET} ${BOLD}'python3'${RESET} or ${BOLD}'python${PYTHON_VERSION}'${RESET} is NOT installed"
-        echo -e "Please install an appropriate Python (>=3.11) and run this installer again"
-        read -p "Press any key to Exit..."
+    if [ ! -d "ComfyUI" ]; then
+        echo -e "${RED}Failed to clone ComfyUI. Please check your internet connection and git setup.${RESET}"
         exit 1
     fi
 
-    # Ensure venv module is available on Debian-based systems
-    if ! $PYTHON_CMD -m venv -h > /dev/null 2>&1; then
-        if command -v apt-get &> /dev/null; then
-            sudo apt-get update && sudo apt-get install -y python3-venv || true
+    # Set Python version and directories
+    PYTHON_VER="3.12.10"
+    PYTHON_EMBED_DIR="python_embeded"
+    PYTHON_EMBED_URL="https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}-embed-$(uname -m).tgz"
+    PYTHON_SRC_URL="https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tgz"
+    
+    echo -e "${GREEN}::::::::::::::: Setting up Python ${PYTHON_VER} Embedded :::::::::::::::${RESET}"
+    
+    # Remove existing directory if it exists
+    rm -rf "$PYTHON_EMBED_DIR"
+    
+    # Create and enter the directory
+    mkdir -p "$PYTHON_EMBED_DIR"
+    cd "$PYTHON_EMBED_DIR"
+    
+    # Download Python embedded
+    echo "Downloading Python ${PYTHON_VER} embedded..."
+    EMBED_TAR_OK=0
+    if curl -L "$PYTHON_EMBED_URL" -o python-embed.tgz; then
+        if tar -tzf python-embed.tgz >/dev/null 2>&1; then
+            EMBED_TAR_OK=1
         fi
     fi
 
-    "$PYTHON_CMD" -m venv python_embeded
-    source python_embeded/bin/activate
+    if [ "$EMBED_TAR_OK" -eq 1 ]; then
+        # Extract embedded Python
+        echo "Extracting Python embedded..."
+        tar -xzf python-embed.tgz
+        rm python-embed.tgz
+        
+        # Set up Python path configuration
+        echo "Configuring Python environment..."
+        PYTHON_CMD="$(pwd)/python3"
+        if [ -x "$PYTHON_CMD" ]; then
+            cat > python << 'EOL'
+#!/usr/bin/env sh
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+exec "$SCRIPT_DIR/python3" "$@"
+EOL
+            chmod +x python
+            PYTHON_CMD="$(pwd)/python"
+        fi
+        
+        # Create python312._pth
+        cat > python312._pth << 'EOL'
+../ComfyUI
+python312.zip
+.
+Lib/site-packages
+Lib
+Scripts
+# import site
+EOL
 
-    python -m pip install $PIP_ARGS "stringzilla==3.12.6"
-    python -m pip install $PIP_ARGS "uv==0.9.7"
-    python -m pip install $PIP_ARGS "typing-extensions>=4.10.0"
-    python -m pip install $PIP_ARGS "torch==2.9.1" "torchvision==0.24.1" "torchaudio==2.9.1" --index-url https://download.pytorch.org/whl/cu130
-    python -m uv pip install $UV_ARGS pygit2
+        # Install pip
+        echo "Installing pip..."
+        curl -sS https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+        $PYTHON_CMD -I get-pip.py
+        rm get-pip.py
+    else
+        echo -e "${YELLOW}Embedded Python archive not available/valid for this platform, falling back to building from source${RESET}"
+        rm -f python-embed.tgz
+
+        echo "Downloading Python ${PYTHON_VER} source..."
+        if ! curl -L "$PYTHON_SRC_URL" -o Python-${PYTHON_VER}.tgz; then
+            echo -e "${RED}Failed to download Python ${PYTHON_VER} source${RESET}"
+            exit 1
+        fi
+
+        echo "Installing system dependencies for Python build..."
+        if [ "$(uname -s)" = "Linux" ]; then
+            if command -v apt-get >/dev/null 2>&1; then
+                # Debian/Ubuntu
+                echo "Detected apt package manager, installing dependencies..."
+                sudo apt-get update
+                sudo apt-get install -y build-essential zlib1g-dev libncurses5-dev \
+                    libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev \
+                    liblzma-dev libbz2-dev libsqlite3-dev libffi-dev
+            elif command -v yum >/dev/null 2>&1; then
+                # RHEL/CentOS
+                echo "Detected yum package manager, installing dependencies..."
+                sudo yum groupinstall -y "Development Tools"
+                sudo yum install -y zlib-devel bzip2-devel openssl-devel ncurses-devel \
+                    sqlite-devel readline-devel xz-devel libffi-devel
+            elif command -v dnf >/dev/null 2>&1; then
+                # Fedora
+                echo "Detected dnf package manager, installing dependencies..."
+                sudo dnf groupinstall -y "Development Tools"
+                sudo dnf install -y zlib-devel bzip2-devel openssl-devel ncurses-devel \
+                    sqlite-devel readline-devel xz-devel libffi-devel
+            elif command -v pacman >/dev/null 2>&1; then
+                # Arch Linux
+                echo "Detected pacman package manager, installing dependencies..."
+                sudo pacman -S --needed --noconfirm base-devel zlib bzip2 openssl \
+                    ncurses sqlite readline xz libffi
+            else
+                echo "Warning: Could not determine package manager. You may need to install build dependencies manually."
+                echo "Required packages: build-essential, zlib1g-dev, liblzma-dev, libbz2-dev, libsqlite3-dev, libffi-dev"
+            fi
+        fi
+
+        echo "Extracting and building Python..."
+        tar -xzf Python-${PYTHON_VER}.tgz
+        cd Python-${PYTHON_VER}
+
+        echo "Configuring Python build..."
+        ./configure --prefix="$(pwd)/.." --enable-optimizations --with-ensurepip=install \
+            --with-system-ffi --with-system-libm
+
+        echo "Building Python (this may take a while)..."
+        MAKE_JOBS="$(getconf _NPROCESSORS_ONLN 2>/dev/null || true)"
+        if [ -z "$MAKE_JOBS" ]; then
+            MAKE_JOBS="$(nproc 2>/dev/null || echo 1)"
+        fi
+        make -j"$MAKE_JOBS"
+        make install
+
+        cd ..
+        rm -rf Python-${PYTHON_VER} Python-${PYTHON_VER}.tgz
+        REAL_PYTHON="$(pwd)/bin/python3"
+        if [ ! -x "$REAL_PYTHON" ]; then
+            echo -e "${RED}Python build did not produce expected binary: $REAL_PYTHON${RESET}"
+            exit 1
+        fi
+
+        cat > python << 'EOL'
+#!/usr/bin/env sh
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+exec "$SCRIPT_DIR/bin/python3" "$@"
+EOL
+        chmod +x python
+
+        cat > python3 << 'EOL'
+#!/usr/bin/env sh
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+exec "$SCRIPT_DIR/bin/python3" "$@"
+EOL
+        chmod +x python3
+
+        PYTHON_CMD="$(pwd)/python"
+    fi
+
+    if [ ! -x "$PYTHON_CMD" ]; then
+        echo -e "${RED}Python setup failed: $PYTHON_CMD not found or not executable${RESET}"
+        exit 1
+    fi
+
+    $PYTHON_CMD -m ensurepip --upgrade >/dev/null 2>&1 || true
+    $PYTHON_CMD -m pip install $PIP_ARGS --upgrade pip
+
+    # Set the full path to the embedded Python
+    EMBEDDED_PYTHON="$PYTHON_CMD"
+    
+    # Return to the original directory
+    cd ..
+    
+    echo -e "${GREEN}Python ${PYTHON_VER} setup complete${RESET}"
+    echo -e "Using Python from: $EMBEDDED_PYTHON"
+
+    # Install required packages using the embedded Python
+    echo "Installing required packages..."
+    $EMBEDDED_PYTHON -m pip install $PIP_ARGS uv==0.9.7
+    $EMBEDDED_PYTHON -m pip install $PIP_ARGS torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1 --index-url https://download.pytorch.org/whl/cu130
+    $EMBEDDED_PYTHON -m uv pip install $UV_ARGS pygit2
+    
+    # Install ComfyUI requirements
+    echo "Installing ComfyUI requirements..."
     cd ComfyUI
-    python -m uv pip install -r requirements.txt $UV_ARGS
+    $EMBEDDED_PYTHON -m uv pip install -r requirements.txt $UV_ARGS
     cd ..
     echo ""
 }
@@ -162,25 +283,13 @@ get_node() {
 
     if [ -f "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
         if [ -s "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
-            REQ_FILE="./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt"
-            if [[ "${OSTYPE}" == "msys"* || "${OSTYPE}" == "cygwin"* || "${OSTYPE}" == "win32"* ]]; then
-                python -m uv pip install -r "$REQ_FILE" $UV_ARGS
-            else
-                if [ "$GIT_FOLDER" = "ComfyUI-RMBG" ]; then
-                    REQ_TMP="${REQ_FILE}.cei.tmp"
-                    grep -v -E '^[[:space:]]*triton-windows([<>=!~ ].*)?$' "$REQ_FILE" > "$REQ_TMP" || true
-                    python -m uv pip install -r "$REQ_TMP" $UV_ARGS
-                    rm -f "$REQ_TMP" || true
-                else
-                    python -m uv pip install -r "$REQ_FILE" $UV_ARGS
-                fi
-            fi
+            $EMBEDDED_PYTHON -m uv pip install -r "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" $UV_ARGS
         fi
     fi
 
     if [ -f "./ComfyUI/custom_nodes/${GIT_FOLDER}/install.py" ]; then
         if [ -s "./ComfyUI/custom_nodes/${GIT_FOLDER}/install.py" ]; then
-            python "./ComfyUI/custom_nodes/${GIT_FOLDER}/install.py"
+            $EMBEDDED_PYTHON "./ComfyUI/custom_nodes/${GIT_FOLDER}/install.py"
         fi
     fi
     echo ""
@@ -195,28 +304,22 @@ copy_files() {
     fi
 }
 
-# Install system dependencies for OpenCV (required by many custom nodes)
-if command -v apt-get &> /dev/null; then
-    echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}OpenCV system dependencies${GREEN} :::::::::::::::${RESET}"
-    pm_run apt-get update
-    pm_run apt-get install -y libglib2.0-0 libsm6 libxext6 libxrender-dev libgomp1 || true
-    echo ""
-fi
-
 # Main script execution
 clear_pip_uv_cache
 install_comfyui
 
 echo -e "${GREEN}::::::::::::::: ${YELLOW}Pre-installation of required modules${GREEN} :::::::::::::::${RESET}"
 echo ""
-python -m uv pip install scikit-build-core $UV_ARGS
-python -m uv pip install onnxruntime-gpu $UV_ARGS
-python -m uv pip install onnx $UV_ARGS
-python -m uv pip install flet $UV_ARGS
-# Install working version of stringzilla (already done in venv)
+$EMBEDDED_PYTHON -m uv pip install scikit-build-core $UV_ARGS
+$EMBEDDED_PYTHON -m uv pip install onnxruntime-gpu $UV_ARGS
+$EMBEDDED_PYTHON -m uv pip install onnx $UV_ARGS
+$EMBEDDED_PYTHON -m uv pip install flet $UV_ARGS
+# Install working version of stringzilla
+$EMBEDDED_PYTHON -m uv pip install stringzilla==3.12.6 $UV_ARGS
 echo ""
 
 # Install Pixaroma's Related Nodes
+# Use the already set PYTHON_CMD
 get_node https://github.com/Comfy-Org/ComfyUI-Manager comfyui-manager
 get_node https://github.com/yolain/ComfyUI-Easy-Use ComfyUI-Easy-Use
 get_node https://github.com/Fannovel16/comfyui_controlnet_aux comfyui_controlnet_aux
@@ -233,47 +336,41 @@ get_node https://github.com/kijai/ComfyUI-KJNodes comfyui-kjnodes
 get_node https://github.com/kijai/ComfyUI-WanVideoWrapper ComfyUI-WanVideoWrapper
 get_node https://github.com/1038lab/ComfyUI-QwenVL ComfyUI-QwenVL
 
-# Ensure unzip exists, then extract helper folders (to provide Add-Ons and other helpers)
-if ! command -v unzip >/dev/null 2>&1; then
-    if command -v apt-get &> /dev/null; then
-        pm_run apt-get update && pm_run apt-get install -y unzip
-    elif command -v dnf &> /dev/null; then
-        pm_run dnf install -y unzip
-    elif command -v yum &> /dev/null; then
-        pm_run yum install -y unzip
-    else
-        echo -e "${RED}Error: 'unzip' not found and package manager not detected. Please install unzip and rerun.${RESET}"
-        read -p "Press any key to Exit..."
-        exit 1
-    fi
-fi
-# Extracting helper folders (to provide Add-Ons and other helpers)
-cd ../
-unzip -o ./"$HLPR_NAME" -d ./
-cd ComfyUI-Easy-Install
-echo -e "${GREEN}::::::::::::::: Add-Ons extracted. Skipping automatic Add-Ons installation :::::::::::::::${RESET}"
+# INSTALLING Add-Ons :::
+# Installing Nunchaku ::
+# bash Add-Ons/Nunchaku-NEXT.sh NoPause
+# Installing Insightface ::
+# bash Add-Ons/Insightface-NEXT.sh NoPause
+# Installing SageAttention ::
+# bash Add-Ons/SageAttention-NEXT.sh NoPause
 
 echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}Required Dependencies${GREEN} :::::::::::::::${RESET}"
 echo ""
 
-# Install llama-cpp-python for Searge_LLM (Python 3.12 only, matches Windows installer)
-PY_VER=$(python -c 'import sys; print(f"cp{sys.version_info.major}{sys.version_info.minor}")')
-if [[ "$PY_VER" == "cp312" ]]; then
-    # Linux Python 3.12 - install CUDA wheel via uv
-    python -m uv pip install \
-      https://github.com/abetlen/llama-cpp-python/releases/download/v0.3.16-cu124/llama_cpp_python-0.3.16-cp312-cp312-linux_x86_64.whl \
-      $UV_ARGS || true
-fi
-
+# Install llama-cpp-python for Searge
+$EMBEDDED_PYTHON -m uv pip install llama-cpp-python $UV_ARGS
 # Install pylatexenc for kokoro
-python -m uv pip install pylatexenc $UV_ARGS
-# Install onnxruntime and onnx
-python -m uv pip install onnxruntime $UV_ARGS
-python -m uv pip install onnx $UV_ARGS
+$EMBEDDED_PYTHON -m uv pip install pylatexenc $UV_ARGS
+# Install onnxruntime
+$EMBEDDED_PYTHON -m uv pip install onnxruntime $UV_ARGS
+$EMBEDDED_PYTHON -m uv pip install onnx $UV_ARGS
 # Install flet for REMBG
-python -m uv pip install flet $UV_ARGS
+$EMBEDDED_PYTHON -m uv pip install flet $UV_ARGS
 # Install ffmpeg
-python -m uv pip install python-ffmpeg $UV_ARGS
+$EMBEDDED_PYTHON -m uv pip install python-ffmpeg $UV_ARGS
+
+# Extracting helper folders
+cd ../
+unzip -o ./"$HLPR_NAME" -d ./
+cd ComfyUI-Easy-Install
+
+# Remove Windows-specific embedded Python directories
+if [ -d "python_embeded_3.11" ]; then
+    rm -rf "python_embeded_3.11"
+fi
+if [ -d "python_embeded_3.12" ]; then
+    rm -rf "python_embeded_3.12"
+fi
 
 # Remove all .bat files after extraction
 find . -type f -name "*.bat" -delete
@@ -287,8 +384,6 @@ copy_files run_nvidia_gpu_SageAttention.sh .
 copy_files extra_model_paths.yaml ComfyUI
 copy_files comfy.settings.json ComfyUI/user/default
 copy_files rgthree_config.json ComfyUI/custom_nodes/rgthree-comfy
-
-deactivate
 
 # Capture the end time
 END_TIME=$(date +%s)
