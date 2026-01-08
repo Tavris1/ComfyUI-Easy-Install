@@ -49,7 +49,7 @@ ComfyUI-Version-Switcher :sparkles:
 - :small_orange_diamond: **FlashAttention :sparkles:** _Installs **Triton** and **FlashAttention** and creates **`Start ComfyUI FlashAttention.bat`**_
 - :small_orange_diamond: **InsightFace :sparkles:** _Installs **InsightFace** with all modules (Pretrained models for non-commercial research only)_
 - :small_orange_diamond: **Trellis2 :sparkles:** _Installs **Trellis 2.0** and the model (requires **`Torch 2.8.0+cu128`** from the **Add-ons/Torch-Pack**)_
-- :small_orange_diamond: **Torch-Pack :sparkles:** _Switch between these Torch versions (reinstall **Nunchaku** & **SageAttention** afterwards):_
+- :small_orange_diamond: **Torch-Pack :sparkles:** _Quick switching between the following Torch versions:_
     - _**Torch 2.7.1+cu128**_
     - _**Torch 2.8.0+cu128**_
     - _**Torch 2.9.1+cu130** (default, requires NVIDIA driver v580 or higher)_
@@ -96,3 +96,4 @@ Thank you for using **ComfyUI-Easy-Install**.
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)
+
