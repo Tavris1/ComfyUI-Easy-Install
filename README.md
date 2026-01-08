@@ -87,7 +87,8 @@ ComfyUI-Version-Switcher :sparkles:
 ---
 
 ## Screenshots  
-<img width="1193" height="643" alt="model2GGUF" src="https://github.com/user-attachments/assets/45f608af-c4e1-4c44-84a4-d8a715409087" />
+
+<img width="1193" height="643" alt="model2GGUF" src="https://github.com/user-attachments/assets/9704bd60-08ee-42aa-b0a3-8cab2fcbcef5" />
 <img width="1264" height="440" alt="CEI" src="https://github.com/user-attachments/assets/bfd4912a-3a77-40a5-9cc2-bb2a45097ec8" />
 
 
@@ -96,4 +97,5 @@ Thank you for using **ComfyUI-Easy-Install**.
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)
+
 
