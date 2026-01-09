@@ -170,7 +170,24 @@ EOL
         fi
 
         echo "Installing system dependencies for Python build..."
-        if [ "$(uname -s)" = "Linux" ]; then
+        if [ "$(uname -s)" = "Darwin" ]; then
+            # macOS
+            if command -v brew >/dev/null 2>&1; then
+                echo "Detected Homebrew, installing dependencies..."
+                brew install openssl readline sqlite3 xz zlib tcl-tk libffi 2>/dev/null || true
+            else
+                echo -e "${YELLOW}Warning: Homebrew not found. Please install build dependencies manually.${RESET}"
+                echo "Install Homebrew: /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
+                echo "Then run: brew install openssl readline sqlite3 xz zlib tcl-tk libffi"
+            fi
+            # Ensure Xcode Command Line Tools are installed
+            if ! xcode-select -p >/dev/null 2>&1; then
+                echo "Installing Xcode Command Line Tools..."
+                xcode-select --install
+                echo "Please complete the Xcode Command Line Tools installation and run this script again."
+                exit 1
+            fi
+        elif [ "$(uname -s)" = "Linux" ]; then
             if command -v apt-get >/dev/null 2>&1; then
                 # Debian/Ubuntu
                 echo "Detected apt package manager, installing dependencies..."
