@@ -18,17 +18,25 @@
 
 |||||
 |---|---|---|---|
-[🔗](https://github.com/Comfy-Org/ComfyUI-Manager)ComfyUI Manager | [🔗](https://github.com/WASasquatch/was-node-suite-comfyui)WAS-Node-Suite | [🔗](https://github.com/yolain/ComfyUI-Easy-Use)Easy-Use | [🔗](https://github.com/Fannovel16/comfyui_controlnet_aux)ControlNet Aux
-[🔗](https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes)Comfyroll Studio | [🔗](https://github.com/crystian/ComfyUI-Crystools)Crystools | [🔗](https://github.com/rgthree/rgthree-comfy)rgthree | [🔗](https://github.com/city96/ComfyUI-GGUF)GGUF
-[🔗](https://github.com/kijai/ComfyUI-Florence2)Florence2 | [🔗](https://github.com/SeargeDP/ComfyUI_Searge_LLM)Searge_LLM | [🔗](https://github.com/gseth/ControlAltAI-Nodes)ControlAltAI-Nodes | [🔗](https://github.com/stavsap/comfyui-ollama)Ollama
-[🔗](https://github.com/MohammadAboulEla/ComfyUI-iTools)iTools | [🔗](https://github.com/spinagon/ComfyUI-seamless-tiling)seamless-tiling | [🔗](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch)Inpaint-CropAndStitch | [🔗](https://github.com/Lerc/canvas_tab)canvas_tab
-[🔗](https://github.com/1038lab/ComfyUI-OmniGen)OmniGen | [🔗](https://github.com/john-mnz/ComfyUI-Inspyrenet-Rembg)Inspyrenet-Rembg | [🔗](https://github.com/kaibioinfo/ComfyUI_AdvancedRefluxControl)AdvancedReduxControl | [🔗](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite)VideoHelperSuite
-[🔗](https://github.com/PowerHouseMan/ComfyUI-AdvancedLivePortrait)AdvancedLivePortrait | [🔗](https://github.com/Yanick112/ComfyUI-ToSVG)ComfyUI-ToSVG | [🔗](https://github.com/stavsap/comfyui-kokoro)Kokoro | [🔗](https://github.com/CY-CHENYUE/ComfyUI-Janus-Pro)Janus-Pro
-[🔗](https://github.com/smthemex/ComfyUI_Sonic)Sonic | [🔗](https://github.com/welltop-cn/ComfyUI-TeaCache)TeaCache | [🔗](https://github.com/kk8bit/KayTool)KayTool | [🔗](https://github.com/shiimizu/ComfyUI-TiledDiffusion)Tiled Diffusion & VAE
-[🔗](https://github.com/Lightricks/ComfyUI-LTXVideo)LTXVideo | [🔗](https://github.com/kijai/ComfyUI-KJNodes)KJNodes | [🔗](https://github.com/kijai/ComfyUI-WanVideoWrapper)WanVideoWrapper | [🔗](https://github.com/Enemyx-net/VibeVoice-ComfyUI)VibeVoice
-[🔗](https://github.com/ussoewwin/ComfyUI-QwenImageLoraLoader)QwenImageLoraLoader | [🔗](https://github.com/1038lab/ComfyUI-QwenVL)QwenVL
-|Optional **Add-ons**|
-|01. [Nunchaku](https://github.com/mit-han-lab/ComfyUI-nunchaku)|02. [SageAttention 2.2.0](https://github.com/thu-ml/SageAttention)|03. [InsightFace](https://github.com/deepinsight/insightface)|Easy-Models-Linker :fire:|
+[🔗](https://github.com/Comfy-Org/ComfyUI-Manager) ComfyUI Manager | [🔗](https://github.com/yolain/ComfyUI-Easy-Use) Easy-Use | [🔗](https://github.com/Fannovel16/comfyui_controlnet_aux) ControlNet Aux | [🔗](https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes) Comfyroll Studio
+ [🔗](https://github.com/rgthree/rgthree-comfy) rgthree | [🔗](https://github.com/city96/ComfyUI-GGUF) GGUF | [🔗](https://github.com/MohammadAboulEla/ComfyUI-iTools) iTools | [🔗](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch) Inpaint-CropAndStitch
+ [🔗](https://github.com/1038lab/ComfyUI-RMBG) RMBG | [🔗](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) VideoHelperSuite | [🔗](https://github.com/welltop-cn/ComfyUI-TeaCache) TeaCache | [🔗](https://github.com/shiimizu/ComfyUI-TiledDiffusion) Tiled Diffusion & VAE
+ [🔗](https://github.com/kijai/ComfyUI-KJNodes) KJNodes | [🔗](https://github.com/kijai/ComfyUI-WanVideoWrapper) WanVideoWrapper |  [🔗](https://github.com/1038lab/ComfyUI-QwenVL) QwenVL  
+
+## Optional Add-ons Nodes
+||||||
+|---|---|---|---|---|
+[🔗](https://github.com/nunchaku-tech/ComfyUI-nunchaku) Nunchaku | [🔗](https://github.com/thu-ml/SageAttention) SageAttention 2.2.0 | [🔗](https://github.com/Dao-AILab/flash-attention) FlashAttention | [🔗](https://github.com/visualbruno/ComfyUI-Trellis2) Trellis 2.0 | [🔗](https://github.com/deepinsight/insightface) InsightFace
+
+## Add-ons Tools
+|||||
+|---|---|---|---|
+Easy-Models-Linker :sparkles: | Torch-Pack :sparkles: ComfyUI-Version-Switcher :sparkles:
+
+- :small_orange_diamond: **Torch-Pack :sparkles:** _Quick switching between the following Torch versions:_
+    - _**Torch 2.7.1+cu128**_
+    - _**Torch 2.8.0+cu128**_
+    - _**Torch 2.9.1+cu130** (default, requires NVIDIA driver v580 or higher)_
 
 ---
 
@@ -54,7 +62,7 @@ Optionally, after setup is complete, install the following from the **Add-ons** 
 A small interactive utility to back up, restore, and manage your ComfyUI data folders.
 
 - **Script**: `Add-Ons/backup_comfyui.sh`
-- **Version**: 1.2 (Pixaroma Community Edition, macOS/Linux by VenimK)
+- **Version**: V2.01.3 (Pixaroma Community Edition, macOS/Linux by VenimK)
 - **Backup location**: `~/ComfyUI_Backups/ComfyUI_backup_YYYYMMDD_HHMMSS`
 
 ## What gets backed up
