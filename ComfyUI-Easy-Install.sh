@@ -151,7 +151,7 @@ python312.zip
 Lib/site-packages
 Lib
 Scripts
-# import site
+import site
 EOL
 
         # Install pip
@@ -188,33 +188,40 @@ EOL
                 exit 1
             fi
         elif [ "$(uname -s)" = "Linux" ]; then
+            # Use sudo only if not running as root
+            SUDO_CMD=""
+            if [ "$(id -u)" -ne 0 ]; then
+                SUDO_CMD="sudo"
+            fi
+            
             if command -v apt-get >/dev/null 2>&1; then
                 # Debian/Ubuntu
                 echo "Detected apt package manager, installing dependencies..."
-                sudo apt-get update
-                sudo apt-get install -y build-essential zlib1g-dev libncurses5-dev \
+                $SUDO_CMD apt-get update
+                $SUDO_CMD apt-get install -y build-essential zlib1g-dev libncurses5-dev \
                     libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev \
-                    liblzma-dev libbz2-dev libsqlite3-dev libffi-dev
+                    liblzma-dev libbz2-dev libsqlite3-dev uuid-dev libdb-dev \
+                    tk-dev libncursesw5-dev unzip
             elif command -v yum >/dev/null 2>&1; then
                 # RHEL/CentOS
                 echo "Detected yum package manager, installing dependencies..."
-                sudo yum groupinstall -y "Development Tools"
-                sudo yum install -y zlib-devel bzip2-devel openssl-devel ncurses-devel \
-                    sqlite-devel readline-devel xz-devel libffi-devel
+                $SUDO_CMD yum groupinstall -y "Development Tools"
+                $SUDO_CMD yum install -y zlib-devel bzip2-devel openssl-devel ncurses-devel \
+                    sqlite-devel readline-devel xz-devel libffi-devel libuuid-devel
             elif command -v dnf >/dev/null 2>&1; then
                 # Fedora
                 echo "Detected dnf package manager, installing dependencies..."
-                sudo dnf groupinstall -y "Development Tools"
-                sudo dnf install -y zlib-devel bzip2-devel openssl-devel ncurses-devel \
-                    sqlite-devel readline-devel xz-devel libffi-devel
+                $SUDO_CMD dnf groupinstall -y "Development Tools"
+                $SUDO_CMD dnf install -y zlib-devel bzip2-devel openssl-devel ncurses-devel \
+                    sqlite-devel readline-devel xz-devel libffi-devel libuuid-devel
             elif command -v pacman >/dev/null 2>&1; then
                 # Arch Linux
                 echo "Detected pacman package manager, installing dependencies..."
-                sudo pacman -S --needed --noconfirm base-devel zlib bzip2 openssl \
+                $SUDO_CMD pacman -S --needed --noconfirm base-devel zlib bzip2 openssl \
                     ncurses sqlite readline xz libffi
             else
                 echo "Warning: Could not determine package manager. You may need to install build dependencies manually."
-                echo "Required packages: build-essential, zlib1g-dev, liblzma-dev, libbz2-dev, libsqlite3-dev, libffi-dev"
+                echo "Required packages: build-essential, zlib1g-dev, liblzma-dev, libbz2-dev, libsqlite3-dev, libffi-dev, libssl-dev"
             fi
         fi
 
