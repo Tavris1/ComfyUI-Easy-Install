@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.01.4"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.01.5"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -229,6 +229,10 @@ REM .\python.exe -I -m pip install torch==2.8.0 torchvision==0.23.0 torchaudio==
 .\python.exe -I -m pip install torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1 --index-url https://download.pytorch.org/whl/cu130 %PIPargs%
 .\python.exe -I -m uv pip install pygit2 %UVargs%
 cd ..\ComfyUI
+
+:: Install working version of av!!! ::
+..\python_embeded\python.exe -I -m uv pip install av==16.0.1 %UVargs%
+
 ..\python_embeded\python.exe -I -m uv pip install -r requirements.txt %UVargs%
 cd ..\
 echo.
