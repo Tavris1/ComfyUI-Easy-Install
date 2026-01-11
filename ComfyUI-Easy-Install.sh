@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v2.01.4
+# Title ComfyUI-Easy-Install  NEXT by ivo v2.01.5
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -288,6 +288,8 @@ EOL
     $EMBEDDED_PYTHON -m pip install $PIP_ARGS uv==0.9.7
     $EMBEDDED_PYTHON -m pip install $PIP_ARGS torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1 --index-url https://download.pytorch.org/whl/cu130
     $EMBEDDED_PYTHON -m uv pip install $UV_ARGS pygit2
+    echo :: Install working version of av!!! Thx @Ivo::
+    $EMBEDDED_PYTHON -m uv pip install $UV_ARGS av==16.0.1    
     
     # Install ComfyUI requirements
     echo "Installing ComfyUI requirements..."
