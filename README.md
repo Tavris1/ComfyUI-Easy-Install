@@ -10,10 +10,10 @@
 > [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_presence_count&logo=discord&logoColor=white&label=Online&color=blue&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
 ---
 
-## Installation List:  
+## Included Components:  
 - [🔗](https://git-scm.com/) **Git** _(will be installed or updated if needed)_  
 - [🔗](https://github.com/comfyanonymous/ComfyUI) **ComfyUI portable**  
-- [🔗](https://www.python.org/downloads/release/python-31210/) **Python 3.12.10 Embedded**
+- [🔗](https://www.python.org/downloads/release/python-31210/) **Python 3.12.10** _(Embedded Portable Version)_
 
 ## Nodes from Pixaroma tutorials on [YouTube](https://www.youtube.com/@pixaroma)  
 
@@ -97,5 +97,6 @@ Thank you for using **ComfyUI-Easy-Install**.
 
 ### [Support me on PayPal](https://paypal.me/tavris1)
 [![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)
+
 
 
