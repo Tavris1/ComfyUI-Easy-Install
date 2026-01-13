@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.01.7"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.01.8"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -207,13 +207,14 @@ powershell -Command "[System.Net.ServicePointManager]::CheckCertificateRevocatio
 REM powershell -Command "Add-Type @'using System.Net;using System.Security.Cryptography.X509Certificates;public class TrustAllCertsPolicy : ICertificatePolicy {public bool CheckValidationResult(ServicePoint srvPoint,X509Certificate certificate,WebRequest request,int certificateProblem){return true;}}'@;[System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy"
 
 md python_embeded&&cd python_embeded
-REM curl.exe -OL https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip --ssl-no-revoke %CURLargs%
-powershell.exe -Command "Invoke-WebRequest -Uri 'https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip' -OutFile 'python-3.12.10-embed-amd64.zip' -UseBasicParsing"
+powershell -Command "try { Invoke-WebRequest 'https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip' -OutFile 'python-3.12.10-embed-amd64.zip' -UseBasicParsing -ErrorAction Stop } catch { curl.exe -L --ssl-no-revoke 'https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip' -o 'python-3.12.10-embed-amd64.zip' }"
+
+
 tar.exe -xf python-3.12.10-embed-amd64.zip
 REM powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath 'python-3.12.10-embed-amd64.zip' -DestinationPath '.' -Force"
 erase python-3.12.10-embed-amd64.zip
-REM curl.exe -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py --ssl-no-revoke %CURLargs%
-powershell.exe -Command "Invoke-WebRequest -Uri 'https://bootstrap.pypa.io/get-pip.py' -OutFile 'get-pip.py' -UseBasicParsing"
+powershell -Command "try { Invoke-WebRequest 'https://bootstrap.pypa.io/get-pip.py' -OutFile 'get-pip.py' -UseBasicParsing -ErrorAction Stop } catch { curl.exe -sSL --ssl-no-revoke 'https://bootstrap.pypa.io/get-pip.py' -o 'get-pip.py' }"
+
 
 Echo ../ComfyUI> python312._pth
 Echo python312.zip>> python312._pth
