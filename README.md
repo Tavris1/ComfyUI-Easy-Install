@@ -87,25 +87,9 @@ ComfyUI-Version-Switcher :sparkles:
 ---
 Thank you for using **ComfyUI-Easy-Install**.  
 
-### ❤️ Support my work
-If you find my projects helpful, consider sponsoring me to help improve and maintain them!
+If you enjoy my projects, please consider sponsoring me. Any support is greatly appreciated!  
 
-<!-- [![Sponsor me on GitHub](https://img.shields.io/github/sponsors/Tavris1?label=Sponsor&logo=GitHub&style=for-the-badge)](https://github.com/sponsors/Tavris1) -->
-Support me on GitHub: https://github.com/sponsors/Tavris1
-
----
-
-### 💜 Support me on PayPal
-
-[![Support me on PayPal](https://img.shields.io/badge/PayPal-Support-blue?logo=paypal&style=for-the-badge)](https://paypal.me/tavris1)
-
-Support me on PayPal: https://paypal.me/tavris1
-
----
-
-### ☕ Support me on Buy Me a Coffee
-
-[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?logo=buy-me-a-coffee&logoColor=black&style=for-the-badge)](https://buymeacoffee.com/tavris1)
-
-Support me on Buy Me a Coffee: https://buymeacoffee.com/tavris1
-
+<!-- [![Sponsor me on GitHub](https://img.shields.io/github/sponsors/Tavris1?label=Sponsor&logo=GitHub)](https://github.com/sponsors/Tavris1) -->  
+❤️ Sponsor on GitHub: https://github.com/sponsors/Tavris1  
+💜 Donate on PayPal: https://paypal.me/tavris1 [![Support me on PayPal](https://img.shields.io/badge/PayPal-Support-blue?logo=paypal)](https://paypal.me/tavris1)  
+☕ Buy Me a Coffee: https://buymeacoffee.com/tavris1 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)  
