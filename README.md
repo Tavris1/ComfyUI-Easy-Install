@@ -87,6 +87,18 @@ ComfyUI-Version-Switcher :sparkles:
 ---
 Thank you for using **ComfyUI-Easy-Install**.  
 
-### [Support me on PayPal](https://paypal.me/tavris1)
-[![Support me on-Paypal-blue](https://github.com/user-attachments/assets/c1a767b0-f3d9-48c7-877b-12653d2f9ac7)](https://paypal.me/tavris1)
+## ❤️ Support my work
+If you find my projects helpful, consider sponsoring me to help improve and maintain them!
+
+[![Sponsor me on GitHub](https://img.shields.io/github/sponsors/Tavris1?label=Sponsor&logo=GitHub&style=for-the-badge)](https://github.com/sponsors/Tavris1)
+
+Support me on GitHub: https://github.com/sponsors/Tavris1
+
+---
+
+### 💜 Support me on PayPal
+
+[![Support me on PayPal](https://img.shields.io/badge/PayPal-Support-blue?logo=paypal&style=for-the-badge)](https://paypal.me/tavris1)
+
+Support me on PayPal: https://paypal.me/tavris1
 
