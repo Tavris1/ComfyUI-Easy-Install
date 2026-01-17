@@ -27,7 +27,7 @@
 ## Optional Add-ons Nodes
 ||||||
 |---|---|---|---|---|
-[🔗](https://github.com/nunchaku-tech/ComfyUI-nunchaku) Nunchaku | [🔗](https://github.com/thu-ml/SageAttention) SageAttention 2.2.0 | [🔗](https://github.com/thu-ml/SageAttention) SageAttention 3 | [🔗](https://github.com/Dao-AILab/flash-attention) FlashAttention | [🔗](https://github.com/visualbruno/ComfyUI-Trellis2) Trellis 2.0
+[🔗](https://github.com/nunchaku-tech/ComfyUI-nunchaku) Nunchaku | [🔗](https://github.com/thu-ml/SageAttention) SageAttention 2.2.0 | [🔗](https://github.com/mengqin/SageAttention) SageAttention 3 | [🔗](https://github.com/Dao-AILab/flash-attention) FlashAttention | [🔗](https://github.com/visualbruno/ComfyUI-Trellis2) Trellis 2.0
 [🔗](https://github.com/deepinsight/insightface) InsightFace
 
 ## Add-ons Tools
@@ -93,3 +93,4 @@ If you enjoy my projects, please consider sponsoring me. Any support is greatly 
 ❤️ Sponsor on GitHub: https://github.com/sponsors/Tavris1  
 💜 Donate on PayPal: https://paypal.me/tavris1 [![Support me on PayPal](https://img.shields.io/badge/PayPal-Support-blue?logo=paypal)](https://paypal.me/tavris1)  
 ☕ Buy Me a Coffee: https://buymeacoffee.com/tavris1 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)  
+
