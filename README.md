@@ -21,8 +21,8 @@
 |---|---|---|---|
 [🔗](https://github.com/Comfy-Org/ComfyUI-Manager) ComfyUI Manager | [🔗](https://github.com/yolain/ComfyUI-Easy-Use) Easy-Use | [🔗](https://github.com/Fannovel16/comfyui_controlnet_aux) ControlNet Aux | [🔗](https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes) Comfyroll Studio
  [🔗](https://github.com/rgthree/rgthree-comfy) rgthree | [🔗](https://github.com/city96/ComfyUI-GGUF) GGUF | [🔗](https://github.com/MohammadAboulEla/ComfyUI-iTools) iTools | [🔗](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch) Inpaint-CropAndStitch
- [🔗](https://github.com/1038lab/ComfyUI-RMBG) RMBG | [🔗](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) VideoHelperSuite | [🔗](https://github.com/welltop-cn/ComfyUI-TeaCache) TeaCache | [🔗](https://github.com/shiimizu/ComfyUI-TiledDiffusion) Tiled Diffusion & VAE
- [🔗](https://github.com/kijai/ComfyUI-KJNodes) KJNodes | [🔗](https://github.com/kijai/ComfyUI-WanVideoWrapper) WanVideoWrapper |  [🔗](https://github.com/1038lab/ComfyUI-QwenVL) QwenVL  
+ [🔗](https://github.com/1038lab/ComfyUI-RMBG) RMBG | [🔗](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) VideoHelperSuite | [🔗](https://github.com/shiimizu/ComfyUI-TiledDiffusion) Tiled Diffusion & VAE | [🔗](https://github.com/kijai/ComfyUI-KJNodes) KJNodes
+ [🔗](https://github.com/kijai/ComfyUI-WanVideoWrapper) WanVideoWrapper |  [🔗](https://github.com/1038lab/ComfyUI-QwenVL) QwenVL  
 
 ## Optional Add-ons Nodes
 ||||||
@@ -93,4 +93,5 @@ If you enjoy my projects, please consider sponsoring me. Any support is greatly 
 ❤️ Sponsor on GitHub: https://github.com/sponsors/Tavris1  
 💜 Donate on PayPal: https://paypal.me/tavris1 [![Support me on PayPal](https://img.shields.io/badge/PayPal-Support-blue?logo=paypal)](https://paypal.me/tavris1)  
 ☕ Buy Me a Coffee: https://buymeacoffee.com/tavris1 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)  
+
 
