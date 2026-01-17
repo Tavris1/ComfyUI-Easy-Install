@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.01.9"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.01.10"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -124,7 +124,7 @@ cd ComfyUI-Easy-Install
 
 if exist ".\Add-Ons\Tools\AutoRun.bat" (
 	pushd %cd%
-	call ".\Add-Ons\Tools\AutoRun.bat"
+	call ".\Add-Ons\Tools\AutoRun.bat" nopause
 	popd
 	Title %CEI_Title%
 	del  ".\Add-Ons\Tools\AutoRun.bat"
@@ -142,18 +142,22 @@ for /f "delims=" %%i in ('powershell -command "Get-Date -Format yyyy-MM-dd_HH:mm
 for /f "delims=" %%i in ('powershell -command "$s=[datetime]::ParseExact('%start%','yyyy-MM-dd_HH:mm:ss',$null); $e=[datetime]::ParseExact('%end%','yyyy-MM-dd_HH:mm:ss',$null); if($e -lt $s){$e=$e.AddDays(1)}; ($e-$s).TotalSeconds"') do set diff=%%i
 
 if not exist ".\ComfyUI\custom_nodes\.disabled" mkdir ".\ComfyUI\custom_nodes\.disabled"
+if exist ".\ComfyUI\custom_nodes\teacache" move ".\ComfyUI\custom_nodes\teacache" "ComfyUI\custom_nodes\.disabled">nul
+
+:: Get real Desktop path ::
+for /f "delims=" %%D in ('powershell -NoProfile -Command "[Environment]::GetFolderPath('Desktop')"') do set "DESKTOP=%%D"
 
 :: Create a shortcut on the desktop ::
 if exist ".\Add-Ons\Tools\Helper-CEI\ComfyUI-EZi.ico" if exist ".\Start ComfyUI.bat" (
 	echo.
 	echo %green%:::::: Creating desktop shortcut to start ComfyUI ::::::%reset%
-	powershell -command "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('%USERPROFILE%\Desktop\ComfyUI-EZi.lnk'); $s.TargetPath='%cd%\Start ComfyUI.bat'; $s.WorkingDirectory='%cd%\'; $s.IconLocation='%cd%\Add-Ons\Tools\Helper-CEI\ComfyUI-EZi.ico'; $s.Save();"
+	powershell -command "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('%DESKTOP%\ComfyUI-EZi.lnk'); $s.TargetPath='%cd%\Start ComfyUI.bat'; $s.WorkingDirectory='%cd%\'; $s.IconLocation='%cd%\Add-Ons\Tools\Helper-CEI\ComfyUI-EZi.ico'; $s.Save();"
 )
 
 if exist ".\Add-Ons\Tools\Helper-CEI\ComfyUI-EZi-output.ico" (
 	echo.
 	echo %green%:::::::: Creating ComfyUI output folder shortcut :::::::%reset%
-	powershell -command "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('%USERPROFILE%\Desktop\ComfyUI-EZi output.lnk'); $s.TargetPath='%cd%\ComfyUI\output'; $s.WorkingDirectory='%cd%\'; $s.IconLocation='%cd%\Add-Ons\Tools\Helper-CEI\ComfyUI-EZi-output.ico, 0'; $s.Save();"
+	powershell -command "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('%DESKTOP%\ComfyUI-EZi output.lnk'); $s.TargetPath='%cd%\ComfyUI\output'; $s.WorkingDirectory='%cd%\'; $s.IconLocation='%cd%\Add-Ons\Tools\Helper-CEI\ComfyUI-EZi-output.ico, 0'; $s.Save();"
 )
 
 :: Final Messages ::
