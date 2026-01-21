@@ -105,46 +105,75 @@ install_comfyui() {
     PYTHON_EMBED_DIR="python_embeded"
     PYTHON_EMBED_URL="https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}-embed-$(uname -m).tgz"
     PYTHON_SRC_URL="https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tgz"
+    USE_BREW_PYTHON=0
+    if [ "$(uname -s)" = "Darwin" ] && command -v brew >/dev/null 2>&1; then
+        BREW_PREFIX="$(brew --prefix)"
+        BREW_PYTHON312=""
+        if [ -x "$BREW_PREFIX/opt/python@3.12/bin/python3.12" ]; then
+            BREW_PYTHON312="$BREW_PREFIX/opt/python@3.12/bin/python3.12"
+        elif [ -x "$BREW_PREFIX/opt/python@3.12/libexec/bin/python3" ]; then
+            BREW_PYTHON312="$BREW_PREFIX/opt/python@3.12/libexec/bin/python3"
+        else
+            PY312_CELLAR_PREFIX="$(brew --prefix python@3.12 2>/dev/null || true)"
+            if [ -n "$PY312_CELLAR_PREFIX" ] && [ -x "$PY312_CELLAR_PREFIX/bin/python3.12" ]; then
+                BREW_PYTHON312="$PY312_CELLAR_PREFIX/bin/python3.12"
+            fi
+        fi
+
+        if [ -n "$BREW_PYTHON312" ] && [ -x "$BREW_PYTHON312" ]; then
+            USE_BREW_PYTHON=1
+            mkdir -p "$PYTHON_EMBED_DIR"
+            if [ ! -x "$PYTHON_EMBED_DIR/venv/bin/python" ]; then
+                echo "Creating local Python venv (Homebrew Python) at: $PYTHON_EMBED_DIR/venv"
+                "$BREW_PYTHON312" -m venv "$PYTHON_EMBED_DIR/venv"
+            fi
+            PYTHON_CMD="$(pwd)/$PYTHON_EMBED_DIR/venv/bin/python"
+            EMBEDDED_PYTHON="$PYTHON_CMD"
+        fi
+    fi
     
     echo -e "${GREEN}::::::::::::::: Setting up Python ${PYTHON_VER} Embedded :::::::::::::::${RESET}"
     
-    # Remove existing directory if it exists
-    rm -rf "$PYTHON_EMBED_DIR"
-    
-    # Create and enter the directory
-    mkdir -p "$PYTHON_EMBED_DIR"
-    cd "$PYTHON_EMBED_DIR"
-    
-    # Download Python embedded
-    echo "Downloading Python ${PYTHON_VER} embedded..."
-    EMBED_TAR_OK=0
-    if curl -L "$PYTHON_EMBED_URL" -o python-embed.tgz; then
-        if tar -tzf python-embed.tgz >/dev/null 2>&1; then
-            EMBED_TAR_OK=1
-        fi
-    fi
-
-    if [ "$EMBED_TAR_OK" -eq 1 ]; then
-        # Extract embedded Python
-        echo "Extracting Python embedded..."
-        tar -xzf python-embed.tgz
-        rm python-embed.tgz
+    if [ "$USE_BREW_PYTHON" -eq 1 ]; then
+        echo "Using Homebrew Python: $EMBEDDED_PYTHON"
+    else
+        # Remove existing directory if it exists
+        rm -rf "$PYTHON_EMBED_DIR"
         
-        # Set up Python path configuration
-        echo "Configuring Python environment..."
-        PYTHON_CMD="$(pwd)/python3"
-        if [ -x "$PYTHON_CMD" ]; then
-            cat > python << 'EOL'
+        # Create and enter the directory
+        mkdir -p "$PYTHON_EMBED_DIR"
+        cd "$PYTHON_EMBED_DIR"
+    
+        # Download Python embedded
+        echo "Downloading Python ${PYTHON_VER} embedded..."
+        EMBED_TAR_OK=0
+        if curl -L "$PYTHON_EMBED_URL" -o python-embed.tgz; then
+            if tar -tzf python-embed.tgz >/dev/null 2>&1; then
+                EMBED_TAR_OK=1
+            fi
+        fi
+
+        if [ "$EMBED_TAR_OK" -eq 1 ]; then
+            # Extract embedded Python
+            echo "Extracting Python embedded..."
+            tar -xzf python-embed.tgz
+            rm python-embed.tgz
+            
+            # Set up Python path configuration
+            echo "Configuring Python environment..."
+            PYTHON_CMD="$(pwd)/python3"
+            if [ -x "$PYTHON_CMD" ]; then
+                cat > python << 'EOL'
 #!/usr/bin/env sh
 SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 exec "$SCRIPT_DIR/python3" "$@"
 EOL
-            chmod +x python
-            PYTHON_CMD="$(pwd)/python"
-        fi
-        
-        # Create python312._pth
-        cat > python312._pth << 'EOL'
+                chmod +x python
+                PYTHON_CMD="$(pwd)/python"
+            fi
+            
+            # Create python312._pth
+            cat > python312._pth << 'EOL'
 ../ComfyUI
 python312.zip
 .
@@ -154,14 +183,14 @@ Scripts
 import site
 EOL
 
-        # Install pip
-        echo "Installing pip..."
-        curl -sS https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-        $PYTHON_CMD -I get-pip.py
-        rm get-pip.py
-    else
-        echo -e "${YELLOW}Embedded Python archive not available/valid for this platform, falling back to building from source${RESET}"
-        rm -f python-embed.tgz
+            # Install pip
+            echo "Installing pip..."
+            curl -sS https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+            $PYTHON_CMD -I get-pip.py
+            rm get-pip.py
+        else
+            echo -e "${YELLOW}Embedded Python archive not available/valid for this platform, falling back to building from source${RESET}"
+            rm -f python-embed.tgz
 
         echo "Downloading Python ${PYTHON_VER} source..."
         if ! curl -L "$PYTHON_SRC_URL" -o Python-${PYTHON_VER}.tgz; then
@@ -263,7 +292,8 @@ exec "$SCRIPT_DIR/bin/python3" "$@"
 EOL
         chmod +x python3
 
-        PYTHON_CMD="$(pwd)/python"
+            PYTHON_CMD="$(pwd)/python"
+        fi
     fi
 
     if [ ! -x "$PYTHON_CMD" ]; then
@@ -275,10 +305,12 @@ EOL
     $PYTHON_CMD -m pip install $PIP_ARGS --upgrade pip
 
     # Set the full path to the embedded Python
-    EMBEDDED_PYTHON="$PYTHON_CMD"
-    
-    # Return to the original directory
-    cd ..
+    if [ "$USE_BREW_PYTHON" -ne 1 ]; then
+        EMBEDDED_PYTHON="$PYTHON_CMD"
+        
+        # Return to the original directory
+        cd ..
+    fi
     
     echo -e "${GREEN}Python ${PYTHON_VER} setup complete${RESET}"
     echo -e "Using Python from: $EMBEDDED_PYTHON"
