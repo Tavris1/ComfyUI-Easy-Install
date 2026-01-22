@@ -26,8 +26,13 @@ fi
 export GIT_LFS_SKIP_SMUDGE=1
 export GIT_TERMINAL_PROMPT=0
 
+# Disable IPv6 to prevent hanging in LXC containers
+echo -e "${YELLOW}Disabling IPv6 to prevent network hangs...${RESET}"
+sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1 || true
+sysctl -w net.ipv6.conf.default.disable_ipv6=1 >/dev/null 2>&1 || true
+
 # Set arguments
-PIP_ARGS="--no-cache-dir --no-warn-script-location --timeout=1000 --retries 10"
+PIP_ARGS="--no-cache-dir --no-warn-script-location --timeout=120 --retries 3 --progress-bar on --root-user-action=ignore"
 CURL_ARGS="--retry 200 --retry-all-errors"
 UV_ARGS="--no-cache --link-mode=copy"
 
@@ -103,77 +108,74 @@ install_comfyui() {
     # Set Python version and directories
     PYTHON_VER="3.12.10"
     PYTHON_EMBED_DIR="python_embeded"
-    PYTHON_EMBED_URL="https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}-embed-$(uname -m).tgz"
+    
+    # Map uname -m output to Python's architecture naming
+    ARCH=$(uname -m)
+    case "$ARCH" in
+        x86_64) PYTHON_ARCH="amd64" ;;
+        aarch64|arm64) PYTHON_ARCH="arm64" ;;
+        *) PYTHON_ARCH="$ARCH" ;;
+    esac
+    
+    PYTHON_EMBED_URL="https://www.python.org/ftp/python/${PYTHON_VER}/python-${PYTHON_VER}-embed-${PYTHON_ARCH}.zip"
     PYTHON_SRC_URL="https://www.python.org/ftp/python/${PYTHON_VER}/Python-${PYTHON_VER}.tgz"
-    USE_BREW_PYTHON=0
-    if [ "$(uname -s)" = "Darwin" ] && command -v brew >/dev/null 2>&1; then
-        BREW_PREFIX="$(brew --prefix)"
-        BREW_PYTHON312=""
-        if [ -x "$BREW_PREFIX/opt/python@3.12/bin/python3.12" ]; then
-            BREW_PYTHON312="$BREW_PREFIX/opt/python@3.12/bin/python3.12"
-        elif [ -x "$BREW_PREFIX/opt/python@3.12/libexec/bin/python3" ]; then
-            BREW_PYTHON312="$BREW_PREFIX/opt/python@3.12/libexec/bin/python3"
-        else
-            PY312_CELLAR_PREFIX="$(brew --prefix python@3.12 2>/dev/null || true)"
-            if [ -n "$PY312_CELLAR_PREFIX" ] && [ -x "$PY312_CELLAR_PREFIX/bin/python3.12" ]; then
-                BREW_PYTHON312="$PY312_CELLAR_PREFIX/bin/python3.12"
-            fi
-        fi
-
-        if [ -n "$BREW_PYTHON312" ] && [ -x "$BREW_PYTHON312" ]; then
-            USE_BREW_PYTHON=1
-            mkdir -p "$PYTHON_EMBED_DIR"
-            if [ ! -x "$PYTHON_EMBED_DIR/venv/bin/python" ]; then
-                echo "Creating local Python venv (Homebrew Python) at: $PYTHON_EMBED_DIR/venv"
-                "$BREW_PYTHON312" -m venv "$PYTHON_EMBED_DIR/venv"
-            fi
-            PYTHON_CMD="$(pwd)/$PYTHON_EMBED_DIR/venv/bin/python"
-            EMBEDDED_PYTHON="$PYTHON_CMD"
-        fi
-    fi
     
     echo -e "${GREEN}::::::::::::::: Setting up Python ${PYTHON_VER} Embedded :::::::::::::::${RESET}"
     
-    if [ "$USE_BREW_PYTHON" -eq 1 ]; then
-        echo "Using Homebrew Python: $EMBEDDED_PYTHON"
-    else
-        # Remove existing directory if it exists
-        rm -rf "$PYTHON_EMBED_DIR"
-        
-        # Create and enter the directory
-        mkdir -p "$PYTHON_EMBED_DIR"
-        cd "$PYTHON_EMBED_DIR"
+    # Remove existing directory if it exists
+    rm -rf "$PYTHON_EMBED_DIR"
     
-        # Download Python embedded
-        echo "Downloading Python ${PYTHON_VER} embedded..."
-        EMBED_TAR_OK=0
-        if curl -L "$PYTHON_EMBED_URL" -o python-embed.tgz; then
-            if tar -tzf python-embed.tgz >/dev/null 2>&1; then
-                EMBED_TAR_OK=1
-            fi
-        fi
+    # Create and enter the directory
+    mkdir -p "$PYTHON_EMBED_DIR"
+    cd "$PYTHON_EMBED_DIR"
+    
+    # Skip embedded Python (Windows-only) - go directly to source compilation
+    echo -e "${YELLOW}Embedded Python not available on $(uname -s), building from source${RESET}"
+    EMBED_TAR_OK=0
 
-        if [ "$EMBED_TAR_OK" -eq 1 ]; then
-            # Extract embedded Python
-            echo "Extracting Python embedded..."
-            tar -xzf python-embed.tgz
-            rm python-embed.tgz
-            
-            # Set up Python path configuration
-            echo "Configuring Python environment..."
+    if [ "$EMBED_TAR_OK" -eq 1 ]; then
+        # Extract embedded Python
+        echo "Extracting Python embedded..."
+        unzip -q python-embed.zip
+        rm python-embed.zip
+        
+        # Set up Python path configuration
+        echo "Configuring Python environment..."
+        
+        # Check for different Python binary names in embedded distribution
+        if [ -x "python.exe" ]; then
+            PYTHON_CMD="$(pwd)/python.exe"
+        elif [ -x "python3" ]; then
             PYTHON_CMD="$(pwd)/python3"
-            if [ -x "$PYTHON_CMD" ]; then
-                cat > python << 'EOL'
+        elif [ -x "python" ]; then
+            PYTHON_CMD="$(pwd)/python"
+        else
+            echo -e "${RED}No Python binary found in embedded distribution${RESET}"
+            exit 1
+        fi
+        
+        # Create wrapper script
+        cat > python << 'EOL'
 #!/usr/bin/env sh
 SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
-exec "$SCRIPT_DIR/python3" "$@"
+
+# Try different Python binary names
+if [ -x "$SCRIPT_DIR/python.exe" ]; then
+    exec "$SCRIPT_DIR/python.exe" "$@"
+elif [ -x "$SCRIPT_DIR/python3" ]; then
+    exec "$SCRIPT_DIR/python3" "$@"
+elif [ -x "$SCRIPT_DIR/python" ]; then
+    exec "$SCRIPT_DIR/python" "$@"
+else
+    echo "Error: No Python binary found"
+    exit 1
+fi
 EOL
-                chmod +x python
-                PYTHON_CMD="$(pwd)/python"
-            fi
-            
-            # Create python312._pth
-            cat > python312._pth << 'EOL'
+        chmod +x python
+        PYTHON_CMD="$(pwd)/python"
+        
+        # Create python312._pth
+        cat > python312._pth << 'EOL'
 ../ComfyUI
 python312.zip
 .
@@ -183,14 +185,14 @@ Scripts
 import site
 EOL
 
-            # Install pip
-            echo "Installing pip..."
-            curl -sS https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-            $PYTHON_CMD -I get-pip.py
-            rm get-pip.py
-        else
-            echo -e "${YELLOW}Embedded Python archive not available/valid for this platform, falling back to building from source${RESET}"
-            rm -f python-embed.tgz
+        # Install pip
+        echo "Installing pip..."
+        curl -sS https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+        $PYTHON_CMD -I get-pip.py
+        rm get-pip.py
+    else
+        echo -e "${YELLOW}Embedded Python archive not available/valid for this platform, falling back to building from source${RESET}"
+        rm -f python-embed.zip
 
         echo "Downloading Python ${PYTHON_VER} source..."
         if ! curl -L "$PYTHON_SRC_URL" -o Python-${PYTHON_VER}.tgz; then
@@ -292,8 +294,7 @@ exec "$SCRIPT_DIR/bin/python3" "$@"
 EOL
         chmod +x python3
 
-            PYTHON_CMD="$(pwd)/python"
-        fi
+        PYTHON_CMD="$(pwd)/python"
     fi
 
     if [ ! -x "$PYTHON_CMD" ]; then
@@ -302,32 +303,60 @@ EOL
     fi
 
     $PYTHON_CMD -m ensurepip --upgrade >/dev/null 2>&1 || true
-    $PYTHON_CMD -m pip install $PIP_ARGS --upgrade pip
+    # Upgrade pip with timeout to prevent hanging (skip if it fails)
+    echo "Upgrading pip (timeout 60s)..."
+    timeout 60 $PYTHON_CMD -m pip install --no-cache-dir --timeout=30 --retries=2 --upgrade pip 2>/dev/null || echo -e "${YELLOW}pip upgrade skipped (timeout or network issue)${RESET}"
 
     # Set the full path to the embedded Python
-    if [ "$USE_BREW_PYTHON" -ne 1 ]; then
-        EMBEDDED_PYTHON="$PYTHON_CMD"
-        
-        # Return to the original directory
-        cd ..
+    EMBEDDED_PYTHON="$PYTHON_CMD"
+    
+    # Add embedded Python's bin to PATH for pip and other scripts
+    PYTHON_BIN_DIR="$(dirname "$PYTHON_CMD")"
+    if [ -d "$PYTHON_BIN_DIR/bin" ]; then
+        export PATH="$PYTHON_BIN_DIR/bin:$PATH"
+    else
+        export PATH="$PYTHON_BIN_DIR:$PATH"
     fi
+    
+    # Return to the original directory
+    cd ..
     
     echo -e "${GREEN}Python ${PYTHON_VER} setup complete${RESET}"
     echo -e "Using Python from: $EMBEDDED_PYTHON"
 
     # Install required packages using the embedded Python
-    echo "Installing required packages..."
+    echo -e "${GREEN}::::::::::::::: Installing required packages :::::::::::::::${RESET}"
+    
+    echo -e "${YELLOW}[1/6]${RESET} Installing uv package manager..."
     $EMBEDDED_PYTHON -m pip install $PIP_ARGS uv==0.9.7
-    $EMBEDDED_PYTHON -m pip install $PIP_ARGS torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1 --index-url https://download.pytorch.org/whl/cu130
+    echo -e "${GREEN}✓${RESET} uv installed"
+    
+    echo -e "${YELLOW}[2/6]${RESET} Installing PyTorch 2.9.1 + CUDA 13.0 (using uv for speed)..."
+    $EMBEDDED_PYTHON -m uv pip install $UV_ARGS torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1 --index-url https://download.pytorch.org/whl/cu130
+    echo -e "${GREEN}✓${RESET} PyTorch installed"
+    
+    echo -e "${YELLOW}[3/6]${RESET} Installing pygit2..."
     $EMBEDDED_PYTHON -m uv pip install $UV_ARGS pygit2
-    echo :: Install working version of av!!! Thx @Ivo::
-    $EMBEDDED_PYTHON -m uv pip install $UV_ARGS av==16.0.1    
+    echo -e "${GREEN}✓${RESET} pygit2 installed"
+    
+    echo -e "${YELLOW}[4/6]${RESET} Installing av==16.0.1 (Thx @Ivo)..."
+    $EMBEDDED_PYTHON -m uv pip install $UV_ARGS av==16.0.1
+    echo -e "${GREEN}✓${RESET} av installed"
     
     # Install ComfyUI requirements
-    echo "Installing ComfyUI requirements..."
+    echo -e "${YELLOW}[5/6]${RESET} Installing ComfyUI requirements..."
     cd ComfyUI
-    $EMBEDDED_PYTHON -m uv pip install -r requirements.txt $UV_ARGS
+    # Install requirements.txt if it exists, otherwise install essential packages
+    if [ -f "requirements.txt" ]; then
+        $EMBEDDED_PYTHON -m uv pip install -r requirements.txt $UV_ARGS
+    else
+        echo -e "${YELLOW}requirements.txt not found, installing essential packages...${RESET}"
+        $EMBEDDED_PYTHON -m uv pip install $UV_ARGS sqlalchemy alembic aiohttp pillow numpy opencv-python-headless sounddevice
+    fi
+    echo -e "${GREEN}✓${RESET} ComfyUI requirements installed"
     cd ..
+    
+    echo -e "${YELLOW}[6/6]${RESET} Base packages complete!"
     echo ""
 }
 
@@ -368,12 +397,25 @@ install_comfyui
 
 echo -e "${GREEN}::::::::::::::: ${YELLOW}Pre-installation of required modules${GREEN} :::::::::::::::${RESET}"
 echo ""
+echo -e "${YELLOW}[1/5]${RESET} Installing scikit-build-core..."
 $EMBEDDED_PYTHON -m uv pip install scikit-build-core $UV_ARGS
+echo -e "${GREEN}✓${RESET} scikit-build-core installed"
+
+echo -e "${YELLOW}[2/5]${RESET} Installing onnxruntime-gpu..."
 $EMBEDDED_PYTHON -m uv pip install onnxruntime-gpu $UV_ARGS
+echo -e "${GREEN}✓${RESET} onnxruntime-gpu installed"
+
+echo -e "${YELLOW}[3/5]${RESET} Installing onnx..."
 $EMBEDDED_PYTHON -m uv pip install onnx $UV_ARGS
+echo -e "${GREEN}✓${RESET} onnx installed"
+
+echo -e "${YELLOW}[4/5]${RESET} Installing flet..."
 $EMBEDDED_PYTHON -m uv pip install flet $UV_ARGS
-# Install working version of stringzilla
+echo -e "${GREEN}✓${RESET} flet installed"
+
+echo -e "${YELLOW}[5/5]${RESET} Installing stringzilla==3.12.6..."
 $EMBEDDED_PYTHON -m uv pip install stringzilla==3.12.6 $UV_ARGS
+echo -e "${GREEN}✓${RESET} stringzilla installed"
 echo ""
 
 # Install Pixaroma's Related Nodes
@@ -405,17 +447,29 @@ get_node https://github.com/1038lab/ComfyUI-QwenVL ComfyUI-QwenVL
 echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}Required Dependencies${GREEN} :::::::::::::::${RESET}"
 echo ""
 
-# Install llama-cpp-python for Searge
+echo -e "${YELLOW}[1/6]${RESET} Installing llama-cpp-python (for Searge)..."
 $EMBEDDED_PYTHON -m uv pip install llama-cpp-python $UV_ARGS
-# Install pylatexenc for kokoro
+echo -e "${GREEN}✓${RESET} llama-cpp-python installed"
+
+echo -e "${YELLOW}[2/6]${RESET} Installing pylatexenc (for kokoro)..."
 $EMBEDDED_PYTHON -m uv pip install pylatexenc $UV_ARGS
-# Install onnxruntime
+echo -e "${GREEN}✓${RESET} pylatexenc installed"
+
+echo -e "${YELLOW}[3/6]${RESET} Installing onnxruntime..."
 $EMBEDDED_PYTHON -m uv pip install onnxruntime $UV_ARGS
+echo -e "${GREEN}✓${RESET} onnxruntime installed"
+
+echo -e "${YELLOW}[4/6]${RESET} Installing onnx..."
 $EMBEDDED_PYTHON -m uv pip install onnx $UV_ARGS
-# Install flet for REMBG
+echo -e "${GREEN}✓${RESET} onnx installed"
+
+echo -e "${YELLOW}[5/6]${RESET} Installing flet (for REMBG)..."
 $EMBEDDED_PYTHON -m uv pip install flet $UV_ARGS
-# Install ffmpeg
+echo -e "${GREEN}✓${RESET} flet installed"
+
+echo -e "${YELLOW}[6/6]${RESET} Installing python-ffmpeg..."
 $EMBEDDED_PYTHON -m uv pip install python-ffmpeg $UV_ARGS
+echo -e "${GREEN}✓${RESET} python-ffmpeg installed"
 
 # Extracting helper folders
 cd ../
