@@ -395,29 +395,6 @@ copy_files() {
 clear_pip_uv_cache
 install_comfyui
 
-echo -e "${GREEN}::::::::::::::: ${YELLOW}Pre-installation of required modules${GREEN} :::::::::::::::${RESET}"
-echo ""
-echo -e "${YELLOW}[1/5]${RESET} Installing scikit-build-core..."
-$EMBEDDED_PYTHON -m uv pip install scikit-build-core $UV_ARGS
-echo -e "${GREEN}✓${RESET} scikit-build-core installed"
-
-echo -e "${YELLOW}[2/5]${RESET} Installing onnxruntime-gpu..."
-$EMBEDDED_PYTHON -m uv pip install onnxruntime-gpu $UV_ARGS
-echo -e "${GREEN}✓${RESET} onnxruntime-gpu installed"
-
-echo -e "${YELLOW}[3/5]${RESET} Installing onnx..."
-$EMBEDDED_PYTHON -m uv pip install onnx $UV_ARGS
-echo -e "${GREEN}✓${RESET} onnx installed"
-
-echo -e "${YELLOW}[4/5]${RESET} Installing flet..."
-$EMBEDDED_PYTHON -m uv pip install flet $UV_ARGS
-echo -e "${GREEN}✓${RESET} flet installed"
-
-echo -e "${YELLOW}[5/5]${RESET} Installing stringzilla==3.12.6..."
-$EMBEDDED_PYTHON -m uv pip install stringzilla==3.12.6 $UV_ARGS
-echo -e "${GREEN}✓${RESET} stringzilla installed"
-echo ""
-
 # Install Pixaroma's Related Nodes
 # Use the already set PYTHON_CMD
 get_node https://github.com/Comfy-Org/ComfyUI-Manager comfyui-manager
