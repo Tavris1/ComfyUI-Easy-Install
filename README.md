@@ -84,6 +84,6 @@ ComfyUI-Version-Switcher :sparkles:
 If you enjoy my projects, please consider sponsoring me. Any support is greatly appreciated!  
 
 <!-- [![Sponsor me on GitHub](https://img.shields.io/github/sponsors/Tavris1?label=Sponsor&logo=GitHub)](https://github.com/sponsors/Tavris1) -->  
-❤️ GitHub Sponsors: https://github.com/sponsors/Tavris1  
 💜 PayPal: https://paypal.me/tavris1  
 ☕ Buy Me a Coffee: https://buymeacoffee.com/tavris1  
+❤️ GitHub Sponsors: https://github.com/sponsors/Tavris1  
