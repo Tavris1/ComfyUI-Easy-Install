@@ -72,26 +72,18 @@ ComfyUI-Version-Switcher :sparkles:
 > - Multiple ComfyUI installs allowed without conflicts.
 > - You can rename/move **`ComfyUI-Easy-Install`** folder after installation.
 
----
-
-### [macOS / Linux Installation](https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux)
+#### [Click here for macOS / Linux Installation](https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux)
 
 ---
 
-## Screenshots  
-
-<img width="1193" height="643" alt="model2GGUF" src="https://github.com/user-attachments/assets/9704bd60-08ee-42aa-b0a3-8cab2fcbcef5" />
+<!-- <img width="1193" height="643" alt="model2GGUF" src="https://github.com/user-attachments/assets/9704bd60-08ee-42aa-b0a3-8cab2fcbcef5" /> -->
 <img width="1264" height="440" alt="CEI" src="https://github.com/user-attachments/assets/bfd4912a-3a77-40a5-9cc2-bb2a45097ec8" />
 
-
 ---
-Thank you for using **ComfyUI-Easy-Install**.  
 
 If you enjoy my projects, please consider sponsoring me. Any support is greatly appreciated!  
 
 <!-- [![Sponsor me on GitHub](https://img.shields.io/github/sponsors/Tavris1?label=Sponsor&logo=GitHub)](https://github.com/sponsors/Tavris1) -->  
-❤️ Sponsor on GitHub: https://github.com/sponsors/Tavris1  
-💜 Donate on PayPal: https://paypal.me/tavris1 [![Support me on PayPal](https://img.shields.io/badge/PayPal-Support-blue?logo=paypal)](https://paypal.me/tavris1)  
-☕ Buy Me a Coffee: https://buymeacoffee.com/tavris1 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)  
-
-
+❤️ GitHub Sponsors: https://github.com/sponsors/Tavris1  
+💜 PayPal: https://paypal.me/tavris1  
+☕ Buy Me a Coffee: https://buymeacoffee.com/tavris1  
