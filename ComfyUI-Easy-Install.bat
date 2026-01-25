@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.01.12"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.02.0"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -56,9 +56,6 @@ echo    %BGR%0000%FGR%00000000000000000000%BGR%0000
 echo    %BGR%0000000000000000000000000000
 echo    %BGR%0000000000000000000000000000%reset%
 echo.
-
-:: Clear Pip and uv Cache ::
-call :clear_pip_uv_cache
 
 :: Install/Update Git ::
 call :install_git
@@ -117,6 +114,9 @@ call :get_node https://github.com/kijai/ComfyUI-KJNodes							comfyui-kjnodes
 call :get_node https://github.com/kijai/ComfyUI-WanVideoWrapper					ComfyUI-WanVideoWrapper
 call :get_node https://github.com/1038lab/ComfyUI-QwenVL						ComfyUI-QwenVL
 
+if not exist ".\ComfyUI\custom_nodes\.disabled" mkdir ".\ComfyUI\custom_nodes\.disabled"
+if exist ".\ComfyUI\custom_nodes\teacache" move ".\ComfyUI\custom_nodes\teacache" "ComfyUI\custom_nodes\.disabled">nul
+
 :: Extracting helper folders ::
 cd ..\
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath '%HLPR_NAME%' -DestinationPath '.' -Force"
@@ -137,35 +137,19 @@ REM pushd %CD%&&echo.&&call Add-Ons\SageAttention.bat NoPause&&popd
 :: Installing Insightface from the Add-ons ::
 REM pushd %CD%&&echo.&&call Add-Ons\Insightface.bat NoPause&&popd
 
+:: Clear Pip and uv Cache ::
+call :clear_pip_uv_cache
+
 :: Capture the end time ::
 for /f "delims=" %%i in ('powershell -command "Get-Date -Format yyyy-MM-dd_HH:mm:ss"') do set end=%%i
 for /f "delims=" %%i in ('powershell -command "$s=[datetime]::ParseExact('%start%','yyyy-MM-dd_HH:mm:ss',$null); $e=[datetime]::ParseExact('%end%','yyyy-MM-dd_HH:mm:ss',$null); if($e -lt $s){$e=$e.AddDays(1)}; ($e-$s).TotalSeconds"') do set diff=%%i
 
-if not exist ".\ComfyUI\custom_nodes\.disabled" mkdir ".\ComfyUI\custom_nodes\.disabled"
-if exist ".\ComfyUI\custom_nodes\teacache" move ".\ComfyUI\custom_nodes\teacache" "ComfyUI\custom_nodes\.disabled">nul
-
-:: Get real Desktop path ::
-for /f "delims=" %%D in ('powershell -NoProfile -Command "[Environment]::GetFolderPath('Desktop')"') do set "DESKTOP=%%D"
-
-:: Create a shortcut on the desktop ::
-if exist ".\Add-Ons\Tools\Helper-CEI\ComfyUI-EZi.ico" if exist ".\Start ComfyUI.bat" (
-	echo.
-	echo %green%:::::: Creating desktop shortcut to start ComfyUI ::::::%reset%
-	powershell -command "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('%DESKTOP%\ComfyUI-EZi.lnk'); $s.TargetPath='%cd%\Start ComfyUI.bat'; $s.WorkingDirectory='%cd%\'; $s.IconLocation='%cd%\Add-Ons\Tools\Helper-CEI\ComfyUI-EZi.ico'; $s.Save();"
-)
-
-if exist ".\Add-Ons\Tools\Helper-CEI\ComfyUI-EZi-output.ico" (
-	echo.
-	echo %green%:::::::: Creating ComfyUI output folder shortcut :::::::%reset%
-	powershell -command "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('%DESKTOP%\ComfyUI-EZi output.lnk'); $s.TargetPath='%cd%\ComfyUI\output'; $s.WorkingDirectory='%cd%\'; $s.IconLocation='%cd%\Add-Ons\Tools\Helper-CEI\ComfyUI-EZi-output.ico, 0'; $s.Save();"
-)
-
 :: Final Messages ::
-echo.
-echo %green%::::::::::::::: Installation Complete :::::::::::::::%reset%
-echo %green%::::::::::::::: Total Running Time:%red% %diff% %green%seconds%reset%
-echo %yellow%::::::::::::::: Press any key to exit :::::::::::::::%reset%&Pause>nul
-goto :eof
+echo %green%::::::::::::::::: Installation Complete ::::::::::::::::%reset%
+echo %green%::::::::::::::::: Total Running Time:%red% %diff% %green%seconds%reset%
+echo %yellow%::::::::::::::::: Press any key to exit ::::::::::::::::%reset%&Pause>nul
+
+exit
 
 ::::::::::::::::::::::::::::::::: END :::::::::::::::::::::::::::::::::
 
@@ -179,10 +163,17 @@ set   reset=[0m
 goto :eof
 
 :clear_pip_uv_cache
-if exist "%localappdata%\pip\cache" rd /s /q "%localappdata%\pip\cache"&&md "%localappdata%\pip\cache"
-if exist "%localappdata%\uv\cache" rd /s /q "%localappdata%\uv\cache"&&md "%localappdata%\uv\cache"
-echo %green%::::::::::::::: Clearing Pip and uv Cache %yellow%Done%green% :::::::::::::::%reset%
+echo %green%:::::::::::::::: Clearing Pip and uv Cache%green% :::::::::::::%reset%
+
+set CACHE_DRIVE=%localappdata:~0,2%
+
+for /f "delims=" %%A in ('
+powershell -NoProfile -Command "$t=0;@('%localappdata%\pip\cache','%localappdata%\uv\cache')|%%{if(Test-Path $_){Get-ChildItem $_ -Recurse -Force -File -ErrorAction SilentlyContinue|%%{$t+=$_.Length};Remove-Item $_ -Recurse -Force -ErrorAction SilentlyContinue}};New-Item -ItemType Directory '%localappdata%\pip\cache' -Force|Out-Null;New-Item -ItemType Directory '%localappdata%\uv\cache' -Force|Out-Null;if($t -eq 0){'Cache is already clean on %CACHE_DRIVE%'} elseif($t -ge 1GB){'Cleared {0:N1} GB on %CACHE_DRIVE%' -f ($t/1GB)} else {'Cleared {0} MB on %CACHE_DRIVE%' -f [math]::Floor($t/1MB)}"
+') do set MSG=%%A
+
+echo %green%:::::::::::::::: %yellow%%MSG%%reset%
 echo.
+
 goto :eof
 
 :install_git
