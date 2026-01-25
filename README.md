@@ -64,8 +64,10 @@ ComfyUI-Version-Switcher :sparkles:
 - :small_orange_diamond: **Update Easy-Install.bat** *(main folder)* - *Updates **Add-ons** and other folders. Creates desktop shortcuts*  
 
 > [!IMPORTANT]
+> To avoid common Windows issues:  
 > - **Don't** run the installer as **Administrator**.
 > - Avoid system folders (**Program Files**, **Windows**, **C:\\** root).
+> - Avoid spaces and special characters in folder names  
 > - Make sure your NVIDIA drivers are up to date.
 
 > [!TIP]
@@ -87,3 +89,4 @@ If you enjoy my projects, please consider sponsoring me. Any support is greatly 
 💜 PayPal: https://paypal.me/tavris1  
 ☕ Buy Me a Coffee: https://buymeacoffee.com/tavris1  
 ❤️ GitHub Sponsors: https://github.com/sponsors/Tavris1  
+
