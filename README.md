@@ -17,12 +17,11 @@
 
 ## Nodes from Pixaroma tutorials on [YouTube](https://www.youtube.com/@pixaroma)  
 
-|||||
-|---|---|---|---|
-[🔗](https://github.com/Comfy-Org/ComfyUI-Manager) ComfyUI Manager | [🔗](https://github.com/yolain/ComfyUI-Easy-Use) Easy-Use | [🔗](https://github.com/Fannovel16/comfyui_controlnet_aux) ControlNet Aux | [🔗](https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes) Comfyroll Studio
- [🔗](https://github.com/rgthree/rgthree-comfy) rgthree | [🔗](https://github.com/city96/ComfyUI-GGUF) GGUF | [🔗](https://github.com/MohammadAboulEla/ComfyUI-iTools) iTools | [🔗](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch) Inpaint-CropAndStitch
- [🔗](https://github.com/1038lab/ComfyUI-RMBG) RMBG | [🔗](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) VideoHelperSuite | [🔗](https://github.com/shiimizu/ComfyUI-TiledDiffusion) Tiled Diffusion & VAE | [🔗](https://github.com/kijai/ComfyUI-KJNodes) KJNodes
- [🔗](https://github.com/kijai/ComfyUI-WanVideoWrapper) WanVideoWrapper |  [🔗](https://github.com/1038lab/ComfyUI-QwenVL) QwenVL  
+||||||
+|---|---|---|---|---|
+ComfyUI Manager | Easy-Use | ControlNet Aux | Comfyroll Studio | rgthree
+GGUF | iTools | Inpaint-CropAndStitch | RMBG | VideoHelperSuite
+Tiled Diffusion & VAE | KJNodes | WanVideoWrapper | QwenVL
 
 ## Optional Add-ons Nodes
 |||||||
@@ -87,6 +86,7 @@ If you enjoy my projects, please consider sponsoring me. Any support is greatly 
 💜 PayPal: https://paypal.me/tavris1  
 ☕ Buy Me a Coffee: https://buymeacoffee.com/tavris1  
 ❤️ GitHub Sponsors: https://github.com/sponsors/Tavris1  
+
 
 
 
