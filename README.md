@@ -25,16 +25,14 @@
  [🔗](https://github.com/kijai/ComfyUI-WanVideoWrapper) WanVideoWrapper |  [🔗](https://github.com/1038lab/ComfyUI-QwenVL) QwenVL  
 
 ## Optional Add-ons Nodes
-||||||
-|---|---|---|---|---|
-[🔗](https://github.com/nunchaku-tech/ComfyUI-nunchaku) Nunchaku | [🔗](https://github.com/thu-ml/SageAttention) SageAttention 2.2.0 | [🔗](https://github.com/mengqin/SageAttention) SageAttention 3 | [🔗](https://github.com/Dao-AILab/flash-attention) FlashAttention | [🔗](https://github.com/visualbruno/ComfyUI-Trellis2) Trellis 2.0
-[🔗](https://github.com/deepinsight/insightface) InsightFace
+|||||||
+|---|---|---|---|---|---|
+Nunchaku | SageAttention 2.2.0 | SageAttention 3 | FlashAttention | Trellis 2.0 | InsightFace
 
 ## Add-ons Tools
-|||||
-|---|---|---|---|
-Easy-Models-Linker :sparkles: | Torch-Pack :sparkles: | Easy-model2GGUF :sparkles: | Long-Paths-Enabler :sparkles:
-ComfyUI-Version-Switcher :sparkles:
+||||||
+|---|---|---|---|---|
+Easy-Models-Linker | Torch-Pack | Easy-model2GGUF | Long-Paths-Enabler | ComfyUI-Version-Switcher
 
 ---
 ## Windows Installation
@@ -89,5 +87,6 @@ If you enjoy my projects, please consider sponsoring me. Any support is greatly 
 💜 PayPal: https://paypal.me/tavris1  
 ☕ Buy Me a Coffee: https://buymeacoffee.com/tavris1  
 ❤️ GitHub Sponsors: https://github.com/sponsors/Tavris1  
+
 
 
