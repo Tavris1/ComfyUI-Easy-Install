@@ -56,7 +56,6 @@ Easy-Models-Linker | Torch-Pack | Easy-model2GGUF | Long-Paths-Enabler | ComfyUI
   - *Applies **5D tensor fixes** if available*  
   - *For example, **flux1-dev.safetensors** (23 GB) converts to **flux1-dev-Q4_K_M.gguf** (6.5 GB) in **5 min.***  
 - :small_orange_diamond: **Long-Paths-Enabler** *(**Add-Ons/Tools**)* - *Enables **Long Paths** in Windows 10/11*. Essential for Python/ComfyUI  
-- :small_orange_diamond: **ComfyUI-Version-Switcher** *(**Add-Ons/Tools**)* - *Quick, **reversible** rollback to the **previous** ComfyUI version*  
 - :small_orange_diamond: **ComfyUI-Version-Switcher** *(**Add-Ons/Tools**)* - ***Reversible** rollback to a **previous** ComfyUI version on issues*  
 - :small_orange_diamond: **Update Easy-Install.bat** *(main folder)* - *Updates **Add-ons** and other folders. Creates desktop shortcuts*  
 
@@ -86,6 +85,7 @@ If you enjoy my projects, please consider sponsoring me. Any support is greatly 
 💜 PayPal: https://paypal.me/tavris1  
 ☕ Buy Me a Coffee: https://buymeacoffee.com/tavris1  
 ❤️ GitHub Sponsors: https://github.com/sponsors/Tavris1  
+
 
 
 
