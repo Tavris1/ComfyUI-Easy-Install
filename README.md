@@ -43,7 +43,7 @@ Easy-Models-Linker :sparkles: | Torch-Pack :sparkles: ComfyUI-Version-Switcher :
 ## Optional **Add-ons**  
 Optionally, after setup is complete, install the following from the **Add-ons** folder:
 
-- **Nunchaku** _- v1.2.0_
+- **Nunchaku** _- v1.2.1_
 
 - **SageAttention** _- v2.2.0_
 
