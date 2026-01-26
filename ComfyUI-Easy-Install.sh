@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v2.01.8
+# Title ComfyUI-Easy-Install  NEXT by ivo v2.02.0
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -58,13 +58,37 @@ START_TIME=$(date +%s)
 
 # Clear Pip and uv Cache
 clear_pip_uv_cache() {
-    if [ -d "$HOME/.cache/pip" ]; then
-        rm -rf "$HOME/.cache/pip" && mkdir -p "$HOME/.cache/pip"
+    echo -e "${GREEN}::::::::::::::: Clearing Pip and uv Cache${GREEN} :::::::::::::::${RESET}"
+    
+    local cache_size=0
+    local pip_cache="$HOME/.cache/pip"
+    local uv_cache="$HOME/.cache/uv"
+    
+    # Calculate and clear pip cache
+    if [ -d "$pip_cache" ]; then
+        cache_size=$(du -sb "$pip_cache" 2>/dev/null | cut -f1)
+        rm -rf "$pip_cache" && mkdir -p "$pip_cache"
     fi
-    if [ -d "$HOME/.cache/uv" ]; then
-        rm -rf "$HOME/.cache/uv" && mkdir -p "$HOME/.cache/uv"
+    
+    # Calculate and clear uv cache
+    if [ -d "$uv_cache" ]; then
+        uv_size=$(du -sb "$uv_cache" 2>/dev/null | cut -f1)
+        cache_size=$((cache_size + uv_size))
+        rm -rf "$uv_cache" && mkdir -p "$uv_cache"
     fi
-    echo -e "${GREEN}::::::::::::::: Clearing Pip and uv Cache ${YELLOW}Done${GREEN} :::::::::::::::${RESET}"
+    
+    # Show space cleared
+    if [ "$cache_size" -eq 0 ]; then
+        echo -e "${GREEN}::::::::::::::: ${YELLOW}Cache is already clean${GREEN} :::::::::::::::${RESET}"
+    elif [ "$cache_size" -ge 1073741824 ]; then
+        local gb=$((cache_size / 1073741824))
+        local remainder=$((cache_size % 1073741824))
+        local decimals=$((remainder * 10 / 1073741824))
+        echo -e "${GREEN}::::::::::::::: ${YELLOW}Cleared ${gb}.${decimals} GB${GREEN} :::::::::::::::${RESET}"
+    else
+        local mb=$((cache_size / 1048576))
+        echo -e "${GREEN}::::::::::::::: ${YELLOW}Cleared ${mb} MB${GREEN} :::::::::::::::${RESET}"
+    fi
     echo ""
 }
 
@@ -392,7 +416,6 @@ copy_files() {
 }
 
 # Main script execution
-clear_pip_uv_cache
 install_comfyui
 
 # Install Pixaroma's Related Nodes
@@ -412,6 +435,18 @@ get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion ComfyUI-TiledDiffusi
 get_node https://github.com/kijai/ComfyUI-KJNodes comfyui-kjnodes
 get_node https://github.com/kijai/ComfyUI-WanVideoWrapper ComfyUI-WanVideoWrapper
 get_node https://github.com/1038lab/ComfyUI-QwenVL ComfyUI-QwenVL
+
+# Disable TeaCache to prevent import issues
+echo -e "${YELLOW}Disabling TeaCache node to prevent import issues...${RESET}"
+if [ ! -d "ComfyUI/custom_nodes/.disabled" ]; then
+    mkdir -p "ComfyUI/custom_nodes/.disabled"
+fi
+
+if [ -d "ComfyUI/custom_nodes/teacache" ]; then
+    echo -e "${YELLOW}Moving TeaCache to disabled folder...${RESET}"
+    mv "ComfyUI/custom_nodes/teacache" "ComfyUI/custom_nodes/.disabled/"
+    echo -e "${GREEN}✓${RESET} TeaCache disabled"
+fi
 
 # INSTALLING Add-Ons :::
 # Installing Nunchaku ::
@@ -473,6 +508,9 @@ copy_files run_nvidia_gpu_SageAttention.sh .
 copy_files extra_model_paths.yaml ComfyUI
 copy_files comfy.settings.json ComfyUI/user/default
 copy_files rgthree_config.json ComfyUI/custom_nodes/rgthree-comfy
+
+# Clear Pip and uv Cache (moved to end in v2.02.0)
+clear_pip_uv_cache
 
 # Capture the end time
 END_TIME=$(date +%s)
