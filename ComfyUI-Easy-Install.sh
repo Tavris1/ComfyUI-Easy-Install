@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v2.02.0
+# Title ComfyUI-Easy-Install  NEXT by ivo v2.02.1
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -34,7 +34,7 @@ sysctl -w net.ipv6.conf.default.disable_ipv6=1 >/dev/null 2>&1 || true
 # Set arguments
 PIP_ARGS="--no-cache-dir --no-warn-script-location --timeout=120 --retries 3 --progress-bar on --root-user-action=ignore"
 CURL_ARGS="--retry 200 --retry-all-errors"
-UV_ARGS="--no-cache --link-mode=copy"
+UV_ARGS="--system --no-cache --link-mode=copy"
 
 # Check for Existing ComfyUI Folder
 if [ -d "ComfyUI-Easy-Install" ]; then
@@ -342,6 +342,9 @@ EOL
         export PATH="$PYTHON_BIN_DIR:$PATH"
     fi
     
+    # Update UV_ARGS to use the embedded Python
+    UV_ARGS="$UV_ARGS --python $EMBEDDED_PYTHON"
+    
     # Return to the original directory
     cd ..
     
@@ -352,27 +355,60 @@ EOL
     echo -e "${GREEN}::::::::::::::: Installing required packages :::::::::::::::${RESET}"
     
     echo -e "${YELLOW}[1/6]${RESET} Installing uv package manager..."
-    $EMBEDDED_PYTHON -m pip install $PIP_ARGS uv==0.9.7
+    $EMBEDDED_PYTHON -m pip install uv==0.9.7 $PIP_ARGS
     echo -e "${GREEN}✓${RESET} uv installed"
     
+    echo -e "${YELLOW}[2/6]${RESET} Installing PyTorch 2.9.1..."
     # Check if running on macOS and install appropriate PyTorch
     if [ "$(uname)" = "Darwin" ]; then
-        echo -e "${YELLOW}[2/6]${RESET} Installing PyTorch 2.9.1 for macOS (CPU/MPS)..."
+        echo -e "${YELLOW}Installing PyTorch 2.9.1 for macOS (CPU/MPS)...${RESET}"
         # For macOS, install without CUDA index
-        $EMBEDDED_PYTHON -m uv pip install $UV_ARGS torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1
+        uv pip install $UV_ARGS torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1
         echo -e "${GREEN}✓${RESET} PyTorch installed (macOS version)"
     else
-        echo -e "${YELLOW}[2/6]${RESET} Installing PyTorch 2.9.1 + CUDA 13.0 (using uv for speed)..."
-        $EMBEDDED_PYTHON -m uv pip install $UV_ARGS torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1 --index-url https://download.pytorch.org/whl/cu130
+        echo -e "${YELLOW}Installing PyTorch 2.9.1 + CUDA 13.0...${RESET}"
+        uv pip install $UV_ARGS torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1 --index-url https://download.pytorch.org/whl/cu130
         echo -e "${GREEN}✓${RESET} PyTorch installed (CUDA version)"
     fi
     
+    echo -e "${GREEN}::::::::::::::: ${YELLOW}Pre-installation of required modules${GREEN} :::::::::::::::${RESET}"
+    echo
+    uv pip install scikit-build-core $UV_ARGS
+    
+    # Handle onnxruntime based on platform
+    if [ "$(uname)" = "Darwin" ]; then
+        echo -e "${YELLOW}Installing onnxruntime (CPU version for macOS)...${RESET}"
+        uv pip install onnxruntime $UV_ARGS
+    else
+        echo -e "${YELLOW}Installing onnxruntime (GPU version for Linux)...${RESET}"
+        uv pip install onnxruntime-gpu $UV_ARGS
+    fi
+    
+    uv pip install onnx $UV_ARGS
+    uv pip install flet $UV_ARGS
+    # Install llama-cpp-python (platform-specific)
+    if [ "$(uname)" = "Darwin" ]; then
+        # macOS version
+        uv pip install llama-cpp-python $UV_ARGS
+    else
+        # Linux version - try to find appropriate wheel or build from source
+        uv pip install llama-cpp-python $UV_ARGS || {
+            echo -e "${YELLOW}Falling back to CPU-only llama-cpp-python...${RESET}"
+            uv pip install llama-cpp-python --force-reinstall $UV_ARGS
+        }
+    fi
+    # Install working version of stringzilla (damn it)
+    uv pip install stringzilla==3.12.6 $UV_ARGS
+    # Install working version of transformers (damn it again)
+    uv pip install transformers==4.57.6 $UV_ARGS
+    echo
+    
     echo -e "${YELLOW}[3/6]${RESET} Installing pygit2..."
-    $EMBEDDED_PYTHON -m uv pip install $UV_ARGS pygit2
+    uv pip install $UV_ARGS pygit2
     echo -e "${GREEN}✓${RESET} pygit2 installed"
     
     echo -e "${YELLOW}[4/6]${RESET} Installing av==16.0.1 (Thx @Ivo)..."
-    $EMBEDDED_PYTHON -m uv pip install $UV_ARGS av==16.0.1
+    uv pip install $UV_ARGS av==16.0.1
     echo -e "${GREEN}✓${RESET} av installed"
     
     # Install ComfyUI requirements
@@ -380,10 +416,10 @@ EOL
     cd ComfyUI
     # Install requirements.txt if it exists, otherwise install essential packages
     if [ -f "requirements.txt" ]; then
-        $EMBEDDED_PYTHON -m uv pip install -r requirements.txt $UV_ARGS
+        uv pip install -r requirements.txt $UV_ARGS
     else
         echo -e "${YELLOW}requirements.txt not found, installing essential packages...${RESET}"
-        $EMBEDDED_PYTHON -m uv pip install $UV_ARGS sqlalchemy alembic aiohttp pillow numpy opencv-python-headless sounddevice
+        uv pip install $UV_ARGS sqlalchemy alembic aiohttp pillow numpy opencv-python-headless sounddevice
     fi
     echo -e "${GREEN}✓${RESET} ComfyUI requirements installed"
     cd ..
@@ -404,7 +440,7 @@ get_node() {
     if [ "$GIT_FOLDER" = "comfyui-rmbg" ] && [ "$(uname)" = "Darwin" ]; then
         echo -e "${YELLOW}Detected macOS, installing CPU version of onnxruntime...${RESET}"
         echo -e "${YELLOW}Note: onnxruntime has native Mac wheels for both Intel and Apple Silicon${RESET}"
-        $EMBEDDED_PYTHON -m uv pip install onnxruntime $UV_ARGS
+        uv pip install onnxruntime $UV_ARGS
         
         # Install other requirements from requirements.txt, excluding Mac-incompatible packages
         if [ -f "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
@@ -414,7 +450,7 @@ get_node() {
                 grep -v "decord" > "/tmp/requirements_temp.txt" 2>/dev/null || true
                 if [ -s "/tmp/requirements_temp.txt" ]; then
                     echo -e "${YELLOW}Installing remaining requirements (excluding onnxruntime-gpu and decord for Mac compatibility)...${RESET}"
-                    $EMBEDDED_PYTHON -m uv pip install -r "/tmp/requirements_temp.txt" $UV_ARGS
+                    uv pip install -r "/tmp/requirements_temp.txt" $UV_ARGS
                 fi
                 rm -f "/tmp/requirements_temp.txt"
             fi
@@ -423,7 +459,7 @@ get_node() {
         # Standard installation for other nodes
         if [ -f "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
             if [ -s "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
-                $EMBEDDED_PYTHON -m uv pip install -r "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" $UV_ARGS
+                uv pip install -r "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" $UV_ARGS
             fi
         fi
     fi
@@ -490,27 +526,27 @@ echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}Required Dependencies${GREE
 echo ""
 
 echo -e "${YELLOW}[1/6]${RESET} Installing llama-cpp-python (for Searge)..."
-$EMBEDDED_PYTHON -m uv pip install llama-cpp-python $UV_ARGS
+uv pip install llama-cpp-python $UV_ARGS
 echo -e "${GREEN}✓${RESET} llama-cpp-python installed"
 
 echo -e "${YELLOW}[2/6]${RESET} Installing pylatexenc (for kokoro)..."
-$EMBEDDED_PYTHON -m uv pip install pylatexenc $UV_ARGS
+uv pip install pylatexenc $UV_ARGS
 echo -e "${GREEN}✓${RESET} pylatexenc installed"
 
 echo -e "${YELLOW}[3/6]${RESET} Installing onnxruntime..."
-$EMBEDDED_PYTHON -m uv pip install onnxruntime $UV_ARGS
+uv pip install onnxruntime $UV_ARGS
 echo -e "${GREEN}✓${RESET} onnxruntime installed"
 
 echo -e "${YELLOW}[4/6]${RESET} Installing onnx..."
-$EMBEDDED_PYTHON -m uv pip install onnx $UV_ARGS
+uv pip install onnx $UV_ARGS
 echo -e "${GREEN}✓${RESET} onnx installed"
 
 echo -e "${YELLOW}[5/6]${RESET} Installing flet (for REMBG)..."
-$EMBEDDED_PYTHON -m uv pip install flet $UV_ARGS
+uv pip install flet $UV_ARGS
 echo -e "${GREEN}✓${RESET} flet installed"
 
 echo -e "${YELLOW}[6/6]${RESET} Installing python-ffmpeg..."
-$EMBEDDED_PYTHON -m uv pip install python-ffmpeg $UV_ARGS
+uv pip install python-ffmpeg $UV_ARGS
 echo -e "${GREEN}✓${RESET} python-ffmpeg installed"
 
 # Extracting helper folders
