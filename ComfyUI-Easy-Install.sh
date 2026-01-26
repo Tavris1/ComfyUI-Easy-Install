@@ -355,9 +355,17 @@ EOL
     $EMBEDDED_PYTHON -m pip install $PIP_ARGS uv==0.9.7
     echo -e "${GREEN}✓${RESET} uv installed"
     
-    echo -e "${YELLOW}[2/6]${RESET} Installing PyTorch 2.9.1 + CUDA 13.0 (using uv for speed)..."
-    $EMBEDDED_PYTHON -m uv pip install $UV_ARGS torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1 --index-url https://download.pytorch.org/whl/cu130
-    echo -e "${GREEN}✓${RESET} PyTorch installed"
+    # Check if running on macOS and install appropriate PyTorch
+    if [ "$(uname)" = "Darwin" ]; then
+        echo -e "${YELLOW}[2/6]${RESET} Installing PyTorch 2.9.1 for macOS (CPU/MPS)..."
+        # For macOS, install without CUDA index
+        $EMBEDDED_PYTHON -m uv pip install $UV_ARGS torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1
+        echo -e "${GREEN}✓${RESET} PyTorch installed (macOS version)"
+    else
+        echo -e "${YELLOW}[2/6]${RESET} Installing PyTorch 2.9.1 + CUDA 13.0 (using uv for speed)..."
+        $EMBEDDED_PYTHON -m uv pip install $UV_ARGS torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1 --index-url https://download.pytorch.org/whl/cu130
+        echo -e "${GREEN}✓${RESET} PyTorch installed (CUDA version)"
+    fi
     
     echo -e "${YELLOW}[3/6]${RESET} Installing pygit2..."
     $EMBEDDED_PYTHON -m uv pip install $UV_ARGS pygit2
@@ -392,9 +400,31 @@ get_node() {
     echo ""
     git clone "$GIT_URL" "ComfyUI/custom_nodes/${GIT_FOLDER}"
 
-    if [ -f "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
-        if [ -s "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
-            $EMBEDDED_PYTHON -m uv pip install -r "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" $UV_ARGS
+    # Special handling for comfyui-rmbg on Mac
+    if [ "$GIT_FOLDER" = "comfyui-rmbg" ] && [ "$(uname)" = "Darwin" ]; then
+        echo -e "${YELLOW}Detected macOS, installing CPU version of onnxruntime...${RESET}"
+        echo -e "${YELLOW}Note: onnxruntime has native Mac wheels for both Intel and Apple Silicon${RESET}"
+        $EMBEDDED_PYTHON -m uv pip install onnxruntime $UV_ARGS
+        
+        # Install other requirements from requirements.txt, excluding Mac-incompatible packages
+        if [ -f "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
+            if [ -s "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
+                # Create temp requirements file without Mac-incompatible packages
+                grep -v "onnxruntime-gpu" "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" | \
+                grep -v "decord" > "/tmp/requirements_temp.txt" 2>/dev/null || true
+                if [ -s "/tmp/requirements_temp.txt" ]; then
+                    echo -e "${YELLOW}Installing remaining requirements (excluding onnxruntime-gpu and decord for Mac compatibility)...${RESET}"
+                    $EMBEDDED_PYTHON -m uv pip install -r "/tmp/requirements_temp.txt" $UV_ARGS
+                fi
+                rm -f "/tmp/requirements_temp.txt"
+            fi
+        fi
+    else
+        # Standard installation for other nodes
+        if [ -f "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
+            if [ -s "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
+                $EMBEDDED_PYTHON -m uv pip install -r "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" $UV_ARGS
+            fi
         fi
     fi
 
