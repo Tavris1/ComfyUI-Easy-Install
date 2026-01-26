@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.02.0"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.02.1"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -95,6 +95,8 @@ echo.
 .\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.18-cu130-Basic-win-20251223/llama_cpp_python-0.3.18-cp312-cp312-win_amd64.whl %UVargs%
 :: Install working version of stringzilla (damn it) ::
 .\python_embeded\python.exe -I -m uv pip install stringzilla==3.12.6 %UVargs%
+:: Install working version of transformers (damn it again)::
+.\python_embeded\python.exe -I -m uv pip install transformers==4.57.6 %UVargs%
 echo.
 
 :: Install Pixaroma's Related Nodes ::
@@ -108,19 +110,21 @@ call :get_node https://github.com/gseth/ControlAltAI-Nodes						controlaltai-nod
 call :get_node https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch		comfyui-inpaint-cropandstitch
 call :get_node https://github.com/1038lab/ComfyUI-RMBG							comfyui-rmbg
 call :get_node https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite			comfyui-videohelpersuite
-call :get_node https://github.com/welltop-cn/ComfyUI-TeaCache					teacache
 call :get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion				ComfyUI-TiledDiffusion
 call :get_node https://github.com/kijai/ComfyUI-KJNodes							comfyui-kjnodes
 call :get_node https://github.com/kijai/ComfyUI-WanVideoWrapper					ComfyUI-WanVideoWrapper
 call :get_node https://github.com/1038lab/ComfyUI-QwenVL						ComfyUI-QwenVL
 
 if not exist ".\ComfyUI\custom_nodes\.disabled" mkdir ".\ComfyUI\custom_nodes\.disabled"
-if exist ".\ComfyUI\custom_nodes\teacache" move ".\ComfyUI\custom_nodes\teacache" "ComfyUI\custom_nodes\.disabled">nul
 
 :: Extracting helper folders ::
 cd ..\
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath '%HLPR_NAME%' -DestinationPath '.' -Force"
 cd ComfyUI-Easy-Install
+
+:: Install Triton for Torch 2.9 ::
+.\python_embeded\python.exe -I -m pip install --upgrade --force-reinstall "triton-windows<3.6" %PIPargs%
+echo.
 
 if exist ".\Add-Ons\Tools\AutoRun.bat" (
 	pushd %cd%
