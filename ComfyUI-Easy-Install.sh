@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v2.02.1
+# Title ComfyUI-Easy-Install  NEXT by ivo v2.02.3
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -482,6 +482,7 @@ copy_files() {
 }
 
 # Main script execution
+# clear_pip_uv_cache  # Disabled to avoid slow connection issues
 install_comfyui
 
 # Install Pixaroma's Related Nodes
@@ -575,8 +576,8 @@ copy_files extra_model_paths.yaml ComfyUI
 copy_files comfy.settings.json ComfyUI/user/default
 copy_files rgthree_config.json ComfyUI/custom_nodes/rgthree-comfy
 
-# Clear Pip and uv Cache (moved to end in v2.02.0)
-clear_pip_uv_cache
+# Clear Pip and uv Cache (moved to end in v2.02.0) - Disabled for slow connections
+# clear_pip_uv_cache
 
 # Capture the end time
 END_TIME=$(date +%s)
