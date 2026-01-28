@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.02.2"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.02.3"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -142,7 +142,7 @@ REM pushd %CD%&&echo.&&call Add-Ons\SageAttention.bat NoPause&&popd
 REM pushd %CD%&&echo.&&call Add-Ons\Insightface.bat NoPause&&popd
 
 :: Clear Pip and uv Cache ::
-call :clear_pip_uv_cache
+REM call :clear_pip_uv_cache
 
 :: Capture the end time ::
 for /f "delims=" %%i in ('powershell -command "Get-Date -Format yyyy-MM-dd_HH:mm:ss"') do set end=%%i
