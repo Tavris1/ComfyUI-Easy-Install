@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.02.5"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.03.0"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -92,7 +92,7 @@ echo.
 .\python_embeded\python.exe -I -m uv pip install onnxruntime-gpu %UVargs%
 .\python_embeded\python.exe -I -m uv pip install onnx %UVargs%
 .\python_embeded\python.exe -I -m uv pip install flet %UVargs%
-.\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.18-cu130-Basic-win-20251223/llama_cpp_python-0.3.18-cp312-cp312-win_amd64.whl %UVargs%
+.\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.24-cu130-Basic-win-20260208/llama_cpp_python-0.3.24+cu130.basic-cp312-cp312-win_amd64.whl %UVargs%
 :: Install working version of stringzilla (damn it) ::
 .\python_embeded\python.exe -I -m uv pip install stringzilla==3.12.6 %UVargs%
 :: Install working version of transformers (damn it again)::
