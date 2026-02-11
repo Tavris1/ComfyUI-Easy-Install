@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v2.02.5
+# Title ComfyUI-Easy-Install  NEXT by ivo v2.03.0
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -386,17 +386,30 @@ EOL
     
     uv pip install onnx $UV_ARGS
     uv pip install flet $UV_ARGS
-    # Install llama-cpp-python (platform-specific)
+    
+        # Install llama-cpp-python (platform-specific) - JamePeng's fork
     if [ "$(uname)" = "Darwin" ]; then
-        # macOS version
-        uv pip install llama-cpp-python $UV_ARGS
+        # macOS version - install from source with Metal support
+        echo -e "${YELLOW}Installing llama-cpp-python v0.3.24 with Metal support for macOS...${RESET}"
+        CMAKE_ARGS="-DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_APPLE_SILICON_PROCESSOR=arm64 -DGGML_METAL=on" uv pip install --upgrade --force-reinstall "llama-cpp-python @ git+https://github.com/JamePeng/llama-cpp-python.git" $UV_ARGS
     else
-        # Linux version - try to find appropriate wheel or build from source
-        uv pip install llama-cpp-python $UV_ARGS || {
-            echo -e "${YELLOW}Falling back to CPU-only llama-cpp-python...${RESET}"
-            uv pip install llama-cpp-python --force-reinstall $UV_ARGS
+        # Linux version - try different CUDA versions
+        echo -e "${YELLOW}Installing llama-cpp-python v0.3.24 with CUDA support for Linux...${RESET}"
+        
+        # Try CUDA 13.0 first
+        uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.24-cu130-Basic-linux-20260208/llama_cpp_python-0.3.24+cu130.basic-cp312-cp312-linux_x86_64.whl $UV_ARGS || {
+            # Fallback to CUDA 12.8
+            uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.24-cu128-Basic-linux-20260208/llama_cpp_python-0.3.24+cu128.basic-cp312-cp312-linux_x86_64.whl $UV_ARGS || {
+                # Final fallback to source build
+                echo -e "${YELLOW}Falling back to source build with CUDA...${RESET}"
+                CMAKE_ARGS="-DGGML_CUDA=on" uv pip install --upgrade --force-reinstall --no-cache-dir "llama-cpp-python @ git+https://github.com/JamePeng/llama-cpp-python.git" $UV_ARGS || {
+                    echo -e "${YELLOW}Final fallback to CPU-only llama-cpp-python...${RESET}"
+                    CMAKE_ARGS="-DGGML_BLAS=ON -DGGML_BLAS_VENDOR=OpenBLAS" uv pip install --upgrade --force-reinstall --no-cache-dir "llama-cpp-python @ git+https://github.com/JamePeng/llama-cpp-python.git" $UV_ARGS
+                }
+            }
         }
     fi
+
     # Install working version of stringzilla (damn it)
     uv pip install stringzilla==3.12.6 $UV_ARGS
     # Install working version of transformers (damn it again)
