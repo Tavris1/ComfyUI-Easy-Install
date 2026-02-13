@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.03.0"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.04.0"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -114,6 +114,7 @@ call :get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion				ComfyUI-Til
 call :get_node https://github.com/kijai/ComfyUI-KJNodes							comfyui-kjnodes
 call :get_node https://github.com/kijai/ComfyUI-WanVideoWrapper					ComfyUI-WanVideoWrapper
 call :get_node https://github.com/1038lab/ComfyUI-QwenVL						ComfyUI-QwenVL
+call :get_node https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler			seedvr2_videoupscaler
 
 if not exist ".\ComfyUI\custom_nodes\.disabled" mkdir ".\ComfyUI\custom_nodes\.disabled"
 
