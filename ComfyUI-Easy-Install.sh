@@ -66,13 +66,15 @@ clear_pip_uv_cache() {
     
     # Calculate and clear pip cache
     if [ -d "$pip_cache" ]; then
-        cache_size=$(du -sb "$pip_cache" 2>/dev/null | cut -f1)
+        cache_size=$(du -sk "$pip_cache" 2>/dev/null | cut -f1)
+        cache_size=$((cache_size * 1024))
         rm -rf "$pip_cache" && mkdir -p "$pip_cache"
     fi
     
     # Calculate and clear uv cache
     if [ -d "$uv_cache" ]; then
-        uv_size=$(du -sb "$uv_cache" 2>/dev/null | cut -f1)
+        uv_size=$(du -sk "$uv_cache" 2>/dev/null | cut -f1)
+        uv_size=$((uv_size * 1024))
         cache_size=$((cache_size + uv_size))
         rm -rf "$uv_cache" && mkdir -p "$uv_cache"
     fi
@@ -387,7 +389,7 @@ EOL
     uv pip install onnx $UV_ARGS
     uv pip install flet $UV_ARGS
     
-        # Install llama-cpp-python (platform-specific) - JamePeng's fork
+    # Install llama-cpp-python (platform-specific) - JamePeng's fork
     if [ "$(uname)" = "Darwin" ]; then
         # macOS version - install from source with Metal support
         echo -e "${YELLOW}Installing llama-cpp-python v0.3.24 with Metal support for macOS...${RESET}"
@@ -402,9 +404,9 @@ EOL
             uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.24-cu128-Basic-linux-20260208/llama_cpp_python-0.3.24+cu128.basic-cp312-cp312-linux_x86_64.whl $UV_ARGS || {
                 # Final fallback to source build
                 echo -e "${YELLOW}Falling back to source build with CUDA...${RESET}"
-                CMAKE_ARGS="-DGGML_CUDA=on" uv pip install --upgrade --force-reinstall --no-cache-dir "llama-cpp-python @ git+https://github.com/JamePeng/llama-cpp-python.git" $UV_ARGS || {
+                CMAKE_ARGS="-DGGML_CUDA=on" uv pip install --upgrade --force-reinstall "llama-cpp-python @ git+https://github.com/JamePeng/llama-cpp-python.git" $UV_ARGS || {
                     echo -e "${YELLOW}Final fallback to CPU-only llama-cpp-python...${RESET}"
-                    CMAKE_ARGS="-DGGML_BLAS=ON -DGGML_BLAS_VENDOR=OpenBLAS" uv pip install --upgrade --force-reinstall --no-cache-dir "llama-cpp-python @ git+https://github.com/JamePeng/llama-cpp-python.git" $UV_ARGS
+                    CMAKE_ARGS="-DGGML_BLAS=ON -DGGML_BLAS_VENDOR=OpenBLAS" uv pip install --upgrade --force-reinstall "llama-cpp-python @ git+https://github.com/JamePeng/llama-cpp-python.git" $UV_ARGS
                 }
             }
         }
@@ -537,30 +539,15 @@ fi
 # Installing SageAttention ::
 # bash Add-Ons/SageAttention-NEXT.sh NoPause
 
+# Install remaining dependencies (only packages NOT already installed above)
 echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}Required Dependencies${GREEN} :::::::::::::::${RESET}"
 echo ""
 
-echo -e "${YELLOW}[1/6]${RESET} Installing llama-cpp-python (for Searge)..."
-uv pip install llama-cpp-python $UV_ARGS
-echo -e "${GREEN}✓${RESET} llama-cpp-python installed"
-
-echo -e "${YELLOW}[2/6]${RESET} Installing pylatexenc (for kokoro)..."
+echo -e "${YELLOW}[1/2]${RESET} Installing pylatexenc (for kokoro)..."
 uv pip install pylatexenc $UV_ARGS
 echo -e "${GREEN}✓${RESET} pylatexenc installed"
 
-echo -e "${YELLOW}[3/6]${RESET} Installing onnxruntime..."
-uv pip install onnxruntime $UV_ARGS
-echo -e "${GREEN}✓${RESET} onnxruntime installed"
-
-echo -e "${YELLOW}[4/6]${RESET} Installing onnx..."
-uv pip install onnx $UV_ARGS
-echo -e "${GREEN}✓${RESET} onnx installed"
-
-echo -e "${YELLOW}[5/6]${RESET} Installing flet (for REMBG)..."
-uv pip install flet $UV_ARGS
-echo -e "${GREEN}✓${RESET} flet installed"
-
-echo -e "${YELLOW}[6/6]${RESET} Installing python-ffmpeg..."
+echo -e "${YELLOW}[2/2]${RESET} Installing python-ffmpeg..."
 uv pip install python-ffmpeg $UV_ARGS
 echo -e "${GREEN}✓${RESET} python-ffmpeg installed"
 
