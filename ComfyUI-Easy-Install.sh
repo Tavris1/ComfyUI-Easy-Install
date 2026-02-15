@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v2.03.0
+# Title ComfyUI-Easy-Install  NEXT by ivo v2.04.1
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -515,6 +515,7 @@ get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion ComfyUI-TiledDiffusi
 get_node https://github.com/kijai/ComfyUI-KJNodes comfyui-kjnodes
 get_node https://github.com/kijai/ComfyUI-WanVideoWrapper ComfyUI-WanVideoWrapper
 get_node https://github.com/1038lab/ComfyUI-QwenVL ComfyUI-QwenVL
+get_node https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler seedvr2_videoupscaler
 
 # Disable TeaCache to prevent import issues
 echo -e "${YELLOW}Disabling TeaCache node to prevent import issues...${RESET}"
