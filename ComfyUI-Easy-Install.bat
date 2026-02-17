@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.04.1"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.05.0"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -120,7 +120,8 @@ if not exist ".\ComfyUI\custom_nodes\.disabled" mkdir ".\ComfyUI\custom_nodes\.d
 
 :: Extracting helper folders ::
 cd ..\
-powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath '%HLPR_NAME%' -DestinationPath '.' -Force"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Microsoft.PowerShell.Archive\Expand-Archive -LiteralPath '%HLPR_NAME%' -DestinationPath '.' -Force"
+
 cd ComfyUI-Easy-Install
 
 :: Install Triton for Torch 2.9 ::
