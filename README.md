@@ -191,6 +191,10 @@ To use models from existing folders on your Mac:
 
 ### Standard Linux Installation
 1. Clone or download this repository
+   ```bash
+   git clone -b MAC-Linux --single-branch https://github.com/Tavris1/ComfyUI-Easy-Install.git
+   ```
+
 2. Make the script executable:
    ```bash
    chmod +x ComfyUI-Easy-Install.sh
@@ -202,6 +206,9 @@ To use models from existing folders on your Mac:
 
 ### Proxmox LXC Container Setup
 1. Clone or download this repository
+   ```bash
+   git clone -b MAC-Linux --single-branch https://github.com/Tavris1/ComfyUI-Easy-Install.git
+   ```
 2. Make all scripts executable:
    ```bash
    chmod +x *.sh
