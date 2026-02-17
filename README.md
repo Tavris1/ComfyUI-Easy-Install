@@ -24,9 +24,9 @@ GGUF | iTools | Inpaint-CropAndStitch | RMBG | VideoHelperSuite
 Tiled Diffusion & VAE | KJNodes | WanVideoWrapper | QwenVL | SeedVR2_VideoUpscaler
 
 ### Optional Add-ons Nodes
-|||||||
-|---|---|---|---|---|---|
-Nunchaku | SageAttention 2.2.0 | SageAttention 3 | FlashAttention | Trellis 2.0 | InsightFace
+||||||
+|---|---|---|---|---|
+Nunchaku | SageAttention-Multi (v2.2.0 and v3) | FlashAttention | Trellis 2.0 | InsightFace
 
 ### Add-ons Tools
 ||||||
@@ -42,10 +42,9 @@ Easy-Models-Linker | Torch-Pack | Easy-model2GGUF | Long-Paths-Enabler | ComfyUI
     - **Easy-Models-Linker** - *Uses existing **MODELS** folder via **extra_model_paths.yaml**, no re-download needed*
       - *Some folders like **LLM** and **llm_gguf** cannot be redirected this way*
     - **Nunchaku** - *Installs Nunchaku. Start `Nunchaku.bat` again if issues occur later*
-    - **SageAttention** - *Installs SageAttention v2.2.0, creates `Start ComfyUI SageAttention.bat`*
-    - **SageAttention3** - *Installs SageAttention3. Only effective on NVIDIA 50‑series GPUs*
-    - **FlashAttention** - *Installs FlashAttention and creates `Start ComfyUI FlashAttention.bat`*
-    - **InsightFace** - *Installs InsightFace with all modules (Pretrained models for non-commercial research only)*
+    - **SageAttention-Multi** - *Installs both SageAttention v2.2.0 and v3 (v3 effective only on NVIDIA 50-series GPUs)*
+    - **FlashAttention** - *Installs FlashAttention v2.8.3*
+    - **InsightFace** - *Installs InsightFace (Pretrained models for non-commercial research only)*
     - **Trellis2** - *Installs Trellis 2.0 and the model (requires `Torch 2.8.0+cu128` from the `Add-ons/Torch-Pack`)*
     - **Torch-Pack** - *Quick switching between:*
       - ***Torch 2.7.1+cu128***
@@ -53,13 +52,11 @@ Easy-Models-Linker | Torch-Pack | Easy-model2GGUF | Long-Paths-Enabler | ComfyUI
       - ***Torch 2.9.1+cu130** (default, requires NVIDIA driver v580+)*
     - **Easy-model2GGUF** *(**Add-Ons/Tools**)*
       - *Converts models (`.safetensors`, `.pth`, `.pt`) to **GGUF** format (FP16 or BF16) within a few minutes*
-      - *Quantizes models with options from **Q8_0** (highest quality) to **Q2_K** (smaller size)*
-      - *Applies **5D tensor fixes** if available*
+      - *Quantizes models with options from **Q2_K** to **Q8_0** and applies **5D tensor fixes** if available*
     - **Long-Paths-Enabler** *(`Add-Ons/Tools`)* - *Enables **Long Paths** in Windows 10/11*. Essential for Python/ComfyUI
     - **ComfyUI-Version-Switcher** *(`Add-Ons/Tools`)* - ***Reversible** rollback to a **previous** ComfyUI version on issues*
     - **Update Easy-Install.bat** *(main folder)* - *Updates **Add-ons** and other folders. Creates desktop shortcuts*
 > [!IMPORTANT]
-> To avoid common Windows issues:
 > - Do not run the installer as **Administrator**.
 > - Avoid system folders (`Program Files`, `Windows`, `C:\` root).
 > - Avoid spaces and special characters in folder names.
@@ -83,6 +80,7 @@ If you enjoy my projects, please consider sponsoring me. Any support is greatly 
 💜 PayPal: https://paypal.me/tavris1  
 ☕ Buy Me a Coffee: https://buymeacoffee.com/tavris1  
 ❤️ GitHub Sponsors: https://github.com/sponsors/Tavris1  
+
 
 
 
