@@ -22,6 +22,7 @@
 ComfyUI Manager | Easy-Use | ControlNet Aux | Comfyroll Studio | rgthree
 GGUF | iTools | Inpaint-CropAndStitch | RMBG | VideoHelperSuite
 Tiled Diffusion & VAE | KJNodes | WanVideoWrapper | QwenVL | SeedVR2_VideoUpscaler
+LayerStyle | WanAnimatePreprocess | Easy-Sam3 | SCAIL-Pose | MelBandRoFormer
 
 ### Optional Add-ons Nodes
 ||||||
@@ -80,6 +81,7 @@ If you enjoy my projects, please consider sponsoring me. Any support is greatly 
 💜 PayPal: https://paypal.me/tavris1  
 ☕ Buy Me a Coffee: https://buymeacoffee.com/tavris1  
 ❤️ GitHub Sponsors: https://github.com/sponsors/Tavris1  
+
 
 
 
