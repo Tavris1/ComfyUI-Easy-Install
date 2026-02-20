@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.05.1"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.06.0"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -38,7 +38,7 @@ if not exist "%HLPR_NAME%" (
 )
 
 :: Capture the start time ::
-for /f "delims=" %%i in ('powershell -command "Get-Date -Format yyyy-MM-dd_HH:mm:ss"') do set start=%%i
+for /f "delims=" %%i in ('powershell -NoProfile -ExecutionPolicy Bypass -command "Get-Date -Format yyyy-MM-dd_HH:mm:ss"') do set start=%%i
 
 :: Show Logo ::
 set BGR=%yellow%
@@ -100,21 +100,26 @@ echo.
 echo.
 
 :: Install Pixaroma's Related Nodes ::
-call :get_node https://github.com/Comfy-Org/ComfyUI-Manager						comfyui-manager
-call :get_node https://github.com/yolain/ComfyUI-Easy-Use						ComfyUI-Easy-Use
-call :get_node https://github.com/Fannovel16/comfyui_controlnet_aux				comfyui_controlnet_aux
-call :get_node https://github.com/rgthree/rgthree-comfy							rgthree-comfy
-call :get_node https://github.com/MohammadAboulEla/ComfyUI-iTools				comfyui-itools
-call :get_node https://github.com/city96/ComfyUI-GGUF							ComfyUI-GGUF
-call :get_node https://github.com/gseth/ControlAltAI-Nodes						controlaltai-nodes
-call :get_node https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch		comfyui-inpaint-cropandstitch
-call :get_node https://github.com/1038lab/ComfyUI-RMBG							comfyui-rmbg
-call :get_node https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite			comfyui-videohelpersuite
-call :get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion				ComfyUI-TiledDiffusion
-call :get_node https://github.com/kijai/ComfyUI-KJNodes							comfyui-kjnodes
-call :get_node https://github.com/kijai/ComfyUI-WanVideoWrapper					ComfyUI-WanVideoWrapper
-call :get_node https://github.com/1038lab/ComfyUI-QwenVL						ComfyUI-QwenVL
-call :get_node https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler			seedvr2_videoupscaler
+call :get_node https://github.com/Comfy-Org/ComfyUI-Manager					comfyui-manager
+call :get_node https://github.com/yolain/ComfyUI-Easy-Use					ComfyUI-Easy-Use
+call :get_node https://github.com/Fannovel16/comfyui_controlnet_aux			comfyui_controlnet_aux
+call :get_node https://github.com/rgthree/rgthree-comfy						rgthree-comfy
+call :get_node https://github.com/MohammadAboulEla/ComfyUI-iTools			comfyui-itools
+call :get_node https://github.com/city96/ComfyUI-GGUF						ComfyUI-GGUF
+call :get_node https://github.com/gseth/ControlAltAI-Nodes					controlaltai-nodes
+call :get_node https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch	comfyui-inpaint-cropandstitch
+call :get_node https://github.com/1038lab/ComfyUI-RMBG						comfyui-rmbg
+call :get_node https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite		comfyui-videohelpersuite
+call :get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion			ComfyUI-TiledDiffusion
+call :get_node https://github.com/kijai/ComfyUI-KJNodes						comfyui-kjnodes
+call :get_node https://github.com/kijai/ComfyUI-WanVideoWrapper				ComfyUI-WanVideoWrapper
+call :get_node https://github.com/1038lab/ComfyUI-QwenVL					ComfyUI-QwenVL
+call :get_node https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler		seedvr2_videoupscaler
+call :get_node https://github.com/chflame163/ComfyUI_LayerStyle				comfyui_layerstyle
+call :get_node https://github.com/kijai/ComfyUI-WanAnimatePreprocess		ComfyUI-WanAnimatePreprocess
+call :get_node https://github.com/yolain/ComfyUI-Easy-Sam3					comfyui-easy-sam3
+call :get_node https://github.com/kijai/ComfyUI-SCAIL-Pose					ComfyUI-SCAIL-Pose
+call :get_node https://github.com/kijai/ComfyUI-MelBandRoFormer				ComfyUI-MelBandRoFormer
 
 if not exist ".\ComfyUI\custom_nodes\.disabled" mkdir ".\ComfyUI\custom_nodes\.disabled"
 
@@ -143,12 +148,9 @@ REM pushd %CD%&&echo.&&call Add-Ons\SageAttention.bat NoPause&&popd
 :: Installing Insightface from the Add-ons ::
 REM pushd %CD%&&echo.&&call Add-Ons\Insightface.bat NoPause&&popd
 
-:: Clear Pip and uv Cache ::
-REM call :clear_pip_uv_cache
-
 :: Capture the end time ::
-for /f "delims=" %%i in ('powershell -command "Get-Date -Format yyyy-MM-dd_HH:mm:ss"') do set end=%%i
-for /f "delims=" %%i in ('powershell -command "$s=[datetime]::ParseExact('%start%','yyyy-MM-dd_HH:mm:ss',$null); $e=[datetime]::ParseExact('%end%','yyyy-MM-dd_HH:mm:ss',$null); if($e -lt $s){$e=$e.AddDays(1)}; ($e-$s).TotalSeconds"') do set diff=%%i
+for /f "delims=" %%i in ('powershell -NoProfile -ExecutionPolicy Bypass -command "Get-Date -Format yyyy-MM-dd_HH:mm:ss"') do set end=%%i
+for /f "delims=" %%i in ('powershell -NoProfile -ExecutionPolicy Bypass -command "$s=[datetime]::ParseExact('%start%','yyyy-MM-dd_HH:mm:ss',$null); $e=[datetime]::ParseExact('%end%','yyyy-MM-dd_HH:mm:ss',$null); if($e -lt $s){$e=$e.AddDays(1)}; ($e-$s).TotalSeconds"') do set diff=%%i
 
 :: Final Messages ::
 echo %green%::::::::::::::::: Installation Complete ::::::::::::::::%reset%
@@ -166,20 +168,6 @@ set   green=[92m
 set  yellow=[93m
 set    bold=[1m
 set   reset=[0m
-goto :eof
-
-:clear_pip_uv_cache
-echo %green%:::::::::::::::: Clearing Pip and uv Cache%green% :::::::::::::%reset%
-
-set CACHE_DRIVE=%localappdata:~0,2%
-
-for /f "delims=" %%A in ('
-powershell -NoProfile -Command "$t=0;@('%localappdata%\pip\cache','%localappdata%\uv\cache')|%%{if(Test-Path $_){Get-ChildItem $_ -Recurse -Force -File -ErrorAction SilentlyContinue|%%{$t+=$_.Length};Remove-Item $_ -Recurse -Force -ErrorAction SilentlyContinue}};New-Item -ItemType Directory '%localappdata%\pip\cache' -Force|Out-Null;New-Item -ItemType Directory '%localappdata%\uv\cache' -Force|Out-Null;if($t -eq 0){'Cache is already clean on %CACHE_DRIVE%'} elseif($t -ge 1GB){'Cleared {0:N1} GB on %CACHE_DRIVE%' -f ($t/1GB)} else {'Cleared {0} MB on %CACHE_DRIVE%' -f [math]::Floor($t/1MB)}"
-') do set MSG=%%A
-
-echo %green%:::::::::::::::: %yellow%%MSG%%reset%
-echo.
-
 goto :eof
 
 :install_git
@@ -202,19 +190,16 @@ REM git.exe clone https://github.com/comfyanonymous/ComfyUI ComfyUI
 git.exe clone https://github.com/Comfy-Org/ComfyUI ComfyUI
 
 :: Disable only CRL/OCSP checks for SSL ::
-powershell -Command "[System.Net.ServicePointManager]::CheckCertificateRevocationList = $false"
-
-:: Ignore SSL certificate errors ::
-REM powershell -Command "Add-Type @'using System.Net;using System.Security.Cryptography.X509Certificates;public class TrustAllCertsPolicy : ICertificatePolicy {public bool CheckValidationResult(ServicePoint srvPoint,X509Certificate certificate,WebRequest request,int certificateProblem){return true;}}'@;[System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::CheckCertificateRevocationList = $false"
 
 md python_embeded&&cd python_embeded
-powershell -Command "try { Invoke-WebRequest 'https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip' -OutFile 'python-3.12.10-embed-amd64.zip' -UseBasicParsing -ErrorAction Stop } catch { curl.exe -L --ssl-no-revoke 'https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip' -o 'python-3.12.10-embed-amd64.zip' }"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "try { Start-BitsTransfer -Source 'https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip' -Destination 'python-3.12.10-embed-amd64.zip' -ErrorAction Stop } catch { curl.exe -L --ssl-no-revoke 'https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip' -o 'python-3.12.10-embed-amd64.zip' }"
 
 
 tar.exe -xf python-3.12.10-embed-amd64.zip
 REM powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath 'python-3.12.10-embed-amd64.zip' -DestinationPath '.' -Force"
 erase python-3.12.10-embed-amd64.zip
-powershell -Command "try { Invoke-WebRequest 'https://bootstrap.pypa.io/get-pip.py' -OutFile 'get-pip.py' -UseBasicParsing -ErrorAction Stop } catch { curl.exe -sSL --ssl-no-revoke 'https://bootstrap.pypa.io/get-pip.py' -o 'get-pip.py' }"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "try { Start-BitsTransfer -Source 'https://bootstrap.pypa.io/get-pip.py' -Destination 'get-pip.py' -ErrorAction Stop } catch { curl.exe -sSL --ssl-no-revoke 'https://bootstrap.pypa.io/get-pip.py' -o 'get-pip.py' }"
 
 
 Echo ../ComfyUI> python312._pth
