@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.06.0"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.06.1"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -196,7 +196,7 @@ md python_embeded&&cd python_embeded
 powershell -NoProfile -ExecutionPolicy Bypass -Command "try { Start-BitsTransfer -Source 'https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip' -Destination 'python-3.12.10-embed-amd64.zip' -ErrorAction Stop } catch { curl.exe -L --ssl-no-revoke 'https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip' -o 'python-3.12.10-embed-amd64.zip' }"
 
 
-tar.exe -xf python-3.12.10-embed-amd64.zip
+tar.exe -xmf python-3.12.10-embed-amd64.zip
 REM powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath 'python-3.12.10-embed-amd64.zip' -DestinationPath '.' -Force"
 erase python-3.12.10-embed-amd64.zip
 powershell -NoProfile -ExecutionPolicy Bypass -Command "try { Start-BitsTransfer -Source 'https://bootstrap.pypa.io/get-pip.py' -Destination 'get-pip.py' -ErrorAction Stop } catch { curl.exe -sSL --ssl-no-revoke 'https://bootstrap.pypa.io/get-pip.py' -o 'get-pip.py' }"
