@@ -62,6 +62,7 @@ Easy-Models-Linker | Torch-Pack | Easy-model2GGUF | Long-Paths-Enabler | ComfyUI
 > - Avoid system folders (`Program Files`, `Windows`, `C:\` root).
 > - Avoid spaces and special characters in folder names.
 > - Make sure your NVIDIA drivers are up to date.
+> - Use NTFS drives (not exFAT).
 
 > [!TIP]
 > - Multiple ComfyUI installs allowed without conflicts.
@@ -81,6 +82,7 @@ If you enjoy my projects, please consider sponsoring me. Any support is greatly 
 💜 PayPal: https://paypal.me/tavris1  
 ☕ Buy Me a Coffee: https://buymeacoffee.com/tavris1  
 ❤️ GitHub Sponsors: https://github.com/sponsors/Tavris1  
+
 
 
 
