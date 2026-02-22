@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v2.05.0
+# Title ComfyUI-Easy-Install  NEXT by ivo v2.06.1
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -34,7 +34,7 @@ sysctl -w net.ipv6.conf.default.disable_ipv6=1 >/dev/null 2>&1 || true
 # Set arguments
 PIP_ARGS="--no-cache-dir --no-warn-script-location --timeout=120 --retries 3 --progress-bar on --root-user-action=ignore"
 CURL_ARGS="--retry 200 --retry-all-errors"
-UV_ARGS="--system --no-cache --link-mode=copy"
+UV_ARGS="--no-cache --link-mode=copy"
 
 # Check for Existing ComfyUI Folder
 if [ -d "ComfyUI-Easy-Install" ]; then
@@ -287,8 +287,25 @@ EOL
         cd Python-${PYTHON_VER}
 
         echo "Configuring Python build..."
-        ./configure --prefix="$(pwd)/.." --enable-optimizations --with-ensurepip=install \
-            --with-system-ffi --with-system-libm
+        if [ "$(uname -s)" = "Darwin" ] && command -v brew >/dev/null 2>&1; then
+            # macOS: must explicitly link OpenSSL from Homebrew
+            OPENSSL_PREFIX="$(brew --prefix openssl)"
+            ./configure --prefix="$(pwd)/.." \
+                --enable-optimizations \
+                --with-ensurepip=install \
+                --with-system-ffi \
+                --with-system-libm \
+                --with-openssl="$OPENSSL_PREFIX" \
+                LDFLAGS="-L${OPENSSL_PREFIX}/lib" \
+                CPPFLAGS="-I${OPENSSL_PREFIX}/include"
+        else
+            # Linux: system OpenSSL is usually found automatically
+            ./configure --prefix="$(pwd)/.." \
+                --enable-optimizations \
+                --with-ensurepip=install \
+                --with-system-ffi \
+                --with-system-libm
+        fi
 
         echo "Building Python (this may take a while)..."
         MAKE_JOBS="$(getconf _NPROCESSORS_ONLN 2>/dev/null || true)"
@@ -451,29 +468,24 @@ get_node() {
     echo ""
     git clone "$GIT_URL" "ComfyUI/custom_nodes/${GIT_FOLDER}"
 
-    # Special handling for comfyui-rmbg on Mac
-    if [ "$GIT_FOLDER" = "comfyui-rmbg" ] && [ "$(uname)" = "Darwin" ]; then
-        echo -e "${YELLOW}Detected macOS, installing CPU version of onnxruntime...${RESET}"
-        echo -e "${YELLOW}Note: onnxruntime has native Mac wheels for both Intel and Apple Silicon${RESET}"
-        uv pip install onnxruntime $UV_ARGS
-        
-        # Install other requirements from requirements.txt, excluding Mac-incompatible packages
-        if [ -f "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
-            if [ -s "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
-                # Create temp requirements file without Mac-incompatible packages
-                grep -v "onnxruntime-gpu" "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" | \
-                grep -v "decord" > "/tmp/requirements_temp.txt" 2>/dev/null || true
+    # Install requirements from requirements.txt
+    if [ -f "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
+        if [ -s "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
+            if [ "$(uname)" = "Darwin" ]; then
+                # macOS: filter out packages that have no macOS wheels
+                grep -vi "onnxruntime-gpu" "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" | \
+                grep -vi "decord" | \
+                grep -vi "triton" > "/tmp/requirements_temp.txt" 2>/dev/null || true
                 if [ -s "/tmp/requirements_temp.txt" ]; then
-                    echo -e "${YELLOW}Installing remaining requirements (excluding onnxruntime-gpu and decord for Mac compatibility)...${RESET}"
                     uv pip install -r "/tmp/requirements_temp.txt" $UV_ARGS
                 fi
                 rm -f "/tmp/requirements_temp.txt"
-            fi
-        fi
-    else
-        # Standard installation for other nodes
-        if [ -f "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
-            if [ -s "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
+                # Replace onnxruntime-gpu with CPU version if needed
+                if grep -qi "onnxruntime" "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt"; then
+                    uv pip install onnxruntime $UV_ARGS
+                fi
+            else
+                # Linux: install as-is
                 uv pip install -r "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" $UV_ARGS
             fi
         fi
@@ -512,23 +524,19 @@ get_node https://github.com/gseth/ControlAltAI-Nodes controlaltai-nodes
 get_node https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch comfyui-inpaint-cropandstitch
 get_node https://github.com/1038lab/ComfyUI-RMBG comfyui-rmbg
 get_node https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite comfyui-videohelpersuite
-get_node https://github.com/welltop-cn/ComfyUI-TeaCache teacache
 get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion ComfyUI-TiledDiffusion
 get_node https://github.com/kijai/ComfyUI-KJNodes comfyui-kjnodes
 get_node https://github.com/kijai/ComfyUI-WanVideoWrapper ComfyUI-WanVideoWrapper
 get_node https://github.com/1038lab/ComfyUI-QwenVL ComfyUI-QwenVL
 get_node https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler seedvr2_videoupscaler
+get_node https://github.com/chflame163/ComfyUI_LayerStyle comfyui_layerstyle
+get_node https://github.com/kijai/ComfyUI-WanAnimatePreprocess ComfyUI-WanAnimatePreprocess
+get_node https://github.com/yolain/ComfyUI-Easy-Sam3 comfyui-easy-sam3
+get_node https://github.com/kijai/ComfyUI-SCAIL-Pose ComfyUI-SCAIL-Pose
+get_node https://github.com/kijai/ComfyUI-MelBandRoFormer ComfyUI-MelBandRoFormer
 
-# Disable TeaCache to prevent import issues
-echo -e "${YELLOW}Disabling TeaCache node to prevent import issues...${RESET}"
 if [ ! -d "ComfyUI/custom_nodes/.disabled" ]; then
     mkdir -p "ComfyUI/custom_nodes/.disabled"
-fi
-
-if [ -d "ComfyUI/custom_nodes/teacache" ]; then
-    echo -e "${YELLOW}Moving TeaCache to disabled folder...${RESET}"
-    mv "ComfyUI/custom_nodes/teacache" "ComfyUI/custom_nodes/.disabled/"
-    echo -e "${GREEN}✓${RESET} TeaCache disabled"
 fi
 
 # INSTALLING Add-Ons :::
@@ -569,6 +577,13 @@ find . -type f -name "*.bat" -delete
 
 # Make all .sh files executable
 find . -type f -name "*.sh" -exec chmod +x {} +
+
+# Install Triton for Torch 2.9 (Linux only)
+if [ "$(uname -s)" = "Linux" ]; then
+    echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}Triton${GREEN} :::::::::::::::${RESET}"
+    $EMBEDDED_PYTHON -m pip install --upgrade --force-reinstall "triton" $PIP_ARGS || echo -e "${YELLOW}Triton install skipped${RESET}"
+    echo ""
+fi
 
 # Copy additional files if they exist
 copy_files run_nvidia_gpu.sh .
