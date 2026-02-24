@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.06.1"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.06.2"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -88,6 +88,8 @@ call :install_comfyui
 
 echo %green%::::::::::::::: %yellow%Pre-installation of required modules%green% :::::::::::::::%reset%
 echo.
+REM .\python_embeded\python.exe -I -m uv pip install requests==2.31.0 urllib3==2.6.3 charset_normalizer==3.4.4
+.\python_embeded\python.exe -I -m uv pip install chardet==5.2.0
 .\python_embeded\python.exe -I -m uv pip install scikit-build-core %UVargs%
 .\python_embeded\python.exe -I -m uv pip install onnxruntime-gpu %UVargs%
 .\python_embeded\python.exe -I -m uv pip install onnx %UVargs%
