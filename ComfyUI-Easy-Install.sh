@@ -290,6 +290,7 @@ EOL
         if [ "$(uname -s)" = "Darwin" ] && command -v brew >/dev/null 2>&1; then
             # macOS: must explicitly link OpenSSL from Homebrew
             OPENSSL_PREFIX="$(brew --prefix openssl)"
+            XZ_PREFIX="$(brew --prefix xz)"
             ./configure --prefix="$(pwd)/.." \
                 --enable-optimizations \
                 --with-ensurepip=install \
@@ -468,6 +469,15 @@ get_node() {
     echo ""
     git clone "$GIT_URL" "ComfyUI/custom_nodes/${GIT_FOLDER}"
 
+    if [ "$(uname -s)" = "Darwin" ] && [ "$GIT_FOLDER" = "comfyui-rmbg" ]; then
+        RMBG_SAM3_FILE="./ComfyUI/custom_nodes/${GIT_FOLDER}/py/AILab_SAM3Segment.py"
+        if [ -f "$RMBG_SAM3_FILE" ]; then
+            mkdir -p "./ComfyUI/custom_nodes/${GIT_FOLDER}/py/.disabled"
+            mv "$RMBG_SAM3_FILE" "./ComfyUI/custom_nodes/${GIT_FOLDER}/py/.disabled/AILab_SAM3Segment.py"
+            echo -e "${YELLOW}Disabled RMBG SAM3 Triton module on macOS: py/.disabled/AILab_SAM3Segment.py${RESET}"
+        fi
+    fi
+
     # Install requirements from requirements.txt
     if [ -f "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
         if [ -s "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
@@ -531,7 +541,11 @@ get_node https://github.com/1038lab/ComfyUI-QwenVL ComfyUI-QwenVL
 get_node https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler seedvr2_videoupscaler
 get_node https://github.com/chflame163/ComfyUI_LayerStyle comfyui_layerstyle
 get_node https://github.com/kijai/ComfyUI-WanAnimatePreprocess ComfyUI-WanAnimatePreprocess
-get_node https://github.com/yolain/ComfyUI-Easy-Sam3 comfyui-easy-sam3
+if [ "$(uname -s)" = "Darwin" ]; then
+    echo -e "${YELLOW}Skipping comfyui-easy-sam3 on macOS (requires triton/CUDA).${RESET}"
+else
+    get_node https://github.com/yolain/ComfyUI-Easy-Sam3 comfyui-easy-sam3
+fi
 get_node https://github.com/kijai/ComfyUI-SCAIL-Pose ComfyUI-SCAIL-Pose
 get_node https://github.com/kijai/ComfyUI-MelBandRoFormer ComfyUI-MelBandRoFormer
 
@@ -558,6 +572,12 @@ echo -e "${GREEN}✓${RESET} pylatexenc installed"
 echo -e "${YELLOW}[2/2]${RESET} Installing python-ffmpeg..."
 uv pip install python-ffmpeg $UV_ARGS
 echo -e "${GREEN}✓${RESET} python-ffmpeg installed"
+
+if [ "$(uname -s)" = "Darwin" ]; then
+    echo -e "${YELLOW}Installing opencv-contrib-python for LayerStyle (ximgproc)...${RESET}"
+    uv pip uninstall -y opencv-python-headless opencv-python || true
+    uv pip install opencv-contrib-python $UV_ARGS
+fi
 
 # Extracting helper folders
 cd ../
