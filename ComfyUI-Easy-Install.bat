@@ -1,5 +1,5 @@
 @Echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.06.2"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.06.3"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -11,7 +11,7 @@ set GIT_LFS_SKIP_SMUDGE=1
 
 :: Set arguments ::
 set "PIPargs=--no-cache-dir --no-warn-script-location --timeout=1000 --retries 10"
-set "UVargs=--no-cache --link-mode=copy"
+set "UVargs=--no-cache"
 
 :: Set local path only (temporarily) ::
 for /f "delims=" %%G in ('cmd /c "where.exe git.exe 2>nul"') do (set "GIT_PATH=%%~dpG")
