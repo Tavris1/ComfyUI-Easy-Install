@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v2.06.1
+# Title ComfyUI-Easy-Install  NEXT by ivo v2.06.3
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -34,7 +34,7 @@ sysctl -w net.ipv6.conf.default.disable_ipv6=1 >/dev/null 2>&1 || true
 # Set arguments
 PIP_ARGS="--no-cache-dir --no-warn-script-location --timeout=120 --retries 3 --progress-bar on --root-user-action=ignore"
 CURL_ARGS="--retry 200 --retry-all-errors"
-UV_ARGS="--no-cache --link-mode=copy"
+UV_ARGS="--no-cache"
 
 # Check for Existing ComfyUI Folder
 if [ -d "ComfyUI-Easy-Install" ]; then
@@ -409,6 +409,8 @@ EOL
     
     uv pip install onnx $UV_ARGS
     uv pip install flet $UV_ARGS
+    uv pip install chardet==5.2.0 $UV_ARGS
+
     
     # Install llama-cpp-python (platform-specific) - JamePeng's fork
     if [ "$(uname)" = "Darwin" ]; then
