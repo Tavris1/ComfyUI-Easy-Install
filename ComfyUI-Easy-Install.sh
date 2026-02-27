@@ -291,14 +291,17 @@ EOL
             # macOS: must explicitly link OpenSSL from Homebrew
             OPENSSL_PREFIX="$(brew --prefix openssl)"
             XZ_PREFIX="$(brew --prefix xz)"
-            ./configure --prefix="$(pwd)/.." \
-                --enable-optimizations \
-                --with-ensurepip=install \
-                --with-system-ffi \
-                --with-system-libm \
-                --with-openssl="$OPENSSL_PREFIX" \
-                LDFLAGS="-L${OPENSSL_PREFIX}/lib" \
-                CPPFLAGS="-I${OPENSSL_PREFIX}/include"
+            env \
+                PKG_CONFIG_PATH="${OPENSSL_PREFIX}/lib/pkgconfig:${XZ_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}" \
+                LDFLAGS="-L${OPENSSL_PREFIX}/lib -L${XZ_PREFIX}/lib" \
+                CPPFLAGS="-I${OPENSSL_PREFIX}/include -I${XZ_PREFIX}/include" \
+                LIBS="-llzma" \
+                ./configure --prefix="$(pwd)/.." \
+                    --enable-optimizations \
+                    --with-ensurepip=install \
+                    --with-system-ffi \
+                    --with-system-libm \
+                    --with-openssl="$OPENSSL_PREFIX"
         else
             # Linux: system OpenSSL is usually found automatically
             ./configure --prefix="$(pwd)/.." \
