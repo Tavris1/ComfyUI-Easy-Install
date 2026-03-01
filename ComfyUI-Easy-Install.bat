@@ -1,5 +1,5 @@
-@Echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.06.5"
+@echo off&&cd /D %~dp0
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.06.6"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -62,12 +62,12 @@ call :install_git
 
 :: Check if git is installed ::
 for /F "tokens=*" %%g in ('git --version') do (set gitversion=%%g)
-Echo %gitversion% | findstr /C:"version">nul&&(
-	Echo %bold%git%reset% %yellow%is installed%reset%
-	Echo.) || (
-    Echo %warning%WARNING:%reset% %bold%'git'%reset% is NOT installed
-	Echo Please install %bold%'git'%reset% manually from %yellow%https://git-scm.com/%reset% and run this installer again
-	Echo Press any key to Exit...&Pause>nul
+echo %gitversion% | findstr /C:"version">nul&&(
+	echo %bold%git%reset% %yellow%is installed%reset%
+	echo.) || (
+    echo %warning%WARNING:%reset% %bold%'git'%reset% is NOT installed
+	echo Please install %bold%'git'%reset% manually from %yellow%https://git-scm.com/%reset% and run this installer again
+	echo Press any key to Exit...&Pause>nul
 	exit /b
 )
 
@@ -194,7 +194,9 @@ git.exe clone https://github.com/Comfy-Org/ComfyUI ComfyUI
 powershell -NoProfile -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::CheckCertificateRevocationList = $false"
 
 md python_embeded&&cd python_embeded
+
 curl.exe -L --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "python-3.12.10-embed-amd64.zip" "https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip"
+if errorlevel 1 curl.exe -L --progress-bar --ssl-no-revoke -k --retry 5 --retry-delay 2 -o "python-3.12.10-embed-amd64.zip" "https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip"
 if errorlevel 1 powershell -NoProfile -ExecutionPolicy Bypass -Command "Try{Start-BitsTransfer -Source 'https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip' -Destination 'python-3.12.10-embed-amd64.zip' -ErrorAction Stop}catch{exit 1}"
 if not exist "python-3.12.10-embed-amd64.zip" (
 echo.
@@ -205,9 +207,10 @@ exit /b 1
 
 tar.exe -xmf python-3.12.10-embed-amd64.zip
 if errorlevel 1 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath 'python-3.12.10-embed-amd64.zip' -DestinationPath '.' -Force"
-
 erase python-3.12.10-embed-amd64.zip
+
 curl.exe -L --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
+if errorlevel 1 curl.exe -L --progress-bar --ssl-no-revoke -k --retry 5 --retry-delay 2 -o "get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
 if errorlevel 1 powershell -NoProfile -ExecutionPolicy Bypass -Command "Try{Start-BitsTransfer -Source 'https://bootstrap.pypa.io/get-pip.py' -Destination 'get-pip.py' -ErrorAction Stop}catch{exit 1}"
 if not exist "get-pip.py" (
 echo.
@@ -216,18 +219,24 @@ echo Press any key to Exit...&Pause>nul
 exit /b 1
 )
 
+echo ../ComfyUI> python312._pth
+echo python312.zip>> python312._pth
+echo .>> python312._pth
+echo Lib/site-packages>> python312._pth
+echo Lib>> python312._pth
+echo Scripts>> python312._pth
+echo # import site>> python312._pth
 
-Echo ../ComfyUI> python312._pth
-Echo python312.zip>> python312._pth
-Echo .>> python312._pth
-Echo Lib/site-packages>> python312._pth
-Echo Lib>> python312._pth
-Echo Scripts>> python312._pth
-Echo # import site>> python312._pth
+echo [global]> pip.ini
+echo trusted-host =>> pip.ini
+echo     pypi.org>> pip.ini
+echo     files.pythonhosted.org>> pip.ini
+echo     pypi.python.org>> pip.ini
 
-.\python.exe -I get-pip.py %PIPargs%
+.\python.exe -I get-pip.py %PIPargs% --trusted-host pypi.org --trusted-host files.pythonhosted.org --trusted-host pypi.python.org
+REM .\python.exe -I -m pip config set global.trusted-host "pypi.org files.pythonhosted.org pypi.python.org"
+
 .\python.exe -I -m pip install uv==0.9.7 %PIPargs%
-REM .\python.exe -I -m pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cu128 %PIPargs%
 .\python.exe -I -m pip install torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1 --index-url https://download.pytorch.org/whl/cu130 %PIPargs%
 .\python.exe -I -m uv pip install pygit2 %UVargs%
 cd ..\ComfyUI
