@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.06.6"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.07.0"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -11,7 +11,7 @@ set GIT_LFS_SKIP_SMUDGE=1
 
 :: Set arguments ::
 set "PIPargs=--no-cache-dir --no-warn-script-location --timeout=1000 --retries 10"
-set "UVargs=--no-cache"
+set "UVargs=--no-cache --link-mode=copy"
 
 :: Set local path only (temporarily) ::
 for /f "delims=" %%G in ('cmd /c "where.exe git.exe 2>nul"') do (set "GIT_PATH=%%~dpG")
@@ -68,7 +68,7 @@ echo %gitversion% | findstr /C:"version">nul&&(
     echo %warning%WARNING:%reset% %bold%'git'%reset% is NOT installed
 	echo Please install %bold%'git'%reset% manually from %yellow%https://git-scm.com/%reset% and run this installer again
 	echo Press any key to Exit...&Pause>nul
-	exit /b
+	exit
 )
 
 :: System folder? ::
@@ -79,7 +79,7 @@ if not exist "ComfyUI-Easy-Install" (
 	echo Make sure you are NOT using system folders like %yellow%Program Files, Windows%reset% or system root %yellow%C:\%reset%
 	echo %green%Move this file to another folder and run it again.%reset%
 	echo Press any key to Exit...&Pause>nul
-	exit /b
+	exit
 )
 cd "ComfyUI-Easy-Install"
 
@@ -122,6 +122,12 @@ call :get_node https://github.com/kijai/ComfyUI-WanAnimatePreprocess		ComfyUI-Wa
 call :get_node https://github.com/yolain/ComfyUI-Easy-Sam3					comfyui-easy-sam3
 call :get_node https://github.com/kijai/ComfyUI-SCAIL-Pose					ComfyUI-SCAIL-Pose
 call :get_node https://github.com/kijai/ComfyUI-MelBandRoFormer				ComfyUI-MelBandRoFormer
+call :get_node https://github.com/flybirdxx/ComfyUI-Qwen-TTS				qwen3-tts-comfyui
+
+echo %green%::::::::::::::: %yellow%Installation/Updating SoX%green% :::::::::::::::%reset%
+echo.
+winget.exe install --id ChrisBagwell.SoX -e --silent
+echo.
 
 if not exist ".\ComfyUI\custom_nodes\.disabled" mkdir ".\ComfyUI\custom_nodes\.disabled"
 
@@ -202,7 +208,7 @@ if not exist "python-3.12.10-embed-amd64.zip" (
 echo.
 echo %red%Failed to download python-3.12.10-embed-amd64.zip%reset%
 echo Press any key to Exit...&Pause>nul
-exit /b 1
+exit
 )
 
 tar.exe -xmf python-3.12.10-embed-amd64.zip
@@ -216,7 +222,7 @@ if not exist "get-pip.py" (
 echo.
 echo %red%Failed to download get-pip.py%reset%
 echo Press any key to Exit...&Pause>nul
-exit /b 1
+exit
 )
 
 echo ../ComfyUI> python312._pth
