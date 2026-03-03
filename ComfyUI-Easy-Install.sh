@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v2.06.3
+# Title ComfyUI-Easy-Install  NEXT by ivo v2.07.1
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -34,7 +34,7 @@ sysctl -w net.ipv6.conf.default.disable_ipv6=1 >/dev/null 2>&1 || true
 # Set arguments
 PIP_ARGS="--no-cache-dir --no-warn-script-location --timeout=120 --retries 3 --progress-bar on --root-user-action=ignore"
 CURL_ARGS="--retry 200 --retry-all-errors"
-UV_ARGS="--no-cache"
+UV_ARGS="--no-cache --link-mode=copy"
 
 # Check for Existing ComfyUI Folder
 if [ -d "ComfyUI-Easy-Install" ]; then
@@ -543,6 +543,7 @@ get_node https://github.com/shiimizu/ComfyUI-TiledDiffusion ComfyUI-TiledDiffusi
 get_node https://github.com/kijai/ComfyUI-KJNodes comfyui-kjnodes
 get_node https://github.com/kijai/ComfyUI-WanVideoWrapper ComfyUI-WanVideoWrapper
 get_node https://github.com/1038lab/ComfyUI-QwenVL ComfyUI-QwenVL
+get_node https://github.com/flybirdxx/ComfyUI-Qwen-TTS qwen3-tts-comfyui
 get_node https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler seedvr2_videoupscaler
 get_node https://github.com/chflame163/ComfyUI_LayerStyle comfyui_layerstyle
 get_node https://github.com/kijai/ComfyUI-WanAnimatePreprocess ComfyUI-WanAnimatePreprocess
@@ -566,6 +567,37 @@ fi
 # Installing SageAttention ::
 # bash Add-Ons/SageAttention-NEXT.sh NoPause
 
+# Install SoX (required by some audio/TTS nodes)
+echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}SoX${GREEN} :::::::::::::::${RESET}"
+if [ "$(uname -s)" = "Darwin" ]; then
+    if command -v brew >/dev/null 2>&1; then
+        brew install sox || true
+    else
+        echo -e "${YELLOW}Homebrew not found. Please install SoX manually.${RESET}"
+    fi
+elif [ "$(uname -s)" = "Linux" ]; then
+    SUDO_CMD=""
+    if [ "$(id -u)" -ne 0 ]; then
+        SUDO_CMD="sudo"
+    fi
+
+    if command -v apt-get >/dev/null 2>&1; then
+        $SUDO_CMD apt-get update
+        $SUDO_CMD apt-get install -y sox || true
+    elif command -v dnf >/dev/null 2>&1; then
+        $SUDO_CMD dnf install -y sox || true
+    elif command -v yum >/dev/null 2>&1; then
+        $SUDO_CMD yum install -y sox || true
+    elif command -v pacman >/dev/null 2>&1; then
+        $SUDO_CMD pacman -S --needed --noconfirm sox || true
+    elif command -v zypper >/dev/null 2>&1; then
+        $SUDO_CMD zypper --non-interactive install sox || true
+    else
+        echo -e "${YELLOW}Could not determine package manager. Please install SoX manually.${RESET}"
+    fi
+fi
+echo
+
 # Install remaining dependencies (only packages NOT already installed above)
 echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}Required Dependencies${GREEN} :::::::::::::::${RESET}"
 echo ""
@@ -580,7 +612,7 @@ echo -e "${GREEN}✓${RESET} python-ffmpeg installed"
 
 if [ "$(uname -s)" = "Darwin" ]; then
     echo -e "${YELLOW}Installing opencv-contrib-python for LayerStyle (ximgproc)...${RESET}"
-    uv pip uninstall -y opencv-python-headless opencv-python || true
+    "$EMBEDDED_PYTHON" -m pip uninstall -y opencv-python-headless opencv-python || true
     uv pip install opencv-contrib-python $UV_ARGS
 fi
 
