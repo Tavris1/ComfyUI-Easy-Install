@@ -1,3 +1,19 @@
+<p align="center">
+🌍 
+<strong>English</strong> |
+<a href="docs/README.zh-CN.md#zh-cn">简体中文</a> |
+<a href="docs/README.ja.md#ja">日本語</a> |
+<a href="docs/README.ko.md#ko">한국어</a> |
+<a href="docs/README.es.md#es">Español</a> |
+<a href="docs/README.pt-BR.md#pt-br">Português</a> |
+<a href="docs/README.ru.md#ru">Русский</a> |
+<a href="docs/README.de.md#de">Deutsch</a> |
+<a href="docs/README.fr.md#fr">Français</a> |
+<a href="docs/README.vi.md#vi">Tiếng Việt</a>
+</p>
+
+---
+
 # ComfyUI-Easy-Install
 > One-click Portable **ComfyUI** for **Windows** 🔹 Nvidia GPUs 🔹 Pixaroma Community Edition 🔹  
 > [![GitHub Release](https://img.shields.io/github/v/release/Tavris1/ComfyUI-Easy-Install)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
@@ -8,6 +24,7 @@
 > Dedicated to the **Pixaroma** team  
 > [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Join%20Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
 > [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_presence_count&logo=discord&logoColor=white&label=Online&color=blue&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
+
 ---
 
 ## Included Components:  
