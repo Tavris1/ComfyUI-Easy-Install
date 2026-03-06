@@ -34,13 +34,12 @@
 
 ### Pixaroma 튜토리얼에서 사용되는 노드 [YouTube](https://www.youtube.com/@pixaroma)
 
-||||||
-|---|---|---|---|---|
-ComfyUI Manager | Tiled Diffusion & VAE | LayerStyle | rgthree | GGUF
-VideoHelperSuite | Inpaint-CropAndStitch | SCAIL-Pose | KJNodes | iTools
-Comfyroll Studio | SeedVR2_VideoUpscaler | ControlNet Aux | Easy-Use | RMBG
-WanVideoWrapper | WanAnimatePreprocess | MelBandRoFormer | Easy-Sam3 | QwenVL
-Qwen3-TTS
+|||||||
+|---|---|---|---|---|---|
+ComfyUI Manager | Tiled Diffusion & VAE | SCAIL-Pose | KJNodes | rgthree | iTools
+MelBandRoFormer | Inpaint-CropAndStitch | Qwen3-TTS | Easy-Use | QwenVL | GGUF
+VideoHelperSuite | SeedVR2_VideoUpscaler | ControlNet Aux | LayerStyle | Easy-Sam3 | RMBG
+WanVideoWrapper | WanAnimatePreprocess | Comfyroll Studio
 
 ### 선택적 추가 노드
 ||||||
@@ -74,6 +73,7 @@ Easy-Models-Linker | Torch-Pack | Easy-model2GGUF | Long-Paths-Enabler | ComfyUI
       - ***Q2_K** 부터 **Q8_0** 까지 양자화 옵션을 지원하며 가능한 경우 **5D tensor 수정** 을 적용합니다*  
     - **Long-Paths-Enabler** *(`Add-Ons/Tools`)* - *Windows 10/11에서 **Long Paths** 를 활성화합니다. Python/ComfyUI에 필수적입니다*  
     - **ComfyUI-Version-Switcher** *(`Add-Ons/Tools`)* - ***이전** ComfyUI 버전으로 **되돌리기 가능** 합니다*  
+    - **Toggle-DynamicVRAM** *(`Add-Ons/Tools`)* - *ComfyUI 시작 파일에서 **--disable-dynamic-vram** 옵션을 전환합니다*  
     - **Update Easy-Install.bat** *(메인 폴더)* - ***Add-ons** 및 기타 폴더를 업데이트하고 바탕화면 바로가기를 생성합니다*  
 
 > [!IMPORTANT]
