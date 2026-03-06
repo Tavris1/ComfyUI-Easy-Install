@@ -34,13 +34,12 @@
 
 ### 来自 Pixaroma 教程的节点 [YouTube](https://www.youtube.com/@pixaroma)
 
-||||||
-|---|---|---|---|---|
-ComfyUI Manager | Tiled Diffusion & VAE | LayerStyle | rgthree | GGUF
-VideoHelperSuite | Inpaint-CropAndStitch | SCAIL-Pose | KJNodes | iTools
-Comfyroll Studio | SeedVR2_VideoUpscaler | ControlNet Aux | Easy-Use | RMBG
-WanVideoWrapper | WanAnimatePreprocess | MelBandRoFormer | Easy-Sam3 | QwenVL
-Qwen3-TTS
+|||||||
+|---|---|---|---|---|---|
+ComfyUI Manager | Tiled Diffusion & VAE | SCAIL-Pose | KJNodes | rgthree | iTools
+MelBandRoFormer | Inpaint-CropAndStitch | Qwen3-TTS | Easy-Use | QwenVL | GGUF
+VideoHelperSuite | SeedVR2_VideoUpscaler | ControlNet Aux | LayerStyle | Easy-Sam3 | RMBG
+WanVideoWrapper | WanAnimatePreprocess | Comfyroll Studio
 
 ### 可选附加节点
 ||||||
@@ -74,6 +73,7 @@ Easy-Models-Linker | Torch-Pack | Easy-model2GGUF | Long-Paths-Enabler | ComfyUI
       - *支持从 **Q2_K** 到 **Q8_0** 的量化选项，并在可用时应用 **5D tensor 修复***  
     - **Long-Paths-Enabler** *(`Add-Ons/Tools`)* - *在 Windows 10/11 中启用 **Long Paths**，对 Python/ComfyUI 至关重要*  
     - **ComfyUI-Version-Switcher** *(`Add-Ons/Tools`)* - ***可逆** 回滚到 **之前** 的 ComfyUI 版本以解决问题*  
+    - **Toggle-DynamicVRAM** *(`Add-Ons/Tools`)* - *切换 ComfyUI 启动文件中的 **--disable-dynamic-vram** 选项*  
     - **Update Easy-Install.bat** *(主文件夹)* - *更新 **Add-ons** 及其他文件夹，并创建桌面快捷方式*  
 
 > [!IMPORTANT]

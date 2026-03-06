@@ -34,13 +34,12 @@
 
 ### Các node từ tutorial Pixaroma trên [YouTube](https://www.youtube.com/@pixaroma)
 
-||||||
-|---|---|---|---|---|
-ComfyUI Manager | Tiled Diffusion & VAE | LayerStyle | rgthree | GGUF
-VideoHelperSuite | Inpaint-CropAndStitch | SCAIL-Pose | KJNodes | iTools
-Comfyroll Studio | SeedVR2_VideoUpscaler | ControlNet Aux | Easy-Use | RMBG
-WanVideoWrapper | WanAnimatePreprocess | MelBandRoFormer | Easy-Sam3 | QwenVL
-Qwen3-TTS
+|||||||
+|---|---|---|---|---|---|
+ComfyUI Manager | Tiled Diffusion & VAE | SCAIL-Pose | KJNodes | rgthree | iTools
+MelBandRoFormer | Inpaint-CropAndStitch | Qwen3-TTS | Easy-Use | QwenVL | GGUF
+VideoHelperSuite | SeedVR2_VideoUpscaler | ControlNet Aux | LayerStyle | Easy-Sam3 | RMBG
+WanVideoWrapper | WanAnimatePreprocess | Comfyroll Studio
 
 ### Node bổ sung tùy chọn
 ||||||
@@ -74,6 +73,7 @@ Easy-Models-Linker | Torch-Pack | Easy-model2GGUF | Long-Paths-Enabler | ComfyUI
       - *Lượng tử hóa mô hình từ **Q2_K** đến **Q8_0** và áp dụng **5D tensor fixes** nếu có*  
     - **Long-Paths-Enabler** *(`Add-Ons/Tools`)* - *Kích hoạt **Long Paths** trên Windows 10/11. Rất cần thiết cho Python/ComfyUI*  
     - **ComfyUI-Version-Switcher** *(`Add-Ons/Tools`)* - ***Hoàn tác có thể đảo ngược** về phiên bản **cũ hơn** của ComfyUI nếu gặp sự cố*  
+    - **Toggle-DynamicVRAM** *(`Add-Ons/Tools`)* - *Bật hoặc tắt tùy chọn **--disable-dynamic-vram** trong các tệp khởi động của ComfyUI*  
     - **Update Easy-Install.bat** *(thư mục chính)* - *Cập nhật **Add-ons** và các thư mục khác. Tạo shortcut trên Desktop*  
 
 > [!IMPORTANT]

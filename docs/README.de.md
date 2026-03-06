@@ -34,13 +34,12 @@
 
 ### Nodes aus den Pixaroma Tutorials auf [YouTube](https://www.youtube.com/@pixaroma)
 
-||||||
-|---|---|---|---|---|
-ComfyUI Manager | Tiled Diffusion & VAE | LayerStyle | rgthree | GGUF
-VideoHelperSuite | Inpaint-CropAndStitch | SCAIL-Pose | KJNodes | iTools
-Comfyroll Studio | SeedVR2_VideoUpscaler | ControlNet Aux | Easy-Use | RMBG
-WanVideoWrapper | WanAnimatePreprocess | MelBandRoFormer | Easy-Sam3 | QwenVL
-Qwen3-TTS
+|||||||
+|---|---|---|---|---|---|
+ComfyUI Manager | Tiled Diffusion & VAE | SCAIL-Pose | KJNodes | rgthree | iTools
+MelBandRoFormer | Inpaint-CropAndStitch | Qwen3-TTS | Easy-Use | QwenVL | GGUF
+VideoHelperSuite | SeedVR2_VideoUpscaler | ControlNet Aux | LayerStyle | Easy-Sam3 | RMBG
+WanVideoWrapper | WanAnimatePreprocess | Comfyroll Studio
 
 ### Optionale zusätzliche Nodes
 ||||||
@@ -74,6 +73,7 @@ Easy-Models-Linker | Torch-Pack | Easy-model2GGUF | Long-Paths-Enabler | ComfyUI
       - *Quantisiert Modelle von **Q2_K** bis **Q8_0** und wendet bei Verfügbarkeit **5D Tensor Fixes** an*  
     - **Long-Paths-Enabler** *(`Add-Ons/Tools`)* - *Aktiviert **Long Paths** in Windows 10/11. Essenziell für Python/ComfyUI*  
     - **ComfyUI-Version-Switcher** *(`Add-Ons/Tools`)* - ***Reversibler** Rollback auf eine **frühere** ComfyUI-Version bei Problemen*  
+    - **Toggle-DynamicVRAM** *(`Add-Ons/Tools`)* - *Schaltet die Option **--disable-dynamic-vram** in den ComfyUI-Startdateien um*  
     - **Update Easy-Install.bat** *(Hauptordner)* - *Aktualisiert **Add-ons** und andere Ordner. Erstellt Desktop-Verknüpfungen*  
 
 > [!IMPORTANT]
