@@ -27,6 +27,10 @@
 
 ---
 
+![ComfyUI-ivo](https://github.com/user-attachments/assets/915e20a1-c1d3-4b4e-8fea-98ba46b8d529)
+
+---
+
 ## Included Components:  
 - **Git** *(will be installed or updated if needed)*
 - **ComfyUI portable**
@@ -99,3 +103,4 @@ If you enjoy my projects, please consider sponsoring me. Any support is greatly 
 💜 PayPal: https://paypal.me/tavris1  
 ☕ Buy Me a Coffee: https://buymeacoffee.com/tavris1  
 ❤️ GitHub Sponsors: https://github.com/sponsors/Tavris1  
+
