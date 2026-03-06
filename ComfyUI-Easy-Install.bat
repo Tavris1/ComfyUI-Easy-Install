@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.07.4"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.07.5"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -127,6 +127,7 @@ call :get_node https://github.com/flybirdxx/ComfyUI-Qwen-TTS				qwen3-tts-comfyu
 echo %green%::::::::::::::: %yellow%Installation/Updating SoX%green% :::::::::::::::%reset%
 echo.
 winget.exe install --id ChrisBagwell.SoX -e --accept-source-agreements --accept-package-agreements --silent
+cd .\
 echo.
 
 if not exist ".\ComfyUI\custom_nodes\.disabled" mkdir ".\ComfyUI\custom_nodes\.disabled"
