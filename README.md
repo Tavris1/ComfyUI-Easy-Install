@@ -29,16 +29,24 @@ Dedicated to the **Pixaroma** team
 
 ![ComfyUI Screenshot](docs/ComfyUI-ivo.jpg)
 
-[![Go to Windows Installation](https://img.shields.io/badge/Go%20to-Windows%20Installation-green?style=for-the-badge&logo=windows&color=1f883d)](#windows-installation)
+ComfyUI-Easy-Install is a fully configured, portable ComfyUI in one click. No Python setup, no manual dependencies.
+
+<!--[![Go to Windows Installation](https://img.shields.io/badge/Go%20to-Windows%20Installation-green?style=for-the-badge&logo=windows&color=1f883d)](#windows-installation)-->
 
 </div>
 
-## Included Components:  
+## 📦 Included Components
+<details>
+<summary><b>Core Components</b></summary>
+
 - **Git** *(installed or updated automatically if needed)*
 - **ComfyUI portable**
 - **Python 3.12.10** *(embedded portable version)*
 
-### Nodes from Pixaroma tutorials on [YouTube](https://www.youtube.com/@pixaroma)
+</details>
+
+<details>
+<summary><b>Nodes from Pixaroma tutorials</b></summary>
 
 |||||||
 |---|---|---|---|---|---|
@@ -47,36 +55,37 @@ MelBandRoFormer | Inpaint-CropAndStitch | Qwen3-TTS | Easy-Use | QwenVL | GGUF
 VideoHelperSuite | SeedVR2_VideoUpscaler | ControlNet Aux | LayerStyle | Easy-Sam3 | RMBG
 WanVideoWrapper | WanAnimatePreprocess | Comfyroll Studio
 
-### Optional Add-ons Nodes and Toold
+</details>
+
+<details>
+<summary><b>Optional Add-ons Nodes and Tools</b></summary>
+
 ||||||
 |---|---|---|---|---|
 Nunchaku | SageAttention (v2.2.0 and v3) | FlashAttention | InsightFace | Trellis 2.0
 Easy-Models-Linker | ComfyUI-Version-Switcher | Easy-model2GGUF | Long-Paths-Enabler | Torch-Pack
 
+</details>
+
 ---
 
-## Windows Installation
-1. Download the [:arrow_forward:**latest release HERE**◀️](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+## 🖥️ Windows Installation
+1. [**Download ComfyUI-Easy-Install**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
 2. Extract the ZIP file to a new folder and run **`ComfyUI-Easy-Install.bat`** to start setup
-3. After setup, you may optionally install or run the following components from the **Add-ons** folder:
+3. After setup, you can install or run the following components from the **Add-ons** folder:
     - **Easy-Models-Linker** - *Uses existing **MODELS** folder via **extra_model_paths.yaml**, no re-download needed*
       - *Some folders like **LLM** and **llm_gguf** cannot be redirected this way*
-    - **Nunchaku** - *Installs Nunchaku. Start `Nunchaku.bat` again if issues occur later*
+    - **Nunchaku** - *Installs Nunchaku. (Start `Nunchaku.bat` again if issues occur later)*
     - **SageAttention-Multi** - *Installs both SageAttention v2.2.0 and v3 (v3 effective only on NVIDIA 50-series GPUs)*
     - **FlashAttention** - *Installs FlashAttention v2.8.3*
     - **InsightFace** - *Installs InsightFace (Pretrained models for non-commercial research only)*
     - **Trellis2** - *Installs Trellis 2.0 and the model (requires `Torch 2.8.0+cu128` from the `Add-ons/Torch-Pack`)*
-    - **Torch-Pack** - *Quick switching between:*
-      - ***Torch 2.7.1+cu128***
-      - ***Torch 2.8.0+cu128***
-      - ***Torch 2.9.1+cu130** (default, requires NVIDIA driver v580+)*
-    - **Easy-model2GGUF** *(**Add-Ons/Tools**)*
-      - *Converts models (`.safetensors`, `.pth`, `.pt`) to **GGUF** format (FP16 or BF16) within a few minutes*
-      - *Quantizes models with options from **Q2_K** to **Q8_0** and applies **5D tensor fixes** if available*
-    - **Long-Paths-Enabler** *(`Add-Ons/Tools`)* - *Enables **Long Paths** in Windows 10/11*. Essential for Python/ComfyUI
-    - **ComfyUI-Version-Switcher** *(`Add-Ons/Tools`)* - ***Reversible** rollback to a **previous** ComfyUI version on issues*
-    - **Toggle-DynamicVRAM** *(`Add-Ons/Tools`)* - *Тoggles **--disable-dynamic-vram** option in ComfyUI startup files*
-    - **Update Easy-Install.bat** *(main folder)* - *Updates **Add-ons** and other folders. Creates desktop shortcuts*
+    - **Torch-Pack** - *Quick switching between: `Torch 2.7.1+cu128`, `Torch 2.8.0+cu128` and `Torch 2.9.1+cu130`*
+    - **Easy-model2GGUF** - *Convert & quantize models to GGUF (Q2_K–Q8_0) with 5D tensor fixes if available*
+    - **Long-Paths-Enabler** - *Enables **Long Paths** in Windows 10/11. Essential for Python/ComfyUI*
+    - **ComfyUI-Version-Switcher** - ***Reversible** rollback to a **previous** ComfyUI version on issues*
+    - **Toggle-DynamicVRAM** - *Тoggles **--disable-dynamic-vram** option in ComfyUI startup files*
+    - **Update Easy-Install.bat** - *Updates **Add-ons** and other folders. Creates desktop shortcuts*
 > [!IMPORTANT]
 > - Do not run the installer as **Administrator**.
 > - Avoid system folders (`Program Files`, `Windows`, `C:\` root).
@@ -86,20 +95,17 @@ Easy-Models-Linker | ComfyUI-Version-Switcher | Easy-model2GGUF | Long-Paths-Ena
 > [!TIP]
 > - Multiple ComfyUI installs allowed without conflicts.
 > - You can rename/move `ComfyUI-Easy-Install` folder after installation.
-> - For macOS / Linux click [here](https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux)
+> - [**For macOS / Linux click here**](https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux)
 
----
 
 <div align="center">
 
-If you enjoy my projects, please consider sponsoring me.  
-Any support is greatly appreciated!
+## ❤️ Support Me
 
-<br>
+Enjoy my projects? Any support is greatly appreciated!
 
-<a href="https://paypal.me/tavris1"><img src="https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white"/></a>
-<a href="https://buymeacoffee.com/tavris1"><img src="https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black"/></a>
-<a href="https://github.com/sponsors/Tavris1"><img src="https://img.shields.io/badge/sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white"/></a>
+[![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tavris1)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)
+[![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](https://github.com/sponsors/Tavris1)
 
-</div> 
-
+</div>
