@@ -1,16 +1,3 @@
-# ComfyUI-Easy-Install
-> One-click Portable **ComfyUI** for **Windows** 🔹 Nvidia GPUs 🔹 Pixaroma Community Edition 🔹  
-> [![GitHub Release](https://img.shields.io/github/v/release/Tavris1/ComfyUI-Easy-Install)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
-> [![GitHun Release Date](https://img.shields.io/github/release-date/Tavris1/ComfyUI-Easy-Install?style=flat)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
-> [![Github All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)]()
-> [![GitHub Downloads latest)](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=downloads%40latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
->
-> Dedicated to the **Pixaroma** team  
-> [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Join%20Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
-> [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_presence_count&logo=discord&logoColor=white&label=Online&color=blue&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
-
----
-
 <p align="center">
 🌍 
 <strong>English</strong> |
@@ -27,14 +14,29 @@
 
 ---
 
-![ComfyUI-ivo](https://github.com/user-attachments/assets/9135ae12-d953-4cb1-8092-991f5626d4ed)
+<div align="center">
 
----
+# ComfyUI-Easy-Install
+One-click Portable **ComfyUI** installer for **Windows** 🔹 Nvidia GPUs  
+[![GitHub Release](https://img.shields.io/github/v/release/Tavris1/ComfyUI-Easy-Install)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+[![GitHun Release Date](https://img.shields.io/github/release-date/Tavris1/ComfyUI-Easy-Install?style=flat)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
+[![Github All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)]()
+[![GitHub Downloads latest)](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=downloads%40latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+
+Dedicated to the **Pixaroma** team  
+[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Join%20Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
+<!--[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_presence_count&logo=discord&logoColor=white&label=Online&color=blue&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)-->
+
+![ComfyUI Screenshot](docs/ComfyUI-ivo.jpg)
+
+[![Go to Windows Installation](https://img.shields.io/badge/Go%20to-Windows%20Installation-green?style=for-the-badge&logo=windows&color=1f883d)](#windows-installation)
+
+</div>
 
 ## Included Components:  
-- **Git** *(will be installed or updated if needed)*
+- **Git** *(installed or updated automatically if needed)*
 - **ComfyUI portable**
-- **Python 3.12.10** *(Embedded Portable Version)*
+- **Python 3.12.10** *(embedded portable version)*
 
 ### Nodes from Pixaroma tutorials on [YouTube](https://www.youtube.com/@pixaroma)
 
@@ -45,15 +47,11 @@ MelBandRoFormer | Inpaint-CropAndStitch | Qwen3-TTS | Easy-Use | QwenVL | GGUF
 VideoHelperSuite | SeedVR2_VideoUpscaler | ControlNet Aux | LayerStyle | Easy-Sam3 | RMBG
 WanVideoWrapper | WanAnimatePreprocess | Comfyroll Studio
 
-### Optional Add-ons Nodes
+### Optional Add-ons Nodes and Toold
 ||||||
 |---|---|---|---|---|
-Nunchaku | SageAttention-Multi (v2.2.0 and v3) | FlashAttention | Trellis 2.0 | InsightFace
-
-### Add-ons Tools
-||||||
-|---|---|---|---|---|
-Easy-Models-Linker | Torch-Pack | Easy-model2GGUF | Long-Paths-Enabler | ComfyUI-Version-Switcher
+Nunchaku | SageAttention (v2.2.0 and v3) | FlashAttention | InsightFace | Trellis 2.0
+Easy-Models-Linker | ComfyUI-Version-Switcher | Easy-model2GGUF | Long-Paths-Enabler | Torch-Pack
 
 ---
 
@@ -92,16 +90,9 @@ Easy-Models-Linker | Torch-Pack | Easy-model2GGUF | Long-Paths-Enabler | ComfyUI
 
 ---
 
-<!-- <img width="1193" height="643" alt="model2GGUF" src="https://github.com/user-attachments/assets/9704bd60-08ee-42aa-b0a3-8cab2fcbcef5" /> -->
-<img width="1038" height="240" alt="123321" src="https://github.com/user-attachments/assets/6d0655ef-8724-4cb1-bce2-a29fc9004173" />
-
----
-
 If you enjoy my projects, please consider sponsoring me. Any support is greatly appreciated!
 
 <!-- [![Sponsor me on GitHub](https://img.shields.io/github/sponsors/Tavris1?label=Sponsor&logo=GitHub)](https://github.com/sponsors/Tavris1) -->
 💜 PayPal: https://paypal.me/tavris1  
 ☕ Buy Me a Coffee: https://buymeacoffee.com/tavris1  
 ❤️ GitHub Sponsors: https://github.com/sponsors/Tavris1  
-
-
