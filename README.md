@@ -27,7 +27,7 @@
 
 ---
 
-![ComfyUI-ivo](https://github.com/user-attachments/assets/915e20a1-c1d3-4b4e-8fea-98ba46b8d529)
+![ComfyUI-ivo](https://github.com/user-attachments/assets/9135ae12-d953-4cb1-8092-991f5626d4ed)
 
 ---
 
@@ -103,4 +103,5 @@ If you enjoy my projects, please consider sponsoring me. Any support is greatly 
 💜 PayPal: https://paypal.me/tavris1  
 ☕ Buy Me a Coffee: https://buymeacoffee.com/tavris1  
 ❤️ GitHub Sponsors: https://github.com/sponsors/Tavris1  
+
 
