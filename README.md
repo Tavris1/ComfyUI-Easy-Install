@@ -90,9 +90,16 @@ Easy-Models-Linker | ComfyUI-Version-Switcher | Easy-model2GGUF | Long-Paths-Ena
 
 ---
 
-If you enjoy my projects, please consider sponsoring me. Any support is greatly appreciated!
+<div align="center">
 
-<!-- [![Sponsor me on GitHub](https://img.shields.io/github/sponsors/Tavris1?label=Sponsor&logo=GitHub)](https://github.com/sponsors/Tavris1) -->
-💜 PayPal: https://paypal.me/tavris1  
-☕ Buy Me a Coffee: https://buymeacoffee.com/tavris1  
-❤️ GitHub Sponsors: https://github.com/sponsors/Tavris1  
+If you enjoy my projects, please consider sponsoring me.  
+Any support is greatly appreciated!
+
+<br>
+
+<a href="https://paypal.me/tavris1"><img src="https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white"/></a>
+<a href="https://buymeacoffee.com/tavris1"><img src="https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black"/></a>
+<a href="https://github.com/sponsors/Tavris1"><img src="https://img.shields.io/badge/sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white"/></a>
+
+</div> 
+
