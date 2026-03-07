@@ -19,19 +19,16 @@
 # ComfyUI-Easy-Install
 One-click Portable **ComfyUI** installer for **Windows** 🔹 Nvidia GPUs  
 [![GitHub Release](https://img.shields.io/github/v/release/Tavris1/ComfyUI-Easy-Install)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
-[![GitHun Release Date](https://img.shields.io/github/release-date/Tavris1/ComfyUI-Easy-Install?style=flat)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
-[![Github All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)]()
-[![GitHub Downloads latest)](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=downloads%40latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+[![GitHub Release Date](https://img.shields.io/github/release-date/Tavris1/ComfyUI-Easy-Install?style=flat)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
+[![GitHub All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
+[![GitHub Downloads Latest](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=downloads%40latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
 
 Dedicated to the **Pixaroma** team  
 [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Join%20Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
-<!--[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_presence_count&logo=discord&logoColor=white&label=Online&color=blue&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)-->
 
 ![ComfyUI Screenshot](docs/ComfyUI-ivo.jpg)
 
 ComfyUI-Easy-Install is a fully configured, portable ComfyUI in one click. No Python setup, no manual dependencies.
-
-<!--[![Go to Windows Installation](https://img.shields.io/badge/Go%20to-Windows%20Installation-green?style=for-the-badge&logo=windows&color=1f883d)](#windows-installation)-->
 
 </div>
 
@@ -39,9 +36,11 @@ ComfyUI-Easy-Install is a fully configured, portable ComfyUI in one click. No Py
 <details>
 <summary><b>Core Components</b></summary>
 
-- **Git** *(installed or updated automatically if needed)*
-- **ComfyUI portable**
-- **Python 3.12.10** *(embedded portable version)*
+| 🔧 Component | 📝 Note |
+|---|---|
+| [Git](https://git-scm.com/) | Installed or updated automatically if needed |
+| [ComfyUI](https://github.com/Comfy-Org/ComfyUI) | Latest portable version |
+| [Python](https://www.python.org/downloads/release/python-31210/) | Embedded portable version 3.12.10 |
 
 </details>
 
@@ -63,10 +62,15 @@ ComfyUI-Easy-Install is a fully configured, portable ComfyUI in one click. No Py
 <details>
 <summary><b>Optional Add-ons Nodes and Tools</b></summary>
 
-||||||
-|---|---|---|---|---|
-Nunchaku | SageAttention (v2.2.0 and v3) | FlashAttention | InsightFace | Trellis 2.0
-Easy-Models-Linker | ComfyUI-Version-Switcher | Easy-model2GGUF | Long-Paths-Enabler | Torch-Pack
+| 🧩 Nodes | 🛠️ Tools |
+|---|---|
+| [Nunchaku](https://github.com/nunchaku-ai/nunchaku) | Easy-Models-Linker |
+| [SageAttention (v2.2.0 and v3)](https://github.com/woct0rdho/SageAttention) | ComfyUI-Version-Switcher |
+| [FlashAttention](https://github.com/Dao-AILab/flash-attention) | Easy-model2GGUF |
+| [InsightFace](https://github.com/deepinsight/insightface) | Long-Paths-Enabler |
+| [Trellis 2.0](https://github.com/visualbruno/ComfyUI-Trellis2) | Torch-Pack |
+| | Toggle-DynamicVRAM |
+| | Update Easy-Install |
 
 </details>
 
@@ -74,7 +78,7 @@ Easy-Models-Linker | ComfyUI-Version-Switcher | Easy-model2GGUF | Long-Paths-Ena
 
 ## 🖥️ Windows Installation
 1. [**Download ComfyUI-Easy-Install**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
-2. Extract the ZIP file to a new folder and run **`ComfyUI-Easy-Install.bat`** to start setup
+2. Extract the ZIP file to a new folder and run **`ComfyUI-Easy-Install.bat`**
 3. After setup, you can install or run the following components from the **Add-ons** folder:
     - **Easy-Models-Linker** - *Uses existing **MODELS** folder via **extra_model_paths.yaml**, no re-download needed*
       - *Some folders like **LLM** and **llm_gguf** cannot be redirected this way*
@@ -112,4 +116,3 @@ Enjoy my projects? Any support is greatly appreciated!
 [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](https://github.com/sponsors/Tavris1)
 
 </div>
-
