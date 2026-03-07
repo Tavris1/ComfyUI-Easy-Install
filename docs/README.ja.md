@@ -38,9 +38,9 @@ ComfyUI-Easy-Install は、完全に設定済みでワンクリックで使え�
 
 | 🔧 コンポーネント | 📝 説明 |
 |---|---|
-| [Git](https://git-scm.com/) | 必要に応じて自動でインストールまたは更新 |
-| [ComfyUI](https://github.com/Comfy-Org/ComfyUI) | 最新のポータブル版 |
-| [Python](https://www.python.org/downloads/release/python-31210/) | 組み込みポータブル版 3.12.10 |
+| [Git](https://git-scm.com/) | ![Git version](https://img.shields.io/github/v/tag/git/git?label=&display_name=tag&color=blue) - 最新（必要に応じてインストール/更新） |
+| [Python](https://www.python.org/downloads/release/python-31210/) | ![Python version](https://img.shields.io/badge/3.12.10-blue) - 埋め込み版 |
+| [ComfyUI](https://github.com/Comfy-Org/ComfyUI) | ![ComfyUI version](https://img.shields.io/github/v/release/Comfy-Org/ComfyUI?label=&display_name=tag) - 最新版 |
 
 </details>
 

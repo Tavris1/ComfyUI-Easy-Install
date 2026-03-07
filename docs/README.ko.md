@@ -38,9 +38,9 @@ ComfyUI-Easy-Install은 완전히 구성된 **원클릭 포터블 ComfyUI**입�
 
 | 🔧 구성요소 | 📝 설명 |
 |---|---|
-| [Git](https://git-scm.com/) | 필요 시 자동 설치 또는 업데이트 |
-| [ComfyUI](https://github.com/Comfy-Org/ComfyUI) | 최신 포터블 버전 |
-| [Python](https://www.python.org/downloads/release/python-31210/) | 내장 포터블 버전 3.12.10 |
+| [Git](https://git-scm.com/) | ![Git version](https://img.shields.io/github/v/tag/git/git?label=&display_name=tag&color=blue) - 최신 (필요시 설치/업데이트) |
+| [Python](https://www.python.org/downloads/release/python-31210/) | ![Python version](https://img.shields.io/badge/3.12.10-blue) - 내장 버전 |
+| [ComfyUI](https://github.com/Comfy-Org/ComfyUI) | ![ComfyUI version](https://img.shields.io/github/v/release/Comfy-Org/ComfyUI?label=&display_name=tag) - 최신 버전 |
 
 </details>
 
