@@ -1,6 +1,6 @@
 <p align="center">
 🌍 
-<a href="../README.md">English</a> |
+<a href="README.en.md#en">English</a> |
 <a href="README.zh-CN.md#zh-cn">简体中文</a> |
 <a href="README.ja.md#ja">日本語</a> |
 <a href="README.ko.md#ko">한국어</a> |
@@ -14,87 +14,105 @@
 
 ---
 
+<div align="center">
+
 # ComfyUI-Easy-Install
-> **ComfyUI** portable chỉ với một cú nhấp cho **Windows** 🔹 GPU Nvidia 🔹 Phiên bản Cộng đồng Pixaroma 🔹  
-> [![GitHub Release](https://img.shields.io/github/v/release/Tavris1/ComfyUI-Easy-Install)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
-> [![GitHun Release Date](https://img.shields.io/github/release-date/Tavris1/ComfyUI-Easy-Install?style=flat)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
-> [![Github All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)]()
-> [![GitHub Downloads latest)](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=downloads%40latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
->
-> Dành tặng đội ngũ **Pixaroma**  
-> [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Join%20Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
-> [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_presence_count&logo=discord&logoColor=white&label=Online&color=blue&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
+Trình cài đặt **ComfyUI** di động với một cú nhấp cho **Windows** 🔹 GPU Nvidia  
+[![GitHub Release](https://img.shields.io/github/v/release/Tavris1/ComfyUI-Easy-Install)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+[![GitHub Release Date](https://img.shields.io/github/release-date/Tavris1/ComfyUI-Easy-Install?style=flat)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
+[![GitHub All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
+[![GitHub Downloads Latest](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=downloads%40latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+
+Dành cho đội ngũ **Pixaroma**  
+[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Join%20Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
+
+![ComfyUI Screenshot](ComfyUI-ivo.jpg)
+
+ComfyUI-Easy-Install là **ComfyUI di động được cấu hình đầy đủ** chỉ với một cú nhấp. Không cần cài Python hay phụ thuộc thủ công.
+
+</div>
+
+## 📦 Các thành phần bao gồm
+<details>
+<summary><b>Thành phần cốt lõi</b></summary>
+
+| 🔧 Thành phần | 📝 Ghi chú |
+|---|---|
+| [Git](https://git-scm.com/) | Tự động cài đặt hoặc cập nhật khi cần |
+| [ComfyUI](https://github.com/Comfy-Org/ComfyUI) | Phiên bản di động mới nhất |
+| [Python](https://www.python.org/downloads/release/python-31210/) | Phiên bản di động nhúng 3.12.10 |
+
+</details>
+
+<details>
+<summary><b>Nodes từ hướng dẫn Pixaroma</b></summary>
+
+| 🖼️ Hình ảnh | 🎬 Video | 🎵 Audio | 🧩 Tiện ích / WF | 🤖 Mô hình |
+|---|---|---|---|---|
+| [Tiled Diffusion & VAE](https://github.com/shiimizu/ComfyUI-TiledDiffusion) | [VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) | [MelBandRoFormer](https://github.com/kijai/ComfyUI-MelBandRoFormer) | [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager) | [QwenVL](https://github.com/1038lab/ComfyUI-QwenVL) |
+| [Inpaint CropAndStitch](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch) | [WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideoWrapper) | [Qwen3-TTS](https://github.com/flybirdxx/ComfyUI-Qwen-TTS) | [Easy-Use](https://github.com/yolain/ComfyUI-Easy-Use) | [GGUF](https://github.com/city96/ComfyUI-GGUF) |
+| [ControlNet Aux](https://github.com/Fannovel16/comfyui_controlnet_aux) | [WanAnimatePreprocess](https://github.com/kijai/ComfyUI-WanAnimatePreprocess) | | [KJNodes](https://github.com/kijai/ComfyUI-KJNodes) | |
+| [LayerStyle](https://github.com/chflame163/ComfyUI_LayerStyle) | [SeedVR2 VideoUpscaler](https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler) | | [rgthree](https://github.com/rgthree/rgthree-comfy) | |
+| [RMBG](https://github.com/1038lab/ComfyUI-RMBG) | | | [iTools](https://github.com/MohammadAboulEla/ComfyUI-iTools) | |
+| [Easy-Sam3](https://github.com/yolain/ComfyUI-Easy-Sam3) | | | [ControlAltAI Nodes](https://github.com/gseth/ControlAltAI-Nodes) | |
+| [SCAIL-Pose](https://github.com/kijai/ComfyUI-SCAIL-Pose) | | | | |
+
+</details>
+
+<details>
+<summary><b>Nodes và công cụ bổ sung tùy chọn</b></summary>
+
+| 🧩 Nodes | 🛠️ Tools |
+|---|---|
+| [Nunchaku](https://github.com/nunchaku-ai/nunchaku) | Easy-Models-Linker |
+| [SageAttention (v2.2.0 và v3)](https://github.com/woct0rdho/SageAttention) | ComfyUI-Version-Switcher |
+| [FlashAttention](https://github.com/Dao-AILab/flash-attention) | Easy-model2GGUF |
+| [InsightFace](https://github.com/deepinsight/insightface) | Long-Paths-Enabler |
+| [Trellis 2.0](https://github.com/visualbruno/ComfyUI-Trellis2) | Torch-Pack |
+| | Toggle-DynamicVRAM |
+| | Update Easy-Install |
+
+</details>
 
 ---
 
-## Thành phần bao gồm:  
-- **Git** *(sẽ được cài đặt hoặc cập nhật nếu cần)*  
-- **ComfyUI portable**  
-- **Python 3.12.10** *(phiên bản portable tích hợp)*  
-
-### Các node từ tutorial Pixaroma trên [YouTube](https://www.youtube.com/@pixaroma)
-
-|||||||
-|---|---|---|---|---|---|
-ComfyUI Manager | Tiled Diffusion & VAE | SCAIL-Pose | KJNodes | rgthree | iTools
-MelBandRoFormer | Inpaint-CropAndStitch | Qwen3-TTS | Easy-Use | QwenVL | GGUF
-VideoHelperSuite | SeedVR2_VideoUpscaler | ControlNet Aux | LayerStyle | Easy-Sam3 | RMBG
-WanVideoWrapper | WanAnimatePreprocess | Comfyroll Studio
-
-### Node bổ sung tùy chọn
-||||||
-|---|---|---|---|---|
-Nunchaku | SageAttention-Multi (v2.2.0 and v3) | FlashAttention | Trellis 2.0 | InsightFace
-
-### Công cụ bổ sung
-||||||
-|---|---|---|---|---|
-Easy-Models-Linker | Torch-Pack | Easy-model2GGUF | Long-Paths-Enabler | ComfyUI-Version-Switcher
-
----
-
-## Cài đặt trên Windows
-1. Tải [:arrow_forward:**phiên bản mới nhất TẠI ĐÂY**◀️](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
-2. Giải nén file ZIP vào một thư mục mới và chạy **`ComfyUI-Easy-Install.bat`** để bắt đầu cài đặt
-3. Sau khi cài đặt xong, bạn có thể tùy chọn cài đặt hoặc chạy các thành phần sau từ thư mục **Add-ons**:
-    - **Easy-Models-Linker** - *Sử dụng thư mục **MODELS** hiện có thông qua **extra_model_paths.yaml**, không cần tải lại*
+## 🖥️ Cài đặt trên Windows
+1. [**Tải ComfyUI-Easy-Install**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+2. Giải nén ZIP vào một thư mục mới và chạy **`ComfyUI-Easy-Install.bat`**
+3. Sau khi cài đặt, bạn có thể cài hoặc chạy các thành phần sau từ thư mục **Add-ons**:
+    - **Easy-Models-Linker** - *Sử dụng thư mục **MODELS** hiện có qua **extra_model_paths.yaml**, không cần tải lại*
       - *Một số thư mục như **LLM** và **llm_gguf** không thể chuyển hướng theo cách này*
-    - **Nunchaku** - *Cài đặt Nunchaku. Chạy lại `Nunchaku.bat` nếu gặp sự cố sau này*
-    - **SageAttention-Multi** - *Cài đặt SageAttention v2.2.0 và v3 (v3 chỉ hoạt động trên GPU NVIDIA dòng 50)*
-    - **FlashAttention** - *Cài đặt FlashAttention v2.8.3*
-    - **InsightFace** - *Cài đặt InsightFace (mô hình huấn luyện sẵn chỉ dành cho nghiên cứu phi thương mại)*
-    - **Trellis2** - *Cài đặt Trellis 2.0 và mô hình (yêu cầu `Torch 2.8.0+cu128` từ `Add-ons/Torch-Pack`)*
-    - **Torch-Pack** - *Chuyển đổi nhanh giữa:*
-      - ***Torch 2.7.1+cu128***
-      - ***Torch 2.8.0+cu128***
-      - ***Torch 2.9.1+cu130** (mặc định, yêu cầu driver NVIDIA v580+)*  
-    - **Easy-model2GGUF** *(**Add-Ons/Tools**)*  
-      - *Chuyển đổi mô hình (`.safetensors`, `.pth`, `.pt`) sang định dạng **GGUF** (FP16 hoặc BF16) trong vài phút*  
-      - *Lượng tử hóa mô hình từ **Q2_K** đến **Q8_0** và áp dụng **5D tensor fixes** nếu có*  
-    - **Long-Paths-Enabler** *(`Add-Ons/Tools`)* - *Kích hoạt **Long Paths** trên Windows 10/11. Rất cần thiết cho Python/ComfyUI*  
-    - **ComfyUI-Version-Switcher** *(`Add-Ons/Tools`)* - ***Hoàn tác có thể đảo ngược** về phiên bản **cũ hơn** của ComfyUI nếu gặp sự cố*  
-    - **Toggle-DynamicVRAM** *(`Add-Ons/Tools`)* - *Bật hoặc tắt tùy chọn **--disable-dynamic-vram** trong các tệp khởi động của ComfyUI*  
-    - **Update Easy-Install.bat** *(thư mục chính)* - *Cập nhật **Add-ons** và các thư mục khác. Tạo shortcut trên Desktop*  
-
+    - **Nunchaku** - *Cài Nunchaku (chạy lại `Nunchaku.bat` nếu có sự cố)*
+    - **SageAttention-Multi** - *Cài cả SageAttention v2.2.0 và v3 (v3 chỉ hiệu quả trên GPU NVIDIA series 50)*
+    - **FlashAttention** - *Cài FlashAttention v2.8.3*
+    - **InsightFace** - *Cài InsightFace (mô hình đã huấn luyện trước chỉ dành cho nghiên cứu phi thương mại)*
+    - **Trellis2** - *Cài Trellis 2.0 và mô hình (yêu cầu `Torch 2.8.0+cu128` từ `Add-ons/Torch-Pack`)*
+    - **Torch-Pack** - *Chuyển đổi nhanh giữa `Torch 2.7.1+cu128`, `Torch 2.8.0+cu128` và `Torch 2.9.1+cu130`*
+    - **Easy-model2GGUF** - *Chuyển đổi & lượng tử hóa mô hình sang GGUF (Q2_K–Q8_0) với sửa lỗi tensor 5D nếu có*
+    - **Long-Paths-Enabler** - *Kích hoạt **Long Paths** trên Windows 10/11. Quan trọng cho Python/ComfyUI*
+    - **ComfyUI-Version-Switcher** - ***Có thể đảo ngược** quay lại phiên bản ComfyUI trước khi gặp sự cố*
+    - **Toggle-DynamicVRAM** - *Chuyển đổi tùy chọn **--disable-dynamic-vram** trong các tệp khởi động ComfyUI*
+    - **Update Easy-Install.bat** - *Cập nhật **Add-ons** và các thư mục khác, tạo lối tắt trên Desktop*
 > [!IMPORTANT]
-> - Không chạy trình cài đặt dưới quyền **Administrator**.
-> - Tránh các thư mục hệ thống (`Program Files`, `Windows`, thư mục gốc `C:\`).
-> - Tránh dấu cách và ký tự đặc biệt trong tên thư mục.
+> - Không chạy trình cài đặt với quyền **Administrator**.
+> - Tránh các thư mục hệ thống (`Program Files`, `Windows`, gốc `C:\`).
+> - Tránh khoảng trắng và ký tự đặc biệt trong tên thư mục.
 > - Đảm bảo driver NVIDIA của bạn được cập nhật.
 
 > [!TIP]
-> - Có thể cài đặt nhiều bản ComfyUI mà không xung đột.
-> - Bạn có thể đổi tên hoặc di chuyển thư mục `ComfyUI-Easy-Install` sau khi cài đặt.
-> - Đối với macOS / Linux nhấn [here](https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux)
+> - Cho phép nhiều cài đặt ComfyUI mà không xung đột.
+> - Thư mục `ComfyUI-Easy-Install` có thể đổi tên/di chuyển sau khi cài đặt.
+> - [**Cho macOS / Linux nhấn vào đây**](https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux)
 
----
 
-<img width="1038" height="240" alt="123321" src="https://github.com/user-attachments/assets/6d0655ef-8724-4cb1-bce2-a29fc9004173" />
+<div align="center">
 
----
+## ❤️ Ủng hộ tôi
 
-Nếu bạn thích các dự án của tôi, vui lòng cân nhắc ủng hộ. Mọi sự hỗ trợ đều rất đáng trân trọng!
+Thích các dự án của tôi? Mọi sự ủng hộ đều rất đáng trân trọng!
 
-💜 PayPal: https://paypal.me/tavris1  
-☕ Buy Me a Coffee: https://buymeacoffee.com/tavris1  
-❤️ GitHub Sponsors: https://github.com/sponsors/Tavris1  
+[![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tavris1)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)
+[![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](https://github.com/sponsors/Tavris1)
+
+</div>

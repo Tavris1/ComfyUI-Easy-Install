@@ -1,6 +1,6 @@
 <p align="center">
 🌍 
-<a href="../README.md">English</a> |
+<a href="README.en.md#en">English</a> |
 <a href="README.zh-CN.md#zh-cn">简体中文</a> |
 <strong>日本語</strong> |
 <a href="README.ko.md#ko">한국어</a> |
@@ -14,87 +14,105 @@
 
 ---
 
+<div align="center">
+
 # ComfyUI-Easy-Install
-> **ComfyUI** のワンクリック ポータブル版 **Windows** 向け 🔹 Nvidia GPU 🔹 Pixaroma コミュニティエディション 🔹  
-> [![GitHub Release](https://img.shields.io/github/v/release/Tavris1/ComfyUI-Easy-Install)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
-> [![GitHun Release Date](https://img.shields.io/github/release-date/Tavris1/ComfyUI-Easy-Install?style=flat)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
-> [![Github All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)]()
-> [![GitHub Downloads latest)](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=downloads%40latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
->
-> **Pixaroma** チームに捧げます  
-> [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Join%20Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
-> [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_presence_count&logo=discord&logoColor=white&label=Online&color=blue&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
+ワンクリックで使えるポータブル **ComfyUI** インストーラー、**Windows** 用 🔹 Nvidia GPU 対応  
+[![GitHub Release](https://img.shields.io/github/v/release/Tavris1/ComfyUI-Easy-Install)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+[![GitHub Release Date](https://img.shields.io/github/release-date/Tavris1/ComfyUI-Easy-Install?style=flat)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
+[![GitHub All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
+[![GitHub Downloads Latest](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=downloads%40latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+
+**Pixaroma** チームに捧ぐ  
+[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Join%20Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
+
+![ComfyUI Screenshot](ComfyUI-ivo.jpg)
+
+ComfyUI-Easy-Install は、完全に設定済みでワンクリックで使えるポータブル ComfyUI です。Python のセットアップや手動依存関係は不要です。
+
+</div>
+
+## 📦 含まれるコンポーネント
+<details>
+<summary><b>コアコンポーネント</b></summary>
+
+| 🔧 コンポーネント | 📝 説明 |
+|---|---|
+| [Git](https://git-scm.com/) | 必要に応じて自動でインストールまたは更新 |
+| [ComfyUI](https://github.com/Comfy-Org/ComfyUI) | 最新のポータブル版 |
+| [Python](https://www.python.org/downloads/release/python-31210/) | 組み込みポータブル版 3.12.10 |
+
+</details>
+
+<details>
+<summary><b>Pixaroma チュートリアルのノード</b></summary>
+
+| 🖼️ 画像 | 🎬 動画 | 🎵 音声 | 🧩 ユーティリティ / WF | 🤖 モデル |
+|---|---|---|---|---|
+| [Tiled Diffusion & VAE](https://github.com/shiimizu/ComfyUI-TiledDiffusion) | [VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) | [MelBandRoFormer](https://github.com/kijai/ComfyUI-MelBandRoFormer) | [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager) | [QwenVL](https://github.com/1038lab/ComfyUI-QwenVL) |
+| [Inpaint CropAndStitch](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch) | [WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideoWrapper) | [Qwen3-TTS](https://github.com/flybirdxx/ComfyUI-Qwen-TTS) | [Easy-Use](https://github.com/yolain/ComfyUI-Easy-Use) | [GGUF](https://github.com/city96/ComfyUI-GGUF) |
+| [ControlNet Aux](https://github.com/Fannovel16/comfyui_controlnet_aux) | [WanAnimatePreprocess](https://github.com/kijai/ComfyUI-WanAnimatePreprocess) | | [KJNodes](https://github.com/kijai/ComfyUI-KJNodes) | |
+| [LayerStyle](https://github.com/chflame163/ComfyUI_LayerStyle) | [SeedVR2 VideoUpscaler](https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler) | | [rgthree](https://github.com/rgthree/rgthree-comfy) | |
+| [RMBG](https://github.com/1038lab/ComfyUI-RMBG) | | | [iTools](https://github.com/MohammadAboulEla/ComfyUI-iTools) | |
+| [Easy-Sam3](https://github.com/yolain/ComfyUI-Easy-Sam3) | | | [ControlAltAI Nodes](https://github.com/gseth/ControlAltAI-Nodes) | |
+| [SCAIL-Pose](https://github.com/kijai/ComfyUI-SCAIL-Pose) | | | | |
+
+</details>
+
+<details>
+<summary><b>オプション追加ノードとツール</b></summary>
+
+| 🧩 ノード | 🛠️ ツール |
+|---|---|
+| [Nunchaku](https://github.com/nunchaku-ai/nunchaku) | Easy-Models-Linker |
+| [SageAttention (v2.2.0 と v3)](https://github.com/woct0rdho/SageAttention) | ComfyUI-Version-Switcher |
+| [FlashAttention](https://github.com/Dao-AILab/flash-attention) | Easy-model2GGUF |
+| [InsightFace](https://github.com/deepinsight/insightface) | Long-Paths-Enabler |
+| [Trellis 2.0](https://github.com/visualbruno/ComfyUI-Trellis2) | Torch-Pack |
+| | Toggle-DynamicVRAM |
+| | Update Easy-Install |
+
+</details>
 
 ---
 
-## 含まれるコンポーネント:  
-- **Git** *(必要に応じてインストールまたは更新されます)*  
-- **ComfyUI portable**  
-- **Python 3.12.10** *(組み込みポータブル版)*  
-
-### Pixaroma のチュートリアルで使用されているノード [YouTube](https://www.youtube.com/@pixaroma)
-
-|||||||
-|---|---|---|---|---|---|
-ComfyUI Manager | Tiled Diffusion & VAE | SCAIL-Pose | KJNodes | rgthree | iTools
-MelBandRoFormer | Inpaint-CropAndStitch | Qwen3-TTS | Easy-Use | QwenVL | GGUF
-VideoHelperSuite | SeedVR2_VideoUpscaler | ControlNet Aux | LayerStyle | Easy-Sam3 | RMBG
-WanVideoWrapper | WanAnimatePreprocess | Comfyroll Studio
-
-### オプション追加ノード
-||||||
-|---|---|---|---|---|
-Nunchaku | SageAttention-Multi (v2.2.0 and v3) | FlashAttention | Trellis 2.0 | InsightFace
-
-### 追加ツール
-||||||
-|---|---|---|---|---|
-Easy-Models-Linker | Torch-Pack | Easy-model2GGUF | Long-Paths-Enabler | ComfyUI-Version-Switcher
-
----
-
-## Windows インストール
-1. [:arrow_forward:**最新バージョンはこちらからダウンロード**◀️](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
-2. ZIP ファイルを新しいフォルダーに解凍し **`ComfyUI-Easy-Install.bat`** を実行してセットアップを開始します
-3. セットアップ後、**Add-ons** フォルダーから以下のコンポーネントを必要に応じてインストールまたは実行できます:
-    - **Easy-Models-Linker** - ***extra_model_paths.yaml** を使用して既存の **MODELS** フォルダーを利用し、再ダウンロードは不要です*
-      - *一部のフォルダー (**LLM** や **llm_gguf**) はこの方法ではリダイレクトできません*
-    - **Nunchaku** - *Nunchaku をインストールします。後で問題が発生した場合は `Nunchaku.bat` を再実行してください*
-    - **SageAttention-Multi** - *SageAttention v2.2.0 と v3 をインストールします (v3 は NVIDIA 50 シリーズ GPU のみ有効)*
-    - **FlashAttention** - *FlashAttention v2.8.3 をインストールします*
-    - **InsightFace** - *InsightFace をインストールします (事前学習モデルは非商用研究目的のみ)*
-    - **Trellis2** - *Trellis 2.0 とモデルをインストールします (`Add-ons/Torch-Pack` の `Torch 2.8.0+cu128` が必要)*
-    - **Torch-Pack** - *以下を素早く切り替え可能:*
-      - ***Torch 2.7.1+cu128***
-      - ***Torch 2.8.0+cu128***
-      - ***Torch 2.9.1+cu130** (デフォルト、NVIDIA ドライバー v580+ が必要)*  
-    - **Easy-model2GGUF** *(**Add-Ons/Tools**)*  
-      - *モデル (`.safetensors`, `.pth`, `.pt`) を数分で **GGUF** 形式 (FP16 または BF16) に変換します*  
-      - ***Q2_K** から **Q8_0** までの量子化オプションに対応し、利用可能な場合は **5D tensor 修正** を適用します*  
-    - **Long-Paths-Enabler** *(`Add-Ons/Tools`)* - *Windows 10/11 で **Long Paths** を有効にします。Python/ComfyUI に重要です*  
-    - **ComfyUI-Version-Switcher** *(`Add-Ons/Tools`)* - ***以前の** ComfyUI バージョンへ **可逆的に** ロールバックできます*  
-    - **Toggle-DynamicVRAM** *(`Add-Ons/Tools`)* - *ComfyUI の起動ファイル内の **--disable-dynamic-vram** オプションを切り替えます*  
-    - **Update Easy-Install.bat** *(メインフォルダー)* - ***Add-ons** やその他のフォルダーを更新し、デスクトップショートカットを作成します*  
-
+## 🖥️ Windows インストール
+1. [**ComfyUI-Easy-Install をダウンロード**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+2. ZIP ファイルを新しいフォルダに解凍し、**`ComfyUI-Easy-Install.bat`** を実行
+3. セットアップ後、**Add-ons** フォルダから以下のコンポーネントをインストールまたは実行可能：
+    - **Easy-Models-Linker** - *既存の **MODELS** フォルダを **extra_model_paths.yaml** 経由で使用、再ダウンロード不要*
+      - ***LLM** や **llm_gguf** のフォルダはこの方法でリダイレクトできません*
+    - **Nunchaku** - *Nunchaku をインストール（問題があれば `Nunchaku.bat` を再実行）*
+    - **SageAttention-Multi** - *SageAttention v2.2.0 と v3 をインストール（v3 は NVIDIA 50 シリーズ GPU のみ有効）*
+    - **FlashAttention** - *FlashAttention v2.8.3 をインストール*
+    - **InsightFace** - *InsightFace をインストール（非商用研究用の事前学習モデルのみ）*
+    - **Trellis2** - *Trellis 2.0 とモデルをインストール（`Add-ons/Torch-Pack` の `Torch 2.8.0+cu128` 必須）*
+    - **Torch-Pack** - *`Torch 2.7.1+cu128`、`Torch 2.8.0+cu128`、`Torch 2.9.1+cu130` の間で簡単切替*
+    - **Easy-model2GGUF** - *モデルを GGUF に変換・量子化（Q2_K–Q8_0）、可能なら 5D テンソル修正も適用*
+    - **Long-Paths-Enabler** - *Windows 10/11 で **Long Paths** を有効化、Python/ComfyUI に必須*
+    - **ComfyUI-Version-Switcher** - ***以前のバージョン** へ巻き戻し可能*
+    - **Toggle-DynamicVRAM** - *ComfyUI 起動ファイルの **--disable-dynamic-vram** オプションを切替*
+    - **Update Easy-Install.bat** - *Add-ons やその他フォルダを更新、デスクトップショートカット作成*
 > [!IMPORTANT]
-> - インストーラーを **管理者として** 実行しないでください。
-> - システムフォルダー (`Program Files`, `Windows`, `C:\` ルート) は避けてください。
-> - フォルダー名にスペースや特殊文字を使用しないでください。
-> - NVIDIA ドライバーが最新であることを確認してください。
+> - インストーラーを **管理者として** 実行しないこと。
+> - システムフォルダ（`Program Files`、`Windows`、`C:\` 直下）を避ける。
+> - フォルダ名にスペースや特殊文字を含めない。
+> - NVIDIA ドライバーが最新であることを確認。
 
 > [!TIP]
-> - 複数の ComfyUI インストールが競合なしで可能です。
-> - インストール後に `ComfyUI-Easy-Install` フォルダーの名前変更や移動が可能です。
-> - macOS / Linux の場合は [here](https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux) をクリックしてください。
+> - 複数の ComfyUI インストールが可能、競合なし。
+> - インストール後、`ComfyUI-Easy-Install` フォルダをリネーム/移動可能。
+> - [**macOS / Linux の場合はこちら**](https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux)
 
----
 
-<img width="1038" height="240" alt="123321" src="https://github.com/user-attachments/assets/6d0655ef-8724-4cb1-bce2-a29fc9004173" />
+<div align="center">
 
----
+## ❤️ サポート
 
-私のプロジェクトを気に入っていただけましたら、ぜひご支援をご検討ください。どのようなサポートでも大変感謝いたします。
+私のプロジェクトが気に入ったら、サポートいただけると嬉しいです！
 
-💜 PayPal: https://paypal.me/tavris1  
-☕ Buy Me a Coffee: https://buymeacoffee.com/tavris1  
-❤️ GitHub Sponsors: https://github.com/sponsors/Tavris1  
+[![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tavris1)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)
+[![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](https://github.com/sponsors/Tavris1)
+
+</div>
