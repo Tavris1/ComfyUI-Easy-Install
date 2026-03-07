@@ -38,9 +38,9 @@ ComfyUI-Easy-Install là **ComfyUI di động được cấu hình đầy đủ*
 
 | 🔧 Thành phần | 📝 Ghi chú |
 |---|---|
-| [Git](https://git-scm.com/) | Tự động cài đặt hoặc cập nhật khi cần |
-| [ComfyUI](https://github.com/Comfy-Org/ComfyUI) | Phiên bản di động mới nhất |
-| [Python](https://www.python.org/downloads/release/python-31210/) | Phiên bản di động nhúng 3.12.10 |
+| [Git](https://git-scm.com/) | ![Git version](https://img.shields.io/github/v/tag/git/git?label=&display_name=tag&color=blue) - Mới nhất (sẽ cài/cập nhật nếu cần) |
+| [Python](https://www.python.org/downloads/release/python-31210/) | ![Python version](https://img.shields.io/badge/3.12.10-blue) - Phiên bản nhúng |
+| [ComfyUI](https://github.com/Comfy-Org/ComfyUI) | ![ComfyUI version](https://img.shields.io/github/v/release/Comfy-Org/ComfyUI?label=&display_name=tag) - Phiên bản mới nhất |
 
 </details>
 

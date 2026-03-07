@@ -38,9 +38,9 @@ ComfyUI-Easy-Install est un **ComfyUI portable entièrement configuré** en un s
 
 | 🔧 Composant | 📝 Note |
 |---|---|
-| [Git](https://git-scm.com/) | Installé ou mis à jour automatiquement si nécessaire |
-| [ComfyUI](https://github.com/Comfy-Org/ComfyUI) | Dernière version portable |
-| [Python](https://www.python.org/downloads/release/python-31210/) | Version portable intégrée 3.12.10 |
+| [Git](https://git-scm.com/) | ![Git version](https://img.shields.io/github/v/tag/git/git?label=&display_name=tag&color=blue) - Dernière (sera installée/mise à jour si nécessaire) |
+| [Python](https://www.python.org/downloads/release/python-31210/) | ![Python version](https://img.shields.io/badge/3.12.10-blue) - Version intégrée |
+| [ComfyUI](https://github.com/Comfy-Org/ComfyUI) | ![ComfyUI version](https://img.shields.io/github/v/release/Comfy-Org/ComfyUI?label=&display_name=tag) - Dernière version |
 
 </details>
 
