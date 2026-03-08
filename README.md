@@ -91,7 +91,7 @@ ComfyUI-Easy-Install is a fully configured, portable ComfyUI in one click. No Py
     - **Easy-model2GGUF** - *Convert & quantize models to GGUF (Q2_K–Q8_0) with 5D tensor fixes if available*
     - **Long-Paths-Enabler** - *Enables **Long Paths** in Windows 10/11. Essential for Python/ComfyUI*
     - **ComfyUI-Version-Switcher** - ***Reversible** rollback to a **previous** ComfyUI version on issues*
-    - **Toggle-DynamicVRAM** - *Тoggles **--disable-dynamic-vram** option in ComfyUI startup files*
+    - **Toggle-DynamicVRAM** - *Toggles **--disable-dynamic-vram** option in ComfyUI startup files*
     - **Update Easy-Install.bat** - *Updates **Add-ons** and other folders. Creates desktop shortcuts*
 > [!IMPORTANT]
 > - Do not run the installer as **Administrator**.
@@ -116,5 +116,6 @@ Enjoy my projects? Any support is greatly appreciated!
 [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](https://github.com/sponsors/Tavris1)
 
 </div>
+
 
 
