@@ -477,9 +477,8 @@ get_node() {
     if [ "$(uname -s)" = "Darwin" ] && [ "$GIT_FOLDER" = "comfyui-rmbg" ]; then
         RMBG_SAM3_FILE="./ComfyUI/custom_nodes/${GIT_FOLDER}/py/AILab_SAM3Segment.py"
         if [ -f "$RMBG_SAM3_FILE" ]; then
-            mkdir -p "./ComfyUI/custom_nodes/${GIT_FOLDER}/py/.disabled"
-            mv "$RMBG_SAM3_FILE" "./ComfyUI/custom_nodes/${GIT_FOLDER}/py/.disabled/AILab_SAM3Segment.py"
-            echo -e "${YELLOW}Disabled RMBG SAM3 Triton module on macOS: py/.disabled/AILab_SAM3Segment.py${RESET}"
+            rm -f "$RMBG_SAM3_FILE"
+            echo -e "${YELLOW}Removed RMBG SAM3 Triton module on macOS (requires CUDA)${RESET}"
         fi
     fi
 
@@ -612,8 +611,8 @@ echo -e "${GREEN}✓${RESET} python-ffmpeg installed"
 
 if [ "$(uname -s)" = "Darwin" ]; then
     echo -e "${YELLOW}Installing opencv-contrib-python for LayerStyle (ximgproc)...${RESET}"
-    "$EMBEDDED_PYTHON" -m pip uninstall -y opencv-python-headless opencv-python || true
-    uv pip install opencv-contrib-python $UV_ARGS
+    uv pip uninstall --python "$EMBEDDED_PYTHON" opencv-python-headless opencv-python opencv-contrib-python 2>/dev/null || true
+    uv pip install --force-reinstall opencv-contrib-python $UV_ARGS
 fi
 
 # Extracting helper folders
