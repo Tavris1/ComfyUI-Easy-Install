@@ -1,250 +1,200 @@
-# ComfyUI-Easy-Install  (NEXT version)
-> Portable **ComfyUI** for **macOS** and **Linux**  🔹 Pixaroma Community Edition 🔹  
-> [![GitHub Release](https://img.shields.io/github/v/release/Tavris1/ComfyUI-Easy-Install)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
-> [![GitHub Release Date](https://img.shields.io/github/release-date/Tavris1/ComfyUI-Easy-Install?style=flat)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
-> [![Github All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)]()
-> [![GitHub Downloads latest)](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=downloads%40latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
->
-> Dedicated to the **Pixaroma** team  
-> [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Join%20Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)  
+<div align="center">
+
+# ComfyUI-Easy-Install
+
+Portable **ComfyUI** for **macOS** and **Linux** 🔹 Pixaroma Community Edition
+[![GitHub Release](https://img.shields.io/github/v/release/Tavris1/ComfyUI-Easy-Install)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+[![GitHub Release Date](https://img.shields.io/github/release-date/Tavris1/ComfyUI-Easy-Install?style=flat)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
+[![GitHub All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
+[![GitHub Downloads Latest](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=⬇+latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+
+Dedicated to the **Pixaroma** team
+[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Join%20Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
+
+</div>
+
 ---
 
-## What will be installed  
-- [**Git**](https://git-scm.com/) will be installed/updated if required  
-- [**ComfyUI portable**](https://github.com/comfyanonymous/ComfyUI)  
-- [**Python 3.12.10 Embedded**](https://www.python.org/downloads/release/python-31210/)
+## 📦 Included Components
 
-## Nodes from Pixaroma tutorials on [:arrow_forward:YouTube](https://www.youtube.com/@pixaroma)  
+<details>
+<summary><b>Core Components</b></summary>
 
-|||||
-|---|---|---|---|
-[🔗](https://github.com/Comfy-Org/ComfyUI-Manager) ComfyUI Manager | [🔗](https://github.com/yolain/ComfyUI-Easy-Use) Easy-Use | [🔗](https://github.com/Fannovel16/comfyui_controlnet_aux) ControlNet Aux | [🔗](https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes) Comfyroll Studio
- [🔗](https://github.com/rgthree/rgthree-comfy) rgthree | [🔗](https://github.com/city96/ComfyUI-GGUF) GGUF | [🔗](https://github.com/MohammadAboulEla/ComfyUI-iTools) iTools | [🔗](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch) Inpaint-CropAndStitch
- [🔗](https://github.com/1038lab/ComfyUI-RMBG) RMBG | [🔗](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) VideoHelperSuite | [🔗](https://github.com/welltop-cn/ComfyUI-TeaCache) TeaCache | [🔗](https://github.com/shiimizu/ComfyUI-TiledDiffusion) Tiled Diffusion & VAE
- [🔗](https://github.com/kijai/ComfyUI-KJNodes) KJNodes | [🔗](https://github.com/kijai/ComfyUI-WanVideoWrapper) WanVideoWrapper |  [🔗](https://github.com/1038lab/ComfyUI-QwenVL) QwenVL | [🔗](https://github.com/SeedV2/SeedVR2_VideoUpscaler) SeedVR2_VideoUpscaler | [🔗](https://github.com/SCAILab/SCAIL-Pose) SCAIL-Pose | [🔗](https://github.com/MelBandRoFormer/MelBandRoFormer) MelBandRoFormer | [🔗](https://github.com/flybirdxx/ComfyUI-Qwen-TTS) Qwen3-TTS 
+| 🔧 Component | 📝 Note |
+|---|---|
+| [Git](https://git-scm.com/) | ![Git version](https://img.shields.io/github/v/tag/git/git?label=&display_name=tag&color=blue) - Latest (will install/update if needed) |
+| [Python](https://www.python.org/downloads/release/python-31210/) | ![Python version](https://img.shields.io/badge/3.12.10-blue) - Built from source |
+| [ComfyUI](https://github.com/Comfy-Org/ComfyUI) | ![ComfyUI version](https://img.shields.io/github/v/release/Comfy-Org/ComfyUI?label=&display_name=tag) - Latest version |
 
+</details>
 
-## Optional Add-ons Nodes
-||||||
+<details>
+<summary><b>Nodes from Pixaroma tutorials</b></summary>
+
+| 🖼️ Image | 🎬 Video | 🎵 Audio | 🧩 Utility / WF | 🤖 Models |
 |---|---|---|---|---|
-[🔗](https://github.com/nunchaku-tech/ComfyUI-nunchaku) Nunchaku | [🔗](https://github.com/thu-ml/SageAttention) SageAttention 2.2.0 | [🔗](https://github.com/Dao-AILab/flash-attention) FlashAttention | [🔗](https://github.com/visualbruno/ComfyUI-Trellis2) Trellis 2.0 | [🔗](https://github.com/deepinsight/insightface) InsightFace
+| [Tiled Diffusion & VAE](https://github.com/shiimizu/ComfyUI-TiledDiffusion) | [VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) | [MelBandRoFormer](https://github.com/kijai/ComfyUI-MelBandRoFormer) | [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager) | [QwenVL](https://github.com/1038lab/ComfyUI-QwenVL) |
+| [Inpaint CropAndStitch](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch) | [WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideoWrapper) | [Qwen3-TTS](https://github.com/flybirdxx/ComfyUI-Qwen-TTS) | [Easy-Use](https://github.com/yolain/ComfyUI-Easy-Use) | [GGUF](https://github.com/city96/ComfyUI-GGUF) |
+| [ControlNet Aux](https://github.com/Fannovel16/comfyui_controlnet_aux) | [WanAnimatePreprocess](https://github.com/kijai/ComfyUI-WanAnimatePreprocess) | | [KJNodes](https://github.com/kijai/ComfyUI-KJNodes) | |
+| [LayerStyle](https://github.com/chflame163/ComfyUI_LayerStyle) | [SeedVR2 VideoUpscaler](https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler) | | [rgthree](https://github.com/rgthree/rgthree-comfy) | |
+| [RMBG](https://github.com/1038lab/ComfyUI-RMBG) | | | [iTools](https://github.com/MohammadAboulEla/ComfyUI-iTools) | |
+| [Easy-Sam3](https://github.com/yolain/ComfyUI-Easy-Sam3) | | | [ControlAltAI Nodes](https://github.com/gseth/ControlAltAI-Nodes) | |
+| [SCAIL-Pose](https://github.com/kijai/ComfyUI-SCAIL-Pose) | | | [TeaCache](https://github.com/welltop-cn/ComfyUI-TeaCache) | |
 
-## Add-ons Tools
-|||||
-|---|---|---|---|
-Easy-Models-Linker :sparkles: | Torch-Pack :sparkles: ComfyUI-Version-Switcher :sparkles:
+</details>
 
-- :small_orange_diamond: **Torch-Pack :sparkles:** _Quick switching between the following Torch versions:_
-    - _**Torch 2.7.1+cu128**_
-    - _**Torch 2.8.0+cu128**_
-    - _**Torch 2.9.1+cu130** (default, requires NVIDIA driver v580 or higher)_
+<details>
+<summary><b>Optional Add-ons Nodes and Tools</b></summary>
+
+| 🧩 Nodes | 🛠️ Tools |
+|---|---|
+| [Nunchaku](https://github.com/nunchaku-ai/nunchaku) | Easy-Models-Linker |
+| [SageAttention (v2.2.0)](https://github.com/woct0rdho/SageAttention) | ComfyUI-Version-Switcher |
+| [FlashAttention](https://github.com/Dao-AILab/flash-attention) | Backup ComfyUI |
+| [InsightFace](https://github.com/deepinsight/insightface) | Torch-Pack |
+| [Trellis 2.0](https://github.com/visualbruno/ComfyUI-Trellis2) | |
+
+</details>
+
+## 🍎 macOS Installation
+
+1. Clone this repository:
+   ```bash
+   git clone --single-branch --branch MAC-Linux https://github.com/Tavris1/ComfyUI-Easy-Install.git
+   ```
+2. Make the script executable and run it:
+   ```bash
+   cd ComfyUI-Easy-Install
+   chmod +x ComfyUI-Easy-Install.sh
+   ./ComfyUI-Easy-Install.sh
+   ```
+3. After installation, start ComfyUI:
+   ```bash
+   cd ComfyUI-Easy-Install
+   ./run_mac_mps.sh
+   ```
+4. After setup, you can install the following from the **Add-ons** folder:
+    - **Easy-Models-Linker** - *Uses existing **MODELS** folder via **extra_model_paths.yaml**, no re-download needed*
+      - *Some folders like **LLM** and **llm_gguf** cannot be redirected this way*
+    - **Nunchaku** - *Installs Nunchaku*
+    - **SageAttention** - *Installs SageAttention v2.2.0*
+    - **InsightFace** - *Installs InsightFace (Pretrained models for non-commercial research only)*
+    - **Trellis2** - *Installs Trellis 2.0*
+    - **Torch-Pack** - *Quick switching between: `Torch 2.7.1+cu128`, `Torch 2.8.0+cu128` and `Torch 2.9.1+cu130`*
+    - **ComfyUI-Version-Switcher** - ***Reversible** rollback to a **previous** ComfyUI version on issues*
+    - **Backup ComfyUI** - *Backup, restore, and manage your ComfyUI data folders*
+
+<details>
+<summary><b>Mac M1/M2 Optimization</b></summary>
+
+The `run_mac_mps.sh` script includes optimizations for Apple Silicon (M1/M2) Macs:
+
+- **Memory Management** - Memory clearing, optimized GC, configurable MPS watermark ratios
+- **Performance** - MPS graph mode, descriptor caching, unified memory support
+- **Compatibility** - FP32 accumulation, force-upcast attention, Float8 disabled (unsupported on MPS)
+
+</details>
+
+<details>
+<summary><b>Troubleshooting macOS</b></summary>
+
+- **Import Failures** - Some nodes may fail due to Apple Silicon incompatibility. Check console output and remove non-essential nodes.
+- **Memory Issues** - Adjust `PYTORCH_MPS_HIGH_WATERMARK_RATIO` / `PYTORCH_MPS_LOW_WATERMARK_RATIO` in `run_mac_mps.sh`, use smaller models, reduce batch sizes.
+- **Performance** - Use GGUF models, prefer smaller models (7B over 13B), avoid CPU-intensive nodes.
+
+</details>
+
+> [!TIP]
+> - Multiple ComfyUI installs allowed without conflicts.
+> - You can rename/move `ComfyUI-Easy-Install` folder after installation.
 
 ---
 
-## Optional **Add-ons**  
-Optionally, after setup is complete, install the following from the **Add-ons** folder:
+## 🐧 Linux and Proxmox Installation
 
-- **Nunchaku** _- v1.2.1_
+<details>
+<summary><b>Standard Linux Installation</b></summary>
 
-- **SageAttention** _- v2.2.0_
+1. Clone this repository:
+   ```bash
+   git clone -b MAC-Linux --single-branch https://github.com/Tavris1/ComfyUI-Easy-Install.git
+   ```
+2. Make the script executable and run it:
+   ```bash
+   cd ComfyUI-Easy-Install
+   chmod +x ComfyUI-Easy-Install.sh
+   ./ComfyUI-Easy-Install.sh
+   ```
+3. After installation, start ComfyUI:
+   ```bash
+   cd ComfyUI-Easy-Install
+   ./run_nvidia_gpu.sh
+   ```
 
-- **InsightFace**
-  - _MIT License. Pretrained models for non-commercial research only._
+</details>
 
-- **Easy-Models-Linker :fire:**
-  - _Creates **`extra_model_paths.yaml`** so you can use your existing **`MODELS`** folder without re-downloading._
-  - _Some folders like **LLM** and **llm_gguf** cannot be redirected this way._
+<details>
+<summary><b>Proxmox LXC Container Setup</b></summary>
 
-- **Backup ComfyUI**
-  - _Backup ComfyUI to a safe location._
+1. Clone this repository:
+   ```bash
+   git clone -b MAC-Linux --single-branch https://github.com/Tavris1/ComfyUI-Easy-Install.git
+   ```
+2. Make all scripts executable:
+   ```bash
+   cd ComfyUI-Easy-Install
+   chmod +x *.sh
+   ```
+3. Setup Container - Install ComfyUI in the container - GPU Passthrough:
+   ```bash
+   ./comfyui-lxc-standalone.sh
+   ```
 
-### Backup_ComfyUI
+**Hardware Requirements**: At least 8GB RAM · NVMe SSD recommended · GPU passthrough (optional)
+
+</details>
+
+<details>
+<summary><b>Troubleshooting Linux / Proxmox</b></summary>
+
+> For Linux/Proxmox support, contact [@VenimK](https://discord.com/users/venimk) on Discord
+
+- **Permission Errors**: `chmod -R 755 ComfyUI-Easy-Install`
+- **Performance**: Use NVMe for model storage, configure container resources, consider GPU passthrough
+
+</details>
+
+> [!NOTE]
+> The Proxmox setup automatically configures most settings, but you may need to adjust container resources based on your needs.
+
+> [!TIP]
+> - [**For Windows installation click here**](https://github.com/Tavris1/ComfyUI-Easy-Install)
+
+<details>
+<summary><b>Backup ComfyUI</b></summary>
 
 A small interactive utility to back up, restore, and manage your ComfyUI data folders.
 
 - **Script**: `Add-Ons/backup_comfyui.sh`
 - **Version**: V2.01.3 (Pixaroma Community Edition, macOS/Linux by VenimK)
 - **Backup location**: `~/ComfyUI_Backups/ComfyUI_backup_YYYYMMDD_HHMMSS`
-
-## What gets backed up
-- **Always**: `user`, `input`, `output`
-- **Optional**: `models` (can be very large)
-
-The script assumes ComfyUI is located at: `ComfyUI-Easy-Install/ComfyUI` (relative to the script’s folder).
-
-## Requirements
-- macOS or Linux shell
-- Core utilities: `cp`, `find`, `sort`, `du`
-- Optional for zipping: `zip`
-
-## How to run
-From the project root or the `Add-Ons` folder:
+- **What gets backed up**: `user`, `input`, `output` (always) · `models` (optional)
 
 ```bash
 bash Add-Ons/backup_comfyui.sh
 ```
 
-You will see a menu with the following options:
-
-1) Create new backup
-2) Restore from backup
-3) Manage backups
-4) Exit
-
-## Create new backup
-- Prompts whether to include the `models` folder.
-- Creates a timestamped folder under `~/ComfyUI_Backups`.
-- After copying, offers to create a `.zip` archive (requires `zip`).
-
-## Restore from backup
-- Lists available backups with size and date.
-- Prompts for which backup to restore.
-- Warns before overwriting files in your `ComfyUI` directory.
-- Restores only directories that exist inside the selected backup.
-
-## Manage backups
-- Lists existing backups.
-- Options to:
-  - **Delete a specific backup** by number.
-  - **Delete all but the most recent** backup.
-
-## Notes
-- The script uses colored output; if full color support is unavailable, it falls back to basic colors.
-- Backup size depends heavily on whether you include the `models` directory.
-- If your ComfyUI folder is in a different location than `Add-Ons/../ComfyUI`, move the script accordingly or adjust the path inside the script.
-
-
----
-
-## macOS Installation and Optimization
-
-### Installation Steps for macOS
-
-1. Clone or download this repository
-
-   git clone --single-branch --branch MAC-Linux https://github.com/Tavris1/ComfyUI-Easy-Install.git
-
-   cd ComfyUI-Easy-Install
-
-2. Run `chmod +x ComfyUI-Easy-Install.sh` to make the installation script executable
-
-3. Execute `./ComfyUI-Easy-Install.sh` to install ComfyUI and its dependencies
-
-4. cd ComfyUI-Easy-Install
-
-5. After installation completes, run `./run_mac_mps.sh` to start ComfyUI (On M1/M2 Macs)
-
-6. After installation completes, run `./run_nvidia_gpu.sh` to start ComfyUI (On Linux)
-
-### Mac M1/M2 Optimization
-
-The `run_mac_mps.sh` script includes several optimizations specifically for Apple Silicon (M1/M2) Macs:
-
-#### Memory Management
-- Memory clearing before startup to ensure maximum available RAM
-- Optimized garbage collection settings
-- Configurable high/low watermark ratios for MPS (Metal Performance Shaders)
-
-#### Performance Enhancements
-- MPS graph mode enabled for better performance
-- Descriptor caching for improved speed
-- Unified memory support for better memory utilization
-
-#### Compatibility Settings
-- FP32 accumulation for improved precision
-- Force-upcast attention for better stability
-- Float8 disabled (not supported on MPS)
-
-### Troubleshooting Common Issues
-
-#### Import Failures
-Some custom nodes may fail to import due to:
-- Dependencies not compatible with Apple Silicon
-- Python package version conflicts
-- Hyphenated directory names causing import issues
-
-If you encounter import failures, check the console output for the specific node causing the issue and consider removing it if not essential to your workflow.
-
-#### Memory Issues
-If you experience out-of-memory errors:
-1. Adjust the `PYTORCH_MPS_HIGH_WATERMARK_RATIO` and `PYTORCH_MPS_LOW_WATERMARK_RATIO` values in `run_mac_mps.sh`
-2. Use smaller model sizes when possible
-3. Reduce batch sizes in your workflows
-
-#### Performance Optimization
-For best performance on Mac M1/M2:
-- Use GGUF models instead of other quantization formats
-- Consider using smaller models (7B instead of 13B for LLMs, etc.)
-- Avoid nodes that require CPU-intensive operations
-
-### Extra Model Paths for macOS
-
-To use models from existing folders on your Mac:
-
-1. Create an `Easy-Models-Linker.sh` script with the following content:
-
-
-
-## Linux and Proxmox Installation
-<details>
-<summary>Installation and Container Setup</summary>
-
-### Standard Linux Installation
-1. Clone or download this repository
-   ```bash
-   git clone -b MAC-Linux --single-branch https://github.com/Tavris1/ComfyUI-Easy-Install.git
-   ```
-
-2. Make the script executable:
-   ```bash
-   chmod +x ComfyUI-Easy-Install.sh
-   ```
-3. Run the installation script:
-   ```bash
-   ./ComfyUI-Easy-Install.sh
-   ```
-
-### Proxmox LXC Container Setup
-1. Clone or download this repository
-   ```bash
-   git clone -b MAC-Linux --single-branch https://github.com/Tavris1/ComfyUI-Easy-Install.git
-   ```
-2. Make all scripts executable:
-   ```bash
-   chmod +x *.sh
-   ```
-3. Setup Container - Install ComfyUI in the container - GPU Passthough:
-   ```bash
-   ./comfyui-lxc-standalone.sh
-   ```
-
-### Container Configuration
-- **Hardware Requirements**:
-  - At least 8GB RAM
-  - NVMe SSD recommended
-  - GPU passthrough (optional)
-
-
-### Troubleshooting
-
-> For Linux/Proxmox support, contact [@VenimK](https://discord.com/users/venimk) on Discord
-
-#### Common Issues
-1. **Permission Errors**:
-   ```bash
-   # Fix permissions in container
-   chmod -R 755 ComfyUI-Easy-Install
-   ```
-#### Performance Optimization
-- Use a NVMe drive for model storage
-- Configure appropriate container resources
-- Consider GPU passthrough for better performance
-
-> [!NOTE]
-> The Proxmox setup automatically configures most settings, but you may need to adjust container resources based on your needs.
-
 </details>
 
-## For Windows installation - click [:arrow_forward:HERE](https://github.com/Tavris1/ComfyUI-Easy-Install)
-
 ---
+
+<div align="center">
+
+## ❤️ Support Me
+Enjoy my projects? Any support is greatly appreciated!
+
+[![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tavris1)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)
+[![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](https://github.com/sponsors/Tavris1)
+
+</div>
