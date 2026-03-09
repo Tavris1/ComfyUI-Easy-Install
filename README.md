@@ -21,7 +21,7 @@
 [🔗](https://github.com/Comfy-Org/ComfyUI-Manager) ComfyUI Manager | [🔗](https://github.com/yolain/ComfyUI-Easy-Use) Easy-Use | [🔗](https://github.com/Fannovel16/comfyui_controlnet_aux) ControlNet Aux | [🔗](https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes) Comfyroll Studio
  [🔗](https://github.com/rgthree/rgthree-comfy) rgthree | [🔗](https://github.com/city96/ComfyUI-GGUF) GGUF | [🔗](https://github.com/MohammadAboulEla/ComfyUI-iTools) iTools | [🔗](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch) Inpaint-CropAndStitch
  [🔗](https://github.com/1038lab/ComfyUI-RMBG) RMBG | [🔗](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) VideoHelperSuite | [🔗](https://github.com/welltop-cn/ComfyUI-TeaCache) TeaCache | [🔗](https://github.com/shiimizu/ComfyUI-TiledDiffusion) Tiled Diffusion & VAE
- [🔗](https://github.com/kijai/ComfyUI-KJNodes) KJNodes | [🔗](https://github.com/kijai/ComfyUI-WanVideoWrapper) WanVideoWrapper |  [🔗](https://github.com/1038lab/ComfyUI-QwenVL) QwenVL | [🔗](https://github.com/SeedV2/SeedVR2_VideoUpscaler) SeedVR2_VideoUpscaler | [🔗](https://github.com/SCAILab/SCAIL-Pose) SCAIL-Pose | [🔗](https://github.com/MelBandRoFormer/MelBandRoFormer) MelBandRoFormer | [🔗](https://github.com/DarioFT/ComfyUI-Qwen3-TTS) Qwen3-TTS 
+ [🔗](https://github.com/kijai/ComfyUI-KJNodes) KJNodes | [🔗](https://github.com/kijai/ComfyUI-WanVideoWrapper) WanVideoWrapper |  [🔗](https://github.com/1038lab/ComfyUI-QwenVL) QwenVL | [🔗](https://github.com/SeedV2/SeedVR2_VideoUpscaler) SeedVR2_VideoUpscaler | [🔗](https://github.com/SCAILab/SCAIL-Pose) SCAIL-Pose | [🔗](https://github.com/MelBandRoFormer/MelBandRoFormer) MelBandRoFormer | [🔗](https://github.com/flybirdxx/ComfyUI-Qwen-TTS) Qwen3-TTS 
 
 
 ## Optional Add-ons Nodes

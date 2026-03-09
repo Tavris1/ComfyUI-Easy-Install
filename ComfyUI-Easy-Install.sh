@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v2.07.1
+# Title ComfyUI-Easy-Install  NEXT by ivo v2.07.5
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -32,7 +32,7 @@ sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1 || true
 sysctl -w net.ipv6.conf.default.disable_ipv6=1 >/dev/null 2>&1 || true
 
 # Set arguments
-PIP_ARGS="--no-cache-dir --no-warn-script-location --timeout=120 --retries 3 --progress-bar on --root-user-action=ignore"
+PIP_ARGS="--no-cache-dir --no-warn-script-location --timeout=120 --retries 3 --progress-bar on --root-user-action=ignore --trusted-host pypi.org --trusted-host files.pythonhosted.org --trusted-host pypi.python.org"
 CURL_ARGS="--retry 200 --retry-all-errors"
 UV_ARGS="--no-cache --link-mode=copy"
 
