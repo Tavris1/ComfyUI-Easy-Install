@@ -93,7 +93,7 @@ ComfyUI-Easy-Install, tek tıklamayla tamamen yapılandırılmış ve taşınabi
     - **Long-Paths-Enabler** - *Windows 10/11'de **Long Paths** özelliğini etkinleştirir. Python/ComfyUI için gereklidir*
     - **ComfyUI-Version-Switcher** - *Sorun durumunda önceki bir ComfyUI sürümüne **geri döndürme** (reversible)*
     - **Toggle-DynamicVRAM** - *ComfyUI başlangıç dosyalarındaki **--disable-dynamic-vram** seçeneğini açıp kapatır*
-    - **Update Easy-Install.bat** - ***Add-ons** ve diğer klasörleri günceller. Masaüstü kısayolları oluşturur*
+    - **Update Easy-Install** - ***Add-ons** ve diğer klasörleri günceller. Masaüstü kısayolları oluşturur*
 > [!IMPORTANT]
 > - Kurucuyu **Administrator** olarak çalıştırmayın.
 > - Sistem klasörlerinden kaçının (`Program Files`, `Windows`, `C:\` kökü).
@@ -115,5 +115,6 @@ Projelerimi beğeniyor musunuz? Her türlü destek çok takdir edilir!
 [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tavris1)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)
 [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](https://github.com/sponsors/Tavris1)
+
 
 </div>
