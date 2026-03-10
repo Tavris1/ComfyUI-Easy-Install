@@ -93,7 +93,7 @@ ComfyUI-Easy-Install은 완전히 구성된 **원클릭 포터블 ComfyUI**입�
     - **Long-Paths-Enabler** - *Windows 10/11에서 **Long Paths** 활성화, Python/ComfyUI 필수*
     - **ComfyUI-Version-Switcher** - ***이전 버전**으로 롤백 가능*
     - **Toggle-DynamicVRAM** - *ComfyUI 시작 파일의 **--disable-dynamic-vram** 옵션 전환*
-    - **Update Easy-Install.bat** - *Add-ons 및 다른 폴더 업데이트, 바탕화면 바로가기 생성*
+    - **Update Easy-Install** - *Add-ons 및 다른 폴더 업데이트, 바탕화면 바로가기 생성*
 > [!IMPORTANT]
 > - 설치 프로그램을 **관리자 권한으로 실행 금지**.
 > - 시스템 폴더 (`Program Files`, `Windows`, `C:\` 루트) 피하기.
@@ -115,5 +115,6 @@ ComfyUI-Easy-Install은 완전히 구성된 **원클릭 포터블 ComfyUI**입�
 [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tavris1)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)
 [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](https://github.com/sponsors/Tavris1)
+
 
 </div>
