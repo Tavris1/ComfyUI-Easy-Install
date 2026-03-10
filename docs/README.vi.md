@@ -93,7 +93,7 @@ ComfyUI-Easy-Install là **ComfyUI di động được cấu hình đầy đủ*
     - **Long-Paths-Enabler** - *Kích hoạt **Long Paths** trên Windows 10/11. Quan trọng cho Python/ComfyUI*
     - **ComfyUI-Version-Switcher** - ***Có thể đảo ngược** quay lại phiên bản ComfyUI trước khi gặp sự cố*
     - **Toggle-DynamicVRAM** - *Chuyển đổi tùy chọn **--disable-dynamic-vram** trong các tệp khởi động ComfyUI*
-    - **Update Easy-Install.bat** - *Cập nhật **Add-ons** và các thư mục khác, tạo lối tắt trên Desktop*
+    - **Update Easy-Install** - *Cập nhật **Add-ons** và các thư mục khác, tạo lối tắt trên Desktop*
 > [!IMPORTANT]
 > - Không chạy trình cài đặt với quyền **Administrator**.
 > - Tránh các thư mục hệ thống (`Program Files`, `Windows`, gốc `C:\`).
@@ -115,5 +115,6 @@ Thích các dự án của tôi? Mọi sự ủng hộ đều rất đáng trân
 [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tavris1)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)
 [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](https://github.com/sponsors/Tavris1)
+
 
 </div>
