@@ -93,7 +93,7 @@ ComfyUI-Easy-Install 是一个完全配置好的便携版 ComfyUI，一键即可
     - **Long-Paths-Enabler** - *在 Windows 10/11 中启用 **Long Paths**，对 Python/ComfyUI 很重要*
     - **ComfyUI-Version-Switcher** - ***可逆**回滚到 **之前的** ComfyUI 版本*
     - **Toggle-DynamicVRAM** - *切换 ComfyUI 启动参数中的 **--disable-dynamic-vram***
-    - **Update Easy-Install.bat** - *更新 **Add-ons** 和其他文件夹，并创建桌面快捷方式*
+    - **Update Easy-Install** - *更新 **Add-ons** 和其他文件夹，并创建桌面快捷方式*
 
 > [!IMPORTANT]
 > - 不要以 **管理员** 身份运行安装程序。
@@ -115,5 +115,6 @@ ComfyUI-Easy-Install 是一个完全配置好的便携版 ComfyUI，一键即可
 [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tavris1)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)
 [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](https://github.com/sponsors/Tavris1)
+
 
 </div>
