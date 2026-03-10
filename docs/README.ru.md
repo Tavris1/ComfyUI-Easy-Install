@@ -93,7 +93,7 @@ ComfyUI-Easy-Install — это полностью настроенный **по
     - **Long-Paths-Enabler** - *Включает **Long Paths** в Windows 10/11. Важно для Python/ComfyUI*
     - **ComfyUI-Version-Switcher** - ***Обратимый** откат к предыдущей версии ComfyUI при проблемах*
     - **Toggle-DynamicVRAM** - *Переключает опцию **--disable-dynamic-vram** в стартовых файлах ComfyUI*
-    - **Update Easy-Install.bat** - *Обновляет **Add-ons** и другие папки, создаёт ярлыки на рабочем столе*
+    - **Update Easy-Install** - *Обновляет **Add-ons** и другие папки, создаёт ярлыки на рабочем столе*
 > [!IMPORTANT]
 > - Не запускайте установщик от имени **Администратора**.
 > - Избегайте системных папок (`Program Files`, `Windows`, корень `C:\`).
@@ -115,5 +115,6 @@ ComfyUI-Easy-Install — это полностью настроенный **по
 [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tavris1)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)
 [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](https://github.com/sponsors/Tavris1)
+
 
 </div>
