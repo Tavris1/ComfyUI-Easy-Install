@@ -93,7 +93,7 @@ ComfyUI-Easy-Install is a fully configured, portable ComfyUI in one click. No Py
     - **Long-Paths-Enabler** - *Enables **Long Paths** in Windows 10/11. Essential for Python/ComfyUI*
     - **ComfyUI-Version-Switcher** - ***Reversible** rollback to a **previous** ComfyUI version on issues*
     - **Toggle-DynamicVRAM** - *Toggles **--disable-dynamic-vram** option in ComfyUI startup files*
-    - **Update Easy-Install.bat** - *Updates **Add-ons** and other folders. Creates desktop shortcuts*
+    - **Update Easy-Install** - *Updates **Add-ons** and other folders. Creates desktop shortcuts*
 > [!IMPORTANT]
 > - Do not run the installer as **Administrator**.
 > - Avoid system folders (`Program Files`, `Windows`, `C:\` root).
@@ -117,6 +117,7 @@ Enjoy my projects? Any support is greatly appreciated!
 [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](https://github.com/sponsors/Tavris1)
 
 </div>
+
 
 
 
