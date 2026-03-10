@@ -93,7 +93,7 @@ ComfyUI-Easy-Install は、完全に設定済みでワンクリックで使え�
     - **Long-Paths-Enabler** - *Windows 10/11 で **Long Paths** を有効化、Python/ComfyUI に必須*
     - **ComfyUI-Version-Switcher** - ***以前のバージョン** へ巻き戻し可能*
     - **Toggle-DynamicVRAM** - *ComfyUI 起動ファイルの **--disable-dynamic-vram** オプションを切替*
-    - **Update Easy-Install.bat** - *Add-ons やその他フォルダを更新、デスクトップショートカット作成*
+    - **Update Easy-Install** - *Add-ons やその他フォルダを更新、デスクトップショートカット作成*
 > [!IMPORTANT]
 > - インストーラーを **管理者として** 実行しないこと。
 > - システムフォルダ（`Program Files`、`Windows`、`C:\` 直下）を避ける。
@@ -115,5 +115,6 @@ ComfyUI-Easy-Install は、完全に設定済みでワンクリックで使え�
 [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tavris1)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)
 [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](https://github.com/sponsors/Tavris1)
+
 
 </div>
