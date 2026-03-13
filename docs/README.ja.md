@@ -88,7 +88,7 @@ ComfyUI-Easy-Install は、完全に設定済みでワンクリックで使え�
     - **FlashAttention** - *FlashAttention v2.8.3 をインストール*
     - **InsightFace** - *InsightFace をインストール（非商用研究用の事前学習モデルのみ）*
     - **Trellis2** - *Trellis 2.0 とモデルをインストール（`Add-ons/Torch-Pack` の `Torch 2.8.0+cu128` 必須）*
-    - **Torch-Pack** - *Torch 2.7、2.8、2.9、2.10 間のクイックスイッチ (CUDA 128 および 130)*
+    - **Torch-Pack** - *`Torch 2.7.1+cu128`、`Torch 2.8.0+cu128`、`Torch 2.9.1+cu130` の間で簡単切替*
     - **Easy-model2GGUF** - *モデルを GGUF に変換・量子化（Q2_K–Q8_0）、可能なら 5D テンソル修正も適用*
     - **Long-Paths-Enabler** - *Windows 10/11 で **Long Paths** を有効化、Python/ComfyUI に必須*
     - **ComfyUI-Version-Switcher** - ***以前のバージョン** へ巻き戻し可能*
@@ -115,6 +115,5 @@ ComfyUI-Easy-Install は、完全に設定済みでワンクリックで使え�
 [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tavris1)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)
 [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](https://github.com/sponsors/Tavris1)
-
 
 </div>

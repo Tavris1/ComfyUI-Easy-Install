@@ -88,7 +88,7 @@ ComfyUI-Easy-Install é um **ComfyUI portátil totalmente configurado** com apen
     - **FlashAttention** - *Instala FlashAttention v2.8.3*
     - **InsightFace** - *Instala InsightFace (modelos pré-treinados apenas para pesquisa não comercial)*
     - **Trellis2** - *Instala Trellis 2.0 e o modelo (requer `Torch 2.8.0+cu128` da pasta `Add-ons/Torch-Pack`)*
-    - **Torch-Pack** - *Alternância rápida entre as versões do Torch 2.7, 2.8, 2.9 e 2.10 (CUDA 128 e 130)*
+    - **Torch-Pack** - *Alterna rapidamente entre `Torch 2.7.1+cu128`, `Torch 2.8.0+cu128` e `Torch 2.9.1+cu130`*
     - **Easy-model2GGUF** - *Converte e quantiza modelos para GGUF (Q2_K–Q8_0), aplica correções 5D se disponíveis*
     - **Long-Paths-Enabler** - *Habilita **Long Paths** no Windows 10/11. Essencial para Python/ComfyUI*
     - **ComfyUI-Version-Switcher** - ***Reversível** para voltar a uma versão anterior do ComfyUI se houver problemas*
@@ -115,6 +115,5 @@ Gostou dos meus projetos? Qualquer apoio é muito apreciado!
 [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tavris1)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)
 [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](https://github.com/sponsors/Tavris1)
-
 
 </div>
