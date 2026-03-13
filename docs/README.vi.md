@@ -88,7 +88,7 @@ ComfyUI-Easy-Install là **ComfyUI di động được cấu hình đầy đủ*
     - **FlashAttention** - *Cài FlashAttention v2.8.3*
     - **InsightFace** - *Cài InsightFace (mô hình đã huấn luyện trước chỉ dành cho nghiên cứu phi thương mại)*
     - **Trellis2** - *Cài Trellis 2.0 và mô hình (yêu cầu `Torch 2.8.0+cu128` từ `Add-ons/Torch-Pack`)*
-    - **Torch-Pack** - *Chuyển đổi nhanh giữa `Torch 2.7.1+cu128`, `Torch 2.8.0+cu128` và `Torch 2.9.1+cu130`*
+    - **Torch-Pack** - *Chuyển đổi nhanh giữa các phiên bản Torch 2.7, 2.8, 2.9 và 2.10 (CUDA 128 và 130)*
     - **Easy-model2GGUF** - *Chuyển đổi & lượng tử hóa mô hình sang GGUF (Q2_K–Q8_0) với sửa lỗi tensor 5D nếu có*
     - **Long-Paths-Enabler** - *Kích hoạt **Long Paths** trên Windows 10/11. Quan trọng cho Python/ComfyUI*
     - **ComfyUI-Version-Switcher** - ***Có thể đảo ngược** quay lại phiên bản ComfyUI trước khi gặp sự cố*
