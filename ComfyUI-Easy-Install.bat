@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.07.6"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.07.7"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -94,7 +94,7 @@ REM .\python_embeded\python.exe -I -m uv pip install requests==2.31.0 urllib3==2
 .\python_embeded\python.exe -I -m uv pip install onnxruntime-gpu %UVargs%
 .\python_embeded\python.exe -I -m uv pip install onnx %UVargs%
 .\python_embeded\python.exe -I -m uv pip install flet %UVargs%
-.\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.24-cu130-Basic-win-20260208/llama_cpp_python-0.3.24+cu130.basic-cp312-cp312-win_amd64.whl %UVargs%
+.\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.32-cu130-Basic-win-20260308/llama_cpp_python-0.3.32+cu130.basic-cp312-cp312-win_amd64.whl %UVargs%
 :: Install working version of stringzilla (damn it) ::
 .\python_embeded\python.exe -I -m uv pip install stringzilla==3.12.6 %UVargs%
 :: Install working version of transformers (damn it again)::
@@ -196,9 +196,6 @@ echo %green%::::::::::::::: Installing%yellow% ComfyUI %green%:::::::::::::::%re
 echo.
 
 git.exe clone https://github.com/Comfy-Org/ComfyUI ComfyUI
-
-:: Disable only CRL/OCSP checks for SSL ::
-powershell -NoProfile -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::CheckCertificateRevocationList = $false"
 
 md python_embeded&&cd python_embeded
 
