@@ -88,7 +88,7 @@ ComfyUI-Easy-Install은 완전히 구성된 **원클릭 포터블 ComfyUI**입�
     - **FlashAttention** - *FlashAttention v2.8.3 설치*
     - **InsightFace** - *InsightFace 설치 (비상업 연구용 사전 학습 모델만)*
     - **Trellis2** - *Trellis 2.0 및 모델 설치 (`Add-ons/Torch-Pack` 의 `Torch 2.8.0+cu128` 필요)*
-    - **Torch-Pack** - *`Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`, `Torch 2.9.1+cu130` 간 빠른 전환*
+    - **Torch-Pack** - *Torch 2.7, 2.8, 2.9 및 2.10 버전 간 빠른 전환 (CUDA 128 및 130)*
     - **Easy-model2GGUF** - *모델을 GGUF로 변환 및 양자화 (Q2_K–Q8_0), 가능 시 5D 텐서 수정 적용*
     - **Long-Paths-Enabler** - *Windows 10/11에서 **Long Paths** 활성화, Python/ComfyUI 필수*
     - **ComfyUI-Version-Switcher** - ***이전 버전**으로 롤백 가능*

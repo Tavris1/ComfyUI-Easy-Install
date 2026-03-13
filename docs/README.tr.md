@@ -88,7 +88,7 @@ ComfyUI-Easy-Install, tek tıklamayla tamamen yapılandırılmış ve taşınabi
     - **FlashAttention** - *FlashAttention v2.8.3'ü kurar*
     - **InsightFace** - *InsightFace'i kurar (Önceden eğitilmiş modeller yalnızca ticari olmayan araştırmalar için)*
     - **Trellis2** - *Trellis 2.0 ve modeli kurar (`Add-ons/Torch-Pack` içindeki `Torch 2.8.0+cu128` gereklidir)*
-    - **Torch-Pack** - *Şunlar arasında hızlı geçiş: `Torch 2.7.1+cu128`, `Torch 2.8.0+cu128` ve `Torch 2.9.1+cu130`*
+    - **Torch-Pack** - *Torch 2.7, 2.8, 2.9 ve 2.10 sürümleri arasında hızlı geçiş (CUDA 128 ve 130)*
     - **Easy-model2GGUF** - *Modelleri GGUF'a dönüştürür ve quantize eder (Q2_K–Q8_0) ve varsa 5D tensor düzeltmeleri uygular*
     - **Long-Paths-Enabler** - *Windows 10/11'de **Long Paths** özelliğini etkinleştirir. Python/ComfyUI için gereklidir*
     - **ComfyUI-Version-Switcher** - *Sorun durumunda önceki bir ComfyUI sürümüne **geri döndürme** (reversible)*
