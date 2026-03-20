@@ -78,9 +78,10 @@ ComfyUI-Easy-Install is a fully configured, portable ComfyUI in one click. No Py
 ---
 
 ## 🖥️ Windows Installation
-1. [**Download ComfyUI-Easy-Install**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
-2. Extract the ZIP file to a new folder and run **`ComfyUI-Easy-Install.bat`**
-3. After setup, you can install or run the following components from the **Add-ons** folder:
+<!-- 1. [**Download ComfyUI-Easy-Install**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip) !-->
+1. [**Download ComfyUI-Easy-Install**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/2.07.11/ComfyUI-Easy-Install.zip)
+3. Extract the ZIP file to a new folder and run **`ComfyUI-Easy-Install.bat`**
+4. After setup, you can install or run the following components from the **Add-ons** folder:
     - **Easy-Models-Linker** - *Uses existing **MODELS** folder via **extra_model_paths.yaml**, no re-download needed*
       - *Some folders like **LLM** and **llm_gguf** cannot be redirected this way*
     - **Nunchaku** - *Installs Nunchaku. (Start `Nunchaku.bat` again if issues occur later)*
