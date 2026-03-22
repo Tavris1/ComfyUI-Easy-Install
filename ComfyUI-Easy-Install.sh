@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v2.07.5
+# Title ComfyUI-Easy-Install  NEXT by ivo v2.09.0
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -289,15 +289,16 @@ EOL
         echo "Configuring Python build..."
         if [ "$(uname -s)" = "Darwin" ] && command -v brew >/dev/null 2>&1; then
             # macOS: must explicitly link OpenSSL from Homebrew
+            # Note: --enable-optimizations is disabled on macOS ARM64 due to PGO linking errors
             OPENSSL_PREFIX="$(brew --prefix openssl)"
             XZ_PREFIX="$(brew --prefix xz)"
+            READLINE_PREFIX="$(brew --prefix readline)"
             env \
-                PKG_CONFIG_PATH="${OPENSSL_PREFIX}/lib/pkgconfig:${XZ_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}" \
-                LDFLAGS="-L${OPENSSL_PREFIX}/lib -L${XZ_PREFIX}/lib" \
-                CPPFLAGS="-I${OPENSSL_PREFIX}/include -I${XZ_PREFIX}/include" \
+                PKG_CONFIG_PATH="${OPENSSL_PREFIX}/lib/pkgconfig:${XZ_PREFIX}/lib/pkgconfig:${READLINE_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}" \
+                LDFLAGS="-L${OPENSSL_PREFIX}/lib -L${XZ_PREFIX}/lib -L${READLINE_PREFIX}/lib" \
+                CPPFLAGS="-I${OPENSSL_PREFIX}/include -I${XZ_PREFIX}/include -I${READLINE_PREFIX}/include" \
                 LIBS="-llzma" \
                 ./configure --prefix="$(pwd)/.." \
-                    --enable-optimizations \
                     --with-ensurepip=install \
                     --with-system-ffi \
                     --with-system-libm \
