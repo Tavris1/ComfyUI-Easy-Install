@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.09.1"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.09.2"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -99,6 +99,7 @@ REM .\python_embeded\python.exe -I -m uv pip install requests==2.31.0 urllib3==2
 .\python_embeded\python.exe -I -m uv pip install stringzilla==3.12.6 %UVargs%
 :: Install working version of transformers (damn it again)::
 .\python_embeded\python.exe -I -m uv pip install transformers==4.57.6 %UVargs%
+.\python_embeded\python.exe -I -m uv pip install descript-audio-codec %UVargs%
 echo.
 
 :: Install Pixaroma's Related Nodes ::
@@ -141,6 +142,8 @@ cd ComfyUI-Easy-Install
 
 :: Install Triton for Torch 2.9 ::
 .\python_embeded\python.exe -I -m pip install --upgrade --force-reinstall "triton-windows<3.6" %PIPargs%
+:: Postinstall
+.\python_embeded\python.exe -I -m uv pip install --upgrade pydantic %UVargs%
 echo.
 
 if exist ".\Add-Ons\Tools\AutoRun.bat" (
