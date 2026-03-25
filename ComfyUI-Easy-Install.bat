@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.09.3"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.09.4"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -143,7 +143,8 @@ cd ComfyUI-Easy-Install
 :: Install Triton for Torch 2.9 ::
 .\python_embeded\python.exe -I -m pip install --upgrade --force-reinstall "triton-windows<3.6" %PIPargs%
 :: Postinstall
-.\python_embeded\python.exe -I -m uv pip install --upgrade pydantic %UVargs%
+.\python_embeded\python.exe -I -m uv pip uninstall pydantic pydantic-core
+.\python_embeded\python.exe -I -m uv pip install pydantic %UVargs%
 echo.
 
 if exist ".\Add-Ons\Tools\AutoRun.bat" (
