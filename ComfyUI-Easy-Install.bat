@@ -1,10 +1,7 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.09.4"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.10.0"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
-
-:: Set colors ::
-call :set_colors
 
 :: Set Ignoring Large File Storage ::
 set GIT_LFS_SKIP_SMUDGE=1
@@ -13,12 +10,12 @@ set GIT_LFS_SKIP_SMUDGE=1
 set "PIPargs=--no-cache-dir --no-warn-script-location --timeout=1000 --retries 10"
 set "UVargs=--no-cache --link-mode=copy"
 
-:: Set local path only (temporarily) ::
+:: Add a path just in case ::
 for /f "delims=" %%G in ('cmd /c "where.exe git.exe 2>nul"') do (set "GIT_PATH=%%~dpG")
-set "path=%GIT_PATH%"
-if exist "%windir%\System32" set "path=%PATH%;%windir%\System32"
-if exist "%windir%\System32\WindowsPowerShell\v1.0" set "path=%PATH%;%windir%\System32\WindowsPowerShell\v1.0"
-if exist "%localappdata%\Microsoft\WindowsApps" set "path=%PATH%;%localappdata%\Microsoft\WindowsApps"
+set "path=%GIT_PATH%;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0;%localappdata%\Microsoft\WindowsApps
+
+call :SET_COLORS
+call :NVIDIA_DRIVER_CHECK
 
 :: Check for Existing ComfyUI Folder ::
 if exist ComfyUI-Easy-Install if exist "ComfyUI-Easy-Install" (
@@ -94,7 +91,13 @@ REM .\python_embeded\python.exe -I -m uv pip install requests==2.31.0 urllib3==2
 .\python_embeded\python.exe -I -m uv pip install onnxruntime-gpu %UVargs%
 .\python_embeded\python.exe -I -m uv pip install onnx %UVargs%
 .\python_embeded\python.exe -I -m uv pip install flet %UVargs%
-.\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.32-cu130-Basic-win-20260308/llama_cpp_python-0.3.32+cu130.basic-cp312-cp312-win_amd64.whl %UVargs%
+
+if "%CURRENT_CUDA%"=="12.8" (
+	.\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.33-cu128-Basic-win-20260315/llama_cpp_python-0.3.33+cu128.basic-cp312-cp312-win_amd64.whl %UVargs%
+) else (
+	.\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.33-cu130-Basic-win-20260315/llama_cpp_python-0.3.33+cu130.basic-cp312-cp312-win_amd64.whl %UVargs%
+)
+
 :: Install working version of stringzilla (damn it) ::
 .\python_embeded\python.exe -I -m uv pip install stringzilla==3.12.6 %UVargs%
 :: Install working version of transformers (damn it again)::
@@ -140,7 +143,14 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Microsoft.PowerShell
 
 cd ComfyUI-Easy-Install
 
-:: Install Triton for Torch 2.9 ::
+:: Install Triton ::
+if "%CURRENT_CUDA%"=="12.8" (
+	.\python_embeded\python.exe -I -m pip install --upgrade --force-reinstall "triton-windows<3.5" %PIPargs%
+) else (
+	.\python_embeded\python.exe -I -m pip install --upgrade --force-reinstall "triton-windows<3.6" %PIPargs%
+)
+
+
 .\python_embeded\python.exe -I -m pip install --upgrade --force-reinstall "triton-windows<3.6" %PIPargs%
 :: Postinstall
 .\python_embeded\python.exe -I -m uv pip uninstall pydantic pydantic-core
@@ -175,14 +185,18 @@ exit
 
 ::::::::::::::::::::::::::::::::: END :::::::::::::::::::::::::::::::::
 
-:set_colors
+:SET_COLORS
 set warning=[33m
+set    gray=[90m
 set     red=[91m
 set   green=[92m
 set  yellow=[93m
-set    bold=[1m
+set    blue=[94m
+set magenta=[95m
+set    cyan=[96m
+set   white=[97m
 set   reset=[0m
-goto :eof
+GOTO :EOF
 
 :install_git
 :: https://git-scm.com/
@@ -246,7 +260,13 @@ echo     pypi.python.org>> pip.ini
 REM .\python.exe -I -m pip config set global.trusted-host "pypi.org files.pythonhosted.org pypi.python.org"
 
 .\python.exe -I -m pip install uv==0.9.7 %PIPargs%
-.\python.exe -I -m pip install torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1 --index-url https://download.pytorch.org/whl/cu130 %PIPargs%
+
+if "%CURRENT_CUDA%"=="12.8" (
+	.\python.exe -I -m pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cu128 %PIPargs%
+) else (
+	.\python.exe -I -m pip install torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1 --index-url https://download.pytorch.org/whl/cu130 %PIPargs%
+)
+
 .\python.exe -I -m uv pip install pygit2 %UVargs%
 cd ..\ComfyUI
 
@@ -283,3 +303,33 @@ endlocal
 
 echo.
 goto :eof
+
+:NVIDIA_DRIVER_CHECK
+set "NV_MIN=580"
+set "CURRENT_CUDA=13.0"
+
+where.exe nvidia-smi.exe >nul 2>&1
+if %errorLevel% neq 0 (
+    echo %red%   NVIDIA driver not detected
+    GOTO :EOF
+)
+
+for /f %%a in ('nvidia-smi --query-gpu^=driver_version --format^=csv^,noheader 2^>nul') do set "NV_FULL=%%a"
+for /f "tokens=1 delims=." %%a in ("%NV_FULL%") do set "NV_MAJOR=%%a"
+
+if not defined NV_MAJOR (
+    echo %red%   Unable to read NVIDIA driver version
+    GOTO :EOF
+)
+
+if %NV_MAJOR% LSS %NV_MIN% (
+	echo.
+    echo %red%   Your NVIDIA driver %yellow%^(%NV_FULL%^)%red% is below %yellow%%NV_MIN%%reset%
+	echo %warning%   Drivers below %yellow%%NV_MIN%%warning% do not support %yellow%CUDA 13%warning% or newer%reset%
+    echo %warning%   Recommendation: Update NVIDIA drivers%reset%
+	echo.
+	echo %green%   The installation will continue with CUDA 12.8.%reset%
+	set "CURRENT_CUDA=12.8"
+)
+
+GOTO :EOF
