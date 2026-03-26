@@ -66,10 +66,11 @@ ComfyUI-Easy-Install は、完全に設定済みでワンクリックで使え�
 | 🧩 ノード | 🛠️ ツール |
 |---|---|
 | [Nunchaku](https://github.com/nunchaku-ai/nunchaku) | Easy-Models-Linker |
-| [SageAttention (v2.2.0 と v3)](https://github.com/woct0rdho/SageAttention) | ComfyUI-Version-Switcher |
-| [FlashAttention](https://github.com/Dao-AILab/flash-attention) | Easy-model2GGUF |
-| [InsightFace](https://github.com/deepinsight/insightface) | Long-Paths-Enabler |
-| [Trellis 2.0](https://github.com/visualbruno/ComfyUI-Trellis2) | Torch-Pack |
+| [SageAttention (v2.2.0 and v3)](https://github.com/woct0rdho/SageAttention) | Easy-System-Checker |
+| [FlashAttention](https://github.com/Dao-AILab/flash-attention) | ComfyUI-Version-Switcher |
+| [InsightFace](https://github.com/deepinsight/insightface) | Easy-model2GGUF |
+| [Trellis 2.0](https://github.com/visualbruno/ComfyUI-Trellis2) | Long-Paths-Enabler |
+| | Torch-Pack |
 | | Toggle-DynamicVRAM |
 | | Update Easy-Install |
 
@@ -83,6 +84,7 @@ ComfyUI-Easy-Install は、完全に設定済みでワンクリックで使え�
 3. セットアップ後、**Add-ons** フォルダから以下のコンポーネントをインストールまたは実行可能：
     - **Easy-Models-Linker** - *既存の **MODELS** フォルダを **extra_model_paths.yaml** 経由で使用、再ダウンロード不要*
       - ***LLM** や **llm_gguf** のフォルダはこの方法でリダイレクトできません*
+    - **Easy-System-Checker** - *主要なハードウェアおよびソフトウェアコンポーネントに関する情報を提供します*
     - **Nunchaku** - *Nunchaku をインストール（問題があれば `Nunchaku.bat` を再実行）*
     - **SageAttention-Multi** - *SageAttention v2.2.0 と v3 をインストール（v3 は NVIDIA 50 シリーズ GPU のみ有効）*
     - **FlashAttention** - *FlashAttention v2.8.3 をインストール*

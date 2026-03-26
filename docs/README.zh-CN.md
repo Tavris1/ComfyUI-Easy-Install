@@ -66,10 +66,11 @@ ComfyUI-Easy-Install 是一个完全配置好的便携版 ComfyUI，一键即可
 | 🧩 节点 | 🛠️ 工具 |
 |---|---|
 | [Nunchaku](https://github.com/nunchaku-ai/nunchaku) | Easy-Models-Linker |
-| [SageAttention (v2.2.0 and v3)](https://github.com/woct0rdho/SageAttention) | ComfyUI-Version-Switcher |
-| [FlashAttention](https://github.com/Dao-AILab/flash-attention) | Easy-model2GGUF |
-| [InsightFace](https://github.com/deepinsight/insightface) | Long-Paths-Enabler |
-| [Trellis 2.0](https://github.com/visualbruno/ComfyUI-Trellis2) | Torch-Pack |
+| [SageAttention (v2.2.0 and v3)](https://github.com/woct0rdho/SageAttention) | Easy-System-Checker |
+| [FlashAttention](https://github.com/Dao-AILab/flash-attention) | ComfyUI-Version-Switcher |
+| [InsightFace](https://github.com/deepinsight/insightface) | Easy-model2GGUF |
+| [Trellis 2.0](https://github.com/visualbruno/ComfyUI-Trellis2) | Long-Paths-Enabler |
+| | Torch-Pack |
 | | Toggle-DynamicVRAM |
 | | Update Easy-Install |
 
@@ -83,6 +84,7 @@ ComfyUI-Easy-Install 是一个完全配置好的便携版 ComfyUI，一键即可
 3. 安装完成后，你可以从 **Add-ons** 文件夹安装或运行以下组件：
     - **Easy-Models-Linker** - *通过 **extra_model_paths.yaml** 使用现有 **MODELS** 文件夹，无需重新下载*
       - *某些文件夹如 **LLM** 和 **llm_gguf** 无法通过此方式重定向*
+    - **Easy-System-Checker** - *提供有关主要硬件和软件组件的信息*
     - **Nunchaku** - *安装 Nunchaku（如果之后出现问题，请再次运行 `Nunchaku.bat`）*
     - **SageAttention-Multi** - *安装 SageAttention v2.2.0 和 v3（v3 仅在 NVIDIA 50 系列 GPU 上有效）*
     - **FlashAttention** - *安装 FlashAttention v2.8.3*
