@@ -50,7 +50,6 @@ ComfyUI-Easy-Install es un **ComfyUI portátil y totalmente configurado** con un
 
 | 🖼️ Imagen | 🎬 Video | 🎵 Audio | 🧩 Utilidad / WF | 🤖 Modelos |
 |---|---|---|---|---|
-|---|---|---|---|---|
 | [Tiled Diffusion & VAE](https://github.com/shiimizu/ComfyUI-TiledDiffusion) | [VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) | [MelBandRoFormer](https://github.com/kijai/ComfyUI-MelBandRoFormer) | [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager) | [QwenVL](https://github.com/1038lab/ComfyUI-QwenVL) |
 | [Inpaint CropAndStitch](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch) | [WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideoWrapper) | [Qwen3-TTS](https://github.com/flybirdxx/ComfyUI-Qwen-TTS) | [Easy-Use](https://github.com/yolain/ComfyUI-Easy-Use) | [GGUF](https://github.com/city96/ComfyUI-GGUF) |
 | [ControlNet Aux](https://github.com/Fannovel16/comfyui_controlnet_aux) | [WanAnimatePreprocess](https://github.com/kijai/ComfyUI-WanAnimatePreprocess) | [FishAudioS2](https://github.com/Saganaki22/ComfyUI-FishAudioS2) | [KJNodes](https://github.com/kijai/ComfyUI-KJNodes) | |
@@ -67,10 +66,11 @@ ComfyUI-Easy-Install es un **ComfyUI portátil y totalmente configurado** con un
 | 🧩 Nodos | 🛠️ Herramientas |
 |---|---|
 | [Nunchaku](https://github.com/nunchaku-ai/nunchaku) | Easy-Models-Linker |
-| [SageAttention (v2.2.0 y v3)](https://github.com/woct0rdho/SageAttention) | ComfyUI-Version-Switcher |
-| [FlashAttention](https://github.com/Dao-AILab/flash-attention) | Easy-model2GGUF |
-| [InsightFace](https://github.com/deepinsight/insightface) | Long-Paths-Enabler |
-| [Trellis 2.0](https://github.com/visualbruno/ComfyUI-Trellis2) | Torch-Pack |
+| [SageAttention (v2.2.0 and v3)](https://github.com/woct0rdho/SageAttention) | Easy-System-Checker |
+| [FlashAttention](https://github.com/Dao-AILab/flash-attention) | ComfyUI-Version-Switcher |
+| [InsightFace](https://github.com/deepinsight/insightface) | Easy-model2GGUF |
+| [Trellis 2.0](https://github.com/visualbruno/ComfyUI-Trellis2) | Long-Paths-Enabler |
+| | Torch-Pack |
 | | Toggle-DynamicVRAM |
 | | Update Easy-Install |
 
@@ -84,6 +84,7 @@ ComfyUI-Easy-Install es un **ComfyUI portátil y totalmente configurado** con un
 3. Tras la instalación, se pueden instalar o ejecutar los siguientes componentes desde la carpeta **Add-ons**:
     - **Easy-Models-Linker** - *Usa la carpeta **MODELS** existente mediante **extra_model_paths.yaml**, no se requiere volver a descargar*
       - *Algunas carpetas como **LLM** y **llm_gguf** no pueden redirigirse de esta manera*
+    - **Easy-System-Checker** - *Proporciona información sobre los componentes clave de hardware y software*
     - **Nunchaku** - *Instala Nunchaku (si hay problemas, ejecutar `Nunchaku.bat` de nuevo)*
     - **SageAttention-Multi** - *Instala SageAttention v2.2.0 y v3 (v3 solo para GPUs NVIDIA serie 50)*
     - **FlashAttention** - *Instala FlashAttention v2.8.3*
