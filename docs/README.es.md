@@ -79,7 +79,7 @@ ComfyUI-Easy-Install es un **ComfyUI portátil y totalmente configurado** con un
 ---
 
 ## 🖥️ Instalación en Windows
-1. [**▶️ HAZ CLIC AQUÍ ◀️**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip) Haz clic aquí para descargar la última versión
+1. [**▶️ HAZ CLIC AQUÍ ◀️**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip) para descargar la última versión
 2. Extraer el archivo ZIP en una carpeta nueva y ejecutar **`ComfyUI-Easy-Install.bat`**
 3. Tras la instalación, se pueden instalar o ejecutar los siguientes componentes desde la carpeta **Add-ons**:
     - **Easy-Models-Linker** - *Usa la carpeta **MODELS** existente mediante **extra_model_paths.yaml**, no se requiere volver a descargar*

@@ -79,7 +79,7 @@ ComfyUI-Easy-Install là **ComfyUI di động được cấu hình đầy đủ*
 ---
 
 ## 🖥️ Cài đặt trên Windows
-1. [**▶️ NHẤN VÀO ĐÂY ◀️**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip) Nhấp vào đây để tải xuống phiên bản mới nhất
+1. [**▶️ NHẤN VÀO ĐÂY ◀️**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip) để tải xuống phiên bản mới nhất
 2. Giải nén ZIP vào một thư mục mới và chạy **`ComfyUI-Easy-Install.bat`**
 3. Sau khi cài đặt, bạn có thể cài hoặc chạy các thành phần sau từ thư mục **Add-ons**:
     - **Easy-Models-Linker** - *Sử dụng thư mục **MODELS** hiện có qua **extra_model_paths.yaml**, không cần tải lại*
