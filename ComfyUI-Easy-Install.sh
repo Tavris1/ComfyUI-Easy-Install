@@ -645,7 +645,7 @@ if [ "$(uname -s)" = "Linux" ]; then
 fi
 
 # Postinstall: resync pydantic stack to avoid version mismatch issues
-uv pip uninstall $UV_ARGS pydantic pydantic-core || true
+uv pip uninstall --python "$EMBEDDED_PYTHON" pydantic pydantic-core || true
 uv pip install $UV_ARGS pydantic
 
 # Copy additional files if they exist
