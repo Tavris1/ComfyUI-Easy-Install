@@ -640,7 +640,7 @@ find . -type f -name "*.sh" -exec chmod +x {} +
 # Install Triton for Torch 2.9 (Linux only)
 if [ "$(uname -s)" = "Linux" ]; then
     echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}Triton${GREEN} :::::::::::::::${RESET}"
-    $EMBEDDED_PYTHON -m pip install --upgrade --force-reinstall "triton" $PIP_ARGS || echo -e "${YELLOW}Triton install skipped${RESET}"
+    $EMBEDDED_PYTHON -m pip install --upgrade --force-reinstall "triton==3.5.1" $PIP_ARGS || echo -e "${YELLOW}Triton install skipped${RESET}"
     echo ""
 fi
 
