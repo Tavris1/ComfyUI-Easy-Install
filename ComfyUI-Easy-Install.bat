@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.10.2"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v2.11.0"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -128,6 +128,7 @@ call :get_node https://github.com/kijai/ComfyUI-SCAIL-Pose					ComfyUI-SCAIL-Pos
 call :get_node https://github.com/kijai/ComfyUI-MelBandRoFormer				ComfyUI-MelBandRoFormer
 call :get_node https://github.com/flybirdxx/ComfyUI-Qwen-TTS				qwen3-tts-comfyui
 call :get_node https://github.com/Saganaki22/ComfyUI-FishAudioS2			ComfyUI-fish-audio-s2
+call :get_node https://github.com/pixaroma/ComfyUI-Pixaroma					ComfyUI-Pixaroma
 
 echo %green%::::::::::::::: %yellow%Installation/Updating SoX%green% :::::::::::::::%reset%
 echo.
