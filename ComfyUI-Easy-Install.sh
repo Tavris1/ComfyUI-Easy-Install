@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v2.09.0
+# Title ComfyUI-Easy-Install  NEXT by ivo v2.10.2
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -440,6 +440,7 @@ EOL
     uv pip install stringzilla==3.12.6 $UV_ARGS
     # Install working version of transformers (damn it again)
     uv pip install transformers==4.57.6 $UV_ARGS
+    uv pip install descript-audio-codec $UV_ARGS
     echo
     
     echo -e "${YELLOW}[3/6]${RESET} Installing pygit2..."
@@ -544,6 +545,7 @@ get_node https://github.com/kijai/ComfyUI-KJNodes comfyui-kjnodes
 get_node https://github.com/kijai/ComfyUI-WanVideoWrapper ComfyUI-WanVideoWrapper
 get_node https://github.com/1038lab/ComfyUI-QwenVL ComfyUI-QwenVL
 get_node https://github.com/flybirdxx/ComfyUI-Qwen-TTS qwen3-tts-comfyui
+get_node https://github.com/Saganaki22/ComfyUI-FishAudioS2 ComfyUI-fish-audio-s2
 get_node https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler seedvr2_videoupscaler
 get_node https://github.com/chflame163/ComfyUI_LayerStyle comfyui_layerstyle
 get_node https://github.com/kijai/ComfyUI-WanAnimatePreprocess ComfyUI-WanAnimatePreprocess
@@ -641,6 +643,10 @@ if [ "$(uname -s)" = "Linux" ]; then
     $EMBEDDED_PYTHON -m pip install --upgrade --force-reinstall "triton" $PIP_ARGS || echo -e "${YELLOW}Triton install skipped${RESET}"
     echo ""
 fi
+
+# Postinstall: resync pydantic stack to avoid version mismatch issues
+uv pip uninstall $UV_ARGS pydantic pydantic-core || true
+uv pip install $UV_ARGS pydantic
 
 # Copy additional files if they exist
 copy_files run_nvidia_gpu.sh .
