@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v2.10.2
+# Title ComfyUI-Easy-Install  NEXT by ivo v2.11.0
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -34,7 +34,7 @@ sysctl -w net.ipv6.conf.default.disable_ipv6=1 >/dev/null 2>&1 || true
 # Set arguments
 PIP_ARGS="--no-cache-dir --no-warn-script-location --timeout=120 --retries 3 --progress-bar on --root-user-action=ignore --trusted-host pypi.org --trusted-host files.pythonhosted.org --trusted-host pypi.python.org"
 CURL_ARGS="--retry 200 --retry-all-errors"
-UV_ARGS="--no-cache --link-mode=copy"
+UV_ARGS="--system --no-cache --link-mode=copy"
 
 # Check for Existing ComfyUI Folder
 if [ -d "ComfyUI-Easy-Install" ]; then
@@ -441,6 +441,7 @@ EOL
     # Install working version of transformers (damn it again)
     uv pip install transformers==4.57.6 $UV_ARGS
     uv pip install descript-audio-codec $UV_ARGS
+    uv pip install "protobuf>=3.9.2,<3.20" $UV_ARGS
     echo
     
     echo -e "${YELLOW}[3/6]${RESET} Installing pygit2..."
@@ -549,6 +550,7 @@ get_node https://github.com/Saganaki22/ComfyUI-FishAudioS2 ComfyUI-fish-audio-s2
 get_node https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler seedvr2_videoupscaler
 get_node https://github.com/chflame163/ComfyUI_LayerStyle comfyui_layerstyle
 get_node https://github.com/kijai/ComfyUI-WanAnimatePreprocess ComfyUI-WanAnimatePreprocess
+get_node https://github.com/pixaroma/ComfyUI-Pixaroma ComfyUI-Pixaroma
 if [ "$(uname -s)" = "Darwin" ]; then
     echo -e "${YELLOW}Skipping comfyui-easy-sam3 on macOS (requires triton/CUDA).${RESET}"
 else
@@ -614,7 +616,7 @@ echo -e "${GREEN}✓${RESET} python-ffmpeg installed"
 
 if [ "$(uname -s)" = "Darwin" ]; then
     echo -e "${YELLOW}Installing opencv-contrib-python for LayerStyle (ximgproc)...${RESET}"
-    uv pip uninstall --python "$EMBEDDED_PYTHON" opencv-python-headless opencv-python opencv-contrib-python 2>/dev/null || true
+    uv pip uninstall --system --python "$EMBEDDED_PYTHON" opencv-python-headless opencv-python opencv-contrib-python 2>/dev/null || true
     uv pip install --force-reinstall opencv-contrib-python $UV_ARGS
 fi
 
@@ -645,7 +647,7 @@ if [ "$(uname -s)" = "Linux" ]; then
 fi
 
 # Postinstall: resync pydantic stack to avoid version mismatch issues
-uv pip uninstall --python "$EMBEDDED_PYTHON" pydantic pydantic-core || true
+uv pip uninstall --system --python "$EMBEDDED_PYTHON" pydantic pydantic-core || true
 uv pip install $UV_ARGS pydantic
 
 # Copy additional files if they exist
