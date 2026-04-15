@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v2.11.1"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.0.0"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -51,7 +51,7 @@ echo    %BGR%0000%FGR%0000%BGR%000000000000%FGR%0000%BGR%0000
 echo    %BGR%0000%FGR%00000000000000000000%BGR%0000
 echo    %BGR%0000%FGR%00000000000000000000%BGR%0000
 echo    %BGR%0000000000000000000000000000
-echo    %BGR%0000000000000000000000000000%reset%
+echo    %BGR%000000000 DESKTOP 0000000000
 echo.
 
 :: Install/Update Git ::
@@ -91,6 +91,8 @@ REM .\python_embeded\python.exe -I -m uv pip install requests==2.31.0 urllib3==2
 .\python_embeded\python.exe -I -m uv pip install onnxruntime-gpu %UVargs%
 .\python_embeded\python.exe -I -m uv pip install onnx %UVargs%
 .\python_embeded\python.exe -I -m uv pip install flet %UVargs%
+.\python_embeded\python.exe -I -m uv pip install pywebview %UVargs%
+.\python_embeded\python.exe -I -m uv pip install -r ".\ComfyUI\manager_requirements.txt" %UVargs%
 
 if "%CURRENT_CUDA%"=="12.8" (
 	.\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.33-cu128-Basic-win-20260315/llama_cpp_python-0.3.33+cu128.basic-cp312-cp312-win_amd64.whl %UVargs%
