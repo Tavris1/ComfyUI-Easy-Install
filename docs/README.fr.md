@@ -30,6 +30,7 @@ Dédié à l'équipe **Pixaroma**
 ![ComfyUI Screenshot](ComfyUI-ivo.jpg)
 
 ComfyUI-Easy-Install est un **ComfyUI portable entièrement configuré** en un seul clic. Aucune installation de Python ou de dépendances manuelles n'est nécessaire.
+La nouvelle version Desktop combine la flexibilité portable avec le confort d'une application Desktop traditionnelle.
 
 </div>
 

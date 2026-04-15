@@ -30,6 +30,7 @@
 ![ComfyUI Screenshot](ComfyUI-ivo.jpg)
 
 ComfyUI-Easy-Install, tek tıklamayla tamamen yapılandırılmış ve taşınabilir bir ComfyUI'dir. Python kurulumu yok, manuel bağımlılık yok.
+Yeni Desktop sürümü, taşınabilir esnekliği geleneksel Desktop uygulamasının konforuyla birleştirir.
 
 </div>
 

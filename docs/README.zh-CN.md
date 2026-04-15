@@ -30,6 +30,7 @@
 ![ComfyUI Screenshot](ComfyUI-ivo.jpg)
 
 ComfyUI-Easy-Install 是一个完全配置好的便携版 ComfyUI，一键即可使用。无需 Python 设置，也无需手动安装依赖。
+新的桌面版本将便携的灵活性与传统桌面应用的舒适性结合在一起。
 
 </div>
 
