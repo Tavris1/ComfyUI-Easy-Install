@@ -30,6 +30,7 @@ Dành cho đội ngũ **Pixaroma**
 ![ComfyUI Screenshot](ComfyUI-ivo.jpg)
 
 ComfyUI-Easy-Install là **ComfyUI di động được cấu hình đầy đủ** chỉ với một cú nhấp. Không cần cài Python hay phụ thuộc thủ công.
+Phiên bản Desktop mới kết hợp tính linh hoạt di động với sự thoải mái của một ứng dụng Desktop truyền thống.
 
 </div>
 

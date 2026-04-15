@@ -30,6 +30,7 @@
 ![ComfyUI Screenshot](ComfyUI-ivo.jpg)
 
 ComfyUI-Easy-Install は、完全に設定済みでワンクリックで使えるポータブル ComfyUI です。Python のセットアップや手動依存関係は不要です。
+新しいデスクトップ版は、ポータブルな柔軟性と従来のデスクトップアプリの快適さを兼ね備えています。
 
 </div>
 
