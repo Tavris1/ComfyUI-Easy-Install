@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v2.11.1
+# Title ComfyUI-Easy-Install  NEXT by ivo v3.0.4
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -602,6 +602,28 @@ elif [ "$(uname -s)" = "Linux" ]; then
 fi
 echo
 
+# Install pywebview for desktop mode (optional - skipped on headless)
+if [ -n "$DISPLAY" ] || [ -n "$WAYLAND_DISPLAY" ] || [ "$(uname -s)" = "Darwin" ]; then
+    echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}PyWebView (Desktop Mode)${GREEN} :::::::::::::::${RESET}"
+    if [ "$(uname -s)" = "Linux" ]; then
+        SUDO_CMD=""
+        if [ "$(id -u)" -ne 0 ]; then
+            SUDO_CMD="sudo"
+        fi
+        if command -v apt-get >/dev/null 2>&1; then
+            $SUDO_CMD apt-get install -y libwebkit2gtk-4.0-dev 2>/dev/null || true
+        elif command -v dnf >/dev/null 2>&1; then
+            $SUDO_CMD dnf install -y webkit2gtk4.0-devel 2>/dev/null || true
+        elif command -v pacman >/dev/null 2>&1; then
+            $SUDO_CMD pacman -S --needed --noconfirm webkit2gtk 2>/dev/null || true
+        fi
+    fi
+    uv pip install pywebview $UV_ARGS || echo -e "${YELLOW}pywebview install skipped${RESET}"
+    echo ""
+else
+    echo -e "${YELLOW}No display detected — skipping pywebview (headless mode)${RESET}"
+fi
+
 # Install remaining dependencies (only packages NOT already installed above)
 echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}Required Dependencies${GREEN} :::::::::::::::${RESET}"
 echo ""
@@ -653,6 +675,9 @@ uv pip install $UV_ARGS pydantic
 # Copy additional files if they exist
 copy_files run_nvidia_gpu.sh .
 copy_files run_nvidia_gpu_SageAttention.sh .
+copy_files run_comfyui_desktop.sh .
+copy_files comfyui_desktop.py .
+copy_files comfyui_icon.png .
 copy_files extra_model_paths.yaml ComfyUI
 copy_files comfy.settings.json ComfyUI/user/default
 copy_files rgthree_config.json ComfyUI/custom_nodes/rgthree-comfy
