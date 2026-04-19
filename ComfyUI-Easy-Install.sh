@@ -125,7 +125,7 @@ install_comfyui() {
         rm -rf ComfyUI
     fi
     git config --global credential.helper ""
-    git clone https://github.com/Comfy-Org/ComfyUI ComfyUI
+    git clone --depth 1 https://github.com/Comfy-Org/ComfyUI ComfyUI
     if [ ! -d "ComfyUI" ]; then
         echo -e "${RED}Failed to clone ComfyUI. Please check your internet connection and git setup.${RESET}"
         exit 1
