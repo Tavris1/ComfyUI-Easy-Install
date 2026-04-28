@@ -82,7 +82,7 @@ The new Desktop version brings portable flexibility together with the comfort of
 ## 🖥️ Windows Installation
 1. [**▶️ CLICK HERE ◀️**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip) to download the latest version
 2. Extract the ZIP file to a new folder and run **`ComfyUI-Easy-Install.bat`**
-3. After setup, you can install or run the following components from the **Add-ons** folder:
+3. After setup, you can install or run components from the Add-ons folder or the EZi Desktop menu:
     - **Easy-Models-Linker** - *Uses existing **MODELS** folder via **extra_model_paths.yaml**, no re-download needed*
       - *Some folders like **LLM** and **llm_gguf** cannot be redirected this way*
     - **Easy-System-Checker** - *Provides information about key hardware and software components*
