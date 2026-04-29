@@ -82,7 +82,7 @@ ComfyUI-Easy-Install 是一个完全配置好的便携版 ComfyUI，一键即可
 ## 🖥️ Windows 安装
 1. [**▶️ 点击这里 ◀️**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip) 下载最新版本
 2. 将 ZIP 文件解压到新文件夹并运行 **`ComfyUI-Easy-Install.bat`**
-3. 安装完成后，你可以从 **Add-ons** 文件夹安装或运行以下组件：
+3. 设置完成后，你可以从 **Add-ons** 文件夹或通过 **EZi Desktop Menu** 安装或运行组件：
     - **Easy-Models-Linker** - *通过 **extra_model_paths.yaml** 使用现有 **MODELS** 文件夹，无需重新下载*
       - *某些文件夹如 **LLM** 和 **llm_gguf** 无法通过此方式重定向*
     - **Easy-System-Checker** - *提供有关主要硬件和软件组件的信息*
@@ -97,6 +97,9 @@ ComfyUI-Easy-Install 是一个完全配置好的便携版 ComfyUI，一键即可
     - **ComfyUI-Version-Switcher** - ***可逆**回滚到 **之前的** ComfyUI 版本*
     - **Toggle-DynamicVRAM** - *切换 ComfyUI 启动参数中的 **--disable-dynamic-vram***
     - **Update Easy-Install** - *更新 **Add-ons** 和其他文件夹，并创建桌面快捷方式*
+    - **EZi Desktop Themes** - *通过 EZi Desktop Menu > Advanced*
+    - **Custom Input, Output & User folders** - *通过 EZi Desktop Menu > Advanced*
+    - **ComfyUI and Frontend versions changer** - *通过 EZi Desktop Menu > Advanced*
 
 > [!IMPORTANT]
 > - 不要以 **管理员** 身份运行安装程序。

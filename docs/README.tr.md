@@ -82,7 +82,7 @@ Yeni Desktop sürümü, taşınabilir esnekliği geleneksel Desktop uygulamasın
 ## 🖥️ Windows Kurulumu
 1. [**▶️ BURAYA TIKLAYIN ◀️**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip) en son sürümü indirmek için
 2. ZIP dosyasını yeni bir klasöre çıkarın ve **`ComfyUI-Easy-Install.bat`** dosyasını çalıştırın
-3. Kurulumdan sonra **Add-ons** klasöründen aşağıdaki bileşenleri kurabilir veya çalıştırabilirsiniz:
+3. Kurulumdan sonra, bileşenleri **Add-ons** klasöründen veya **EZi Desktop Menu** üzerinden kurabilir ya da çalıştırabilirsiniz:
     - **Easy-Models-Linker** - *Mevcut **MODELS** klasörünü **extra_model_paths.yaml** aracılığıyla kullanır, yeniden indirme gerekmez*
       - *Bazı klasörler (**LLM** ve **llm_gguf** gibi) bu şekilde yönlendirilemez*
     - **Easy-System-Checker** - *Temel donanım ve yazılım bileşenleri hakkında bilgi sağlar*
@@ -97,6 +97,9 @@ Yeni Desktop sürümü, taşınabilir esnekliği geleneksel Desktop uygulamasın
     - **ComfyUI-Version-Switcher** - *Sorun durumunda önceki bir ComfyUI sürümüne **geri döndürme** (reversible)*
     - **Toggle-DynamicVRAM** - *ComfyUI başlangıç dosyalarındaki **--disable-dynamic-vram** seçeneğini açıp kapatır*
     - **Update Easy-Install** - ***Add-ons** ve diğer klasörleri günceller. Masaüstü kısayolları oluşturur*
+    - **EZi Desktop Themes** - *EZi Desktop Menu > Advanced üzerinden*
+    - **Custom Input, Output & User folders** - *EZi Desktop Menu > Advanced üzerinden*
+    - **ComfyUI and Frontend versions changer** - *EZi Desktop Menu > Advanced üzerinden*
 > [!IMPORTANT]
 > - Kurucuyu **Administrator** olarak çalıştırmayın.
 > - Sistem klasörlerinden kaçının (`Program Files`, `Windows`, `C:\` kökü).

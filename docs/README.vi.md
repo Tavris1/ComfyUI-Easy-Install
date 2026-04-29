@@ -82,7 +82,7 @@ Phiên bản Desktop mới kết hợp tính linh hoạt di động với sự t
 ## 🖥️ Cài đặt trên Windows
 1. [**▶️ NHẤN VÀO ĐÂY ◀️**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip) để tải xuống phiên bản mới nhất
 2. Giải nén ZIP vào một thư mục mới và chạy **`ComfyUI-Easy-Install.bat`**
-3. Sau khi cài đặt, bạn có thể cài hoặc chạy các thành phần sau từ thư mục **Add-ons**:
+3. Sau khi thiết lập, bạn có thể cài đặt hoặc chạy các thành phần từ thư mục **Add-ons** hoặc qua **EZi Desktop Menu**:
     - **Easy-Models-Linker** - *Sử dụng thư mục **MODELS** hiện có qua **extra_model_paths.yaml**, không cần tải lại*
       - *Một số thư mục như **LLM** và **llm_gguf** không thể chuyển hướng theo cách này*
     - **Easy-System-Checker** - *Cung cấp thông tin về các thành phần phần cứng và phần mềm chính*
@@ -97,6 +97,9 @@ Phiên bản Desktop mới kết hợp tính linh hoạt di động với sự t
     - **ComfyUI-Version-Switcher** - ***Có thể đảo ngược** quay lại phiên bản ComfyUI trước khi gặp sự cố*
     - **Toggle-DynamicVRAM** - *Chuyển đổi tùy chọn **--disable-dynamic-vram** trong các tệp khởi động ComfyUI*
     - **Update Easy-Install** - *Cập nhật **Add-ons** và các thư mục khác, tạo lối tắt trên Desktop*
+    - **EZi Desktop Themes** - *qua EZi Desktop Menu > Advanced*
+    - **Custom Input, Output & User folders** - *qua EZi Desktop Menu > Advanced*
+    - **ComfyUI and Frontend versions changer** - *qua EZi Desktop Menu > Advanced*
 > [!IMPORTANT]
 > - Không chạy trình cài đặt với quyền **Administrator**.
 > - Tránh các thư mục hệ thống (`Program Files`, `Windows`, gốc `C:\`).
