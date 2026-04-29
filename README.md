@@ -82,7 +82,7 @@ The new Desktop version brings portable flexibility together with the comfort of
 ## 🖥️ Windows Installation
 1. [**▶️ CLICK HERE ◀️**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip) to download the latest version
 2. Extract the ZIP file to a new folder and run **`ComfyUI-Easy-Install.bat`**
-3. After setup, you can install or run components from the **Add-ons** folder or the **EZi Desktop menu**:
+3. After setup, you can install or run components from the **Add-ons** folder or via the **EZi Desktop Menu**:
     - **Easy-Models-Linker** - *Uses existing **MODELS** folder via **extra_model_paths.yaml**, no re-download needed*
       - *Some folders like **LLM** and **llm_gguf** cannot be redirected this way*
     - **Easy-System-Checker** - *Provides information about key hardware and software components*
@@ -94,9 +94,13 @@ The new Desktop version brings portable flexibility together with the comfort of
     - **Torch-Pack** - *Quick switching between: `Torch 2.7.1+cu128`, `Torch 2.8.0+cu128` and `Torch 2.9.1+cu130`*
     - **Easy-model2GGUF** - *Convert & quantize models to GGUF (Q2_K–Q8_0) with 5D tensor fixes if available*
     - **Long-Paths-Enabler** - *Enables **Long Paths** in Windows 10/11. Essential for Python/ComfyUI*
-    - **ComfyUI-Version-Switcher** - ***Reversible** rollback to a **previous** ComfyUI version on issues*
+    - **ComfyUI-Version-Switcher** - ***Reversible** rollback to a **previous** ComfyUI version in case of issues*
     - **Toggle-DynamicVRAM** - *Toggles **--disable-dynamic-vram** option in ComfyUI startup files*
     - **Update Easy-Install** - *Updates **Add-ons** and other folders. Creates desktop shortcuts*
+    - **EZi Desktop Themes** - *via EZi Desktop Menu > Advanced*
+    - **Custom Input, Output & User folders** - *via EZi Desktop Menu > Advanced*
+    - **ComfyUI and Frontend versions changer** - *via EZi Desktop Menu > Advanced*
+
 > [!IMPORTANT]
 > - Do not run the installer as **Administrator**.
 > - Avoid system folders (`Program Files`, `Windows`, `C:\` root).
@@ -120,6 +124,3 @@ Enjoy my projects? Any support is greatly appreciated!
 [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#white)](https://github.com/sponsors/Tavris1)
 
 </div>
-
-
-
