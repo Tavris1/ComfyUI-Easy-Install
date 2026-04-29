@@ -82,7 +82,7 @@ ComfyUI-Easy-Install — это полностью настроенный **по
 ## 🖥️ Установка на Windows
 1. [**▶️ НАЖМИТЕ ЗДЕСЬ ◀️**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip) чтобы скачать последнюю версию
 2. Распакуйте ZIP в новую папку и запустите **`ComfyUI-Easy-Install.bat`**
-3. После установки можно установить или запустить следующие компоненты из папки **Add-ons**:
+3. После установки вы можете устанавливать или запускать компоненты из папки **Add-ons** или через **EZi Desktop Menu**:
     - **Easy-Models-Linker** - *Использует существующую папку **MODELS** через **extra_model_paths.yaml**, повторное скачивание не требуется*
       - *Некоторые папки, такие как **LLM** и **llm_gguf**, не перенаправляются таким образом*
     - **Easy-System-Checker** - *Предоставляет информацию об основных аппаратных и программных компонентах*
@@ -97,6 +97,9 @@ ComfyUI-Easy-Install — это полностью настроенный **по
     - **ComfyUI-Version-Switcher** - ***Обратимый** откат к предыдущей версии ComfyUI при проблемах*
     - **Toggle-DynamicVRAM** - *Переключает опцию **--disable-dynamic-vram** в стартовых файлах ComfyUI*
     - **Update Easy-Install** - *Обновляет **Add-ons** и другие папки, создаёт ярлыки на рабочем столе*
+    - **EZi Desktop Themes** - *через EZi Desktop Menu > Advanced*
+    - **Custom Input, Output & User folders** - *через EZi Desktop Menu > Advanced*
+    - **ComfyUI and Frontend versions changer** - *через EZi Desktop Menu > Advanced*
 > [!IMPORTANT]
 > - Не запускайте установщик от имени **Администратора**.
 > - Избегайте системных папок (`Program Files`, `Windows`, корень `C:\`).

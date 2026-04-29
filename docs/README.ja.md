@@ -82,7 +82,7 @@ ComfyUI-Easy-Install は、完全に設定済みでワンクリックで使え�
 ## 🖥️ Windows インストール
 1. [**▶️ ここをクリック ◀️**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip) 最新バージョンをダウンロード
 2. ZIP ファイルを新しいフォルダに解凍し、**`ComfyUI-Easy-Install.bat`** を実行
-3. セットアップ後、**Add-ons** フォルダから以下のコンポーネントをインストールまたは実行可能：
+3. セットアップ後、**Add-ons** フォルダまたは **EZi Desktop Menu** からコンポーネントをインストールまたは実行できます：
     - **Easy-Models-Linker** - *既存の **MODELS** フォルダを **extra_model_paths.yaml** 経由で使用、再ダウンロード不要*
       - ***LLM** や **llm_gguf** のフォルダはこの方法でリダイレクトできません*
     - **Easy-System-Checker** - *主要なハードウェアおよびソフトウェアコンポーネントに関する情報を提供します*
@@ -97,6 +97,9 @@ ComfyUI-Easy-Install は、完全に設定済みでワンクリックで使え�
     - **ComfyUI-Version-Switcher** - ***以前のバージョン** へ巻き戻し可能*
     - **Toggle-DynamicVRAM** - *ComfyUI 起動ファイルの **--disable-dynamic-vram** オプションを切替*
     - **Update Easy-Install** - *Add-ons やその他フォルダを更新、デスクトップショートカット作成*
+    - **EZi Desktop Themes** - *EZi Desktop Menu > Advanced から*
+    - **Custom Input, Output & User folders** - *EZi Desktop Menu > Advanced から*
+    - **ComfyUI and Frontend versions changer** - *EZi Desktop Menu > Advanced から*
 > [!IMPORTANT]
 > - インストーラーを **管理者として** 実行しないこと。
 > - システムフォルダ（`Program Files`、`Windows`、`C:\` 直下）を避ける。

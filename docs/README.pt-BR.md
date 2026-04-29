@@ -82,7 +82,7 @@ A nova versão Desktop combina flexibilidade portátil com o conforto de um apli
 ## 🖥️ Instalação no Windows
 1. [**▶️ CLIQUE AQUI ◀️**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip) para baixar a versão mais recente
 2. Extraia o arquivo ZIP em uma nova pasta e execute **`ComfyUI-Easy-Install.bat`**
-3. Após a instalação, você pode instalar ou executar os seguintes componentes da pasta **Add-ons**:
+3. Após a configuração, você pode instalar ou executar componentes pela pasta **Add-ons** ou pelo **EZi Desktop Menu**:
     - **Easy-Models-Linker** - *Usa a pasta **MODELS** existente via **extra_model_paths.yaml**, sem necessidade de novo download*
       - *Algumas pastas como **LLM** e **llm_gguf** não podem ser redirecionadas assim*
     - **Easy-System-Checker** - *Fornece informações sobre os principais componentes de hardware e software*
@@ -97,6 +97,9 @@ A nova versão Desktop combina flexibilidade portátil com o conforto de um apli
     - **ComfyUI-Version-Switcher** - ***Reversível** para voltar a uma versão anterior do ComfyUI se houver problemas*
     - **Toggle-DynamicVRAM** - *Alterna a opção **--disable-dynamic-vram** nos arquivos de inicialização do ComfyUI*
     - **Update Easy-Install** - *Atualiza **Add-ons** e outras pastas, cria atalhos na área de trabalho*
+    - **EZi Desktop Themes** - *via EZi Desktop Menu > Advanced*
+    - **Custom Input, Output & User folders** - *via EZi Desktop Menu > Advanced*
+    - **ComfyUI and Frontend versions changer** - *via EZi Desktop Menu > Advanced*
 > [!IMPORTANT]
 > - Não execute o instalador como **Administrador**.
 > - Evite pastas do sistema (`Program Files`, `Windows`, raiz `C:\`).

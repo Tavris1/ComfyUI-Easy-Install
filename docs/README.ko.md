@@ -82,7 +82,7 @@ ComfyUI-Easy-Install은 완전히 구성된 **원클릭 포터블 ComfyUI**입�
 ## 🖥️ Windows 설치
 1. [**▶️ 여기를 클릭 ◀️**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip) 최신 버전을 다운로드
 2. ZIP 파일을 새 폴더에 압축 해제 후 **`ComfyUI-Easy-Install.bat`** 실행
-3. 설치 후 **Add-ons** 폴더에서 다음 구성요소 설치/실행 가능:
+3. 설정 후, **Add-ons** 폴더 또는 **EZi Desktop Menu**를 통해 구성 요소를 설치하거나 실행할 수 있습니다:
     - **Easy-Models-Linker** - *기존 **MODELS** 폴더를 **extra_model_paths.yaml** 통해 사용, 재다운로드 불필요*
       - ***LLM** 및 **llm_gguf** 폴더는 이 방법으로 리디렉션 불가*
     - **Easy-System-Checker** - *주요 하드웨어 및 소프트웨어 구성 요소에 대한 정보를 제공합니다*
@@ -97,6 +97,9 @@ ComfyUI-Easy-Install은 완전히 구성된 **원클릭 포터블 ComfyUI**입�
     - **ComfyUI-Version-Switcher** - ***이전 버전**으로 롤백 가능*
     - **Toggle-DynamicVRAM** - *ComfyUI 시작 파일의 **--disable-dynamic-vram** 옵션 전환*
     - **Update Easy-Install** - *Add-ons 및 다른 폴더 업데이트, 바탕화면 바로가기 생성*
+    - **EZi Desktop Themes** - *EZi Desktop Menu > Advanced에서*
+    - **Custom Input, Output & User folders** - *EZi Desktop Menu > Advanced에서*
+    - **ComfyUI and Frontend versions changer** - *EZi Desktop Menu > Advanced에서*
 > [!IMPORTANT]
 > - 설치 프로그램을 **관리자 권한으로 실행 금지**.
 > - 시스템 폴더 (`Program Files`, `Windows`, `C:\` 루트) 피하기.
