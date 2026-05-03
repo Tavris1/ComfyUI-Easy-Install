@@ -81,7 +81,7 @@ LOADING_HTML = f"""
 </head>
 <body>
 <div class="wrap">
-  <div class="logo"><img src="data:image/png;base64,{_ICON_B64}" alt="ComfyUI"></div>
+  <div class="logo">{('<img src="data:image/png;base64,' + _ICON_B64 + '" alt="ComfyUI">') if _ICON_B64 else ''}</div>
   <div class="status" id="status">Connecting to {COMFYUI_HOST}:{COMFYUI_PORT}...</div>
   <div class="bar"><div class="fill"></div></div>
 </div>
@@ -169,11 +169,18 @@ INJECTED_JS = """
     document.addEventListener('click', function(e) {
         var inp = e.target.closest('input[type="file"]');
         if (!inp) {
-            /* ComfyUI often uses a button/label that triggers a hidden file input */
-            var btn = e.target.closest('button, .comfy-file-input, [data-upload]');
+            /* Only intercept elements explicitly marked for file upload */
+            var btn = e.target.closest('.comfy-file-input, [data-upload], label[for]');
             if (btn) {
-                var form = btn.closest('.comfy-widget, .comfy-modal, form, div');
-                if (form) inp = form.querySelector('input[type="file"]');
+                var linkedId = btn.getAttribute('for');
+                if (linkedId) {
+                    var linked = document.getElementById(linkedId);
+                    if (linked && linked.type === 'file') inp = linked;
+                }
+                if (!inp) {
+                    var form = btn.closest('.comfy-widget, .comfy-modal, form');
+                    if (form) inp = form.querySelector('input[type="file"]');
+                }
             }
         }
         if (inp) {
@@ -243,14 +250,10 @@ def open_in_webview():
             filename = os.path.basename(file_path)
             self._toast(f'Uploading {filename}...')
 
-            # Determine upload type based on extension
+            # Determine upload subfolder based on extension
             ext = os.path.splitext(filename)[1].lower()
-            if ext in ('.mp4', '.webm', '.mov', '.avi', '.mkv'):
-                upload_type = 'input'
-                subfolder = ''
-            else:
-                upload_type = 'input'
-                subfolder = ''
+            upload_type = 'input'
+            subfolder = ''
 
             # Upload to ComfyUI server
             try:
@@ -268,6 +271,12 @@ def open_in_webview():
                     f'Content-Disposition: form-data; name="image"; filename="{filename}"\r\n'
                     f'Content-Type: {content_type}\r\n\r\n'
                 ).encode() + file_data + (
+                    f'\r\n--{boundary}\r\n'
+                    f'Content-Disposition: form-data; name="type"\r\n\r\n'
+                    f'{upload_type}'
+                    f'\r\n--{boundary}\r\n'
+                    f'Content-Disposition: form-data; name="subfolder"\r\n\r\n'
+                    f'{subfolder}'
                     f'\r\n--{boundary}\r\n'
                     f'Content-Disposition: form-data; name="overwrite"\r\n\r\n'
                     f'true'
@@ -294,8 +303,11 @@ def open_in_webview():
                     print(f"  Uploaded: {upl_name} (subfolder={upl_sub}, type={upl_type})")
                     # Notify JS to refresh widgets
                     try:
+                        safe_upl_name = upl_name.replace('\\', '\\\\').replace("'", "\\'")
+                        safe_upl_sub = upl_sub.replace('\\', '\\\\').replace("'", "\\'")
+                        safe_upl_type = upl_type.replace('\\', '\\\\').replace("'", "\\'")
                         window.evaluate_js(
-                            f"window._comfyDesktopUploadDone('{upl_name}','{upl_sub}','{upl_type}');"
+                            f"window._comfyDesktopUploadDone('{safe_upl_name}','{safe_upl_sub}','{safe_upl_type}');"
                         )
                     except Exception:
                         pass
@@ -459,6 +471,7 @@ def open_in_webview():
                 pass
 
     api = Api()
+    api._window = None  # will be set after window creation
 
     # Show window IMMEDIATELY with loading splash — no waiting
     window = webview.create_window(
@@ -520,6 +533,8 @@ def open_in_webview():
                 os.kill(pid, signal.SIGTERM)
             except (ValueError, OSError):
                 pass
+
+    api._window = window  # now safe for Api methods to use
 
     window.events.loaded += on_loaded
     window.events.closed += on_closed

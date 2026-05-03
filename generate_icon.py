@@ -42,8 +42,6 @@ def generate_pixaroma_icon(size=256):
     bg = (30, 30, 40, 255)        # dark background
     yellow = (255, 200, 50, 255)  # yellow accent (from installer)
     green = (80, 200, 120, 255)   # green accent (from installer)
-    white = (240, 240, 245, 255)  # highlights
-
     center = size // 2
     radius = size // 2 - 12
 

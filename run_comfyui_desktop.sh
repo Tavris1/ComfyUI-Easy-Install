@@ -27,6 +27,10 @@ EXTRA_ARGS=()
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --remote)
+            if [ -z "$2" ] || [[ "$2" == --* ]]; then
+                echo -e "${RED}ERROR: --remote requires a HOST[:PORT] argument${RESET}"
+                exit 1
+            fi
             REMOTE_MODE=1
             REMOTE_ADDR="$2"
             # Parse HOST:PORT or just HOST
@@ -39,6 +43,10 @@ while [[ $# -gt 0 ]]; do
             shift 2
             ;;
         --port)
+            if [ -z "$2" ] || [[ "$2" == --* ]]; then
+                echo -e "${RED}ERROR: --port requires a PORT number${RESET}"
+                exit 1
+            fi
             PORT="$2"
             shift 2
             ;;
@@ -115,7 +123,7 @@ cleanup() {
         rm -f "$PID_FILE"
     fi
     # Kill any remaining child processes
-    jobs -p | xargs -r kill 2>/dev/null || true
+    for pid in $(jobs -p 2>/dev/null); do kill "$pid" 2>/dev/null; done || true
     echo -e "${GREEN}ComfyUI stopped.${RESET}"
 }
 trap cleanup EXIT INT TERM
