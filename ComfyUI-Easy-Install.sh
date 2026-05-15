@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v3.0.4
+# Title ComfyUI-Easy-Install  NEXT by ivo v3.5.0
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -125,7 +125,7 @@ install_comfyui() {
         rm -rf ComfyUI
     fi
     git config --global credential.helper ""
-    git clone --depth 1 https://github.com/Comfy-Org/ComfyUI ComfyUI
+    git clone https://github.com/Comfy-Org/ComfyUI ComfyUI
     if [ ! -d "ComfyUI" ]; then
         echo -e "${RED}Failed to clone ComfyUI. Please check your internet connection and git setup.${RESET}"
         exit 1
@@ -441,7 +441,6 @@ EOL
     # Install working version of transformers (damn it again)
     uv pip install transformers==4.57.6 $UV_ARGS
     uv pip install descript-audio-codec $UV_ARGS
-    uv pip install "protobuf>=3.9.2,<3.20" $UV_ARGS
     echo
     
     echo -e "${YELLOW}[3/6]${RESET} Installing pygit2..."
@@ -461,6 +460,15 @@ EOL
     else
         echo -e "${YELLOW}requirements.txt not found, installing essential packages...${RESET}"
         uv pip install $UV_ARGS sqlalchemy alembic aiohttp pillow numpy opencv-python-headless sounddevice
+    fi
+    # Install manager requirements if available
+    if [ -f "custom_nodes/comfyui-manager/requirements.txt" ] || [ -f "manager_requirements.txt" ]; then
+        echo -e "${YELLOW}Installing ComfyUI Manager requirements...${RESET}"
+        if [ -f "manager_requirements.txt" ]; then
+            uv pip install -r manager_requirements.txt $UV_ARGS
+        elif [ -f "custom_nodes/comfyui-manager/requirements.txt" ]; then
+            uv pip install -r custom_nodes/comfyui-manager/requirements.txt $UV_ARGS
+        fi
     fi
     echo -e "${GREEN}✓${RESET} ComfyUI requirements installed"
     cd ..
@@ -602,28 +610,6 @@ elif [ "$(uname -s)" = "Linux" ]; then
 fi
 echo
 
-# Install pywebview for desktop mode (optional - skipped on headless)
-if [ -n "$DISPLAY" ] || [ -n "$WAYLAND_DISPLAY" ] || [ "$(uname -s)" = "Darwin" ]; then
-    echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}PyWebView (Desktop Mode)${GREEN} :::::::::::::::${RESET}"
-    if [ "$(uname -s)" = "Linux" ]; then
-        SUDO_CMD=""
-        if [ "$(id -u)" -ne 0 ]; then
-            SUDO_CMD="sudo"
-        fi
-        if command -v apt-get >/dev/null 2>&1; then
-            $SUDO_CMD apt-get install -y libwebkit2gtk-4.0-dev 2>/dev/null || true
-        elif command -v dnf >/dev/null 2>&1; then
-            $SUDO_CMD dnf install -y webkit2gtk4.0-devel 2>/dev/null || true
-        elif command -v pacman >/dev/null 2>&1; then
-            $SUDO_CMD pacman -S --needed --noconfirm webkit2gtk 2>/dev/null || true
-        fi
-    fi
-    uv pip install pywebview $UV_ARGS || echo -e "${YELLOW}pywebview install skipped${RESET}"
-    echo ""
-else
-    echo -e "${YELLOW}No display detected — skipping pywebview (headless mode)${RESET}"
-fi
-
 # Install remaining dependencies (only packages NOT already installed above)
 echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}Required Dependencies${GREEN} :::::::::::::::${RESET}"
 echo ""
@@ -661,10 +647,16 @@ find . -type f -name "*.bat" -delete
 # Make all .sh files executable
 find . -type f -name "*.sh" -exec chmod +x {} +
 
-# Install Triton for Torch 2.9 (Linux only)
+# Install Triton matching Torch requirements (Linux only)
 if [ "$(uname -s)" = "Linux" ]; then
     echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}Triton${GREEN} :::::::::::::::${RESET}"
-    $EMBEDDED_PYTHON -m pip install --upgrade --force-reinstall "triton==3.5.1" $PIP_ARGS || echo -e "${YELLOW}Triton install skipped${RESET}"
+    TRITON_VER=$($EMBEDDED_PYTHON -c "import importlib.metadata; dist = importlib.metadata.metadata('torch'); reqs = [r for r in (dist.get_all('Requires-Dist') or []) if r.startswith('triton')]; ver = reqs[0].split('==')[1].split(';')[0].strip() if reqs and '==' in reqs[0] else ''; print(ver)" 2>/dev/null)
+    if [ -n "$TRITON_VER" ]; then
+        echo -e "${YELLOW}Torch requires triton==${TRITON_VER}${RESET}"
+        $EMBEDDED_PYTHON -m pip install --upgrade --force-reinstall "triton==${TRITON_VER}" $PIP_ARGS || echo -e "${YELLOW}Triton install skipped${RESET}"
+    else
+        echo -e "${YELLOW}Could not determine triton version from torch metadata, skipping${RESET}"
+    fi
     echo ""
 fi
 
@@ -675,9 +667,6 @@ uv pip install $UV_ARGS pydantic
 # Copy additional files if they exist
 copy_files run_nvidia_gpu.sh .
 copy_files run_nvidia_gpu_SageAttention.sh .
-copy_files run_comfyui_desktop.sh .
-copy_files comfyui_desktop.py .
-copy_files comfyui_icon.png .
 copy_files extra_model_paths.yaml ComfyUI
 copy_files comfy.settings.json ComfyUI/user/default
 copy_files rgthree_config.json ComfyUI/custom_nodes/rgthree-comfy
