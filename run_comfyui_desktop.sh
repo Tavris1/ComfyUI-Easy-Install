@@ -85,8 +85,13 @@ HAS_WEBVIEW=0
 $PYTHON_CMD -c "import webview" 2>/dev/null && HAS_WEBVIEW=1
 
 if [ "$HAS_WEBVIEW" -eq 0 ]; then
-    # Try to install pywebview into the desktop venv
-    if [ -x "$DESKTOP_VENV/bin/python3" ]; then
+    # Try to install pywebview into the embedded Python first
+    echo -e "${YELLOW}pywebview not found — attempting to install...${RESET}"
+    if $PYTHON_CMD -m pip install pywebview -q 2>/dev/null; then
+        $PYTHON_CMD -c "import webview" 2>/dev/null && HAS_WEBVIEW=1
+    fi
+    # Fallback: try the desktop venv
+    if [ "$HAS_WEBVIEW" -eq 0 ] && [ -x "$DESKTOP_VENV/bin/python3" ]; then
         echo -e "${YELLOW}Installing pywebview into desktop venv...${RESET}"
         "$DESKTOP_VENV/bin/python3" -m pip install pywebview -q && HAS_WEBVIEW=1
     fi
