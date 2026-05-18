@@ -15,6 +15,8 @@ import webbrowser
 import urllib.request
 import urllib.parse
 import base64
+import json
+import subprocess
 
 COMFYUI_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
 COMFYUI_PORT = int(os.environ.get("COMFYUI_PORT", 8188))
@@ -32,6 +34,7 @@ WINDOW_HEIGHT = 900
 # Path to icon (relative to this script)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ICON_PATH = os.path.join(SCRIPT_DIR, "comfyui_icon.png")
+WINDOW_STATE_FILE = os.path.join(SCRIPT_DIR, ".comfyui_desktop_state.json")
 
 # Embed icon as base64 for the loading splash
 _ICON_B64 = ""
@@ -56,6 +59,177 @@ def open_in_browser():
     """Fallback: open ComfyUI in the default browser."""
     print(f"Opening ComfyUI in browser: {COMFYUI_URL}")
     webbrowser.open(COMFYUI_URL)
+
+
+def is_port_in_use(port, host="127.0.0.1"):
+    """Return True if port is already bound."""
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.settimeout(0.5)
+            return s.connect_ex((host, port)) == 0
+    except Exception:
+        return False
+
+
+def load_window_state():
+    """Load saved window geometry. Returns dict or {}."""
+    try:
+        if os.path.isfile(WINDOW_STATE_FILE):
+            with open(WINDOW_STATE_FILE, "r") as f:
+                data = json.load(f)
+            if isinstance(data, dict):
+                return data
+    except Exception:
+        pass
+    return {}
+
+
+def save_window_state(window):
+    """Persist current window size/position to disk."""
+    try:
+        state = {
+            "width":  window.width,
+            "height": window.height,
+            "x":      window.x,
+            "y":      window.y,
+        }
+        # Filter out None / negative values that pywebview may return on some platforms
+        if any(v is None or v < 0 for v in state.values()):
+            return
+        with open(WINDOW_STATE_FILE, "w") as f:
+            json.dump(state, f)
+    except Exception:
+        pass
+
+
+def get_system_info():
+    """Return a dict with Python, Torch, ComfyUI and platform info."""
+    info = {}
+    info["platform"] = sys.platform
+    info["python"] = sys.version.split()[0]
+
+    # PyTorch
+    try:
+        import torch
+        info["torch"] = torch.__version__
+        if sys.platform == "darwin":
+            info["mps"] = str(torch.backends.mps.is_available())
+            info["gpu"] = "MPS (Apple Silicon)" if torch.backends.mps.is_available() else "CPU"
+        elif torch.cuda.is_available():
+            info["gpu"] = torch.cuda.get_device_name(0)
+            info["cuda"] = torch.version.cuda or "unknown"
+        else:
+            info["gpu"] = "CPU only"
+    except Exception:
+        info["torch"] = "not installed"
+        info["gpu"] = "unknown"
+
+    # ComfyUI git rev
+    comfy_dir = os.path.join(SCRIPT_DIR, "ComfyUI")
+    try:
+        r = subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"],
+            cwd=comfy_dir, capture_output=True, text=True, timeout=5,
+        )
+        info["comfyui_rev"] = r.stdout.strip() if r.returncode == 0 else "unknown"
+    except Exception:
+        info["comfyui_rev"] = "unknown"
+
+    # Free disk space
+    try:
+        import shutil
+        _, _, free = shutil.disk_usage(SCRIPT_DIR)
+        info["disk_free_gb"] = f"{free / 1e9:.1f}"
+    except Exception:
+        pass
+
+    return info
+
+
+def get_cache_info():
+    """Return sizes (MB) of pip and uv caches."""
+    result = {}
+    home = os.path.expanduser("~")
+    for name, path in [
+        ("pip", os.path.join(home, ".cache", "pip")),
+        ("uv",  os.path.join(home, ".cache", "uv")),
+    ]:
+        try:
+            total = sum(
+                os.path.getsize(os.path.join(dp, f))
+                for dp, _, files in os.walk(path)
+                for f in files
+            )
+            result[name] = round(total / 1_048_576, 1)
+        except Exception:
+            result[name] = 0
+    return result
+
+
+def clear_cache(cache_type):
+    """Delete pip or uv cache. cache_type: 'pip' | 'uv' | 'all'"""
+    import shutil
+    home = os.path.expanduser("~")
+    targets = {
+        "pip": os.path.join(home, ".cache", "pip"),
+        "uv":  os.path.join(home, ".cache", "uv"),
+    }
+    cleared = []
+    for name, path in targets.items():
+        if cache_type in (name, "all") and os.path.isdir(path):
+            try:
+                shutil.rmtree(path)
+                os.makedirs(path)
+                cleared.append(name)
+            except Exception:
+                pass
+    return cleared
+
+
+def check_comfyui_update():
+    """Fetch git status for ComfyUI. Returns dict with update info."""
+    comfy_dir = os.path.join(SCRIPT_DIR, "ComfyUI")
+    if not os.path.isdir(os.path.join(comfy_dir, ".git")):
+        return {"error": "ComfyUI directory not a git repo"}
+    try:
+        subprocess.run(
+            ["git", "fetch", "--quiet"],
+            cwd=comfy_dir, capture_output=True, timeout=10,
+        )
+        local = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=comfy_dir, capture_output=True, text=True, timeout=5,
+        ).stdout.strip()
+        remote = subprocess.run(
+            ["git", "rev-parse", "@{u}"],
+            cwd=comfy_dir, capture_output=True, text=True, timeout=5,
+        ).stdout.strip()
+        behind = subprocess.run(
+            ["git", "rev-list", "--count", "HEAD..@{u}"],
+            cwd=comfy_dir, capture_output=True, text=True, timeout=5,
+        ).stdout.strip()
+        return {
+            "local": local[:8],
+            "remote": remote[:8],
+            "up_to_date": local == remote,
+            "commits_behind": int(behind) if behind.isdigit() else 0,
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def get_comfyui_versions():
+    """Return list of recent ComfyUI git tags (newest first, max 20)."""
+    comfy_dir = os.path.join(SCRIPT_DIR, "ComfyUI")
+    try:
+        r = subprocess.run(
+            ["git", "tag", "--sort=-creatordate"],
+            cwd=comfy_dir, capture_output=True, text=True, timeout=10,
+        )
+        tags = [t.strip() for t in r.stdout.splitlines() if t.strip()]
+        return tags[:20]
+    except Exception:
+        return []
 
 
 # Loading splash shown instantly while server starts up
@@ -458,6 +632,40 @@ def open_in_webview():
                 counter += 1
             return fallback
 
+        def get_system_info(self):
+            """Return system/platform info as a JSON string (called from JS)."""
+            return json.dumps(get_system_info())
+
+        def get_cache_info(self):
+            """Return pip/uv cache sizes as a JSON string (called from JS)."""
+            return json.dumps(get_cache_info())
+
+        def clear_cache(self, cache_type="all"):
+            """Clear pip/uv cache. cache_type: 'pip'|'uv'|'all'"""
+            cleared = clear_cache(cache_type)
+            self._toast(f"Cache cleared: {', '.join(cleared) if cleared else 'nothing to clear'}")
+            return json.dumps({"cleared": cleared})
+
+        def check_update(self):
+            """Check if ComfyUI has upstream updates. Returns JSON."""
+            return json.dumps(check_comfyui_update())
+
+        def get_versions(self):
+            """Return list of ComfyUI git tags as a JSON array."""
+            return json.dumps(get_comfyui_versions())
+
+        def confirm_close(self):
+            """Called from JS confirm-close dialog — destroy the window."""
+            self._confirm_close = True
+            try:
+                window.destroy()
+            except Exception:
+                pass
+
+        def cancel_close(self):
+            """Called from JS confirm-close dialog — dismiss and keep open."""
+            self._confirm_close = False
+
         def _toast(self, msg):
             """Show a toast message in the webview."""
             safe = msg.replace("'", "\\'")
@@ -471,19 +679,31 @@ def open_in_webview():
                 pass
 
     api = Api()
-    api._window = None  # will be set after window creation
+    api._window = None
+    api._confirm_close = False
+
+    # Restore saved geometry (falls back to defaults if no state saved)
+    _state = load_window_state()
+    _win_w = _state.get("width",  WINDOW_WIDTH)
+    _win_h = _state.get("height", WINDOW_HEIGHT)
+    _win_x = _state.get("x")
+    _win_y = _state.get("y")
 
     # Show window IMMEDIATELY with loading splash — no waiting
-    window = webview.create_window(
-        WINDOW_TITLE,
+    _create_kwargs = dict(
+        title=WINDOW_TITLE,
         html=LOADING_HTML,
-        width=WINDOW_WIDTH,
-        height=WINDOW_HEIGHT,
+        width=_win_w,
+        height=_win_h,
         resizable=True,
         zoomable=True,
         min_size=(800, 600),
         js_api=api,
     )
+    if _win_x is not None and _win_y is not None:
+        _create_kwargs["x"] = _win_x
+        _create_kwargs["y"] = _win_y
+    window = webview.create_window(**_create_kwargs)
 
     def poll_and_navigate():
         """Background: poll server, then navigate once ready."""
@@ -521,8 +741,67 @@ def open_in_webview():
         except Exception:
             pass
 
+    def on_closing():
+        """Intercept window close — show native confirm dialog if ComfyUI is running.
+
+        IMPORTANT: on_closing runs on the Cocoa main thread on macOS.
+        evaluate_js() also needs the main thread (callAfter + semaphore) so
+        calling it here deadlocks. Use a native OS dialog on a background
+        thread instead, then call window.destroy() if the user confirms.
+        """
+        if api._confirm_close or COMFYUI_REMOTE:
+            return True
+        if not is_port_in_use(COMFYUI_PORT):
+            return True
+
+        def _ask_and_close():
+            confirmed = False
+            if sys.platform == "darwin":
+                try:
+                    r = subprocess.run(
+                        [
+                            "osascript", "-e",
+                            'button returned of (display dialog '
+                            '"Stop ComfyUI and close?" '
+                            'buttons {"Cancel", "Stop & Close"} '
+                            'default button "Stop & Close" '
+                            'with title "ComfyUI Desktop" '
+                            'with icon caution)',
+                        ],
+                        capture_output=True, text=True, timeout=60,
+                    )
+                    confirmed = r.stdout.strip() == "Stop & Close"
+                except Exception:
+                    confirmed = True
+            else:
+                try:
+                    import tkinter as tk
+                    from tkinter import messagebox
+                    root = tk.Tk()
+                    root.withdraw()
+                    confirmed = messagebox.askyesno(
+                        "ComfyUI Desktop",
+                        "Stop ComfyUI and close?",
+                    )
+                    root.destroy()
+                except Exception:
+                    confirmed = True
+
+            if confirmed:
+                api._confirm_close = True
+                try:
+                    window.destroy()
+                except Exception:
+                    pass
+
+        threading.Thread(target=_ask_and_close, daemon=True).start()
+        # Return False to block this close attempt; _ask_and_close will call
+        # window.destroy() → on_closing again with _confirm_close=True → True.
+        return False
+
     def on_closed():
-        """When the window is closed, signal the parent process (local mode only)."""
+        """When the window is closed, save state and signal the server process."""
+        save_window_state(window)
         if COMFYUI_REMOTE:
             return
         pid_file = os.path.join(SCRIPT_DIR, ".comfyui_server.pid")
@@ -534,10 +813,40 @@ def open_in_webview():
             except (ValueError, OSError):
                 pass
 
+    def port_monitor():
+        """Background: detect ComfyUI restart and reload the webview."""
+        _was_up = False
+        _down_ticks = 0
+        while True:
+            time.sleep(1)
+            if COMFYUI_REMOTE:
+                break
+            up = is_port_in_use(COMFYUI_PORT)
+            if up:
+                _down_ticks = 0
+                if not _was_up:
+                    _was_up = True
+            else:
+                if _was_up:
+                    _down_ticks += 1
+                    if _down_ticks >= 3:
+                        _was_up = False
+                        _down_ticks = 0
+                        print("ComfyUI went offline — watching for restart...")
+                        if wait_for_server(COMFYUI_HOST, COMFYUI_PORT, timeout=300):
+                            print("ComfyUI restarted — reloading window.")
+                            try:
+                                window.load_url(COMFYUI_URL)
+                            except Exception:
+                                pass
+
     api._window = window  # now safe for Api methods to use
 
-    window.events.loaded += on_loaded
-    window.events.closed += on_closed
+    window.events.closing += on_closing
+    window.events.loaded  += on_loaded
+    window.events.closed  += on_closed
+
+    threading.Thread(target=port_monitor, daemon=True).start()
 
     print(f"  Tip: Press Cmd+B (macOS) or Ctrl+B (Linux) to open in browser for file uploads")
 
@@ -546,6 +855,14 @@ def open_in_webview():
 
 
 def main():
+    # In local mode, warn if port is already bound (another instance running)
+    if not COMFYUI_REMOTE and is_port_in_use(COMFYUI_PORT):
+        print(
+            f"WARNING: Port {COMFYUI_PORT} is already in use. "
+            "Another ComfyUI instance may already be running. "
+            "Connecting to it instead of starting a new server."
+        )
+
     # Check for display server
     has_display = (
         sys.platform == "darwin"
