@@ -485,6 +485,8 @@ def get_comfy_theme():
                 if palette_files:
                     with open(palette_files[0], "r", errors="replace") as f:
                         pdata = json.load(f)
+                    # Use 'id' from JSON as authoritative palette ID (matches EZi approach)
+                    _ = pdata.get("id") or palette_id
                     cb = pdata.get("colors", {}).get("comfy_base", {})
                     lg = pdata.get("colors", {}).get("litegraph_base", {})
                     colors = {
@@ -554,15 +556,21 @@ def list_comfy_themes():
                 data = json.load(f)
             custom = list(data.get("Comfy.CustomColorPalettes", {}).keys())
             ids = ids + [c for c in custom if c not in ids]
-        # Also scan frontend package palette JSON files for more built-ins
+        # Also scan frontend package palette JSON files — use 'id' field inside each JSON
         try:
             import glob as _glob, site as _site
             site_dir = _site.getsitepackages()[0]
-            for p in _glob.glob(os.path.join(site_dir, "comfyui_frontend_package*",
-                                              "static", "assets", "palettes", "*.json")):
-                pid = os.path.splitext(os.path.basename(p))[0]
-                if pid not in ids:
-                    ids.append(pid)
+            for p in sorted(_glob.glob(os.path.join(
+                    site_dir, "comfyui_frontend_package*",
+                    "static", "assets", "palettes", "*.json"))):
+                try:
+                    with open(p, "r", errors="replace") as f:
+                        pdata = json.load(f)
+                    pid = pdata.get("id") or os.path.splitext(os.path.basename(p))[0]
+                    if pid and pid not in ids:
+                        ids.append(pid)
+                except Exception:
+                    continue
         except Exception:
             pass
     except Exception:
