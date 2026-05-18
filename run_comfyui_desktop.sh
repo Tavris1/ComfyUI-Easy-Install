@@ -133,12 +133,29 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
+# Load saved extra launch args from desktop state file
+SAVED_ARGS=()
+STATE_FILE="$SCRIPT_DIR/.comfyui_desktop_state.json"
+if [ -f "$STATE_FILE" ]; then
+    SAVED_ARGS_STR=$($PYTHON_CMD -c "
+import json, sys
+try:
+    d = json.load(open('$STATE_FILE'))
+    print(d.get('launch_args',''))
+except: pass
+" 2>/dev/null)
+    if [ -n "$SAVED_ARGS_STR" ]; then
+        read -ra SAVED_ARGS <<< "$SAVED_ARGS_STR"
+        echo -e "${YELLOW}Extra launch args: ${SAVED_ARGS_STR}${RESET}"
+    fi
+fi
+
 # Start ComfyUI server in the background
 echo -e "${GREEN}Starting ComfyUI server on port ${PORT}...${RESET}"
 $PYTHON_CMD -W ignore::FutureWarning "$COMFYUI_DIR/main.py" \
     --port "$PORT" \
     --listen 127.0.0.1 \
-    "${EXTRA_ARGS[@]}" &
+    "${EXTRA_ARGS[@]}" "${SAVED_ARGS[@]}" &
 SERVER_PID=$!
 echo "$SERVER_PID" > "$PID_FILE"
 
