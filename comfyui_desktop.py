@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ComfyUI Desktop — PyWebView wrapper
+Desktop EZi  — PyWebView wrapper
 Opens ComfyUI in a native desktop window instead of a browser.
 Part of ComfyUI-Easy-Install by Pixaroma / VenimK
 """
@@ -920,7 +920,7 @@ INJECTED_JS = """
 
                 /* header */
                 '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">' +
-                '<span style="font-size:16px;font-weight:600">⚙ ComfyUI Desktop</span>' +
+                '<span style="font-size:16px;font-weight:600">⚙ EZi Desktop</span>' +
                 '<button id="_cdp_close" style="background:none;border:none;color:#888;font-size:20px;cursor:pointer;line-height:1">✕</button>' +
                 '</div>' +
 
@@ -1978,7 +1978,7 @@ def open_in_webview():
                             '"Stop ComfyUI and close?" '
                             'buttons {"Cancel", "Stop & Close"} '
                             'default button "Stop & Close" '
-                            'with title "ComfyUI Desktop" '
+                            'with title "EZi Desktop" '
                             'with icon caution)',
                         ],
                         capture_output=True, text=True, timeout=60,
@@ -1993,7 +1993,7 @@ def open_in_webview():
                     root = tk.Tk()
                     root.withdraw()
                     confirmed = messagebox.askyesno(
-                        "ComfyUI Desktop",
+                        "EZi Desktop",
                         "Stop ComfyUI and close?",
                     )
                     root.destroy()
@@ -2085,7 +2085,7 @@ def main():
 
     if has_display:
         # Window opens instantly — server polling happens in background
-        print(f"Launching ComfyUI Desktop → {COMFYUI_URL}")
+        print(f"Launching EZi Desktop → {COMFYUI_URL}")
         open_in_webview()
     else:
         # Headless: must wait for server before opening browser

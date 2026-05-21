@@ -163,7 +163,7 @@ echo "$SERVER_PID" > "$PID_FILE"
 export COMFYUI_HOST="$HOST"
 export COMFYUI_PORT="$PORT"
 export COMFYUI_REMOTE=0
-echo -e "${GREEN}Launching ComfyUI Desktop...${RESET}"
+echo -e "${GREEN}Launching EZi Desktop ...${RESET}"
 $PYTHON_CMD "$SCRIPT_DIR/comfyui_desktop.py"
 
 # If pywebview window was closed, server will be killed by cleanup trap
