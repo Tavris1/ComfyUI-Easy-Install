@@ -290,6 +290,111 @@ def install_frontend_version(version):
         return {"error": str(e)}
 
 
+def get_frontend_is_nightly():
+    """Detect if installed frontend is a nightly/dev build. Returns bool."""
+    try:
+        import glob as _glob, site as _site, re as _re
+        site_dir = _site.getsitepackages()[0]
+        pkg_dir = None
+        candidates = _glob.glob(os.path.join(site_dir, "comfyui_frontend_package*"))
+        for c in candidates:
+            if os.path.isdir(c) and "dist-info" not in c:
+                pkg_dir = c
+                break
+        if not pkg_dir:
+            return False
+        # Check if assets directory contains nightly-specific markers
+        assets_dir = os.path.join(pkg_dir, "static", "assets")
+        if not os.path.isdir(assets_dir):
+            return False
+        # Look for version file or check for dev markers
+        for root, dirs, files in os.walk(pkg_dir):
+            for f in files:
+                if f.endswith(".js") or f.endswith(".txt"):
+                    try:
+                        with open(os.path.join(root, f), "r", errors="replace") as file:
+                            content = file.read()
+                            if "nightly" in content.lower() or "dev" in content.lower():
+                                return True
+                    except:
+                        pass
+        return False
+    except Exception:
+        return False
+
+
+def get_comfyui_required_frontend(tag):
+    """Read requirements.txt from a ComfyUI git tag to find required frontend version.
+    Returns version string or None if not specified."""
+    comfy_dir = os.path.join(SCRIPT_DIR, "ComfyUI")
+    try:
+        # Try to read requirements.txt from the specific tag
+        r = subprocess.run(
+            ["git", "show", f"{tag}:requirements.txt"],
+            cwd=comfy_dir, capture_output=True, text=True, timeout=5,
+        )
+        if r.returncode == 0:
+            for line in r.stdout.splitlines():
+                line = line.strip()
+                if line.startswith("comfyui-frontend-package"):
+                    # Parse version specifier like comfyui-frontend-package==1.2.3
+                    if "==" in line:
+                        return line.split("==")[1].strip()
+                    if ">=" in line:
+                        return line.split(">=")[1].strip()
+        # Also check pyproject.toml if available
+        r2 = subprocess.run(
+            ["git", "show", f"{tag}:pyproject.toml"],
+            cwd=comfy_dir, capture_output=True, text=True, timeout=5,
+        )
+        if r2.returncode == 0:
+            import re as _re
+            for line in r2.stdout.splitlines():
+                match = _re.search(r'comfyui-frontend-package\s*[=<>]+\s*["\']?([0-9.]+)', line)
+                if match:
+                    return match.group(1)
+        return None
+    except Exception:
+        return None
+
+
+def switch_comfyui_and_frontend(tag, fe_version=None):
+    """Switch ComfyUI to a specific tag and optionally/install matching frontend.
+    If fe_version is None, auto-detect from requirements.txt."""
+    comfy_dir = os.path.join(SCRIPT_DIR, "ComfyUI")
+    results = {"comfyui": None, "frontend": None}
+
+    # Step 1: Checkout ComfyUI tag
+    try:
+        subprocess.run(
+            ["git", "fetch", "--tags"], cwd=comfy_dir,
+            capture_output=True, timeout=10,
+        )
+        r = subprocess.run(
+            ["git", "checkout", tag], cwd=comfy_dir,
+            capture_output=True, text=True, timeout=10,
+        )
+        if r.returncode != 0:
+            return {"error": f"Git checkout failed: {r.stderr}"}
+        results["comfyui"] = tag
+    except Exception as e:
+        return {"error": f"ComfyUI switch failed: {e}"}
+
+    # Step 2: Determine frontend version
+    if fe_version is None or fe_version == "auto":
+        fe_version = get_comfyui_required_frontend(tag)
+        results["auto_detected"] = fe_version
+
+    # Step 3: Install frontend if needed
+    if fe_version:
+        fe_result = install_frontend_version(fe_version)
+        results["frontend"] = fe_result
+        if fe_result.get("error"):
+            return {"error": f"Frontend install failed: {fe_result['error']}", "partial": results}
+
+    return {"ok": True, "results": results}
+
+
 def check_installer_update():
     """Check if the local installer is behind the MAC-Linux branch HEAD on GitHub."""
     try:
@@ -658,7 +763,7 @@ INJECTED_JS = """
         }
     });
 
-    /* Performance: GPU compositing hint on canvas */
+    /* Performance: GPU compositing hint on canvas + EZi Panel Themes */
     var style = document.createElement('style');
     style.textContent = [
         'canvas { will-change: transform; }',
@@ -666,6 +771,11 @@ INJECTED_JS = """
         '#_comfy_toast{position:fixed;top:16px;right:16px;background:#333;color:#e0e0e0;padding:10px 18px;',
         'border-radius:8px;font-size:13px;z-index:99999;opacity:0;transition:opacity .3s;pointer-events:none}',
         '#_comfy_toast.show{opacity:1}',
+        /* EZi Panel Themes */
+        '._ezi-theme-dark{--bg:#1a1a1a;--panel-bg:#1e1e28;--node-bg:#252530;--fg:#e0e0e0;--muted:#888;--border:#444;--input-bg:#111;--accent:#e8530a;--accent-hover:#ff7040;--accent-bg:#6e2200;--accent-bg-hover:#8a3000;--text-on-accent:#fff}',
+        '._ezi-theme-pixaroma{--bg:#1a1a1a;--panel-bg:#1e1e28;--node-bg:#252530;--fg:#cccccc;--muted:#888;--border:#444;--input-bg:#111;--accent:#e8530a;--accent-hover:#ff7040;--accent-bg:#6e2200;--accent-bg-hover:#8a3000;--text-on-accent:#fff}',
+        '._ezi-theme-light{--bg:#f0f2f5;--panel-bg:#ffffff;--node-bg:#e2e6eb;--fg:#333;--muted:#666;--border:#c8cdd5;--input-bg:#fff;--accent:#e8530a;--accent-hover:#ff7040;--accent-bg:#ffdcc8;--accent-bg-hover:#ffcbb0;--text-on-accent:#000}',
+        '._ezi-theme-comfyui{/* Uses ComfyUI theme vars applied via JS */}',
     ].join('\\n');
     document.head.appendChild(style);
 
@@ -845,21 +955,38 @@ INJECTED_JS = """
                 '<button id="_cdp_browser" style="' + btnStyle('#2a3a5a') + '">Open in browser</button>' +
                 '</div>' +
 
-                /* theme selector */
+                /* panel theme selector (EZi themes) */
+                '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">' +
+                '<select id="_cdp_panel_theme" style="flex:1;background:var(--input-bg,#111);border:1px solid var(--border,#444);border-radius:5px;' +
+                'padding:5px 8px;font-size:12px;color:var(--fg,#e0e0e0)">' +
+                '<option value="comfyui">Panel Theme: ComfyUI (auto)</option>' +
+                '<option value="dark">Panel Theme: EZi Dark</option>' +
+                '<option value="pixaroma">Panel Theme: Pixaroma</option>' +
+                '<option value="light">Panel Theme: EZi Light</option>' +
+                '</select>' +
+                '<button id="_cdp_panel_theme_apply" style="' + btnStyle('#2a3a5a') + '">Apply</button>' +
+                '</div>' +
+
+                /* ComfyUI theme selector (actual ComfyUI palette) */
                 '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">' +
                 '<select id="_cdp_theme" style="flex:1;background:var(--input-bg,#111);border:1px solid var(--border,#444);border-radius:5px;' +
                 'padding:5px 8px;font-size:12px;color:var(--fg,#e0e0e0)">' +
-                '<option value="">Theme (loading\u2026)</option></select>' +
-                '<button id="_cdp_theme_apply" style="' + btnStyle('#2a3a5a') + '">Apply theme</button>' +
+                '<option value="">ComfyUI Theme (loading\u2026)</option></select>' +
+                '<button id="_cdp_theme_apply" style="' + btnStyle('#2a3a5a') + '">Set ComfyUI Theme</button>' +
                 '</div>' +
 
                 /* comfyui version switcher */
                 '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">' +
-                '<select id="_cdp_ver" style="flex:1;background:#111;border:1px solid #444;border-radius:5px;' +
-                'padding:5px 8px;font-size:12px;color:#e0e0e0">' +
+                '<select id="_cdp_ver" style="flex:1;background:var(--input-bg,#111);border:1px solid var(--border,#444);border-radius:5px;' +
+                'padding:5px 8px;font-size:12px;color:var(--fg,#e0e0e0)">' +
                 '<option value="">ComfyUI versions…</option></select>' +
                 '<button id="_cdp_switch" style="' + btnStyle('#3a2a5a') + '">Switch ComfyUI</button>' +
+                '<button id="_cdp_switch_both" style="' + btnStyle('#5a2a5a') + '" title="Switch ComfyUI + auto-install matching frontend">Switch Both</button>' +
                 '</div>' +
+                '<label style="font-size:11px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;margin-bottom:8px;cursor:pointer">' +
+                '<input type="checkbox" id="_cdp_auto_fe" checked> Auto-detect frontend from requirements.txt' +
+                '<span id="_cdp_nightly_badge" style="display:none;background:#ff9800;color:#000;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600;margin-left:auto">NIGHTLY</span>' +
+                '</label>' +
 
                 /* frontend version switcher */
                 '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">' +
@@ -950,6 +1077,57 @@ INJECTED_JS = """
                     /* Trigger ComfyUI to reload so the theme takes effect */
                     setTimeout(function() { window.location.reload(); }, 800);
                 });
+            };
+
+            /* ── Panel Theme (EZi Dark/Light/Pixaroma) ── */
+            /* Map ComfyUI theme IDs to EZi panel themes */
+            var _comfyToPanel = {
+                'dark': 'dark', 'light': 'light', 'github': 'dark', 'nord': 'dark',
+                'solarized': 'dark', 'arc': 'dark', 'pixaroma': 'pixaroma'
+            };
+            function clearInlineThemeVars(el) {
+                var toRemove = [];
+                for (var i = 0; i < el.style.length; i++) {
+                    var prop = el.style[i];
+                    if (prop.startsWith('--')) toRemove.push(prop);
+                }
+                toRemove.forEach(function(p) { el.style.removeProperty(p); });
+            }
+            function applyPanelTheme(themeId) {
+                var inner = document.getElementById('_cdp_inner');
+                if (!inner) return;
+                /* Remove existing theme classes and inline vars */
+                inner.classList.remove('_ezi-theme-dark', '_ezi-theme-pixaroma', '_ezi-theme-light', '_ezi-theme-comfyui');
+                clearInlineThemeVars(inner);
+                /* If auto-sync mode, fetch current ComfyUI theme and map to panel theme */
+                if (!themeId || themeId === 'comfyui') {
+                    inner.classList.add('_ezi-theme-comfyui');
+                    pywebview.api.get_comfy_theme().then(function(raw) {
+                        var t = JSON.parse(raw);
+                        if (!t.error) {
+                            var comfyId = t.palette_id || 'dark';
+                            var panelId = _comfyToPanel[comfyId] || 'dark';
+                            inner.classList.remove('_ezi-theme-dark', '_ezi-theme-pixaroma', '_ezi-theme-light', '_ezi-theme-comfyui');
+                            inner.classList.add('_ezi-theme-' + panelId);
+                            applyTheme(inner, t);
+                        }
+                    });
+                    return;
+                }
+                /* Manual theme selection - clear inline vars so class vars work */
+                inner.classList.add('_ezi-theme-' + themeId);
+            }
+            /* Load saved panel theme */
+            var savedPanelTheme = localStorage.getItem('_comfy_panel_theme') || 'comfyui';
+            document.getElementById('_cdp_panel_theme').value = savedPanelTheme;
+            applyPanelTheme(savedPanelTheme);
+            /* Handle panel theme apply */
+            document.getElementById('_cdp_panel_theme_apply').onclick = function() {
+                var sel = document.getElementById('_cdp_panel_theme');
+                var themeId = sel.value;
+                localStorage.setItem('_comfy_panel_theme', themeId);
+                applyPanelTheme(themeId);
+                setMsg('✓ Panel theme: ' + themeId, '#8f8');
             };
 
             /* ── populate URL field ── */
@@ -1180,6 +1358,45 @@ INJECTED_JS = """
                     else removePanel();
                 });
             };
+
+            /* Combined ComfyUI + Frontend switcher (EZi v3.6.2 feature) */
+            document.getElementById('_cdp_switch_both').onclick = function() {
+                var sel = document.getElementById('_cdp_ver');
+                var tag = sel.value;
+                if (!tag) { setMsg('Select a ComfyUI version first.', '#f88'); return; }
+                var autoFe = document.getElementById('_cdp_auto_fe').checked;
+                var feMode = autoFe ? 'auto' : null;
+                var msg = autoFe ? 'Switching to ' + tag + ' with auto-detected frontend…' : 'Switching to ' + tag + ' (keeping current frontend)…';
+                if (!confirm(msg + ' Server will restart.')) return;
+                setMsg(msg, '#fc8');
+                pywebview.api.switch_version_and_frontend(tag, feMode).then(function(raw) {
+                    var d = JSON.parse(raw);
+                    if (d.error) {
+                        setMsg('Switch failed: ' + d.error, '#f88');
+                        return;
+                    }
+                    var info = d.results || {};
+                    var feInfo = info.frontend || {};
+                    var autoVer = info.auto_detected || 'none';
+                    if (feInfo.ok) {
+                        setMsg('✓ Switched to ' + tag + ' + frontend v' + feInfo.version + ' — restarting…', '#8f8');
+                    } else if (autoVer !== 'none') {
+                        setMsg('✓ Switched to ' + tag + ' (frontend v' + autoVer + ' install pending) — restarting…', '#8f8');
+                    } else {
+                        setMsg('✓ Switched to ' + tag + ' — restarting…', '#8f8');
+                    }
+                    setTimeout(removePanel, 1000);
+                });
+            };
+
+            /* Check if frontend is nightly and show badge */
+            pywebview.api.get_frontend_is_nightly().then(function(raw) {
+                var isNightly = JSON.parse(raw);
+                if (isNightly) {
+                    var badge = document.getElementById('_cdp_nightly_badge');
+                    if (badge) badge.style.display = 'inline';
+                }
+            });
         }
 
         function btnStyle(bg) {
@@ -1463,6 +1680,19 @@ def open_in_webview():
         def get_versions(self):
             """Return list of ComfyUI git tags as a JSON array."""
             return json.dumps(get_comfyui_versions())
+
+        def get_frontend_is_nightly(self):
+            """Return True if installed frontend is a nightly/dev build."""
+            return json.dumps(get_frontend_is_nightly())
+
+        def get_required_frontend(self, tag):
+            """Get the required frontend version for a specific ComfyUI tag."""
+            return json.dumps(get_comfyui_required_frontend(tag))
+
+        def switch_version_and_frontend(self, tag, fe_version=None):
+            """Switch ComfyUI version and auto-install matching frontend.
+            fe_version can be 'auto' to auto-detect from requirements.txt."""
+            return json.dumps(switch_comfyui_and_frontend(tag, fe_version))
 
         def get_comfy_theme(self):
             """Return ComfyUI's active palette CSS vars for the desktop panel."""
