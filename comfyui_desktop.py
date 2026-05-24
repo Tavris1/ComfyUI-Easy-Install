@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Desktop EZi  — PyWebView wrapper
+Desktop EZi v3.6.3 — PyWebView wrapper
 Opens ComfyUI in a native desktop window instead of a browser.
 Part of ComfyUI-Easy-Install by Pixaroma / VenimK
 """
