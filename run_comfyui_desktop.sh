@@ -80,6 +80,61 @@ if [ ! -x "$PYTHON_CMD" ]; then
     fi
 fi
 
+# ─── LINUX: Check and install GTK/Qt backend for pywebview ───
+if [[ "$(uname -s)" == "Linux" ]]; then
+    HAS_GTK_BACKEND=0
+    HAS_QT_BACKEND=0
+
+    $PYTHON_CMD -c "import gi" 2>/dev/null && HAS_GTK_BACKEND=1
+    $PYTHON_CMD -c "import qtpy" 2>/dev/null && HAS_QT_BACKEND=1
+
+    if [ "$HAS_GTK_BACKEND" -eq 0 ] && [ "$HAS_QT_BACKEND" -eq 0 ]; then
+        echo -e "${YELLOW}No pywebview GUI backend found. Attempting to fix...${RESET}"
+
+        # Try pip install of PyGObject first (works if system libgirepository is present)
+        if $PYTHON_CMD -m pip install PyGObject -q 2>/dev/null; then
+            $PYTHON_CMD -c "import gi" 2>/dev/null && HAS_GTK_BACKEND=1 && \
+                echo -e "${GREEN}GTK backend installed via pip.${RESET}"
+        fi
+
+        # If pip failed, install system package and symlink into embedded python
+        if [ "$HAS_GTK_BACKEND" -eq 0 ]; then
+            echo -e "${YELLOW}Trying system package (requires sudo)...${RESET}"
+            if command -v apt-get >/dev/null 2>&1; then
+                sudo apt-get install -y python3-gi python3-gi-cairo gir1.2-gtk-3.0 gir1.2-webkit2-4.1 2>/dev/null || \
+                sudo apt-get install -y python3-gi python3-gi-cairo gir1.2-gtk-3.0 gir1.2-webkit2-4.0 2>/dev/null || true
+                SYS_GI=$(python3 -c "import gi; import os; print(os.path.dirname(gi.__file__))" 2>/dev/null)
+                EMBED_SITE=$($PYTHON_CMD -c "import site; print(site.getsitepackages()[0])" 2>/dev/null)
+                if [ -n "$SYS_GI" ] && [ -n "$EMBED_SITE" ]; then
+                    ln -sf "$SYS_GI" "$EMBED_SITE/gi" 2>/dev/null || true
+                    $PYTHON_CMD -c "import gi" 2>/dev/null && HAS_GTK_BACKEND=1 && \
+                        echo -e "${GREEN}GTK backend linked from system Python.${RESET}"
+                fi
+            fi
+        fi
+
+        # Fallback: Qt backend via pip
+        if [ "$HAS_GTK_BACKEND" -eq 0 ] && [ "$HAS_QT_BACKEND" -eq 0 ]; then
+            echo -e "${YELLOW}Trying Qt backend (PyQt6 + qtpy)...${RESET}"
+            if $PYTHON_CMD -m pip install PyQt6 qtpy -q 2>/dev/null; then
+                $PYTHON_CMD -c "import qtpy" 2>/dev/null && HAS_QT_BACKEND=1 && \
+                    echo -e "${GREEN}Qt backend installed via pip.${RESET}"
+            fi
+        fi
+
+        if [ "$HAS_GTK_BACKEND" -eq 0 ] && [ "$HAS_QT_BACKEND" -eq 0 ]; then
+            echo -e "${RED}Could not install a pywebview GUI backend automatically.${RESET}"
+            echo -e "${YELLOW}Manual fix — Option 1 (GTK, recommended for Ubuntu/Pop!_OS/Debian):${RESET}"
+            echo -e "  sudo apt-get install python3-gi python3-gi-cairo gir1.2-gtk-3.0 gir1.2-webkit2-4.1"
+            echo -e "  SYS_GI=\$(python3 -c \"import gi,os; print(os.path.dirname(gi.__file__))\")"
+            echo -e "  ln -s \$SYS_GI \$(./python_embeded/python -c \"import site; print(site.getsitepackages()[0])\")/gi"
+            echo -e "${YELLOW}Manual fix — Option 2 (Qt, no sudo needed):${RESET}"
+            echo -e "  ./python_embeded/python -m pip install PyQt6 qtpy"
+            echo -e "${YELLOW}ComfyUI will open in your browser for now.${RESET}"
+        fi
+    fi
+fi
+
 # Check if pywebview is available
 HAS_WEBVIEW=0
 $PYTHON_CMD -c "import webview" 2>/dev/null && HAS_WEBVIEW=1
