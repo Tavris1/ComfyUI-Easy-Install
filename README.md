@@ -97,12 +97,12 @@ The new Desktop version brings portable flexibility together with the comfort of
     - **ComfyUI-Version-Switcher** - ***Reversible** rollback to a **previous** ComfyUI version in case of issues*
     - **Toggle-DynamicVRAM** - *Toggles **--disable-dynamic-vram** option in ComfyUI startup files*
     - **Update Easy-Install** - *Updates **Add-ons** and other folders. Creates desktop shortcuts*
-    - **EZi Desktop Themes** - *via EZi Desktop Menu > Advanced*
-    - **Custom Input, Output & User folders** - *via EZi Desktop Menu > Advanced*
-    - **ComfyUI and Frontend versions changer** - *via EZi Desktop Menu > Advanced*
+    - **EZi Desktop Themes** - *via EZi Desktop > Menu > Advanced*
+    - **Custom Input, Output & User folders** - *via EZi Desktop > Menu > Advanced*
+    - **ComfyUI and Frontend versions changer** - *via EZi Desktop > Menu > Advanced*
     - **UV & PIP cache cleaner** - *via EZi Desktop Menu*
-    - **ComfyUI-Manager Security-Level Config** - *Easy configuration of security_level via EZi Desktop Menu*
-    - **Pinned-Packages-Manager** - *Freeze package versions such as NumPy==1.26.4 via EZi Desktop Menu*
+    - **ComfyUI-Manager Security-Level Config** - *Easy configuration of security_level via EZi Desktop > Menu*
+    - **Pinned-Packages-Manager** - *Freeze package versions such as NumPy==1.26.4 via EZi Desktop > Menu*
 
 > [!IMPORTANT]
 > - Do not run the installer as **Administrator**.
