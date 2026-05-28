@@ -205,26 +205,55 @@ except: pass
     fi
 fi
 
+# Function to start ComfyUI server
+start_server() {
+    echo -e "${GREEN}Starting ComfyUI server on port ${PORT}...${RESET}"
+    $PYTHON_CMD -W ignore::FutureWarning "$COMFYUI_DIR/main.py" \
+        --port "$PORT" \
+        --listen 127.0.0.1 \
+        "${EXTRA_ARGS[@]}" "${SAVED_ARGS[@]}" &
+    SERVER_PID=$!
+    echo "$SERVER_PID" > "$PID_FILE"
+}
+
 # Start ComfyUI server in the background
-echo -e "${GREEN}Starting ComfyUI server on port ${PORT}...${RESET}"
-$PYTHON_CMD -W ignore::FutureWarning "$COMFYUI_DIR/main.py" \
-    --port "$PORT" \
-    --listen 127.0.0.1 \
-    "${EXTRA_ARGS[@]}" "${SAVED_ARGS[@]}" &
-SERVER_PID=$!
-echo "$SERVER_PID" > "$PID_FILE"
+start_server
 
 # Launch desktop wrapper (it waits for server, then opens window or browser)
 export COMFYUI_HOST="$HOST"
 export COMFYUI_PORT="$PORT"
 export COMFYUI_REMOTE=0
 echo -e "${GREEN}Launching EZi Desktop ...${RESET}"
-$PYTHON_CMD "$SCRIPT_DIR/comfyui_desktop.py"
 
-# If pywebview window was closed, server will be killed by cleanup trap
-# If running in browser mode, wait for the server process
 if [ "$HAS_WEBVIEW" -eq 0 ]; then
+    # Browser mode: no desktop wrapper, just wait for server
     echo -e "${YELLOW}ComfyUI is running at http://127.0.0.1:${PORT}${RESET}"
     echo -e "${YELLOW}Press Ctrl+C to stop${RESET}"
     wait "$SERVER_PID" 2>/dev/null || true
+else
+    # Desktop mode: run wrapper in background and monitor both processes
+    $PYTHON_CMD "$SCRIPT_DIR/comfyui_desktop.py" &
+    DESKTOP_PID=$!
+
+    # Server restart loop: restart server when killed (for version switching)
+    # but stop when desktop wrapper exits
+    while kill -0 "$DESKTOP_PID" 2>/dev/null; do
+        # Wait for server to exit
+        if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+            # Server died - check if desktop is still running
+            if kill -0 "$DESKTOP_PID" 2>/dev/null; then
+                echo -e "${YELLOW}Server stopped, restarting...${RESET}"
+                sleep 1
+                start_server
+            fi
+        fi
+        sleep 1
+    done
+
+    # Desktop wrapper exited - clean up server
+    echo -e "${YELLOW}Desktop closed, stopping server...${RESET}"
+    if kill -0 "$SERVER_PID" 2>/dev/null; then
+        kill "$SERVER_PID" 2>/dev/null || true
+        wait "$SERVER_PID" 2>/dev/null || true
+    fi
 fi
