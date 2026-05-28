@@ -188,6 +188,33 @@ bash Add-Ons/backup_comfyui.sh
 
 ---
 
+## 🖥️ EZi Desktop (Native Window Mode)
+
+Run ComfyUI in a native desktop window instead of a browser:
+
+```bash
+./run_comfyui_desktop.sh
+```
+
+| ⌨️ Action | 🍎 macOS | 🐧 Linux |
+|---|---|---|
+| Open Desktop Settings panel | `Cmd+Shift+I` | `Ctrl+Shift+I` |
+| Open ComfyUI in browser | `Cmd+B` | `Ctrl+B` |
+
+> [!NOTE]
+> On Linux, pywebview requires a GTK or Qt backend. The launcher will attempt to install it automatically. If it fails, run:
+> ```bash
+> # GTK (recommended for Ubuntu/Pop!_OS/Debian)
+> sudo apt-get install python3-gi python3-gi-cairo gir1.2-gtk-3.0 gir1.2-webkit2-4.1
+> SYS_GI=$(python3 -c "import gi,os; print(os.path.dirname(gi.__file__))")
+> ln -s "$SYS_GI" "$(./python_embeded/python -c "import site; print(site.getsitepackages()[0])")/gi"
+>
+> # Qt alternative (no sudo needed)
+> ./python_embeded/python -m pip install PyQt6 qtpy
+> ```
+
+---
+
 <div align="center">
 
 ## ❤️ Support Me
