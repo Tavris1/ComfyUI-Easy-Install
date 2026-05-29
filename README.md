@@ -31,9 +31,17 @@ Dedicated to the **Pixaroma** team
 
 </div>
 
-ComfyUI-Easy-Install is a fully configured, portable ComfyUI in one click. No Python setup, no manual dependencies.  
-The new **Desktop app** brings portable flexibility together with the comfort of a traditional desktop application,  
-acting as a **complete ComfyUI & dependency management system**.
+## 🌟 Features
+ComfyUI-Easy-Install is a ***complete portable ComfyUI & dependency management system***  
+that runs through its own dedicated ***EZi Desktop app*** or via any web browser with a one-click setup.  
+No Python or Git setup required, and absolutely no manual dependencies.  
+
+With the built-in app, you can install complex packages like Nunchaku, SageAttention (v2/v3),  
+FlashAttention, InsightFace, and Trellis 2.0 automatically in one click, without any compilation errors.  
+
+The ***advanced management tools*** let you link existing model folders, toggle Dynamic VRAM,  
+freeze package versions (like NumPy==1.26.4), switch PyTorch/CUDA versions on the fly,  
+roll back ComfyUI & frontend versions, clean UV/PIP cache, convert models to GGUF, and much more.
 
 ## 📦 Included Components
 <details>
