@@ -18,7 +18,7 @@
 <div align="center">
 
 # ComfyUI-Easy-Install
-One-click Portable **ComfyUI** installer for **Windows** with EZi Desktop 🔹 Nvidia GPUs  
+One-click Portable **ComfyUI** installer for **Windows** with EZi Desktop app 🔹 Nvidia GPUs  
 [![GitHub Release](https://img.shields.io/github/v/release/Tavris1/ComfyUI-Easy-Install)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
 [![GitHub Release Date](https://img.shields.io/github/release-date/Tavris1/ComfyUI-Easy-Install?style=flat)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
 [![GitHub All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
