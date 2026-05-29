@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Desktop EZi v3.6.3 — PyWebView wrapper
+Desktop EZi v3.6.5 — PyWebView wrapper
 Opens ComfyUI in a native desktop window instead of a browser.
 Part of ComfyUI-Easy-Install by Pixaroma / VenimK
 """
@@ -937,14 +937,16 @@ INJECTED_JS = """
                 '<button id="_cdp_clr" style="' + btnStyle('#5a2727') + '">Clear cache</button>' +
                 '<button id="_cdp_rst" style="' + btnStyle('#5a4010') + '">Restart server</button>' +
                 '<button id="_cdp_inst_upd" style="' + btnStyle('#1a3a3a') + '">Check installer update</button>' +
+                '<div id="_cdp_ezi_upd_badge" style="display:none;background:#3a1a6e;color:#bd93f9;border:1px solid #bd93f9;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:bold;"></div>' +
                 '</div>' +
 
                 /* row 2: folders */
                 '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">' +
-                '<button id="_cdp_fol_out"    style="' + btnStyle('#2a3a5a') + '">📂 Output</button>' +
-                '<button id="_cdp_fol_in"     style="' + btnStyle('#2a3a5a') + '">📂 Input</button>' +
-                '<button id="_cdp_fol_models" style="' + btnStyle('#2a3a5a') + '">📂 Models</button>' +
-                '<button id="_cdp_fol_root"   style="' + btnStyle('#2a3a5a') + '">📂 ComfyUI</button>' +
+                '<button id="_cdp_fol_out"       style="' + btnStyle('#2a3a5a') + '">📂 Output</button>' +
+                '<button id="_cdp_fol_in"        style="' + btnStyle('#2a3a5a') + '">📂 Input</button>' +
+                '<button id="_cdp_fol_workflows" style="' + btnStyle('#2a3a5a') + '">📂 Workflows</button>' +
+                '<button id="_cdp_fol_models"    style="' + btnStyle('#2a3a5a') + '">📂 Models</button>' +
+                '<button id="_cdp_fol_root"      style="' + btnStyle('#2a3a5a') + '">📂 ComfyUI</button>' +
                 '</div>' +
 
                 /* row 3: url + browser */
@@ -1337,10 +1339,25 @@ INJECTED_JS = """
                 });
             };
 
-            document.getElementById('_cdp_fol_out').onclick    = function(){ pywebview.api.open_folder('output'); };
-            document.getElementById('_cdp_fol_in').onclick     = function(){ pywebview.api.open_folder('input'); };
-            document.getElementById('_cdp_fol_models').onclick = function(){ pywebview.api.open_folder('models'); };
-            document.getElementById('_cdp_fol_root').onclick   = function(){ pywebview.api.open_folder('comfyui'); };
+            document.getElementById('_cdp_fol_out').onclick       = function(){ pywebview.api.open_folder('output'); };
+            document.getElementById('_cdp_fol_in').onclick          = function(){ pywebview.api.open_folder('input'); };
+            document.getElementById('_cdp_fol_workflows').onclick    = function(){ pywebview.api.open_sub_folder('workflows'); };
+            document.getElementById('_cdp_fol_models').onclick       = function(){ pywebview.api.open_folder('models'); };
+            document.getElementById('_cdp_fol_root').onclick         = function(){ pywebview.api.open_folder('comfyui'); };
+
+            /* ── EZi installer update badge (auto-check on panel open) ── */
+            pywebview.api.check_installer_update().then(function(raw) {
+                try {
+                    var d = JSON.parse(raw);
+                    if (!d.error && !d.up_to_date) {
+                        var badge = document.getElementById('_cdp_ezi_upd_badge');
+                        if (badge) {
+                            badge.textContent = '⬆ Installer update available (' + d.commits_behind + ' commits behind)';
+                            badge.style.display = 'block';
+                        }
+                    }
+                } catch(e) {}
+            });
 
             document.getElementById('_cdp_browser').onclick = function() {
                 pywebview.api.open_browser(); removePanel();
@@ -1830,6 +1847,26 @@ def open_in_webview():
                 "models":  os.path.join(SCRIPT_DIR, "ComfyUI", "models"),
             }
             path = paths.get(target, paths["comfyui"])
+            os.makedirs(path, exist_ok=True)
+            try:
+                if sys.platform == "darwin":
+                    subprocess.Popen(["open", path])
+                else:
+                    subprocess.Popen(["xdg-open", path])
+            except Exception:
+                pass
+
+        def open_sub_folder(self, folder_type):
+            """Open a ComfyUI sub-folder. folder_type: 'workflows'|'input'|'models'"""
+            user_dir = os.path.join(SCRIPT_DIR, "ComfyUI", "user", "default")
+            paths = {
+                "workflows": os.path.join(user_dir, "workflows"),
+                "input":     os.path.join(SCRIPT_DIR, "ComfyUI", "input"),
+                "models":    os.path.join(SCRIPT_DIR, "ComfyUI", "models"),
+            }
+            path = paths.get(folder_type)
+            if not path:
+                return
             os.makedirs(path, exist_ok=True)
             try:
                 if sys.platform == "darwin":
