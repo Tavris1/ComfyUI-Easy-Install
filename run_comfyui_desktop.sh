@@ -231,29 +231,50 @@ if [ "$HAS_WEBVIEW" -eq 0 ]; then
     echo -e "${YELLOW}Press Ctrl+C to stop${RESET}"
     wait "$SERVER_PID" 2>/dev/null || true
 else
-    # Desktop mode: run wrapper in background and monitor both processes
+    # Desktop mode: monitor in background subshell, desktop in foreground
+    # IMPORTANT: pywebview/Cocoa on macOS requires a proper terminal session.
+    # Do NOT run this script with nohup or backgrounded (&) from another process.
+
+    # Background subshell: restart server if killed while desktop is running
+    (
+        sleep 3  # give desktop time to start
+        DPID_FILE="$SCRIPT_DIR/.comfyui_desktop.pid"
+        DESKTOP_PID=""
+        for i in $(seq 1 10); do
+            [ -f "$DPID_FILE" ] && DESKTOP_PID=$(cat "$DPID_FILE") && break
+            sleep 1
+        done
+        [ -z "$DESKTOP_PID" ] && exit 0
+        while kill -0 "$DESKTOP_PID" 2>/dev/null; do
+            CURRENT_PID=$(cat "$PID_FILE" 2>/dev/null || echo "")
+            if [ -n "$CURRENT_PID" ] && ! kill -0 "$CURRENT_PID" 2>/dev/null; then
+                if kill -0 "$DESKTOP_PID" 2>/dev/null; then
+                    echo -e "${YELLOW}Server stopped, restarting...${RESET}"
+                    sleep 1
+                    $PYTHON_CMD -W ignore::FutureWarning "$COMFYUI_DIR/main.py" \
+                        --port "$PORT" \
+                        --listen 127.0.0.1 \
+                        "${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}" \
+                        "${SAVED_ARGS[@]+"${SAVED_ARGS[@]}"}" &
+                    echo "$!" > "$PID_FILE"
+                fi
+            fi
+            sleep 1
+        done
+        echo -e "${YELLOW}Desktop closed, stopping server...${RESET}"
+        FINAL_PID=$(cat "$PID_FILE" 2>/dev/null || echo "")
+        [ -n "$FINAL_PID" ] && kill "$FINAL_PID" 2>/dev/null || true
+        rm -f "$DPID_FILE"
+    ) &
+    MONITOR_PID=$!
+
+    # Write desktop PID for monitor, run desktop in foreground
+    DPID_FILE="$SCRIPT_DIR/.comfyui_desktop.pid"
     $PYTHON_CMD "$SCRIPT_DIR/comfyui_desktop.py" &
     DESKTOP_PID=$!
+    echo "$DESKTOP_PID" > "$DPID_FILE"
+    wait "$DESKTOP_PID" 2>/dev/null || true
 
-    # Server restart loop: restart server when killed (for version switching)
-    # but stop when desktop wrapper exits
-    while kill -0 "$DESKTOP_PID" 2>/dev/null; do
-        # Wait for server to exit
-        if ! kill -0 "$SERVER_PID" 2>/dev/null; then
-            # Server died - check if desktop is still running
-            if kill -0 "$DESKTOP_PID" 2>/dev/null; then
-                echo -e "${YELLOW}Server stopped, restarting...${RESET}"
-                sleep 1
-                start_server
-            fi
-        fi
-        sleep 1
-    done
-
-    # Desktop wrapper exited - clean up server
-    echo -e "${YELLOW}Desktop closed, stopping server...${RESET}"
-    if kill -0 "$SERVER_PID" 2>/dev/null; then
-        kill "$SERVER_PID" 2>/dev/null || true
-        wait "$SERVER_PID" 2>/dev/null || true
-    fi
+    kill "$MONITOR_PID" 2>/dev/null || true
+    rm -f "$DPID_FILE"
 fi
