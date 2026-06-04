@@ -236,3 +236,4 @@ testinstaller
 testinstaller_linux.sh
 comfyui-lxc-standalone-no-clone.sh
 .windsurf/workflows/check-windows-updates.md
+.devin/workflows/check-windows-updates.md
