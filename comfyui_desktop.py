@@ -516,6 +516,112 @@ def set_custom_paths(input_dir, output_dir, user_dir):
         return {"error": str(e)}
 
 
+# ─── ComfyUI-Manager security level ─────────────────────────────────────────
+
+MANAGER_CONFIG_PATH = os.path.join(
+    SCRIPT_DIR, "ComfyUI", "custom_nodes", "ComfyUI-Manager", "config.ini"
+)
+
+
+def get_manager_security_level():
+    """Read security_level from ComfyUI-Manager config.ini."""
+    import configparser
+    try:
+        cfg = configparser.ConfigParser()
+        if os.path.isfile(MANAGER_CONFIG_PATH):
+            cfg.read(MANAGER_CONFIG_PATH)
+            return cfg.get("default", "security_level", fallback="weak")
+    except Exception:
+        pass
+    return "weak"
+
+
+def set_manager_security_level(level):
+    """Write security_level to ComfyUI-Manager config.ini."""
+    import configparser
+    valid = {"weak", "normal", "strong", "semi"}
+    if level not in valid:
+        return {"error": f"Invalid level '{level}'. Must be one of: {sorted(valid)}"}
+    try:
+        cfg = configparser.ConfigParser()
+        if os.path.isfile(MANAGER_CONFIG_PATH):
+            cfg.read(MANAGER_CONFIG_PATH)
+        if not cfg.has_section("default"):
+            cfg.add_section("default")
+        cfg.set("default", "security_level", level)
+        os.makedirs(os.path.dirname(MANAGER_CONFIG_PATH), exist_ok=True)
+        with open(MANAGER_CONFIG_PATH, "w") as f:
+            cfg.write(f)
+        return {"ok": True, "level": level}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+# ─── Pinned packages ──────────────────────────────────────────────────────────
+
+PINNED_PACKAGES_FILE = os.path.join(SCRIPT_DIR, ".pinned_packages.json")
+
+
+def get_pinned_packages():
+    """Return list of pinned package specs, e.g. ['numpy==1.26.4']."""
+    try:
+        if os.path.isfile(PINNED_PACKAGES_FILE):
+            with open(PINNED_PACKAGES_FILE) as f:
+                data = json.load(f)
+            return data if isinstance(data, list) else []
+    except Exception:
+        pass
+    return []
+
+
+def add_pinned_package(spec):
+    """Add a pip package spec to the pinned list. Returns dict."""
+    spec = spec.strip()
+    if not spec:
+        return {"error": "Empty package spec"}
+    try:
+        pkgs = get_pinned_packages()
+        pkg_name = spec.split("==")[0].split(">=")[0].split("<=")[0].split("!=")[0].strip().lower()
+        pkgs = [p for p in pkgs
+                if p.split("==")[0].split(">=")[0].split("<=")[0].split("!=")[0].strip().lower() != pkg_name]
+        pkgs.append(spec)
+        with open(PINNED_PACKAGES_FILE, "w") as f:
+            json.dump(pkgs, f, indent=2)
+        return {"ok": True, "packages": pkgs}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def remove_pinned_package(spec):
+    """Remove a package spec from the pinned list. Returns dict."""
+    try:
+        pkgs = get_pinned_packages()
+        pkgs = [p for p in pkgs if p != spec]
+        with open(PINNED_PACKAGES_FILE, "w") as f:
+            json.dump(pkgs, f, indent=2)
+        return {"ok": True, "packages": pkgs}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def enforce_pinned_packages():
+    """pip-install all pinned packages. Called at startup to enforce versions."""
+    pkgs = get_pinned_packages()
+    if not pkgs:
+        return
+    python = os.path.join(SCRIPT_DIR, "python_embeded", "python")
+    if not os.path.isfile(python):
+        python = sys.executable
+    try:
+        print(f"  Enforcing {len(pkgs)} pinned package(s): {', '.join(pkgs)}")
+        subprocess.run(
+            [python, "-m", "pip", "install", "--quiet"] + pkgs,
+            capture_output=True, timeout=120,
+        )
+    except Exception as e:
+        print(f"  Warning: pinned packages enforcement failed: {e}")
+
+
 _BUILTIN_PALETTES = {
     'dark':      {'bg': '#202020', 'menu_bg': '#171718', 'fg': '#ffffff', 'border': '#4e4e4e', 'input_bg': '#222222', 'accent': '#9a9', 'node_bg': '#353535'},
     'light':     {'bg': '#e9e9e9', 'menu_bg': '#f5f5f5', 'fg': '#222222', 'border': '#bbbbbb', 'input_bg': '#d0d0d0', 'accent': '#4CAF50', 'node_bg': '#f5f5f5'},
@@ -1040,6 +1146,31 @@ INJECTED_JS = """
                 '</div>' +
                 '</div>' +
 
+                /* manager security level */
+                '<hr style="border:none;border-top:1px solid #333;margin:10px 0">' +
+                '<div style="margin-bottom:10px">' +
+                '<div style="font-size:10px;color:var(--muted,#666);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em">ComfyUI-Manager Security Level</div>' +
+                '<div style="display:flex;gap:8px;align-items:center">' +
+                '<select id="_cdp_sec_lvl" style="flex:1;background:var(--input-bg,#111);border:1px solid var(--border,#444);border-radius:5px;padding:5px 8px;font-size:12px;color:var(--fg,#e0e0e0)">' +
+                '<option value="weak">weak</option>' +
+                '<option value="normal">normal</option>' +
+                '<option value="strong">strong</option>' +
+                '</select>' +
+                '<button id="_cdp_sec_apply" style="' + btnStyle('#2a3a5a') + ';padding:5px 12px">Apply</button>' +
+                '</div>' +
+                '</div>' +
+
+                /* pinned packages */
+                '<div style="margin-bottom:12px">' +
+                '<div style="font-size:10px;color:var(--muted,#666);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em">Pinned Packages Manager</div>' +
+                '<div id="_cdp_pins" style="margin-bottom:6px"></div>' +
+                '<div style="display:flex;gap:8px">' +
+                '<input id="_cdp_pin_inp" type="text" placeholder="e.g. numpy==1.26.4" ' +
+                'style="flex:1;background:#111;border:1px solid #444;border-radius:5px;padding:5px 8px;font-size:12px;color:#e0e0e0;outline:none">' +
+                '<button id="_cdp_pin_add" style="' + btnStyle('#2d5a27') + ';padding:5px 12px">Add</button>' +
+                '</div>' +
+                '</div>' +
+
                 '<div id="_cdp_msg" style="font-size:12px;color:#888;min-height:16px"></div>' +
                 '</div>';
 
@@ -1226,6 +1357,64 @@ INJECTED_JS = """
                            d.ok ? '#8f8' : '#f88');
                 });
             };
+
+            /* ── ComfyUI-Manager security level ── */
+            pywebview.api.get_manager_security_level().then(function(raw) {
+                var d = JSON.parse(raw);
+                var sel = document.getElementById('_cdp_sec_lvl');
+                if (sel && d.level) sel.value = d.level;
+            });
+            document.getElementById('_cdp_sec_apply').onclick = function() {
+                var lvl = document.getElementById('_cdp_sec_lvl').value;
+                pywebview.api.set_manager_security_level(lvl).then(function(raw) {
+                    var d = JSON.parse(raw);
+                    setMsg(d.ok ? '\u2713 Security level set to "' + lvl + '" \u2014 restart ComfyUI to apply'
+                                : 'Error: ' + d.error,
+                           d.ok ? '#8f8' : '#f88');
+                });
+            };
+
+            /* ── Pinned packages ── */
+            function refreshPins() {
+                pywebview.api.get_pinned_packages().then(function(raw) {
+                    var pkgs = JSON.parse(raw);
+                    var el = document.getElementById('_cdp_pins');
+                    if (!el) return;
+                    if (!pkgs.length) {
+                        el.innerHTML = '<span style="font-size:11px;color:#555">No pinned packages</span>';
+                        return;
+                    }
+                    el.innerHTML = pkgs.map(function(p) {
+                        return '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">' +
+                               '<span style="color:#8f8;font-size:14px">\u2713</span>' +
+                               '<span style="font-size:12px;color:var(--fg,#e0e0e0);flex:1">' + p + '</span>' +
+                               '<button class="_cdp_pin_rm" data-pkg="' + p.replace(/"/g, '&quot;') + '" ' +
+                               'style="background:none;border:none;color:#888;cursor:pointer;font-size:14px;padding:0 4px" title="Remove">\u2715</button>' +
+                               '</div>';
+                    }).join('');
+                    el.querySelectorAll('._cdp_pin_rm').forEach(function(btn) {
+                        btn.onclick = function() {
+                            var pkg = this.getAttribute('data-pkg');
+                            pywebview.api.remove_pinned_package(pkg).then(function() { refreshPins(); });
+                        };
+                    });
+                });
+            }
+            refreshPins();
+            document.getElementById('_cdp_pin_add').onclick = function() {
+                var spec = document.getElementById('_cdp_pin_inp').value.trim();
+                if (!spec) { setMsg('Enter a package spec (e.g. numpy==1.26.4)', '#f88'); return; }
+                pywebview.api.add_pinned_package(spec).then(function(raw) {
+                    var d = JSON.parse(raw);
+                    if (d.error) { setMsg('Error: ' + d.error, '#f88'); return; }
+                    document.getElementById('_cdp_pin_inp').value = '';
+                    setMsg('\u2713 Pinned: ' + spec + ' (enforced on next start)', '#8f8');
+                    refreshPins();
+                });
+            };
+            document.getElementById('_cdp_pin_inp').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') document.getElementById('_cdp_pin_add').click();
+            });
 
             /* ── installer update check ── */
             document.getElementById('_cdp_inst_upd').onclick = function() {
@@ -1743,6 +1932,26 @@ def open_in_webview():
             """Save custom paths into launch args."""
             return json.dumps(set_custom_paths(input_dir, output_dir, user_dir))
 
+        def get_manager_security_level(self):
+            """Return current ComfyUI-Manager security level."""
+            return json.dumps({"level": get_manager_security_level()})
+
+        def set_manager_security_level(self, level):
+            """Set ComfyUI-Manager security level (restart ComfyUI to apply)."""
+            return json.dumps(set_manager_security_level(level))
+
+        def get_pinned_packages(self):
+            """Return list of pinned package specs."""
+            return json.dumps(get_pinned_packages())
+
+        def add_pinned_package(self, spec):
+            """Add a package spec to the pinned list."""
+            return json.dumps(add_pinned_package(spec))
+
+        def remove_pinned_package(self, spec):
+            """Remove a package spec from the pinned list."""
+            return json.dumps(remove_pinned_package(spec))
+
         def get_runtime_stats(self):
             """Return RAM usage of the ComfyUI server process and system RAM."""
             stats = {}
@@ -2112,6 +2321,9 @@ def main():
             "Another ComfyUI instance may already be running. "
             "Connecting to it instead of starting a new server."
         )
+
+    # Enforce pinned packages before starting
+    enforce_pinned_packages()
 
     # Check for display server
     has_display = (
