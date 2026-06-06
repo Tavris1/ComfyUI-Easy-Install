@@ -539,7 +539,7 @@ def get_manager_security_level():
 def set_manager_security_level(level):
     """Write security_level to ComfyUI-Manager config.ini."""
     import configparser
-    valid = {"weak", "normal", "strong", "semi"}
+    valid = {"weak", "normal-", "normal", "strong"}
     if level not in valid:
         return {"error": f"Invalid level '{level}'. Must be one of: {sorted(valid)}"}
     try:
@@ -555,6 +555,11 @@ def set_manager_security_level(level):
         return {"ok": True, "level": level}
     except Exception as e:
         return {"error": str(e)}
+
+
+def manager_config_exists():
+    """Return True if ComfyUI-Manager is installed and config.ini exists."""
+    return os.path.isfile(MANAGER_CONFIG_PATH)
 
 
 # ─── Pinned packages ──────────────────────────────────────────────────────────
@@ -602,6 +607,34 @@ def remove_pinned_package(spec):
         return {"ok": True, "packages": pkgs}
     except Exception as e:
         return {"error": str(e)}
+
+
+def check_pinned_packages():
+    """Return per-package install status for all pinned specs."""
+    pkgs = get_pinned_packages()
+    if not pkgs:
+        return []
+    python = os.path.join(SCRIPT_DIR, "python_embeded", "python")
+    if not os.path.isfile(python):
+        python = sys.executable
+    installed_map = {}
+    try:
+        r = subprocess.run(
+            [python, "-m", "pip", "list", "--format=json"],
+            capture_output=True, text=True, timeout=20,
+        )
+        if r.returncode == 0:
+            for pkg in json.loads(r.stdout):
+                installed_map[pkg["name"].lower().replace("-", "_")] = pkg["version"]
+    except Exception:
+        pass
+    results = []
+    for spec in pkgs:
+        pkg_name = spec.split("==")[0].split(">=")[0].split("<=")[0].split("!=")[0].strip()
+        key = pkg_name.lower().replace("-", "_")
+        installed_ver = installed_map.get(key)
+        results.append({"spec": spec, "installed": installed_ver, "ok": installed_ver is not None})
+    return results
 
 
 def enforce_pinned_packages():
@@ -1020,162 +1053,150 @@ INJECTED_JS = """
                             'display:flex;align-items:center;justify-content:center;font-family:system-ui';
             overlay.onclick = function(e){ if(e.target===overlay) removePanel(); };
 
+            var S = 'flex:1;background:var(--input-bg,#111);border:1px solid var(--border,#444);border-radius:5px;padding:5px 8px;font-size:12px;color:var(--fg,#e0e0e0)';
+            var BOX_HD = 'font-size:10px;font-weight:bold;text-transform:uppercase;letter-spacing:.06em;color:var(--muted,#888);background:var(--input-bg,#111);padding:4px 10px;border-bottom:1px solid var(--border,#444)';
+            function box(title, body) { return '<div style="border:1px solid var(--accent,#5294e2);border-radius:6px;overflow:hidden;margin-bottom:10px"><div style="'+BOX_HD+'">'+title+'</div><div style="padding:8px 10px">'+body+'</div></div>'; }
             overlay.innerHTML =
+                '<style>' +
+                '#_cdp_inner._ezi-theme-dark{--bg:#0c0e12;--border:#30363d;--fg:#ccc;--muted:#8b949e;--input-bg:#0d1117;--accent:#388bfd;--accent-bg:#0d419d}' +
+                '#_cdp_inner._ezi-theme-pixaroma{--bg:#111;--border:#2e2e2e;--fg:#ccc;--muted:#888;--input-bg:#0d0d0d;--accent:#e8530a;--accent-bg:#6e2200}' +
+                '#_cdp_inner._ezi-theme-light{--bg:#f0f2f5;--border:#c8cdd5;--fg:#24292f;--muted:#57606a;--input-bg:#fff;--accent:#0969da;--accent-bg:#d4e8ff}' +
+                '._cdp_tab{padding:4px 8px;font:bold 11px/1.4 inherit;border:1px solid var(--accent,#5294e2);border-radius:4px;background:none;color:var(--accent,#5294e2);cursor:pointer;transition:all .15s;white-space:nowrap}' +
+                '._cdp_tab:hover,._cdp_tab.on{background:var(--accent-bg,#0d419d);color:#fff}' +
+                '</style>' +
                 '<div id="_cdp_inner" style="background:var(--bg,#1e1e28);border:1px solid var(--border,#444);border-radius:14px;' +
-                'padding:28px 32px;min-width:400px;max-width:540px;color:var(--fg,#e0e0e0)">' +
-
+                'min-width:500px;max-width:600px;color:var(--fg,#e0e0e0);max-height:88vh;overflow-y:auto">' +
                 /* header */
-                '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">' +
-                '<span style="font-size:16px;font-weight:600">⚙ EZi Desktop</span>' +
-                '<button id="_cdp_close" style="background:none;border:none;color:#888;font-size:20px;cursor:pointer;line-height:1">✕</button>' +
+                '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px 6px;flex-shrink:0">' +
+                '<span style="font-size:16px;font-weight:600">\u2699 EZi Desktop</span>' +
+                '<button id="_cdp_close" style="background:none;border:none;color:var(--muted,#888);font-size:20px;cursor:pointer;line-height:1">\u2715</button>' +
                 '</div>' +
-
-                /* system info table */
-                '<table id="_cdp_info" style="width:100%;border-collapse:collapse;font-size:13px">' +
-                '<tr><td colspan="2" style="color:#555;padding-bottom:8px">Loading system info…</td></tr>' +
-                '</table>' +
-
-                '<hr style="border:none;border-top:1px solid #333;margin:14px 0">' +
-
-                /* row 1: update + cache */
-                '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">' +
-                '<button id="_cdp_upd" style="' + btnStyle('#2d5a27') + '">Check ComfyUI update</button>' +
-                '<button id="_cdp_clr" style="' + btnStyle('#5a2727') + '">Clear cache</button>' +
-                '<button id="_cdp_rst" style="' + btnStyle('#5a4010') + '">Restart server</button>' +
-                '<button id="_cdp_inst_upd" style="' + btnStyle('#1a3a3a') + '">Check installer update</button>' +
-                '<div id="_cdp_ezi_upd_badge" style="display:none;background:#3a1a6e;color:#bd93f9;border:1px solid #bd93f9;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:bold;"></div>' +
+                /* tab bar */
+                '<div style="padding:6px 20px 0;border-bottom:1px solid var(--border,#444);flex-shrink:0">' +
+                '<div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;padding-bottom:8px">' +
+                '<button class="_cdp_tab" data-tab="sys">System Info</button>' +
+                '<button class="_cdp_tab" data-tab="add">Add-ons</button>' +
+                '<button class="_cdp_tab" data-tab="tls">Tools</button>' +
+                '<button class="_cdp_tab" data-tab="app">Appearance</button>' +
+                '<button class="_cdp_tab" data-tab="adv">Advanced</button>' +
+                '<button onclick="pywebview.api.open_url(\\'https://github.com/Tavris1/ComfyUI-Easy-Install\\')" style="margin-left:auto;padding:4px 12px;font:bold 11px/1.4 inherit;border:1px solid var(--accent,#5294e2);border-radius:4px;background:none;color:var(--accent,#5294e2);cursor:pointer">\uD83C\uDFE0 Home page</button>' +
+                '</div></div>' +
+                /* scrollable content */
+                '<div id="_cdp_content" style="padding:16px 20px">' +
+                /* TAB: System Info */
+                '<div id="_cdp_t_sys">' +
+                '<table id="_cdp_info" style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:8px"><tr><td colspan="2" style="color:var(--muted,#555)">Loading\u2026</td></tr></table>' +
+                '<div id="_cdp_stats" style="font-size:11px;color:var(--muted,#666);margin-bottom:10px">Loading stats\u2026</div>' +
+                box('Package Cache', '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+                    '<button id="_cdp_upd" style="'+btnStyle('#2d5a27')+'">Check for updates</button>' +
+                    '<button id="_cdp_clr" style="'+btnStyle('#5a2727')+'">Clear cache</button>' +
+                    '<button id="_cdp_rst" style="'+btnStyle('#5a4010')+'">Restart server</button>' +
+                    '</div>') +
                 '</div>' +
-
-                /* row 2: folders */
-                '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">' +
-                '<button id="_cdp_fol_out"       style="' + btnStyle('#2a3a5a') + '">📂 Output</button>' +
-                '<button id="_cdp_fol_in"        style="' + btnStyle('#2a3a5a') + '">📂 Input</button>' +
-                '<button id="_cdp_fol_workflows" style="' + btnStyle('#2a3a5a') + '">📂 Workflows</button>' +
-                '<button id="_cdp_fol_models"    style="' + btnStyle('#2a3a5a') + '">📂 Models</button>' +
-                '<button id="_cdp_fol_root"      style="' + btnStyle('#2a3a5a') + '">📂 ComfyUI</button>' +
+                /* TAB: Add-ons */
+                '<div id="_cdp_t_add">' +
+                '<div id="_cdp_ezi_upd_badge" style="display:none;background:#3a1a6e;color:#bd93f9;border:1px solid #bd93f9;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:bold;margin-bottom:10px"></div>' +
+                box('ComfyUI Version',
+                    '<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">' +
+                    '<select id="_cdp_ver" style="'+S+'"><option value="">versions\u2026</option></select>' +
+                    '<button id="_cdp_switch" style="'+btnStyle('#3a2a5a')+'">Switch</button>' +
+                    '<button id="_cdp_switch_both" style="'+btnStyle('#5a2a5a')+'" title="Switch ComfyUI + auto-install matching frontend">Switch Both</button>' +
+                    '</div><label style="font-size:11px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;cursor:pointer">' +
+                    '<input type="checkbox" id="_cdp_auto_fe" checked> Auto-detect frontend from requirements.txt' +
+                    '<span id="_cdp_nightly_badge" style="display:none;background:#ff9800;color:#000;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600;margin-left:auto">NIGHTLY</span></label>') +
+                box('Frontend Version',
+                    '<div style="display:flex;gap:8px;align-items:center">' +
+                    '<select id="_cdp_fe_ver" style="'+S+'"><option value="">loading\u2026</option></select>' +
+                    '<button id="_cdp_fe_switch" style="'+btnStyle('#3a2a5a')+'">Switch</button></div>') +
+                box('Updates', '<button id="_cdp_inst_upd" style="'+btnStyle('#1a3a3a')+'">Check installer update</button>') +
+                box('\uD83D\uDD25 Torch Pack Installer',
+                    '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">' +
+                    '<select id="_cdp_tp_sel" style="'+S+';flex:1"><option value="">Loading\u2026</option></select>' +
+                    '<button id="_cdp_tp_run" style="'+btnStyle('#3a5a2a')+'">Install</button>' +
+                    '<button id="_cdp_tp_cancel" style="'+btnStyle('#5a2a2a')+'">Cancel</button></div>' +
+                    '<pre id="_cdp_tp_log" style="margin:0;background:var(--input-bg,#0d0d0d);border:1px solid var(--border,#444);border-radius:5px;padding:8px;font-size:11px;color:#c8c8c8;height:180px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;font-family:monospace">Select a script and click Install\u2026</pre>') +
                 '</div>' +
-
-                /* row 3: url + browser */
-                '<div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">' +
-                '<code id="_cdp_url" style="flex:1;background:#111;border:1px solid #333;border-radius:5px;' +
-                'padding:5px 10px;font-size:12px;color:#7ec8e3;cursor:pointer;overflow:hidden;white-space:nowrap"' +
-                ' title="Click to copy"></code>' +
-                '<button id="_cdp_browser" style="' + btnStyle('#2a3a5a') + '">Open in browser</button>' +
+                /* TAB: Tools */
+                '<div id="_cdp_t_tls">' +
+                box('Server',
+                    '<div style="display:flex;gap:8px;align-items:center">' +
+                    '<code id="_cdp_url" style="flex:1;background:var(--input-bg,#111);border:1px solid var(--border,#333);border-radius:5px;padding:5px 10px;font-size:12px;color:#7ec8e3;cursor:pointer;overflow:hidden;white-space:nowrap" title="Click to copy"></code>' +
+                    '<button id="_cdp_browser" style="'+btnStyle('#2a3a5a')+'">Open in browser</button></div>') +
+                box('Open Folder', '<div style="display:flex;gap:6px;flex-wrap:wrap">' +
+                    '<button id="_cdp_fol_out"       style="'+btnStyle('#2a3a5a')+'">\uD83D\uDCC2 Output</button>' +
+                    '<button id="_cdp_fol_in"        style="'+btnStyle('#2a3a5a')+'">\uD83D\uDCC2 Input</button>' +
+                    '<button id="_cdp_fol_workflows" style="'+btnStyle('#2a3a5a')+'">\uD83D\uDCC2 Workflows</button>' +
+                    '<button id="_cdp_fol_models"    style="'+btnStyle('#2a3a5a')+'">\uD83D\uDCC2 Models</button>' +
+                    '<button id="_cdp_fol_root"      style="'+btnStyle('#2a3a5a')+'">\uD83D\uDCC2 ComfyUI</button></div>') +
+                box('Launch Args (applied on next start)',
+                    '<div style="display:flex;gap:8px"><input id="_cdp_args" type="text" placeholder="e.g. --lowvram --cpu" style="'+S+';outline:none">' +
+                    '<button id="_cdp_args_save" style="'+btnStyle('#2d5a27')+';padding:5px 12px">Save</button></div>') +
+                box('Custom Paths (applied on next start)',
+                    '<div style="display:grid;grid-template-columns:70px 1fr;gap:5px;align-items:center;margin-bottom:8px">' +
+                    '<label style="font-size:11px;color:var(--muted,#666)">Input:</label><input id="_cdp_path_in" type="text" placeholder="default" style="background:var(--input-bg,#111);border:1px solid var(--border,#444);border-radius:4px;padding:4px 7px;font-size:11px;color:var(--fg,#e0e0e0);outline:none">' +
+                    '<label style="font-size:11px;color:var(--muted,#666)">Output:</label><input id="_cdp_path_out" type="text" placeholder="default" style="background:var(--input-bg,#111);border:1px solid var(--border,#444);border-radius:4px;padding:4px 7px;font-size:11px;color:var(--fg,#e0e0e0);outline:none">' +
+                    '<label style="font-size:11px;color:var(--muted,#666)">User:</label><input id="_cdp_path_usr" type="text" placeholder="default" style="background:var(--input-bg,#111);border:1px solid var(--border,#444);border-radius:4px;padding:4px 7px;font-size:11px;color:var(--fg,#e0e0e0);outline:none"></div>' +
+                    '<button id="_cdp_paths_save" style="'+btnStyle('#2d5a27')+';padding:5px 14px">Save paths</button>') +
                 '</div>' +
-
-                /* panel theme selector (EZi themes) */
-                '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">' +
-                '<select id="_cdp_panel_theme" style="flex:1;background:var(--input-bg,#111);border:1px solid var(--border,#444);border-radius:5px;' +
-                'padding:5px 8px;font-size:12px;color:var(--fg,#e0e0e0)">' +
-                '<option value="comfyui">Panel Theme: ComfyUI (auto)</option>' +
-                '<option value="dark">Panel Theme: EZi Dark</option>' +
-                '<option value="pixaroma">Panel Theme: Pixaroma</option>' +
-                '<option value="light">Panel Theme: EZi Light</option>' +
-                '</select>' +
-                '<button id="_cdp_panel_theme_apply" style="' + btnStyle('#2a3a5a') + '">Apply</button>' +
+                /* TAB: Appearance */
+                '<div id="_cdp_t_app">' +
+                box('EZi Panel Theme',
+                    '<div style="display:flex;gap:8px;align-items:center">' +
+                    '<select id="_cdp_panel_theme" style="'+S+'"><option value="comfyui">ComfyUI (auto-sync)</option><option value="dark">EZi Dark</option><option value="pixaroma">Pixaroma \u2014 orange</option><option value="light">EZi Light</option></select>' +
+                    '<button id="_cdp_panel_theme_apply" style="'+btnStyle('#2a3a5a')+'">Apply</button></div>') +
+                box('ComfyUI Node Editor Theme',
+                    '<div style="display:flex;gap:8px;align-items:center">' +
+                    '<select id="_cdp_theme" style="'+S+'"><option value="">Loading\u2026</option></select>' +
+                    '<button id="_cdp_theme_apply" style="'+btnStyle('#2a3a5a')+'">Set Theme</button></div>') +
+                box('View',
+                    '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">' +
+                    '<span style="font-size:12px;color:var(--muted,#888)">Zoom:</span>' +
+                    '<button id="_cdp_zm_out" style="'+btnStyle('#333')+';padding:4px 10px">\u2212</button>' +
+                    '<span id="_cdp_zm_val" style="font-size:12px;color:var(--fg,#e0e0e0);min-width:36px;text-align:center">100%</span>' +
+                    '<button id="_cdp_zm_in"  style="'+btnStyle('#333')+';padding:4px 10px">+</button>' +
+                    '<button id="_cdp_zm_rst" style="'+btnStyle('#333')+';padding:4px 10px;font-size:11px">Reset</button></div>' +
+                    '<label style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="_cdp_aot"> Always on top</label>') +
                 '</div>' +
-
-                /* ComfyUI theme selector (actual ComfyUI palette) */
-                '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">' +
-                '<select id="_cdp_theme" style="flex:1;background:var(--input-bg,#111);border:1px solid var(--border,#444);border-radius:5px;' +
-                'padding:5px 8px;font-size:12px;color:var(--fg,#e0e0e0)">' +
-                '<option value="">ComfyUI Theme (loading\u2026)</option></select>' +
-                '<button id="_cdp_theme_apply" style="' + btnStyle('#2a3a5a') + '">Set ComfyUI Theme</button>' +
-                '</div>' +
-
-                /* comfyui version switcher */
-                '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">' +
-                '<select id="_cdp_ver" style="flex:1;background:var(--input-bg,#111);border:1px solid var(--border,#444);border-radius:5px;' +
-                'padding:5px 8px;font-size:12px;color:var(--fg,#e0e0e0)">' +
-                '<option value="">ComfyUI versions…</option></select>' +
-                '<button id="_cdp_switch" style="' + btnStyle('#3a2a5a') + '">Switch ComfyUI</button>' +
-                '<button id="_cdp_switch_both" style="' + btnStyle('#5a2a5a') + '" title="Switch ComfyUI + auto-install matching frontend">Switch Both</button>' +
-                '</div>' +
-                '<label style="font-size:11px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;margin-bottom:8px;cursor:pointer">' +
-                '<input type="checkbox" id="_cdp_auto_fe" checked> Auto-detect frontend from requirements.txt' +
-                '<span id="_cdp_nightly_badge" style="display:none;background:#ff9800;color:#000;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600;margin-left:auto">NIGHTLY</span>' +
-                '</label>' +
-
-                /* frontend version switcher */
-                '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">' +
-                '<select id="_cdp_fe_ver" style="flex:1;background:#111;border:1px solid #444;border-radius:5px;' +
-                'padding:5px 8px;font-size:12px;color:#e0e0e0">' +
-                '<option value="">Frontend versions (loading…)</option></select>' +
-                '<button id="_cdp_fe_switch" style="' + btnStyle('#3a2a5a') + '">Switch frontend</button>' +
-                '</div>' +
-
-                /* custom paths */
-                '<details style="margin-bottom:10px">' +
-                '<summary style="font-size:12px;color:#888;cursor:pointer;user-select:none">Custom paths (applied on next start)</summary>' +
-                '<div style="margin-top:8px;display:grid;grid-template-columns:80px 1fr;gap:6px;align-items:center">' +
-                '<label style="font-size:11px;color:#666">Input dir:</label>' +
-                '<input id="_cdp_path_in" type="text" placeholder="default" ' +
-                'style="background:#111;border:1px solid #444;border-radius:4px;padding:4px 7px;font-size:11px;color:#e0e0e0;outline:none">' +
-                '<label style="font-size:11px;color:#666">Output dir:</label>' +
-                '<input id="_cdp_path_out" type="text" placeholder="default" ' +
-                'style="background:#111;border:1px solid #444;border-radius:4px;padding:4px 7px;font-size:11px;color:#e0e0e0;outline:none">' +
-                '<label style="font-size:11px;color:#666">User dir:</label>' +
-                '<input id="_cdp_path_usr" type="text" placeholder="default" ' +
-                'style="background:#111;border:1px solid #444;border-radius:4px;padding:4px 7px;font-size:11px;color:#e0e0e0;outline:none">' +
-                '</div>' +
-                '<button id="_cdp_paths_save" style="margin-top:8px;' + btnStyle('#2d5a27') + ';padding:5px 14px">Save paths</button>' +
-                '</details>' +
-
-                /* zoom + always on top */
-                '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">' +
-                '<span style="font-size:12px;color:#888;white-space:nowrap">Zoom:</span>' +
-                '<button id="_cdp_zm_out" style="' + btnStyle('#333') + ';padding:4px 10px">−</button>' +
-                '<span id="_cdp_zm_val" style="font-size:12px;color:#e0e0e0;min-width:36px;text-align:center">100%</span>' +
-                '<button id="_cdp_zm_in"  style="' + btnStyle('#333') + ';padding:4px 10px">+</button>' +
-                '<button id="_cdp_zm_rst" style="' + btnStyle('#333') + ';padding:4px 10px;font-size:11px">Reset</button>' +
-                '<label style="margin-left:12px;font-size:12px;color:#888;display:flex;align-items:center;gap:6px;cursor:pointer">' +
-                '<input type="checkbox" id="_cdp_aot"> Always on top</label>' +
-                '</div>' +
-
-                /* runtime stats */
-                '<div id="_cdp_stats" style="font-size:12px;color:#666;margin-bottom:8px">Loading stats…</div>' +
-
-                /* launch args */
-                '<div style="margin-bottom:12px">' +
-                '<div style="font-size:11px;color:#666;margin-bottom:4px">Extra launch args (saved, applied on next start):</div>' +
-                '<div style="display:flex;gap:8px">' +
-                '<input id="_cdp_args" type="text" placeholder="e.g. --lowvram --cpu" ' +
-                'style="flex:1;background:#111;border:1px solid #444;border-radius:5px;padding:5px 8px;' +
-                'font-size:12px;color:#e0e0e0;outline:none">' +
-                '<button id="_cdp_args_save" style="' + btnStyle('#2d5a27') + ';padding:5px 12px">Save</button>' +
+                /* TAB: Advanced */
+                '<div id="_cdp_t_adv">' +
+                box('ComfyUI-Manager Security Level',
+                    '<div style="position:relative"><div style="display:flex;gap:8px;align-items:center">' +
+                    '<select id="_cdp_sec_lvl" style="'+S+'"><option value="weak">weak</option><option value="normal-">normal-</option><option value="normal">normal</option><option value="strong">strong</option></select>' +
+                    '<button id="_cdp_sec_info" title="Security level info" style="width:20px;height:20px;border-radius:50%;border:1px solid var(--accent,#5294e2);background:none;color:var(--accent,#5294e2);font-size:11px;font-weight:bold;cursor:pointer;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;padding:0">i</button>' +
+                    '<button id="_cdp_sec_apply" style="'+btnStyle('#2a3a5a')+';padding:5px 12px">Apply</button></div>' +
+                    '<div id="_cdp_sec_tip" style="display:none;position:absolute;z-index:10;left:0;top:100%;margin-top:4px;background:var(--bg,#202020);border:1px solid var(--border,#444);border-radius:6px;padding:8px 12px;font-size:11px;color:var(--fg,#e0e0e0);line-height:1.7;max-width:340px;box-shadow:0 4px 16px rgba(0,0,0,.5)">' +
+                    '<b>strong</b> \u2014 blocks high and middle risk features<br><b>normal</b> \u2014 blocks only high risk features<br><b>normal-</b> \u2014 blocks high risk only when --listen is non-localhost<br><b>weak</b> \u2014 all features available</div></div>') +
+                box('Pinned Packages Manager',
+                    '<div id="_cdp_pins" style="margin-bottom:6px"></div>' +
+                    '<div style="display:flex;gap:8px"><input id="_cdp_pin_inp" type="text" placeholder="e.g. numpy==1.26.4" style="'+S+';outline:none">' +
+                    '<button id="_cdp_pin_add" style="'+btnStyle('#2d5a27')+';padding:5px 12px">Add</button></div>') +
                 '</div>' +
                 '</div>' +
-
-                /* manager security level */
-                '<hr style="border:none;border-top:1px solid #333;margin:10px 0">' +
-                '<div style="margin-bottom:10px">' +
-                '<div style="font-size:10px;color:var(--muted,#666);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em">ComfyUI-Manager Security Level</div>' +
-                '<div style="display:flex;gap:8px;align-items:center">' +
-                '<select id="_cdp_sec_lvl" style="flex:1;background:var(--input-bg,#111);border:1px solid var(--border,#444);border-radius:5px;padding:5px 8px;font-size:12px;color:var(--fg,#e0e0e0)">' +
-                '<option value="weak">weak</option>' +
-                '<option value="normal">normal</option>' +
-                '<option value="strong">strong</option>' +
-                '</select>' +
-                '<button id="_cdp_sec_apply" style="' + btnStyle('#2a3a5a') + ';padding:5px 12px">Apply</button>' +
-                '</div>' +
-                '</div>' +
-
-                /* pinned packages */
-                '<div style="margin-bottom:12px">' +
-                '<div style="font-size:10px;color:var(--muted,#666);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em">Pinned Packages Manager</div>' +
-                '<div id="_cdp_pins" style="margin-bottom:6px"></div>' +
-                '<div style="display:flex;gap:8px">' +
-                '<input id="_cdp_pin_inp" type="text" placeholder="e.g. numpy==1.26.4" ' +
-                'style="flex:1;background:#111;border:1px solid #444;border-radius:5px;padding:5px 8px;font-size:12px;color:#e0e0e0;outline:none">' +
-                '<button id="_cdp_pin_add" style="' + btnStyle('#2d5a27') + ';padding:5px 12px">Add</button>' +
-                '</div>' +
-                '</div>' +
-
-                '<div id="_cdp_msg" style="font-size:12px;color:#888;min-height:16px"></div>' +
+                /* footer */
+                '<div style="padding:6px 20px 12px;flex-shrink:0"><div id="_cdp_msg" style="font-size:12px;color:var(--muted,#888);min-height:16px"></div></div>' +
                 '</div>';
 
             document.body.appendChild(overlay);
             document.getElementById('_cdp_close').onclick = removePanel;
+
+            /* ── Tab switching ── */
+            (function() {
+                var _tabs = ['sys','add','tls','app','adv'];
+                function showTab(name) {
+                    _tabs.forEach(function(t) {
+                        document.getElementById('_cdp_t_' + t).style.display = (t === name) ? 'block' : 'none';
+                        var b = document.querySelector('._cdp_tab[data-tab="' + t + '"]');
+                        if (b) b.classList.toggle('on', t === name);
+                    });
+                    try { localStorage.setItem('_cdp_tab', name); } catch(e) {}
+                }
+                document.querySelectorAll('._cdp_tab').forEach(function(b) {
+                    b.addEventListener('click', function() { showTab(this.getAttribute('data-tab')); });
+                });
+                var st = 'sys';
+                try { st = localStorage.getItem('_cdp_tab') || 'sys'; } catch(e) {}
+                showTab(st);
+            })();
 
             /* ── Apply ComfyUI theme to panel + populate theme selector ── */
             pywebview.api.get_comfy_theme().then(function(raw) {
@@ -1373,10 +1394,20 @@ INJECTED_JS = """
                            d.ok ? '#8f8' : '#f88');
                 });
             };
+            (function() {
+                var infoBtn = document.getElementById('_cdp_sec_info');
+                var tip = document.getElementById('_cdp_sec_tip');
+                if (!infoBtn || !tip) return;
+                infoBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    tip.style.display = tip.style.display === 'none' ? 'block' : 'none';
+                };
+                document.addEventListener('click', function() { tip.style.display = 'none'; });
+            })();
 
             /* ── Pinned packages ── */
             function refreshPins() {
-                pywebview.api.get_pinned_packages().then(function(raw) {
+                pywebview.api.check_pinned_packages().then(function(raw) {
                     var pkgs = JSON.parse(raw);
                     var el = document.getElementById('_cdp_pins');
                     if (!el) return;
@@ -1385,10 +1416,13 @@ INJECTED_JS = """
                         return;
                     }
                     el.innerHTML = pkgs.map(function(p) {
+                        var icon = p.ok ? '\u2713' : '\u26a0';
+                        var icol = p.ok ? '#8f8' : '#fa8';
+                        var ver  = p.ok ? (' <span style="font-size:10px;color:#666">' + p.installed + '</span>') : ' <span style="font-size:10px;color:#f88">not installed</span>';
                         return '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">' +
-                               '<span style="color:#8f8;font-size:14px">\u2713</span>' +
-                               '<span style="font-size:12px;color:var(--fg,#e0e0e0);flex:1">' + p + '</span>' +
-                               '<button class="_cdp_pin_rm" data-pkg="' + p.replace(/"/g, '&quot;') + '" ' +
+                               '<span style="color:' + icol + ';font-size:14px">' + icon + '</span>' +
+                               '<span style="font-size:12px;color:var(--fg,#e0e0e0);flex:1">' + p.spec + ver + '</span>' +
+                               '<button class="_cdp_pin_rm" data-pkg="' + p.spec.replace(/"/g, '&quot;') + '" ' +
                                'style="background:none;border:none;color:#888;cursor:pointer;font-size:14px;padding:0 4px" title="Remove">\u2715</button>' +
                                '</div>';
                     }).join('');
@@ -1415,6 +1449,64 @@ INJECTED_JS = """
             document.getElementById('_cdp_pin_inp').addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') document.getElementById('_cdp_pin_add').click();
             });
+
+            /* ── Torch Pack installer ── */
+            (function() {
+                var _tp_iid = null;
+                var _tp_last = 0;
+                /* populate dropdown */
+                pywebview.api.list_torch_packs().then(function(raw) {
+                    var packs = JSON.parse(raw);
+                    var sel = document.getElementById('_cdp_tp_sel');
+                    if (!sel) return;
+                    if (!packs.length) {
+                        sel.innerHTML = '<option value="">No Torch Pack scripts found</option>';
+                        return;
+                    }
+                    var isMac = /mac/i.test(navigator.platform);
+                    sel.innerHTML = packs.map(function(p) {
+                        var label = p.name + (p.mac ? ' \u2014 macOS' : (p.cuda ? ' \u2014 CUDA' : ''));
+                        var hi = (isMac && p.mac) || (!isMac && p.cuda);
+                        return '<option value="' + p.filename + '"' + (hi ? ' style="font-weight:bold;color:#8f8"' : '') + '>' + label + '</option>';
+                    }).join('');
+                });
+                /* install button */
+                document.getElementById('_cdp_tp_run').onclick = function() {
+                    var sel = document.getElementById('_cdp_tp_sel');
+                    var fn = sel ? sel.value : '';
+                    if (!fn) { setMsg('Select a Torch Pack script first.', '#f88'); return; }
+                    var log = document.getElementById('_cdp_tp_log');
+                    if (log) { log.textContent = 'Starting ' + fn + '\u2026\\n'; }
+                    _tp_last = 0;
+                    if (_tp_iid) { clearInterval(_tp_iid); _tp_iid = null; }
+                    pywebview.api.run_torch_pack(fn).then(function(raw) {
+                        var d = JSON.parse(raw);
+                        if (d.error) { if (log) log.textContent += 'ERROR: ' + d.error + '\\n'; return; }
+                        _tp_iid = setInterval(function() {
+                            pywebview.api.get_torch_pack_log().then(function(raw2) {
+                                var ld = JSON.parse(raw2);
+                                if (ld.lines.length > _tp_last) {
+                                    var added = ld.lines.slice(_tp_last).join('\\n');
+                                    if (log) { log.textContent += added + '\\n'; log.scrollTop = log.scrollHeight; }
+                                    _tp_last = ld.lines.length;
+                                }
+                                if (ld.done) {
+                                    clearInterval(_tp_iid); _tp_iid = null;
+                                    if (log) { log.textContent += '\u2014 Done \u2014\\n'; log.scrollTop = log.scrollHeight; }
+                                }
+                            });
+                        }, 500);
+                    });
+                };
+                /* cancel button */
+                document.getElementById('_cdp_tp_cancel').onclick = function() {
+                    if (_tp_iid) { clearInterval(_tp_iid); _tp_iid = null; }
+                    pywebview.api.cancel_torch_pack().then(function() {
+                        var log = document.getElementById('_cdp_tp_log');
+                        if (log) { log.textContent += '\u2014 Cancelled \u2014\\n'; log.scrollTop = log.scrollHeight; }
+                    });
+                };
+            })();
 
             /* ── installer update check ── */
             document.getElementById('_cdp_inst_upd').onclick = function() {
@@ -1952,6 +2044,21 @@ def open_in_webview():
             """Remove a package spec from the pinned list."""
             return json.dumps(remove_pinned_package(spec))
 
+        def manager_config_exists(self):
+            """Return True if ComfyUI-Manager config.ini exists."""
+            return json.dumps(manager_config_exists())
+
+        def check_pinned_packages(self):
+            """Return per-package install status for all pinned specs."""
+            return json.dumps(check_pinned_packages())
+
+        def open_url(self, url):
+            """Open an arbitrary URL in the system browser."""
+            try:
+                webbrowser.open(url)
+            except Exception:
+                pass
+
         def get_runtime_stats(self):
             """Return RAM usage of the ComfyUI server process and system RAM."""
             stats = {}
@@ -2112,6 +2219,88 @@ def open_in_webview():
                     pass
             threading.Thread(target=_do_switch, daemon=True).start()
             return json.dumps({"ok": True, "tag": tag})
+
+        def list_torch_packs(self):
+            """Return metadata for every .sh file in Add-Ons/Torch-Pack/."""
+            tp_dir = os.path.join(SCRIPT_DIR, "Add-Ons", "Torch-Pack")
+            if not os.path.isdir(tp_dir):
+                return json.dumps([])
+            results = []
+            for fname in sorted(os.listdir(tp_dir)):
+                if not fname.endswith(".sh"):
+                    continue
+                is_mac  = "-mac" in fname.lower()
+                is_cuda = any(x in fname for x in ("cu118", "cu121", "cu124", "cu126", "cu128", "cu130"))
+                # derive a pretty display name
+                stem = fname.replace(".sh", "")
+                name = stem.replace("-mac", " (macOS)").replace("+", " ").replace("-", " ")
+                results.append({
+                    "filename": fname,
+                    "name":     name,
+                    "mac":      is_mac,
+                    "cuda":     is_cuda,
+                })
+            return json.dumps(results)
+
+        def run_torch_pack(self, filename):
+            """Launch a Torch-Pack installer script and stream its output."""
+            import re as _re
+            # Safety: filename must be a plain basename ending in .sh, no path separators
+            if not filename or not filename.endswith(".sh") or os.sep in filename or "/" in filename:
+                return json.dumps({"error": "Invalid filename"})
+            tp_dir  = os.path.join(SCRIPT_DIR, "Add-Ons", "Torch-Pack")
+            script  = os.path.join(tp_dir, filename)
+            if not os.path.isfile(script):
+                return json.dumps({"error": "Script not found"})
+            # Kill any previous install still running
+            if getattr(self, "_tp_proc", None) and self._tp_proc.poll() is None:
+                try:
+                    self._tp_proc.terminate()
+                except Exception:
+                    pass
+            self._tp_buf  = []
+            self._tp_done = False
+            _ANSI = _re.compile(r"\x1b\[[0-9;]*[mGKHF]")
+            def _reader(proc):
+                try:
+                    for line in proc.stdout:
+                        self._tp_buf.append(_ANSI.sub("", line.rstrip("\n")))
+                except Exception:
+                    pass
+                finally:
+                    proc.wait()
+                    self._tp_done = True
+            try:
+                proc = subprocess.Popen(
+                    ["bash", script],
+                    cwd=tp_dir,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    bufsize=1,
+                )
+                self._tp_proc = proc
+                threading.Thread(target=_reader, args=(proc,), daemon=True).start()
+                return json.dumps({"ok": True})
+            except Exception as e:
+                return json.dumps({"error": str(e)})
+
+        def get_torch_pack_log(self):
+            """Return accumulated installer output lines and done flag."""
+            lines = list(getattr(self, "_tp_buf", []))
+            done  = bool(getattr(self, "_tp_done", True))
+            return json.dumps({"lines": lines, "done": done})
+
+        def cancel_torch_pack(self):
+            """Kill the running Torch-Pack installer."""
+            proc = getattr(self, "_tp_proc", None)
+            if proc and proc.poll() is None:
+                try:
+                    proc.terminate()
+                except Exception:
+                    pass
+            self._tp_done = True
+            return json.dumps({"ok": True})
 
         def confirm_close(self):
             """Called from JS confirm-close dialog — destroy the window."""
