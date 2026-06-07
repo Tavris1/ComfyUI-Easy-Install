@@ -1,7 +1,10 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.7.1"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.7.2"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
+
+set "GIT_TERMINAL_PROMPT=0"
+set "GIT_ASKPASS=echo"
 
 :: Set Ignoring Large File Storage ::
 set GIT_LFS_SKIP_SMUDGE=1
@@ -130,7 +133,8 @@ call :get_node https://github.com/kijai/ComfyUI-SCAIL-Pose					ComfyUI-SCAIL-Pos
 call :get_node https://github.com/kijai/ComfyUI-MelBandRoFormer				ComfyUI-MelBandRoFormer
 call :get_node https://github.com/flybirdxx/ComfyUI-Qwen-TTS				qwen3-tts-comfyui
 call :get_node https://github.com/Saganaki22/ComfyUI-FishAudioS2			ComfyUI-fish-audio-s2
-call :get_node https://github.com/pixaroma/ComfyUI-Pixaroma					ComfyUI-Pixaroma
+
+call :get_node https://gitlab.com/pixaroma/ComfyUI-Pixaroma.git				ComfyUI-Pixaroma
 
 echo %green%::::::::::::::: %yellow%Installation/Updating SoX%green% :::::::::::::::%reset%
 echo.
