@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Desktop EZi v3.7.0 — PyWebView wrapper
+Desktop EZi v3.7.3 — PyWebView wrapper
 Opens ComfyUI in a native desktop window instead of a browser.
 Part of ComfyUI-Easy-Install by Pixaroma / VenimK
 """
@@ -17,6 +17,8 @@ import urllib.parse
 import base64
 import json
 import subprocess
+
+EZI_VERSION = "3.7.3"
 
 COMFYUI_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
 COMFYUI_PORT = int(os.environ.get("COMFYUI_PORT", 8188))
@@ -1069,6 +1071,7 @@ INJECTED_JS = """
                 /* header */
                 '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px 6px;flex-shrink:0">' +
                 '<span style="font-size:16px;font-weight:600">\u2699 EZi Desktop</span>' +
+                '<span style="font-size:11px;color:var(--muted,#888);margin-left:8px">v' + EZI_VERSION + '</span>' +
                 '<button id="_cdp_close" style="background:none;border:none;color:var(--muted,#888);font-size:20px;cursor:pointer;line-height:1">\u2715</button>' +
                 '</div>' +
                 /* tab bar */
@@ -2385,7 +2388,7 @@ def open_in_webview():
             return
         # Subsequent loads = ComfyUI page — inject JS
         try:
-            window.evaluate_js(INJECTED_JS)
+            window.evaluate_js(f"const EZI_VERSION={repr(EZI_VERSION)};\n" + INJECTED_JS)
         except Exception:
             pass
 

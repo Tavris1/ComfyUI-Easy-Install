@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v3.7.0
+# Title ComfyUI-Easy-Install  NEXT by ivo v3.7.3
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -25,6 +25,7 @@ fi
 # Set Ignoring Large File Storage
 export GIT_LFS_SKIP_SMUDGE=1
 export GIT_TERMINAL_PROMPT=0
+export GIT_ASKPASS=echo
 
 # Disable IPv6 to prevent hanging in LXC containers
 echo -e "${YELLOW}Disabling IPv6 to prevent network hangs...${RESET}"
@@ -558,7 +559,7 @@ get_node https://github.com/Saganaki22/ComfyUI-FishAudioS2 ComfyUI-fish-audio-s2
 get_node https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler seedvr2_videoupscaler
 get_node https://github.com/chflame163/ComfyUI_LayerStyle comfyui_layerstyle
 get_node https://github.com/kijai/ComfyUI-WanAnimatePreprocess ComfyUI-WanAnimatePreprocess
-get_node https://github.com/pixaroma/ComfyUI-Pixaroma ComfyUI-Pixaroma
+get_node https://gitlab.com/pixaroma/ComfyUI-Pixaroma.git ComfyUI-Pixaroma
 if [ "$(uname -s)" = "Darwin" ]; then
     echo -e "${YELLOW}Skipping comfyui-easy-sam3 on macOS (requires triton/CUDA).${RESET}"
 else
