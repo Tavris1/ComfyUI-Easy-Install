@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.8.0"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.8.1"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -15,7 +15,7 @@ set "UVargs=--no-cache --link-mode=copy"
 
 :: Add a path just in case ::
 for /f "delims=" %%G in ('cmd /c "where.exe git.exe 2>nul"') do (set "GIT_PATH=%%~dpG")
-set "path=%GIT_PATH%;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0;%localappdata%\Microsoft\WindowsApps
+set "path=%GIT_PATH%;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0;%localappdata%\Microsoft\WindowsApps;%path%"
 
 call :SET_COLORS
 call :NVIDIA_DRIVER_CHECK
@@ -89,6 +89,7 @@ call :install_comfyui
 echo %green%::::::::::::::: %yellow%Pre-installation of required modules%green% :::::::::::::::%reset%
 echo.
 REM .\python_embeded\python.exe -I -m uv pip install requests==2.31.0 urllib3==2.6.3 charset_normalizer==3.4.4
+.\python_embeded\python.exe -I -m uv pip install scipy==1.17.1 %UVargs%
 .\python_embeded\python.exe -I -m uv pip install chardet==5.2.0 %UVargs%
 .\python_embeded\python.exe -I -m uv pip install scikit-build-core %UVargs%
 .\python_embeded\python.exe -I -m uv pip install onnxruntime-gpu %UVargs%
@@ -136,11 +137,25 @@ call :get_node https://github.com/Saganaki22/ComfyUI-FishAudioS2			ComfyUI-fish-
 
 call :get_node https://gitlab.com/pixaroma/ComfyUI-Pixaroma.git				ComfyUI-Pixaroma
 
-echo %green%::::::::::::::: %yellow%Installation/Updating SoX%green% :::::::::::::::%reset%
+:: Check if SoX is already installed - skip silently if found
+where sox.exe >nul 2>&1
+if not errorlevel 1 goto SkipSoX
+
 echo.
-winget.exe install --id ChrisBagwell.SoX -e --accept-source-agreements --accept-package-agreements --silent
+echo %green%::::::::::::::::::::: %yellow%Checking SoX%green% :::::::::::::::::::::%reset%
+echo.
+winget.exe list --id ChrisBagwell.SoX 2>nul | findstr /i "ChrisBagwell.SoX" >nul
+if errorlevel 1 (
+    echo %green%:::::::::::::::::::: %yellow%Installing SoX%green% ::::::::::::::::::::%reset%
+    winget.exe install --id ChrisBagwell.SoX -e --accept-source-agreements --accept-package-agreements --silent
+) else (
+    winget.exe upgrade --id ChrisBagwell.SoX -e --accept-source-agreements --accept-package-agreements --silent >nul 2>nul
+)
+
+:SkipSoX
 cd .\
 echo.
+
 
 if not exist ".\ComfyUI\custom_nodes\.disabled" mkdir ".\ComfyUI\custom_nodes\.disabled"
 
