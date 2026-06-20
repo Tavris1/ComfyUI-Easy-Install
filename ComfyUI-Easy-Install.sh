@@ -581,32 +581,36 @@ fi
 # bash Add-Ons/SageAttention-NEXT.sh NoPause
 
 # Install SoX (required by some audio/TTS nodes)
-echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}SoX${GREEN} :::::::::::::::${RESET}"
-if [ "$(uname -s)" = "Darwin" ]; then
-    if command -v brew >/dev/null 2>&1; then
-        brew install sox || true
-    else
-        echo -e "${YELLOW}Homebrew not found. Please install SoX manually.${RESET}"
-    fi
-elif [ "$(uname -s)" = "Linux" ]; then
-    SUDO_CMD=""
-    if [ "$(id -u)" -ne 0 ]; then
-        SUDO_CMD="sudo"
-    fi
+if command -v sox >/dev/null 2>&1; then
+    echo -e "${GREEN}::::::::::::::: ${YELLOW}SoX${GREEN} already installed — skipping${RESET}"
+else
+    echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}SoX${GREEN} :::::::::::::::${RESET}"
+    if [ "$(uname -s)" = "Darwin" ]; then
+        if command -v brew >/dev/null 2>&1; then
+            brew install sox || true
+        else
+            echo -e "${YELLOW}Homebrew not found. Please install SoX manually.${RESET}"
+        fi
+    elif [ "$(uname -s)" = "Linux" ]; then
+        SUDO_CMD=""
+        if [ "$(id -u)" -ne 0 ]; then
+            SUDO_CMD="sudo"
+        fi
 
-    if command -v apt-get >/dev/null 2>&1; then
-        $SUDO_CMD apt-get update
-        $SUDO_CMD apt-get install -y sox || true
-    elif command -v dnf >/dev/null 2>&1; then
-        $SUDO_CMD dnf install -y sox || true
-    elif command -v yum >/dev/null 2>&1; then
-        $SUDO_CMD yum install -y sox || true
-    elif command -v pacman >/dev/null 2>&1; then
-        $SUDO_CMD pacman -S --needed --noconfirm sox || true
-    elif command -v zypper >/dev/null 2>&1; then
-        $SUDO_CMD zypper --non-interactive install sox || true
-    else
-        echo -e "${YELLOW}Could not determine package manager. Please install SoX manually.${RESET}"
+        if command -v apt-get >/dev/null 2>&1; then
+            $SUDO_CMD apt-get update
+            $SUDO_CMD apt-get install -y sox || true
+        elif command -v dnf >/dev/null 2>&1; then
+            $SUDO_CMD dnf install -y sox || true
+        elif command -v yum >/dev/null 2>&1; then
+            $SUDO_CMD yum install -y sox || true
+        elif command -v pacman >/dev/null 2>&1; then
+            $SUDO_CMD pacman -S --needed --noconfirm sox || true
+        elif command -v zypper >/dev/null 2>&1; then
+            $SUDO_CMD zypper --non-interactive install sox || true
+        else
+            echo -e "${YELLOW}Could not determine package manager. Please install SoX manually.${RESET}"
+        fi
     fi
 fi
 echo
