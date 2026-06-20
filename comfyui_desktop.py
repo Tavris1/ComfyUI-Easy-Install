@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Desktop EZi v3.7.3 — PyWebView wrapper
+Desktop EZi v3.8.0 — PyWebView wrapper
 Opens ComfyUI in a native desktop window instead of a browser.
 Part of ComfyUI-Easy-Install by Pixaroma / VenimK
 """
@@ -18,7 +18,7 @@ import base64
 import json
 import subprocess
 
-EZI_VERSION = "3.7.3"
+EZI_VERSION = "3.8.0"
 
 COMFYUI_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
 COMFYUI_PORT = int(os.environ.get("COMFYUI_PORT", 8188))
@@ -2019,6 +2019,48 @@ def open_in_webview():
             """Check GitHub for a newer ComfyUI-Easy-Install release."""
             return json.dumps(check_installer_update())
 
+        def _check_ezi_update(self):
+            """Background: poll GitHub releases to see if a newer EZi Desktop is available."""
+            try:
+                import urllib.request as _ur
+                url = "https://api.github.com/repos/Tavris1/ComfyUI-Easy-Install/releases/latest"
+                req = _ur.Request(url, headers={"User-Agent": "ComfyUI-Desktop-Mac"})
+                with _ur.urlopen(req, timeout=8) as r:
+                    data = json.loads(r.read())
+                tag = data.get("tag_name", "").strip().lstrip("v")
+                if not tag:
+                    return
+                local_parts  = [int(x) for x in EZI_VERSION.split(".") if x.isdigit()]
+                remote_parts = [int(x) for x in tag.split(".")      if x.isdigit()]
+                if remote_parts > local_parts:
+                    display = "v" + tag
+                    safe = display.replace("'", "\\'")
+                    self._toast(f"EZi Desktop {safe} available — visit GitHub to update")
+            except Exception:
+                pass
+
+        def get_ui_settings(self):
+            """Return persisted UI settings as JSON."""
+            state = load_window_state()
+            settings = state.get("ui_settings", {})
+            return json.dumps(settings)
+
+        def save_ui_settings(self, settings_json):
+            """Persist UI settings (theme, zoom, etc.) to window state file."""
+            try:
+                if not settings_json or not isinstance(settings_json, str):
+                    return json.dumps({"error": "invalid input"})
+                data = json.loads(settings_json)
+                if not isinstance(data, dict):
+                    return json.dumps({"error": "not a dict"})
+                state = load_window_state()
+                state["ui_settings"] = data
+                with open(WINDOW_STATE_FILE, "w") as f:
+                    json.dump(state, f)
+                return json.dumps({"ok": True})
+            except Exception as e:
+                return json.dumps({"error": str(e)})
+
         def get_custom_paths(self):
             """Return saved custom input/output/user paths."""
             return json.dumps(get_custom_paths())
@@ -2208,6 +2250,16 @@ def open_in_webview():
             except Exception as e:
                 return json.dumps({"error": str(e)})
 
+        def retry(self, cols=0):
+            """Restart ComfyUI with optional custom TQDM column width."""
+            try:
+                if cols and int(cols) > 0:
+                    os.environ['TQDM_NCOLS'] = str(max(40, int(cols)))
+            except Exception:
+                pass
+            self.restart_server()
+            return json.dumps({"ok": True})
+
         def switch_version(self, tag):
             """Git checkout a specific ComfyUI tag then restart the server."""
             comfy_dir = os.path.join(SCRIPT_DIR, "ComfyUI")
@@ -2365,6 +2417,11 @@ def open_in_webview():
                 window.load_url(COMFYUI_URL)
             except Exception:
                 pass
+            # After server is up, check for EZi Desktop updates in background
+            try:
+                api._check_ezi_update()
+            except Exception:
+                pass
         else:
             # Server unreachable — show error in the splash
             try:
@@ -2451,7 +2508,39 @@ def open_in_webview():
         return False
 
     def on_closed():
-        """When the window is closed, save state and signal the server process."""
+        """When the window is closed, save state, backup ComfyUI storage, and signal the server process."""
+        # Try to backup ComfyUI localStorage/sessionStorage before exit
+        try:
+            result = window.evaluate_js("""
+                (function() {
+                    try {
+                        var out = { ls: {}, ss: {} };
+                        try {
+                            var ls = window.localStorage;
+                            for (var i = 0; i < ls.length; i++) {
+                                var k = ls.key(i);
+                                if (k) out.ls[k] = ls.getItem(k);
+                            }
+                        } catch(e) {}
+                        try {
+                            var ss = window.sessionStorage;
+                            for (var j = 0; j < ss.length; j++) {
+                                var sk = ss.key(j);
+                                if (sk) out.ss[sk] = ss.getItem(sk);
+                            }
+                        } catch(e) {}
+                        return JSON.stringify(out);
+                    } catch(e) { return null; }
+                })();
+            """)
+            if result:
+                state = load_window_state()
+                state["comfy_storage"] = json.loads(result)
+                with open(WINDOW_STATE_FILE, "w") as f:
+                    json.dump(state, f)
+        except Exception:
+            pass
+
         save_window_state(window)
         if COMFYUI_REMOTE:
             return
