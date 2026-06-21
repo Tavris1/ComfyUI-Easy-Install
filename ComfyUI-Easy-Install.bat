@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.8.1"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.8.2"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -144,12 +144,9 @@ if not errorlevel 1 goto SkipSoX
 echo.
 echo %green%::::::::::::::::::::: %yellow%Checking SoX%green% :::::::::::::::::::::%reset%
 echo.
-winget.exe list --id ChrisBagwell.SoX 2>nul | findstr /i "ChrisBagwell.SoX" >nul
-if errorlevel 1 (
-    echo %green%:::::::::::::::::::: %yellow%Installing SoX%green% ::::::::::::::::::::%reset%
-    winget.exe install --id ChrisBagwell.SoX -e --accept-source-agreements --accept-package-agreements --silent
-) else (
-    winget.exe upgrade --id ChrisBagwell.SoX -e --accept-source-agreements --accept-package-agreements --silent >nul 2>nul
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='SilentlyContinue'; $o=Join-Path $env:TEMP 'cei_sox_out.tmp'; $e=Join-Path $env:TEMP 'cei_sox_err.tmp'; function RunW($a,$t){$p=Start-Process -FilePath 'winget.exe' -ArgumentList $a -NoNewWindow -PassThru -RedirectStandardOutput $o -RedirectStandardError $e; if(-not $p.WaitForExit($t*1000)){try{$p.Kill()}catch{}; return $false}; return $true}; $ok=RunW @('list','--id','ChrisBagwell.SoX','--accept-source-agreements','--disable-interactivity') 40; if(-not $ok){exit 2}; $out=Get-Content $o -Raw -ErrorAction SilentlyContinue; if($out -match 'ChrisBagwell\.SoX'){$ok2=RunW @('upgrade','--id','ChrisBagwell.SoX','-e','--accept-source-agreements','--accept-package-agreements','--silent','--disable-interactivity') 180}else{Write-Host 'Installing SoX...'; $ok2=RunW @('install','--id','ChrisBagwell.SoX','-e','--accept-source-agreements','--accept-package-agreements','--silent','--disable-interactivity') 180}; if(-not $ok2){exit 2}else{exit 0}"
+if errorlevel 2 (
+    echo %warning%WARNING:%reset% winget did not respond in time - skipping SoX. You can install it later from %yellow%https://sourceforge.net/projects/sox/%reset%
 )
 
 :SkipSoX
