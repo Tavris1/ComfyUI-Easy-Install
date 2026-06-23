@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Desktop EZi v3.8.0 — PyWebView wrapper
+Desktop EZi v3.8.3 — PyWebView wrapper
 Opens ComfyUI in a native desktop window instead of a browser.
 Part of ComfyUI-Easy-Install by Pixaroma / VenimK
 """
@@ -18,7 +18,7 @@ import base64
 import json
 import subprocess
 
-EZI_VERSION = "3.8.0"
+EZI_VERSION = "3.8.3"
 
 COMFYUI_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
 COMFYUI_PORT = int(os.environ.get("COMFYUI_PORT", 8188))
@@ -2369,6 +2369,85 @@ def open_in_webview():
             """Called from JS confirm-close dialog — dismiss and keep open."""
             self._confirm_close = False
 
+        def set_title(self, suffix: str = ""):
+            """Set the window title, optionally with a status suffix."""
+            if not self._window:
+                return
+            try:
+                t = f"EZi Desktop  v{EZI_VERSION}"
+                self._window.set_title(t + (f" - {suffix}" if suffix else ""))
+            except Exception:
+                pass
+
+        def ui_shown(self):
+            """Called from JS when the ComfyUI UI becomes visible."""
+            self._ui_shown = True
+
+        def _graceful_close(self):
+            """Flush storage to disk then destroy the window."""
+            self._flush_state_to_disk()
+            try:
+                window.destroy()
+            except Exception:
+                pass
+
+        def _flush_state_to_disk(self):
+            """Backup ComfyUI localStorage/sessionStorage with draft-filtering and 2 MB cap."""
+            _DRAFT_PREFIXES = (
+                "Comfy.Workflow.DraftIndex.v2:",
+                "Comfy.Workflow.Draft.v2:",
+                "Comfy.Workflow.LastActivePath:",
+                "Comfy.Workflow.LastOpenPaths:",
+                "workflow",
+            )
+            _MAX_STORAGE_BYTES = 2 * 1024 * 1024
+            try:
+                result = window.evaluate_js("""
+                    (function() {
+                        try {
+                            var out = { ls: {}, ss: {} };
+                            try {
+                                var ls = window.localStorage;
+                                for (var i = 0; i < ls.length; i++) {
+                                    var k = ls.key(i);
+                                    if (k) out.ls[k] = ls.getItem(k);
+                                }
+                            } catch(e) {}
+                            try {
+                                var ss = window.sessionStorage;
+                                for (var j = 0; j < ss.length; j++) {
+                                    var sk = ss.key(j);
+                                    if (sk) out.ss[sk] = ss.getItem(sk);
+                                }
+                            } catch(e) {}
+                            return JSON.stringify(out);
+                        } catch(e) { return null; }
+                    })();
+                """)
+                if not result:
+                    return
+                data = json.loads(result)
+                if not data or (isinstance(data.get("ls"), dict) and not data["ls"]
+                                and isinstance(data.get("ss"), dict) and not data["ss"]):
+                    return
+                def _should_skip(k):
+                    return any(k.startswith(p) for p in _DRAFT_PREFIXES)
+                if isinstance(data.get("ls"), dict):
+                    data["ls"] = {k: v for k, v in data["ls"].items() if not _should_skip(k)}
+                if isinstance(data.get("ss"), dict):
+                    data["ss"] = {k: v for k, v in data["ss"].items() if not _should_skip(k)}
+                try:
+                    if len(json.dumps(data)) > _MAX_STORAGE_BYTES:
+                        return
+                except Exception:
+                    pass
+                state = load_window_state()
+                state["comfy_storage"] = data
+                with open(WINDOW_STATE_FILE, "w") as f:
+                    json.dump(state, f)
+            except Exception:
+                pass
+
         def _toast(self, msg):
             """Show a toast message in the webview."""
             safe = msg.replace("'", "\\'")
@@ -2384,6 +2463,7 @@ def open_in_webview():
     api = Api()
     api._window = None
     api._confirm_close = False
+    api._ui_shown = False
 
     # Restore saved geometry (falls back to defaults if no state saved)
     _state = load_window_state()
@@ -2509,38 +2589,7 @@ def open_in_webview():
 
     def on_closed():
         """When the window is closed, save state, backup ComfyUI storage, and signal the server process."""
-        # Try to backup ComfyUI localStorage/sessionStorage before exit
-        try:
-            result = window.evaluate_js("""
-                (function() {
-                    try {
-                        var out = { ls: {}, ss: {} };
-                        try {
-                            var ls = window.localStorage;
-                            for (var i = 0; i < ls.length; i++) {
-                                var k = ls.key(i);
-                                if (k) out.ls[k] = ls.getItem(k);
-                            }
-                        } catch(e) {}
-                        try {
-                            var ss = window.sessionStorage;
-                            for (var j = 0; j < ss.length; j++) {
-                                var sk = ss.key(j);
-                                if (sk) out.ss[sk] = ss.getItem(sk);
-                            }
-                        } catch(e) {}
-                        return JSON.stringify(out);
-                    } catch(e) { return null; }
-                })();
-            """)
-            if result:
-                state = load_window_state()
-                state["comfy_storage"] = json.loads(result)
-                with open(WINDOW_STATE_FILE, "w") as f:
-                    json.dump(state, f)
-        except Exception:
-            pass
-
+        api._flush_state_to_disk()
         save_window_state(window)
         if COMFYUI_REMOTE:
             return

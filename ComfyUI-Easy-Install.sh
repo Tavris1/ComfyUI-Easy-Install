@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v3.8.0
+# Title ComfyUI-Easy-Install  NEXT by ivo v3.8.3
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -442,6 +442,7 @@ EOL
     # Install working version of transformers (damn it again)
     uv pip install transformers==4.57.6 $UV_ARGS
     uv pip install descript-audio-codec $UV_ARGS
+    uv pip install scipy==1.17.1 $UV_ARGS
     echo
     
     echo -e "${YELLOW}[3/6]${RESET} Installing pygit2..."
