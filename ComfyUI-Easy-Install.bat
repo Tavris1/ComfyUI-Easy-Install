@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.8.3"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.8.4"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
