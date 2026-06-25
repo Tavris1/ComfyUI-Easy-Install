@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.8.4"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.8.5"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -178,6 +178,7 @@ cd ..\
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Microsoft.PowerShell.Archive\Expand-Archive -LiteralPath '%HLPR_NAME%' -DestinationPath '.' -Force"
 
 cd ComfyUI-Easy-Install
+for %%e in (jpeg jpg png mp3 mp4) do move ".\Add-Ons\Tools\Helper-CEI\*.%%e" ".\ComfyUI\input\" >nul 2>&1
 
 :: Install Triton ::
 if "%CURRENT_CUDA%"=="12.8" (
