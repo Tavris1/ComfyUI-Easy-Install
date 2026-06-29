@@ -101,7 +101,7 @@ roll back ComfyUI & frontend versions, clean UV/PIP cache, convert models to GGU
     - **FlashAttention** - *Installs FlashAttention v2.8.3*
     - **InsightFace** - *Installs InsightFace (Pretrained models for non-commercial research only)*
     - **Trellis2** - *Installs Trellis 2.0 and the model (requires `Torch 2.8.0+cu128` from the `Add-ons/Torch-Pack`)*
-    - **Torch-Pack** - *Quick switching between: `Torch 2.7.1+cu128`, `Torch 2.8.0+cu128` and `Torch 2.9.1+cu130`*
+    - **Torch-Pack** - *Quick switching between: `Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`, `Torch 2.9.1+cu130` and `Torch 2.10+cu130`*
     - **Easy-model2GGUF** - *Convert & quantize models to GGUF (Q2_K–Q8_0) with 5D tensor fixes if available*
     - **Long-Paths-Enabler** - *Enables **Long Paths** in Windows 10/11. Essential for Python/ComfyUI*
     - **ComfyUI-Version-Switcher** - ***Reversible** rollback to a **previous** ComfyUI version in case of issues*
