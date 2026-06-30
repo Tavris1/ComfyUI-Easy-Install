@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Desktop EZi v3.8.3 — PyWebView wrapper
+Desktop EZi v3.9.0 — PyWebView wrapper
 Opens ComfyUI in a native desktop window instead of a browser.
 Part of ComfyUI-Easy-Install by Pixaroma / VenimK
 """
@@ -18,7 +18,7 @@ import base64
 import json
 import subprocess
 
-EZI_VERSION = "3.8.3"
+EZI_VERSION = "3.9.0"
 
 COMFYUI_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
 COMFYUI_PORT = int(os.environ.get("COMFYUI_PORT", 8188))
@@ -845,17 +845,92 @@ def set_comfy_theme(palette_id):
 
 
 def get_comfyui_versions():
-    """Return list of recent ComfyUI git tags (newest first, max 20)."""
+    """Return ComfyUI git tags (local + remote GitHub, newest first, max 20) with stable label."""
+    import re as _re
+    import urllib.request as _ur
+
+    def _ver_key(tag):
+        nums = [int(x) for x in _re.findall(r'\d+', tag)]
+        return nums if nums else [0]
+
     comfy_dir = os.path.join(SCRIPT_DIR, "ComfyUI")
+
+    # Current checked-out tag
+    current = None
+    try:
+        r = subprocess.run(
+            ["git", "describe", "--tags", "--exact-match", "HEAD"],
+            cwd=comfy_dir, capture_output=True, text=True, timeout=5,
+        )
+        if r.returncode == 0:
+            current = r.stdout.strip() or None
+    except Exception:
+        pass
+
+    # Local tags
+    local_tags = []
     try:
         r = subprocess.run(
             ["git", "tag", "--sort=-creatordate"],
             cwd=comfy_dir, capture_output=True, text=True, timeout=10,
         )
-        tags = [t.strip() for t in r.stdout.splitlines() if t.strip()]
-        return tags[:20]
+        local_tags = [t.strip() for t in r.stdout.splitlines() if t.strip()]
     except Exception:
-        return []
+        pass
+
+    # Remote GitHub tags (up to 200)
+    remote_tags = []
+    for page in (1, 2):
+        try:
+            req = _ur.Request(
+                f"https://api.github.com/repos/comfyanonymous/ComfyUI/tags?per_page=100&page={page}",
+                headers={"User-Agent": "ComfyUI-EZi"},
+            )
+            with _ur.urlopen(req, timeout=8) as resp:
+                data = json.loads(resp.read())
+            batch = [t["name"] for t in data if t.get("name")]
+            remote_tags.extend(batch)
+            if len(batch) < 100:
+                break
+        except Exception:
+            break
+
+    all_tags = list({t for t in (local_tags + remote_tags) if _re.match(r'^v?\d+\.\d+', t)})
+    all_tags.sort(key=_ver_key, reverse=True)
+    all_tags = all_tags[:20]
+    if current and current not in all_tags:
+        all_tags.insert(0, current)
+        all_tags = all_tags[:20]
+    if not current:
+        all_tags.insert(0, "NIGHTLY")
+        current = "NIGHTLY"
+
+    # Latest stable release from GitHub
+    stable_version = None
+    try:
+        req = _ur.Request(
+            "https://api.github.com/repos/comfyanonymous/ComfyUI/releases/latest",
+            headers={"User-Agent": "ComfyUI-EZi"},
+        )
+        with _ur.urlopen(req, timeout=8) as resp:
+            rel_data = json.loads(resp.read())
+        stable_version = rel_data.get("tag_name") or None
+        if stable_version:
+            try:
+                state = load_window_state()
+                state["cached_comfy_stable_version"] = stable_version
+                with open(WINDOW_STATE_FILE, "w") as _sf:
+                    json.dump(state, _sf)
+            except Exception:
+                pass
+    except Exception:
+        try:
+            state = load_window_state()
+            stable_version = state.get("cached_comfy_stable_version") or None
+        except Exception:
+            pass
+
+    return {"current": current, "versions": all_tags, "stableVersion": stable_version}
 
 
 # Loading splash shown instantly while server starts up
@@ -1962,6 +2037,41 @@ def open_in_webview():
 
         def get_system_info(self):
             """Return system/platform info as a JSON string (called from JS)."""
+            if COMFYUI_REMOTE:
+                try:
+                    url = f"{COMFYUI_URL}/system_stats"
+                    req = urllib.request.Request(url, headers={"User-Agent": "EZiDesktop"})
+                    with urllib.request.urlopen(req, timeout=5) as resp:
+                        raw = json.loads(resp.read().decode())
+                    sys_raw = raw.get("system", {})
+                    devices  = raw.get("devices", [])
+                    info = {}
+                    info["platform"] = sys_raw.get("os", "unknown") + " (remote)"
+                    info["python"]   = sys_raw.get("python_version", "—")
+                    info["torch"]    = sys_raw.get("pytorch_version", "—")
+                    gpu_parts = []
+                    for dev in devices:
+                        name = dev.get("name", "")
+                        dtype = dev.get("type", "")
+                        vram_total = dev.get("vram_total", 0)
+                        vram_free  = dev.get("vram_free",  0)
+                        vram_str = ""
+                        if vram_total:
+                            used_mb  = round((vram_total - vram_free) / 1024 / 1024)
+                            total_mb = round(vram_total / 1024 / 1024)
+                            vram_str = f" ({used_mb}/{total_mb} MB)"
+                        gpu_parts.append(f"{name}{vram_str}" if name else dtype)
+                        if dtype == "cuda":
+                            info["cuda"] = "remote"
+                    info["gpu"] = ", ".join(gpu_parts) if gpu_parts else "unknown"
+                    info["comfyui_rev"] = sys_raw.get("comfyui_version", "—")
+                    info["frontend"]   = "— (remote)"
+                    return json.dumps(info)
+                except Exception as e:
+                    return json.dumps({"platform": f"remote ({COMFYUI_HOST})",
+                                       "python": "—", "torch": "—",
+                                       "gpu": f"fetch error: {e}",
+                                       "comfyui_rev": "—", "frontend": "—"})
             return json.dumps(get_system_info())
 
         def get_cache_info(self):
@@ -2104,8 +2214,102 @@ def open_in_webview():
             except Exception:
                 pass
 
+        def apply_api_key(self, key):
+            """Auto-fill a Comfy.org API key into the ComfyUI settings dialog via JS injection."""
+            key = (key or "").strip()
+            if not key:
+                return
+            try:
+                self.write_clipboard(key)
+            except Exception:
+                pass
+            key_js = json.dumps(key)
+            auto_js = (
+                "(function(){"
+                "  try {"
+                "    var iframe = document.getElementById('ui-frame');"
+                "    var doc = iframe && iframe.contentDocument;"
+                "    var win = iframe && iframe.contentWindow;"
+                "    if (!doc || !win) return 'no-doc';"
+                "    var KEY = " + key_js + ";"
+                "    var clicked = false;"
+                "    var cands = doc.querySelectorAll('button, [role=\"button\"], a');"
+                "    for (var i = 0; i < cands.length; i++) {"
+                "      var txt = (cands[i].textContent || '').trim();"
+                "      if (txt === 'Comfy API Key' || txt.indexOf('Comfy API Key') !== -1) {"
+                "        cands[i].click(); clicked = true; break;"
+                "      }"
+                "    }"
+                "    function clickUseApiKey(){"
+                "      var bs = doc.querySelectorAll('button');"
+                "      for (var j = 0; j < bs.length; j++) {"
+                "        var t = (bs[j].textContent || '').trim();"
+                "        if (/API Key/i.test(t) && !/Comfy API Key/i.test(t)) { bs[j].click(); return true; }"
+                "      }"
+                "      return false;"
+                "    }"
+                "    function submitForm(input){"
+                "      var form = input.closest('form');"
+                "      if (!form) return false;"
+                "      try { if (typeof form.requestSubmit === 'function') { form.requestSubmit(); return true; } } catch(e){}"
+                "      var btn = form.querySelector('button[type=\"submit\"]');"
+                "      try { form.dispatchEvent(new win.Event('submit', {bubbles: true, cancelable: true})); } catch(e){}"
+                "      if (btn && !btn.disabled) { btn.click(); return true; }"
+                "      return false;"
+                "    }"
+                "    var tries = 0;"
+                "    function fill(){"
+                "      tries++;"
+                "      var input = doc.getElementById('comfy-org-api-key');"
+                "      if (!input) {"
+                "        if (tries === 5) { clickUseApiKey(); }"
+                "        if (tries < 80) { setTimeout(fill, 100); return; }"
+                "        return;"
+                "      }"
+                "      var nativeInput = win.Object.getOwnPropertyDescriptor(win.HTMLInputElement.prototype, 'value');"
+                "      nativeInput.set.call(input, KEY);"
+                "      input.dispatchEvent(new win.Event('input',  {bubbles: true}));"
+                "      input.dispatchEvent(new win.Event('change', {bubbles: true}));"
+                "      setTimeout(function(){ submitForm(input); }, 120);"
+                "    }"
+                "    fill();"
+                "  } catch(e) { return String(e); }"
+                "})();"
+            )
+            try:
+                window = self._window
+                if window:
+                    window.evaluate_js(auto_js)
+            except Exception:
+                pass
+
         def get_runtime_stats(self):
             """Return RAM usage of the ComfyUI server process and system RAM."""
+            if COMFYUI_REMOTE:
+                try:
+                    url = f"{COMFYUI_URL}/system_stats"
+                    req = urllib.request.Request(url, headers={"User-Agent": "EZiDesktop"})
+                    with urllib.request.urlopen(req, timeout=5) as resp:
+                        raw = json.loads(resp.read().decode())
+                    sys_raw = raw.get("system", {})
+                    devices  = raw.get("devices", [])
+                    stats = {}
+                    ram_total = sys_raw.get("ram_total", 0)
+                    ram_free  = sys_raw.get("ram_free",  0)
+                    if ram_total:
+                        stats["ram_total_gb"] = round(ram_total / 1e9, 1)
+                    if ram_free and ram_total:
+                        stats["ram_avail_gb"] = round(ram_free / 1e9, 1)
+                    if devices:
+                        dev = devices[0]
+                        vram_total = dev.get("vram_total", 0)
+                        vram_free  = dev.get("vram_free",  0)
+                        if vram_total:
+                            stats["vram_total_mb"] = round(vram_total / 1024 / 1024)
+                            stats["vram_used_mb"]  = round((vram_total - vram_free) / 1024 / 1024)
+                    return json.dumps(stats)
+                except Exception:
+                    return json.dumps({})
             stats = {}
             pid_file = os.path.join(SCRIPT_DIR, ".comfyui_server.pid")
             try:
@@ -2239,6 +2443,8 @@ def open_in_webview():
 
         def restart_server(self):
             """Kill the ComfyUI server process — port_monitor will reload the webview when it comes back."""
+            if COMFYUI_REMOTE:
+                return json.dumps({"error": "Restart not available in remote mode"})
             pid_file = os.path.join(SCRIPT_DIR, ".comfyui_server.pid")
             if not os.path.isfile(pid_file):
                 return json.dumps({"error": "No PID file found"})
@@ -2252,6 +2458,8 @@ def open_in_webview():
 
         def retry(self, cols=0):
             """Restart ComfyUI with optional custom TQDM column width."""
+            if COMFYUI_REMOTE:
+                return json.dumps({"error": "Restart not available in remote mode"})
             try:
                 if cols and int(cols) > 0:
                     os.environ['TQDM_NCOLS'] = str(max(40, int(cols)))
