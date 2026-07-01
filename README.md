@@ -40,6 +40,7 @@ Dedicated to the **Pixaroma** team
 | [RMBG](https://github.com/1038lab/ComfyUI-RMBG) | | | [iTools](https://github.com/MohammadAboulEla/ComfyUI-iTools) | |
 | [Easy-Sam3](https://github.com/yolain/ComfyUI-Easy-Sam3) | | | [ControlAltAI Nodes](https://github.com/gseth/ControlAltAI-Nodes) | |
 | [SCAIL-Pose](https://github.com/kijai/ComfyUI-SCAIL-Pose) | | | [TeaCache](https://github.com/welltop-cn/ComfyUI-TeaCache) | |
+| [Krea2T-Enhancer](https://github.com/capitan01R/ComfyUI-Krea2T-Enhancer) | | | | |
 
 </details>
 

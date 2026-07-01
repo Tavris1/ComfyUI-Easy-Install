@@ -569,6 +569,7 @@ else
 fi
 get_node https://github.com/kijai/ComfyUI-SCAIL-Pose ComfyUI-SCAIL-Pose
 get_node https://github.com/kijai/ComfyUI-MelBandRoFormer ComfyUI-MelBandRoFormer
+get_node https://github.com/capitan01R/ComfyUI-Krea2T-Enhancer ComfyUI-Krea2T-Enhancer
 
 if [ ! -d "ComfyUI/custom_nodes/.disabled" ]; then
     mkdir -p "ComfyUI/custom_nodes/.disabled"
