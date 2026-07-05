@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.9.0"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.10.0"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -89,6 +89,7 @@ call :install_comfyui
 echo %green%::::::::::::::: %yellow%Pre-installation of required modules%green% :::::::::::::::%reset%
 echo.
 REM .\python_embeded\python.exe -I -m uv pip install requests==2.31.0 urllib3==2.6.3 charset_normalizer==3.4.4
+.\python_embeded\python.exe -I -m uv pip install kornia==0.7.4 %UVargs%
 .\python_embeded\python.exe -I -m uv pip install scipy==1.17.1 %UVargs%
 .\python_embeded\python.exe -I -m uv pip install chardet==5.2.0 %UVargs%
 .\python_embeded\python.exe -I -m uv pip install scikit-build-core %UVargs%
@@ -99,9 +100,9 @@ REM .\python_embeded\python.exe -I -m uv pip install requests==2.31.0 urllib3==2
 .\python_embeded\python.exe -I -m uv pip install -r ".\ComfyUI\manager_requirements.txt" %UVargs%
 
 if "%CURRENT_CUDA%"=="12.8" (
-    .\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.40-cu128-win-20260608/llama_cpp_python-0.3.40+cu128-cp312-cp312-win_amd64.whl %UVargs%
+    .\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.38-cu128-Basic-win-20260504/llama_cpp_python-0.3.38+cu128.basic-cp312-cp312-win_amd64.whl %UVargs%
 ) else (
-    .\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.40-cu130-win-20260608/llama_cpp_python-0.3.40+cu130-cp312-cp312-win_amd64.whl %UVargs%
+    .\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.38-cu130-Basic-win-20260504/llama_cpp_python-0.3.38+cu130.basic-cp312-cp312-win_amd64.whl %UVargs%
 )
 
 :: Install working version of stringzilla (damn it) ::
@@ -301,7 +302,7 @@ REM .\python.exe -I -m pip config set global.trusted-host "pypi.org files.python
 if "%CURRENT_CUDA%"=="12.8" (
 	.\python.exe -I -m pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cu128 %PIPargs%
 ) else (
-	.\python.exe -I -m pip install torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1 --index-url https://download.pytorch.org/whl/cu130 %PIPargs%
+	.\python.exe -I -m pip install torch==2.10.0 torchvision==0.25.0 torchaudio==2.10.0 --index-url https://download.pytorch.org/whl/cu130 %PIPargs%
 )
 
 .\python.exe -I -m uv pip install pygit2 %UVargs%
