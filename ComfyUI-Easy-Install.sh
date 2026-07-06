@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v3.9.0
+# Title ComfyUI-Easy-Install  NEXT by ivo v3.10.0
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -383,16 +383,16 @@ EOL
     $EMBEDDED_PYTHON -m pip install uv==0.9.7 $PIP_ARGS
     echo -e "${GREEN}✓${RESET} uv installed"
     
-    echo -e "${YELLOW}[2/6]${RESET} Installing PyTorch 2.9.1..."
+    echo -e "${YELLOW}[2/6]${RESET} Installing PyTorch 2.10.0..."
     # Check if running on macOS and install appropriate PyTorch
     if [ "$(uname)" = "Darwin" ]; then
-        echo -e "${YELLOW}Installing PyTorch 2.9.1 for macOS (CPU/MPS)...${RESET}"
+        echo -e "${YELLOW}Installing PyTorch 2.10.0 for macOS (CPU/MPS)...${RESET}"
         # For macOS, install without CUDA index
-        uv pip install $UV_ARGS torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1
+        uv pip install $UV_ARGS torch==2.10.0 torchvision==0.25.0 torchaudio==2.10.0
         echo -e "${GREEN}✓${RESET} PyTorch installed (macOS version)"
     else
-        echo -e "${YELLOW}Installing PyTorch 2.9.1 + CUDA 13.0...${RESET}"
-        uv pip install $UV_ARGS torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1 --index-url https://download.pytorch.org/whl/cu130
+        echo -e "${YELLOW}Installing PyTorch 2.10.0 + CUDA 13.0...${RESET}"
+        uv pip install $UV_ARGS torch==2.10.0 torchvision==0.25.0 torchaudio==2.10.0 --index-url https://download.pytorch.org/whl/cu130
         echo -e "${GREEN}✓${RESET} PyTorch installed (CUDA version)"
     fi
     
@@ -412,6 +412,7 @@ EOL
     uv pip install onnx $UV_ARGS
     uv pip install flet $UV_ARGS
     uv pip install chardet==5.2.0 $UV_ARGS
+    uv pip install kornia==0.7.4 $UV_ARGS
 
     
     # Install llama-cpp-python (platform-specific) - JamePeng's fork
