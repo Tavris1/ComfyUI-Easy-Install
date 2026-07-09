@@ -81,7 +81,7 @@ Dedicated to the **Pixaroma** team
     - **SageAttention** - *Installs SageAttention v2.2.0*
     - **InsightFace** - *Installs InsightFace (Pretrained models for non-commercial research only)*
     - **Trellis2** - *Installs Trellis 2.0*
-    - **Torch-Pack** - *Quick switching between: `Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`, `Torch 2.9.1+cu130` and `Torch 2.10.0+cu130`*
+    - **Torch-Pack** - *Quick switching between: `Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`, `Torch 2.9.1+cu130`, `Torch 2.10.0+cu130`, `Torch 2.13.0+cu130` and `Torch 2.13.0-mac`*
     - **ComfyUI-Version-Switcher** - ***Reversible** rollback to a **previous** ComfyUI version on issues*
     - **Backup ComfyUI** - *Backup, restore, and manage your ComfyUI data folders*
 
