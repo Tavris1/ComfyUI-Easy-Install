@@ -211,7 +211,7 @@ Run ComfyUI in a native desktop window instead of a browser:
 > ln -s "$SYS_GI" "$(./python_embeded/python -c "import site; print(site.getsitepackages()[0])")/gi"
 >
 > # Qt alternative (no sudo needed)
-> ./python_embeded/python -m pip install PyQt6 qtpy
+> ./python_embeded/python -m pip install PyQt6 qtpy PyQt6-WebEngine
 > ```
 
 ---
