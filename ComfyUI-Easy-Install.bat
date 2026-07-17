@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.11.1"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.11.2"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -297,7 +297,8 @@ echo     pypi.python.org>> pip.ini
 .\python.exe -I get-pip.py %PIPargs% --trusted-host pypi.org --trusted-host files.pythonhosted.org --trusted-host pypi.python.org
 REM .\python.exe -I -m pip config set global.trusted-host "pypi.org files.pythonhosted.org pypi.python.org"
 
-.\python.exe -I -m pip install uv==0.9.7 %PIPargs%
+REM .\python.exe -I -m pip install uv==0.9.7 %PIPargs%
+.\python.exe -I -m pip install uv %PIPargs%
 
 if "%CURRENT_CUDA%"=="12.8" (
 	.\python.exe -I -m pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cu128 %PIPargs%
