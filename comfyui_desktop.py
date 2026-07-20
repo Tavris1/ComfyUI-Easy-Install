@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Desktop EZi v3.11.0 — PyWebView wrapper
+Desktop EZi v3.11.2 — PyWebView wrapper
 Opens ComfyUI in a native desktop window instead of a browser.
 Part of ComfyUI-Easy-Install by Pixaroma / VenimK
 """
@@ -18,7 +18,7 @@ import base64
 import json
 import subprocess
 
-EZI_VERSION = "3.11.0"
+EZI_VERSION = "3.11.2"
 
 COMFYUI_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
 COMFYUI_PORT = int(os.environ.get("COMFYUI_PORT", 8188))
@@ -1101,6 +1101,32 @@ INJECTED_JS = """
         if (z) document.body.style.zoom = z;
     })();
 
+    (function() {
+        var seen = new WeakSet();
+        function scheduleKill(el) {
+            if (seen.has(el)) return;
+            seen.add(el);
+            setTimeout(function() {
+                if (document.body.contains(el)) el.remove();
+            }, 8000);
+        }
+        function scan(node) {
+            if (!node || node.nodeType !== 1) return;
+            if (node.matches && node.matches('.p-tooltip')) scheduleKill(node);
+            if (node.querySelectorAll) node.querySelectorAll('.p-tooltip').forEach(scheduleKill);
+        }
+        function init() {
+            document.querySelectorAll('.p-tooltip').forEach(scheduleKill);
+            new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    mutation.addedNodes.forEach(scan);
+                });
+            }).observe(document.body, {childList: true, subtree: true});
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+        else init();
+    })();
+
     /* ── Desktop Settings Panel (Cmd+Shift+I / Ctrl+Shift+I) ── */
     (function() {
         var PANEL_ID = '_comfy_desktop_panel';
@@ -2133,15 +2159,26 @@ def open_in_webview():
             """Background: poll GitHub releases to see if a newer EZi Desktop is available."""
             try:
                 import urllib.request as _ur
-                url = "https://api.github.com/repos/Tavris1/ComfyUI-Easy-Install/releases/latest"
-                req = _ur.Request(url, headers={"User-Agent": "ComfyUI-Desktop-Mac"})
-                with _ur.urlopen(req, timeout=8) as r:
-                    data = json.loads(r.read())
-                tag = data.get("tag_name", "").strip().lstrip("v")
+                headers = {"User-Agent": "ComfyUI-Desktop-Mac"}
+                try:
+                    req = _ur.Request(
+                        "https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest",
+                        headers=headers,
+                        method="HEAD",
+                    )
+                    with _ur.urlopen(req, timeout=8) as r:
+                        tag = r.geturl().rstrip("/").rsplit("/", 1)[-1].strip().lstrip("v")
+                except Exception:
+                    req = _ur.Request(
+                        "https://api.github.com/repos/Tavris1/ComfyUI-Easy-Install/releases/latest",
+                        headers=headers,
+                    )
+                    with _ur.urlopen(req, timeout=8) as r:
+                        tag = json.loads(r.read()).get("tag_name", "").strip().lstrip("v")
                 if not tag:
                     return
-                local_parts  = [int(x) for x in EZI_VERSION.split(".") if x.isdigit()]
-                remote_parts = [int(x) for x in tag.split(".")      if x.isdigit()]
+                local_parts = [int(x) for x in EZI_VERSION.split(".") if x.isdigit()]
+                remote_parts = [int(x) for x in tag.split(".") if x.isdigit()]
                 if remote_parts > local_parts:
                     display = "v" + tag
                     safe = display.replace("'", "\\'")

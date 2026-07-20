@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v3.11.0
+# Title ComfyUI-Easy-Install  NEXT by ivo v3.11.2
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -380,7 +380,7 @@ EOL
     echo -e "${GREEN}::::::::::::::: Installing required packages :::::::::::::::${RESET}"
     
     echo -e "${YELLOW}[1/6]${RESET} Installing uv package manager..."
-    $EMBEDDED_PYTHON -m pip install uv==0.9.7 $PIP_ARGS
+    $EMBEDDED_PYTHON -m pip install uv $PIP_ARGS
     echo -e "${GREEN}✓${RESET} uv installed"
     
     echo -e "${YELLOW}[2/6]${RESET} Installing PyTorch 2.10.0..."
