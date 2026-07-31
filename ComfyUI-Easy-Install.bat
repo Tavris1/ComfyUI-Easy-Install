@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.11.3"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.12.0"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -137,6 +137,7 @@ call :get_node https://github.com/flybirdxx/ComfyUI-Qwen-TTS				qwen3-tts-comfyu
 call :get_node https://github.com/Saganaki22/ComfyUI-FishAudioS2			ComfyUI-fish-audio-s2
 call :get_node https://gitlab.com/pixaroma/ComfyUI-Pixaroma.git				ComfyUI-Pixaroma
 call :get_node https://github.com/capitan01R/ComfyUI-Krea2T-Enhancer        ComfyUI-Krea2T-Enhancer
+call :get_node https://github.com/lbouaraba/comfyui-krea2edit               comfyui-krea2edit
 
 :: Check if SoX is already installed - skip silently if found
 where sox.exe >nul 2>&1
@@ -303,7 +304,7 @@ REM .\python.exe -I -m pip install uv==0.9.7 %PIPargs%
 if "%CURRENT_CUDA%"=="12.8" (
 	.\python.exe -I -m pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cu128 %PIPargs%
 ) else (
-	.\python.exe -I -m pip install torch==2.10.0 torchvision==0.25.0 torchaudio==2.10.0 --index-url https://download.pytorch.org/whl/cu130 %PIPargs%
+	.\python.exe -I -m pip install torch==2.11.0 torchvision==0.26.0 torchaudio==2.11.0 --index-url https://download.pytorch.org/whl/cu130 %PIPargs%
 )
 
 .\python.exe -I -m uv pip install pygit2 %UVargs%
