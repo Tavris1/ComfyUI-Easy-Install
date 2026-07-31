@@ -79,6 +79,7 @@ roll back ComfyUI & frontend versions, clean UV/PIP cache, convert models to GGU
 | [Easy-Sam3](https://github.com/yolain/ComfyUI-Easy-Sam3) | | | [ControlAltAI Nodes](https://github.com/gseth/ControlAltAI-Nodes) | |
 | [SCAIL-Pose](https://github.com/kijai/ComfyUI-SCAIL-Pose) | | | ✨[Pixaroma](https://github.com/pixaroma/ComfyUI-Pixaroma) | |
 | | | | [Krea2T-Enhancer](https://github.com/capitan01R/ComfyUI-Krea2T-Enhancer) | |
+| | | | [Krea2Edit](https://github.com/lbouaraba/comfyui-krea2edit) | |
 
 ### • Optional Add-ons Nodes and Tools
 
@@ -115,7 +116,7 @@ roll back ComfyUI & frontend versions, clean UV/PIP cache, convert models to GGU
     - **InsightFace** - *Installs InsightFace (Pretrained models for non-commercial research only)*
     - **Trellis2** - *Installs Trellis 2.0 and the model (requires `Torch 2.8.0+cu128` from the `Add-ons/Torch-Pack`)*
     - **Torch-Pack** - *Quick switch between:*  
-      - *`Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`, `Torch 2.9.1+cu130` & `Torch 2.10+cu130`*
+      - *`Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`, `Torch 2.9.1+cu130`, `Torch 2.10+cu130` & `Torch 2.11+cu130`*
     - **Easy-model2GGUF** - *Convert & quantize models to GGUF (Q2_K–Q8_0) with 5D tensor fixes if available*
     - **Long-Paths-Enabler** - *Enables **Long Paths** in Windows 10/11. Essential for Python/ComfyUI*
     - **ComfyUI-Version-Switcher** - ***Reversible** rollback to a **previous** ComfyUI version in case of issues*
