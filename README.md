@@ -16,22 +16,37 @@
 ---
 
 <div align="center">
+  <img src="docs/EZi-Logo.svg" width="120" alt="Pixaroma Logo">
+  <h1>ComfyUI-Easy-Install</h1>
+  <p align="center">
+    <strong>One-click Windows Portable ComfyUI with EZi Desktop app</strong><br />
+    Nvidia GPUs • Pixaroma Community Edition
+  </p>
 
-# ComfyUI-Easy-Install
-One-click Portable **ComfyUI** installer for **Windows** with EZi Desktop app 🔹 Nvidia GPUs  
 [![GitHub Release](https://img.shields.io/github/v/release/Tavris1/ComfyUI-Easy-Install)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
-[![GitHub Release Date](https://img.shields.io/github/release-date/Tavris1/ComfyUI-Easy-Install?style=flat)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
+[![GitHub Release Date](https://img.shields.io/github/release-date/Tavris1/ComfyUI-Easy-Install?style=flat&label=date)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
 [![GitHub All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
-[![GitHub Downloads Latest](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=⬇+latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+<!--[![GitHub Downloads Latest](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=⬇+latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)-->
 
-Dedicated to the **Pixaroma** team  
-[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Join%20Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
+  <p align="center">
+    <a href="#%EF%B8%8F-windows-installation">📥 Install</a> &nbsp;·&nbsp;
+    <a href="#-features">✨ Features/Components</a> &nbsp;·&nbsp;
+    <a href="https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
+    <a href="https://discord.gg/gggpkVgBf3">💬 Pixaroma Discord</a> &nbsp;·&nbsp;
+    <a href="#%EF%B8%8F-support-me">❤️ Support Me</a>
+  </p>
+
+<!-- Dedicated to the **Pixaroma** community  
+[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
+-->
+
+---
 
 ![ComfyUI Screenshot](docs/ComfyUI-ivo.jpg)
 
 </div>
 
-## 🌟 Features
+## ✨ Features
 ComfyUI-Easy-Install is a ***complete portable ComfyUI & dependency management system***  
 that runs through its own dedicated ***EZi Desktop app*** or via any web browser with a one-click setup.  
 No Python or Git setup required, and absolutely no manual dependencies.  
@@ -44,8 +59,7 @@ freeze package versions (like NumPy==1.26.4), switch PyTorch/CUDA versions on th
 roll back ComfyUI & frontend versions, clean UV/PIP cache, convert models to GGUF, and much more.
 
 ## 📦 Included Components
-<details>
-<summary><b>Core Components</b></summary>
+### • Core Components
 
 | 🔧 Component | 📝 Note |
 |---|---|
@@ -53,10 +67,7 @@ roll back ComfyUI & frontend versions, clean UV/PIP cache, convert models to GGU
 | [Python](https://www.python.org/downloads/release/python-31210/) | ![Python version](https://img.shields.io/badge/3.12.10-blue) - Embedded version |
 | [ComfyUI](https://github.com/Comfy-Org/ComfyUI) | ![ComfyUI version](https://img.shields.io/github/v/release/Comfy-Org/ComfyUI?label=&display_name=tag) - Latest version |
 
-</details>
-
-<details>
-<summary><b>Nodes from Pixaroma tutorials</b></summary>
+### • Nodes from Pixaroma tutorials
 
 | 🖼️ Image | 🎬 Video | 🎵 Audio | 🧩 Utility / WF | 🤖 Models |
 |---|---|---|---|---|
@@ -69,10 +80,7 @@ roll back ComfyUI & frontend versions, clean UV/PIP cache, convert models to GGU
 | [SCAIL-Pose](https://github.com/kijai/ComfyUI-SCAIL-Pose) | | | ✨[Pixaroma](https://github.com/pixaroma/ComfyUI-Pixaroma) | |
 | | | | [Krea2T-Enhancer](https://github.com/capitan01R/ComfyUI-Krea2T-Enhancer) | |
 
-</details>
-
-<details>
-<summary><b>Optional Add-ons Nodes and Tools</b></summary>
+### • Optional Add-ons Nodes and Tools
 
 | 🧩 Nodes | 🛠️ Tools |
 |---|---|
@@ -85,11 +93,16 @@ roll back ComfyUI & frontend versions, clean UV/PIP cache, convert models to GGU
 | | Toggle-DynamicVRAM |
 | | Update Easy-Install |
 
-</details>
-
 ---
 
 ## 🖥️ Windows Installation
+
+> [!IMPORTANT]
+> - Do not run the installer as **Administrator**.
+> - Avoid system folders (`Program Files`, `Windows`, `C:\` root).
+> - Avoid spaces and special characters in folder names.
+> - Make sure your NVIDIA drivers are up to date.
+
 1. [**▶️ CLICK HERE ◀️**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip) to download the latest version
 2. Extract the ZIP file to a new folder and run **`ComfyUI-Easy-Install.bat`**
 3. After setup, you can install or run components from the **Add-ons** folder or via the **EZi Desktop Menu**:
@@ -101,7 +114,8 @@ roll back ComfyUI & frontend versions, clean UV/PIP cache, convert models to GGU
     - **FlashAttention** - *Installs FlashAttention v2.8.3*
     - **InsightFace** - *Installs InsightFace (Pretrained models for non-commercial research only)*
     - **Trellis2** - *Installs Trellis 2.0 and the model (requires `Torch 2.8.0+cu128` from the `Add-ons/Torch-Pack`)*
-    - **Torch-Pack** - *Quick switch: `Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`, `Torch 2.9.1+cu130` & `Torch 2.10+cu130`*
+    - **Torch-Pack** - *Quick switch between:*  
+      - *`Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`, `Torch 2.9.1+cu130` & `Torch 2.10+cu130`*
     - **Easy-model2GGUF** - *Convert & quantize models to GGUF (Q2_K–Q8_0) with 5D tensor fixes if available*
     - **Long-Paths-Enabler** - *Enables **Long Paths** in Windows 10/11. Essential for Python/ComfyUI*
     - **ComfyUI-Version-Switcher** - ***Reversible** rollback to a **previous** ComfyUI version in case of issues*
@@ -114,19 +128,9 @@ roll back ComfyUI & frontend versions, clean UV/PIP cache, convert models to GGU
     - **ComfyUI-Manager Security-Level Config** - *Easy configuration of security_level via EZi Desktop > Menu*
     - **Pinned-Packages-Manager** - *Freeze package versions such as NumPy==1.26.4 via EZi Desktop > Menu*
 
-> [!IMPORTANT]
-> - Do not run the installer as **Administrator**.
-> - Avoid system folders (`Program Files`, `Windows`, `C:\` root).
-> - Avoid spaces and special characters in folder names.
-> - Make sure your NVIDIA drivers are up to date.
-
-> [!TIP]
-> - Multiple ComfyUI installs allowed without conflicts.
-> - You can rename/move `ComfyUI-Easy-Install` folder after installation.
-> - [**For macOS / Linux click here**](https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux)
-
-
 <div align="center">
+
+---
 
 ## ❤️ Support Me
 
