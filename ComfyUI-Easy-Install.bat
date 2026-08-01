@@ -22,7 +22,7 @@ call :NVIDIA_DRIVER_CHECK
 
 :: Check for Existing ComfyUI Folder ::
 if exist ComfyUI-Easy-Install if exist "ComfyUI-Easy-Install" (
-	echo %warning%WARNING:%reset% '%bold%ComfyUI-Easy-Install%reset%' folder already exists!
+	echo %warning%WARNING:%reset% '%yellow%ComfyUI-Easy-Install%reset%' folder already exists!
 	echo %green%Move this file to another folder and run it again.%reset%
 	echo Press any key to Exit...&Pause>nul
 	goto :eof
@@ -31,7 +31,7 @@ if exist ComfyUI-Easy-Install if exist "ComfyUI-Easy-Install" (
 :: Check for Existing Helper-CEI ::
 set "HLPR_NAME=Helper-CEI.zip"
 if not exist "%HLPR_NAME%" (
-	echo %warning%WARNING:%reset% '%bold%%HLPR_NAME%%reset%' not exists!
+	echo %warning%WARNING:%reset% '%yellow%%HLPR_NAME%%reset%' not exists!
 	echo %green%Unzip the entire package and try again.%reset%
 	echo Press any key to Exit...&Pause>nul
 	goto :eof
@@ -63,10 +63,10 @@ call :install_git
 :: Check if git is installed ::
 for /F "tokens=*" %%g in ('git --version') do (set gitversion=%%g)
 echo %gitversion% | findstr /C:"version">nul&&(
-	echo %bold%git%reset% %yellow%is installed%reset%
+	echo %green%git%reset% %yellow%is installed%reset%
 	echo.) || (
-    echo %warning%WARNING:%reset% %bold%'git'%reset% is NOT installed
-	echo Please install %bold%'git'%reset% manually from %yellow%https://git-scm.com/%reset% and run this installer again
+    echo %warning%WARNING:%reset% %yellow%'git'%reset% is NOT installed
+	echo Please install %yellow%'git'%reset% manually from %yellow%https://git-scm.com/%reset% and run this installer again
 	echo Press any key to Exit...&Pause>nul
 	exit
 )
@@ -151,12 +151,21 @@ set "SOX_ROOT=%LocalAppData%\SoX"
 set "SOX_DIR=%SOX_ROOT%\sox-14.4.2"
 set "SOX_ZIP=%TEMP%\sox-14.4.2-win32.zip"
 
-curl.exe -L --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "%SOX_ZIP%" "https://downloads.sourceforge.net/project/sox/sox/14.4.2/sox-14.4.2-win32.zip"
+curl.exe -L --progress-bar --ssl-no-revoke -f --retry 5 --retry-delay 2 -o "%SOX_ZIP%" "https://downloads.sourceforge.net/project/sox/sox/14.4.2/sox-14.4.2-win32.zip"
+if errorlevel 1 if exist "%SOX_ZIP%" del /q "%SOX_ZIP%"
 if not exist "%SOX_ZIP%" (
     powershell -NoProfile -ExecutionPolicy Bypass -Command "try { Start-BitsTransfer -Source 'https://downloads.sourceforge.net/project/sox/sox/14.4.2/sox-14.4.2-win32.zip' -Destination '%SOX_ZIP%' -ErrorAction Stop } catch { exit 1 }"
+    if errorlevel 1 if exist "%SOX_ZIP%" del /q "%SOX_ZIP%"
 )
 
+set "SOX_SIZE=0"
+if exist "%SOX_ZIP%" for %%F in ("%SOX_ZIP%") do set "SOX_SIZE=%%~zF"
+
 if exist "%SOX_ZIP%" (
+    if %SOX_SIZE% LSS 100000 (
+        del /q "%SOX_ZIP%"
+        echo %warning%WARNING:%reset% Downloaded SoX file is too small - probably a failed download.
+    ) else (
     if not exist "%SOX_ROOT%" mkdir "%SOX_ROOT%"
     tar.exe -xmf "%SOX_ZIP%" -C "%SOX_ROOT%"
     del "%SOX_ZIP%"
@@ -164,6 +173,7 @@ if exist "%SOX_ZIP%" (
     set "path=%path%;%SOX_DIR%"
     powershell -NoProfile -ExecutionPolicy Bypass -Command "$p=[Environment]::GetEnvironmentVariable('Path','User'); $d='%SOX_DIR%'; if(-not ($p -like \"*$d*\")){[Environment]::SetEnvironmentVariable('Path', $p+';'+$d, 'User')}"
     echo %green%SoX installed successfully.%reset%
+    )
 ) else (
     echo %warning%WARNING:%reset% Could not download SoX. You can install it manually later from %yellow%https://sourceforge.net/projects/sox/%reset%
 )
@@ -189,8 +199,6 @@ if "%CURRENT_CUDA%"=="12.8" (
 	.\python_embeded\python.exe -I -m pip install --upgrade --force-reinstall "triton-windows<3.6" %PIPargs%
 )
 
-
-.\python_embeded\python.exe -I -m pip install --upgrade --force-reinstall "triton-windows<3.6" %PIPargs%
 :: Postinstall
 .\python_embeded\python.exe -I -m uv pip uninstall pydantic pydantic-core
 .\python_embeded\python.exe -I -m uv pip install pydantic %UVargs%
@@ -198,7 +206,7 @@ echo.
 
 if exist ".\Add-Ons\Tools\AutoRun.bat" (
 	pushd %cd%
-	call ".\Add-Ons\Tools\AutoRun.bat" nopause
+	call ".\Add-Ons\Tools\AutoRun.bat" nopause >nul
 	popd
 	Title %CEI_Title%
 	del  ".\Add-Ons\Tools\AutoRun.bat"
@@ -257,8 +265,10 @@ git.exe clone https://github.com/Comfy-Org/ComfyUI ComfyUI
 
 md python_embeded&&cd python_embeded
 
-curl.exe -L --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "python-3.12.10-embed-amd64.zip" "https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip"
-if errorlevel 1 curl.exe -L --progress-bar --ssl-no-revoke -k --retry 5 --retry-delay 2 -o "python-3.12.10-embed-amd64.zip" "https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip"
+curl.exe -L --progress-bar --ssl-no-revoke -f --retry 5 --retry-delay 2 -o "python-3.12.10-embed-amd64.zip" "https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip"
+if errorlevel 1 if exist "python-3.12.10-embed-amd64.zip" del /q "python-3.12.10-embed-amd64.zip"
+if errorlevel 1 curl.exe -L --progress-bar --ssl-no-revoke -k -f --retry 5 --retry-delay 2 -o "python-3.12.10-embed-amd64.zip" "https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip"
+if errorlevel 1 if exist "python-3.12.10-embed-amd64.zip" del /q "python-3.12.10-embed-amd64.zip"
 if errorlevel 1 powershell -NoProfile -ExecutionPolicy Bypass -Command "Try{Start-BitsTransfer -Source 'https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip' -Destination 'python-3.12.10-embed-amd64.zip' -ErrorAction Stop}catch{exit 1}"
 if not exist "python-3.12.10-embed-amd64.zip" (
 echo.
@@ -271,8 +281,10 @@ tar.exe -xmf python-3.12.10-embed-amd64.zip
 if errorlevel 1 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath 'python-3.12.10-embed-amd64.zip' -DestinationPath '.' -Force"
 erase python-3.12.10-embed-amd64.zip
 
-curl.exe -L --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
-if errorlevel 1 curl.exe -L --progress-bar --ssl-no-revoke -k --retry 5 --retry-delay 2 -o "get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
+curl.exe -L --progress-bar --ssl-no-revoke -f --retry 5 --retry-delay 2 -o "get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
+if errorlevel 1 if exist "get-pip.py" del /q "get-pip.py"
+if errorlevel 1 curl.exe -L --progress-bar --ssl-no-revoke -k -f --retry 5 --retry-delay 2 -o "get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
+if errorlevel 1 if exist "get-pip.py" del /q "get-pip.py"
 if errorlevel 1 powershell -NoProfile -ExecutionPolicy Bypass -Command "Try{Start-BitsTransfer -Source 'https://bootstrap.pypa.io/get-pip.py' -Destination 'get-pip.py' -ErrorAction Stop}catch{exit 1}"
 if not exist "get-pip.py" (
 echo.
@@ -350,7 +362,7 @@ set "CURRENT_CUDA=13.0"
 
 where.exe nvidia-smi.exe >nul 2>&1
 if %errorLevel% neq 0 (
-    echo %red%   NVIDIA driver not detected
+    echo %red%   NVIDIA driver not detected%reset%
     GOTO :EOF
 )
 
@@ -358,7 +370,7 @@ for /f %%a in ('nvidia-smi --query-gpu^=driver_version --format^=csv^,noheader 2
 for /f "tokens=1 delims=." %%a in ("%NV_FULL%") do set "NV_MAJOR=%%a"
 
 if not defined NV_MAJOR (
-    echo %red%   Unable to read NVIDIA driver version
+    echo %red%   Unable to read NVIDIA driver version%reset%
     GOTO :EOF
 )
 
