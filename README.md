@@ -16,7 +16,7 @@
 ---
 
 <div align="center">
-  <img src="docs/EZi-Logo.svg" width="120" alt="Pixaroma Logo">
+  <img src="docs/EZi-Logo.svg" width="120" alt="EZi Logo">
   <h1>ComfyUI-Easy-Install</h1>
   <p align="center">
     <strong>One-click Windows Portable ComfyUI with EZi Desktop app</strong><br />
