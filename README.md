@@ -19,8 +19,8 @@
   <img src="docs/EZi-Logo.svg" width="120" alt="EZi Logo">
   <h1>ComfyUI-Easy-Install</h1>
   <p align="center">
-    <strong>One-click Windows Portable ComfyUI with EZi Desktop app</strong><br />
-    Nvidia GPUs • Pixaroma Community Edition
+    <strong>One-click Portable ComfyUI with EZi Desktop</strong><br />
+    Windows • NVIDIA GPUs • Pixaroma Community Edition
   </p>
 
 [![GitHub Release](https://img.shields.io/github/v/release/Tavris1/ComfyUI-Easy-Install)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
@@ -33,7 +33,7 @@
     <a href="#-features">✨ Features/Components</a> &nbsp;·&nbsp;
     <a href="https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
     <a href="https://discord.gg/gggpkVgBf3">💬 Pixaroma Discord</a> &nbsp;·&nbsp;
-    <a href="#%EF%B8%8F-support-me">❤️ Support Me</a>
+    <a href="#%EF%B8%8F-support-development">❤️ Support Development</a>
   </p>
 
 <!-- Dedicated to the **Pixaroma** community  
@@ -47,19 +47,18 @@
 </div>
 
 ## ✨ Features
-ComfyUI-Easy-Install is a ***complete portable ComfyUI & dependency management system***  
-that runs through its own dedicated ***EZi Desktop app*** or via any web browser with a one-click setup.  
-No Python or Git setup required, and absolutely no manual dependencies.  
 
-With the built-in app, you can install complex packages like Nunchaku, SageAttention (v2/v3),  
-FlashAttention, InsightFace, and Trellis 2.0 automatically in one click, without any compilation errors.  
+**ComfyUI-Easy-Install** provides a portable ComfyUI environment with **EZi Desktop**.  
+No manual Python or Git setup required.
 
-The ***advanced management tools*** let you link existing model folders, toggle Dynamic VRAM,  
-freeze package versions (like NumPy==1.26.4), switch PyTorch/CUDA versions on the fly,  
-roll back ComfyUI & frontend versions, clean UV/PIP cache, convert models to GGUF, and much more.
+Install complex packages such as Nunchaku, SageAttention, FlashAttention, InsightFace, and Trellis 2.0 with one click.
+
+Manage **models, packages, PyTorch/CUDA versions, Dynamic VRAM,  
+ComfyUI/frontend versions, UV/PIP caches, and GGUF conversion** from one place.
 
 ## 📦 Included Components
-### • Core Components
+<details open>
+<summary><b>Core Components</b></summary>
 
 | 🔧 Component | 📝 Note |
 |---|---|
@@ -67,7 +66,10 @@ roll back ComfyUI & frontend versions, clean UV/PIP cache, convert models to GGU
 | [Python](https://www.python.org/downloads/release/python-31210/) | ![Python version](https://img.shields.io/badge/3.12.10-blue) - Embedded version |
 | [ComfyUI](https://github.com/Comfy-Org/ComfyUI) | ![ComfyUI version](https://img.shields.io/github/v/release/Comfy-Org/ComfyUI?label=&display_name=tag) - Latest stable version |
 
-### • Nodes from Pixaroma tutorials
+</details>
+
+<details>
+<summary><b>Nodes Used in Pixaroma Tutorials</b></summary>
 
 | 🖼️ Image | 🎬 Video | 🎵 Audio | 🧩 Utility / WF | 🤖 Models |
 |---|---|---|---|---|
@@ -81,7 +83,10 @@ roll back ComfyUI & frontend versions, clean UV/PIP cache, convert models to GGU
 | | | | [Krea2T-Enhancer](https://github.com/capitan01R/ComfyUI-Krea2T-Enhancer) | |
 | | | | [Krea2Edit](https://github.com/lbouaraba/comfyui-krea2edit) | |
 
-### • Optional Add-ons Nodes and Tools
+</details>
+
+<details>
+<summary><b>Optional Add-ons & Tools</b></summary>
 
 | 🧩 Nodes | 🛠️ Tools |
 |---|---|
@@ -94,6 +99,8 @@ roll back ComfyUI & frontend versions, clean UV/PIP cache, convert models to GGU
 | | Toggle-DynamicVRAM |
 | | Update Easy-Install |
 
+</details>
+
 ---
 
 ## 🖥️ Windows Installation
@@ -104,9 +111,9 @@ roll back ComfyUI & frontend versions, clean UV/PIP cache, convert models to GGU
 > - Avoid spaces and special characters in folder names.
 > - Make sure your NVIDIA drivers are up to date.
 
-1. [**▶️ CLICK HERE ◀️**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip) to download the latest version
+1. [**📥 DOWNLOAD LATEST VERSION**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
 2. Extract the ZIP file to a new folder and run **`ComfyUI-Easy-Install.bat`**
-3. After setup, you can install or run components from the **Add-ons** folder or via the **EZi Desktop Menu**:
+3. Optionally, after the setup, install or run components from the **Add-ons** folder or **EZi Desktop Menu**:
     - **Easy-Models-Linker** - *Uses existing **MODELS** folder via **extra_model_paths.yaml**, no re-download needed*
       - *Some folders like **LLM** and **llm_gguf** cannot be redirected this way*
     - **Easy-System-Checker** - *Provides information about key hardware and software components*
@@ -119,12 +126,12 @@ roll back ComfyUI & frontend versions, clean UV/PIP cache, convert models to GGU
       - *`Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`, `Torch 2.9.1+cu130`, `Torch 2.10+cu130` & `Torch 2.11+cu130`*
     - **Easy-model2GGUF** - *Convert & quantize models to GGUF (Q2_K–Q8_0) with 5D tensor fixes if available*
     - **Long-Paths-Enabler** - *Enables **Long Paths** in Windows 10/11. Essential for Python/ComfyUI*
-    - **ComfyUI-Version-Switcher** - ***Reversible** rollback to a **previous** ComfyUI version in case of issues*
+    - **ComfyUI-Version-Switcher** - ***Reversible** rollback to a **previous** ComfyUI version if issues occur*
     - **Toggle-DynamicVRAM** - *Toggles **--disable-dynamic-vram** option in ComfyUI startup files*
     - **Update Easy-Install** - *Updates **Add-ons** and other folders. Creates desktop shortcuts*
     - **EZi Desktop Themes** - *via EZi Desktop > Menu > Advanced*
     - **Custom Input, Output & User folders** - *via EZi Desktop > Menu > Advanced*
-    - **ComfyUI and Frontend versions changer** - *via EZi Desktop > Menu > Advanced*
+    - **ComfyUI & Frontend Version Changer** - *via EZi Desktop > Menu > Advanced*
     - **UV & PIP cache cleaner** - *via EZi Desktop > Menu*
     - **ComfyUI-Manager Security-Level Config** - *Easy configuration of security_level via EZi Desktop > Menu*
     - **Pinned-Packages-Manager** - *Freeze package versions such as NumPy==1.26.4 via EZi Desktop > Menu*
@@ -133,9 +140,10 @@ roll back ComfyUI & frontend versions, clean UV/PIP cache, convert models to GGU
 
 ---
 
-## ❤️ Support Me
+## ❤️ Support Development
 
-Enjoy my projects? Any support is greatly appreciated!
+Enjoy the project?  
+If it saves you time, your support helps keep development and maintenance going.
 
 [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tavris1)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)
