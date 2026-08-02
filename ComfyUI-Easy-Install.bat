@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.12.0"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.12.1"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -186,11 +186,9 @@ for %%e in (jpeg jpg png mp3 mp4) do move ".\Add-Ons\Tools\Helper-CEI\*.%%e" ".\
 if "%CURRENT_CUDA%"=="12.8" (
 	.\python_embeded\python.exe -I -m pip install --upgrade --force-reinstall "triton-windows<3.5" %PIPargs%
 ) else (
-	.\python_embeded\python.exe -I -m pip install --upgrade --force-reinstall "triton-windows<3.6" %PIPargs%
+	.\python_embeded\python.exe -I -m pip install --upgrade --force-reinstall "triton-windows<3.7" %PIPargs%
 )
 
-
-.\python_embeded\python.exe -I -m pip install --upgrade --force-reinstall "triton-windows<3.6" %PIPargs%
 :: Postinstall
 .\python_embeded\python.exe -I -m uv pip uninstall pydantic pydantic-core
 .\python_embeded\python.exe -I -m uv pip install pydantic %UVargs%
