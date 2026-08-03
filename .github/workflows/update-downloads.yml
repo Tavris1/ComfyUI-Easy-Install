@@ -73,8 +73,24 @@ jobs:
           git add .github/badges/downloads.json
           if git diff --cached --quiet; then
             echo "No changes."
-          else
-            git commit -m "Update download count badge"
-            git pull --rebase origin Windows
-            git push
+            exit 0
           fi
+          git commit -m "Update download count badge"
+
+          for i in 1 2 3 4 5; do
+            if git push origin HEAD:Windows; then
+              echo "Push succeeded."
+              exit 0
+            fi
+            echo "Push rejected, attempt $i. Fetching and rebasing..."
+            git fetch origin Windows
+            git rebase origin/Windows || {
+              echo "Rebase conflict, aborting."
+              git rebase --abort || true
+              exit 1
+            }
+            sleep $((RANDOM % 5 + 2))
+          done
+
+          echo "Push failed after retries."
+          exit 1
