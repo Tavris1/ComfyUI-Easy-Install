@@ -41,8 +41,17 @@ jobs:
         run: |
           total=$(cat downloads.txt)
           mkdir -p .github/badges
+
+          if [ "$total" -ge 1000000 ]; then
+            formatted=$(awk -v n="$total" 'BEGIN{printf "%.1fM", n/1000000}')
+          elif [ "$total" -ge 1000 ]; then
+            formatted=$(awk -v n="$total" 'BEGIN{printf "%.1fk", n/1000}')
+          else
+            formatted="$total"
+          fi
+
           cat > .github/badges/downloads.json <<EOF
-          {"schemaVersion":1,"label":"downloads","message":"${total}","color":"blue"}
+          {"schemaVersion":1,"label":"downloads","message":"${formatted}","color":"blue"}
           EOF
 
       - name: Commit badge
