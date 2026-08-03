@@ -7,6 +7,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+concurrency:
+  group: update-downloads-badge
+  cancel-in-progress: false
 jobs:
   update-downloads:
     runs-on: ubuntu-latest
@@ -39,8 +42,13 @@ jobs:
 
       - name: Update badge data
         run: |
-          total=$(cat downloads.txt)
+          total=$(cat downloads.txt | tr -d '[:space:]')
           mkdir -p .github/badges
+
+          if ! [[ "$total" =~ ^[0-9]+$ ]]; then
+            echo "ERROR: total is not a valid number: '$total'"
+            exit 1
+          fi
 
           if [ "$total" -ge 1000000 ]; then
             formatted=$(awk -v n="$total" 'BEGIN{printf "%.1fM", n/1000000}')
@@ -49,6 +57,8 @@ jobs:
           else
             formatted="$total"
           fi
+
+          echo "Formatted: $formatted"
 
           cat > .github/badges/downloads.json <<EOF
           {"schemaVersion":1,"label":"downloads","message":"${formatted}","color":"blue"}
@@ -63,5 +73,6 @@ jobs:
             echo "No changes."
           else
             git commit -m "Update download count badge"
+            git pull --rebase origin Windows
             git push
           fi
