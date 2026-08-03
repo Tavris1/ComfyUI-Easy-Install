@@ -1,0 +1,58 @@
+name: Update Download Count
+on:
+  schedule:
+    - cron: "7,37 * * * *"
+  release:
+    types: [published]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update-downloads:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Calculate downloads
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          total=0
+          page=1
+          while true; do
+            releases=$(gh api \
+              "/repos/${GITHUB_REPOSITORY}/releases?per_page=100&page=${page}")
+            count=$(echo "$releases" | jq 'length')
+            if [ "$count" -eq 0 ]; then
+              break
+            fi
+            page_total=$(echo "$releases" | jq '[.[].assets[].download_count] | add // 0')
+            total=$((total + page_total))
+            if [ "$count" -lt 100 ]; then
+              break
+            fi
+            page=$((page + 1))
+          done
+          echo "Total downloads: $total"
+          echo "$total" > downloads.txt
+
+      - name: Update badge data
+        run: |
+          total=$(cat downloads.txt)
+          mkdir -p .github/badges
+          cat > .github/badges/downloads.json <<EOF
+          {"schemaVersion":1,"label":"downloads","message":"${total}","color":"blue"}
+          EOF
+
+      - name: Commit badge
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/badges/downloads.json
+          if git diff --cached --quiet; then
+            echo "No changes."
+          else
+            git commit -m "Update download count badge"
+            git push
+          fi
