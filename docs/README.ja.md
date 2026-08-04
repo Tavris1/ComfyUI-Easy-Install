@@ -2,7 +2,7 @@
 
 <p align="center">
 🌍 
-<a href="../README.md#english">English</a> |
+<a href="../README.md">English</a> |
 <a href="README.zh-CN.md#zh-cn">简体中文</a> |
 <strong>日本語</strong> |
 <a href="README.ko.md#ko">한국어</a> |
@@ -11,15 +11,15 @@
 <a href="README.de.md#de">Deutsch</a> |
 <a href="README.fr.md#fr">Français</a> |
 <a href="README.ru.md#ru">Русский</a> |
-<a href="README.tr.md#de">Türkçe</a> |
+<a href="README.tr.md#tr">Türkçe</a> |
 <a href="README.vi.md#vi">Tiếng Việt</a>
 </p>
 
 ---
 
 <div align="center">
-  <img src="docs/EZi-Logo.svg" width="120" alt="EZi Logo">
-  <h1>ComfyUI-Easy-インストール</h1>
+  <img src="EZi-Logo.svg" width="120" alt="EZi Logo">
+  <h1>ComfyUI-Easy-Install</h1>
   <p align="center">
     <strong>EZi Desktop によるワンクリック・ポータブル ComfyUI</strong><br />
     Windows • NVIDIA GPU • Pixaroma Community Edition
@@ -30,22 +30,31 @@
 [![Downloads](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Tavris1/ComfyUI-Easy-Install/Windows/.github/badges/downloads.json)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
 
   <p align="center">
-    <a href="#%EF%B8%8F-windows-installation">📥 インストール</a> &nbsp;·&nbsp;
-    <a href="#-features">✨ 機能/コンポーネント</a> &nbsp;·&nbsp;
-    <a href="https://github.com/Tavris1/ComfyUI-Easy-インストール/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
+    <a href="#windows-installation">📥 インストール</a> &nbsp;·&nbsp;
+    <a href="#features">✨ 機能/コンポーネント</a> &nbsp;·&nbsp;
+    <a href="https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
     <a href="https://discord.gg/gggpkVgBf3">💬 Pixaroma Discord</a> &nbsp;·&nbsp;
-    <a href="#%EF%B8%8F-support-development">❤️ 開発を支援</a>
+    <a href="#support-development">❤️ 開発を支援</a>
   </p>
+
+<!-- Dedicated to the **Pixaroma** community  
+[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
+-->
+
+<!--[![GitHub All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)-->
+<!--[![GitHub Downloads Latest](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=⬇+latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)-->
 
 ---
 
-![ComfyUI Screenshot](docs/ComfyUI-ivo.jpg)
+![ComfyUI Screenshot](ComfyUI-ivo.jpg)
 
 </div>
 
+<a id="features"></a>
+
 ## ✨ 機能
 
-****ComfyUI-Easy-インストール** は **EZi Desktop** とともにポータブルな ComfyUI 環境を提供します。  
+****ComfyUI-Easy-Install** は **EZi Desktop** とともにポータブルな ComfyUI 環境を提供します。  
 Python や Git の手動セットアップは不要です。
 
 Nunchaku、SageAttention、FlashAttention、InsightFace、Trellis 2.0 などの複雑なパッケージをワンクリックでインストールできます。
@@ -99,6 +108,8 @@ Nunchaku、SageAttention、FlashAttention、InsightFace、Trellis 2.0 などの�
 
 ---
 
+<a id="windows-installation"></a>
+
 ## 🖥️ Windows へのインストール
 
 > [!IMPORTANT]
@@ -107,8 +118,8 @@ Nunchaku、SageAttention、FlashAttention、InsightFace、Trellis 2.0 などの�
 > - フォルダー名にスペースや特殊文字を使用しないでください。
 > - NVIDIA ドライバーを最新の状態にしてください。
 
-1. [**📥 最新版をダウンロード**](https://github.com/Tavris1/ComfyUI-Easy-インストール/releases/latest/download/ComfyUI-Easy-インストール.zip)
-2. ZIP ファイルを新しいフォルダーに展開し、**`ComfyUI-Easy-インストール.bat`** を実行します。
+1. [**📥 最新版をダウンロード**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+2. ZIP ファイルを新しいフォルダーに展開し、**`ComfyUI-Easy-Install.bat`** を実行します。
 3. セットアップ後、必要に応じて **Add-ons** フォルダーまたは **EZi Desktop Menu** からコンポーネントをインストール/実行できます。
     - **Easy-モデル-Linker** - ***extra_model_paths.yaml** を使って既存の **MODELS** フォルダーを利用でき、再ダウンロードは不要です*
       - ***LLM** や **llm_gguf** など一部のフォルダーはこの方法ではリダイレクトできません*
@@ -135,6 +146,8 @@ Nunchaku、SageAttention、FlashAttention、InsightFace、Trellis 2.0 などの�
 <div align="center">
 
 ---
+
+<a id="support-development"></a>
 
 ## ❤️ 開発を支援
 

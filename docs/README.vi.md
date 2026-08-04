@@ -2,7 +2,7 @@
 
 <p align="center">
 🌍 
-<a href="../README.md#english">English</a> |
+<a href="../README.md">English</a> |
 <a href="README.zh-CN.md#zh-cn">简体中文</a> |
 <a href="README.ja.md#ja">日本語</a> |
 <a href="README.ko.md#ko">한국어</a> |
@@ -11,15 +11,15 @@
 <a href="README.de.md#de">Deutsch</a> |
 <a href="README.fr.md#fr">Français</a> |
 <a href="README.ru.md#ru">Русский</a> |
-<a href="README.tr.md#de">Türkçe</a> |
+<a href="README.tr.md#tr">Türkçe</a> |
 <strong>Tiếng Việt</strong>
 </p>
 
 ---
 
 <div align="center">
-  <img src="docs/EZi-Logo.svg" width="120" alt="EZi Logo">
-  <h1>ComfyUI-Easy-Cài đặt</h1>
+  <img src="EZi-Logo.svg" width="120" alt="EZi Logo">
+  <h1>ComfyUI-Easy-Install</h1>
   <p align="center">
     <strong>ComfyUI Portable một cú nhấp với EZi Desktop</strong><br />
     Windows • GPU NVIDIA • Pixaroma Community Edition
@@ -30,22 +30,31 @@
 [![Downloads](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Tavris1/ComfyUI-Easy-Install/Windows/.github/badges/downloads.json)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
 
   <p align="center">
-    <a href="#%EF%B8%8F-windows-installation">📥 Cài đặt</a> &nbsp;·&nbsp;
-    <a href="#-features">✨ Tính năng/Thành phần</a> &nbsp;·&nbsp;
-    <a href="https://github.com/Tavris1/ComfyUI-Easy-Cài đặt/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
+    <a href="#windows-installation">📥 Cài đặt</a> &nbsp;·&nbsp;
+    <a href="#features">✨ Tính năng/Thành phần</a> &nbsp;·&nbsp;
+    <a href="https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
     <a href="https://discord.gg/gggpkVgBf3">💬 Pixaroma Discord</a> &nbsp;·&nbsp;
-    <a href="#%EF%B8%8F-support-development">❤️ Ủng hộ phát triển</a>
+    <a href="#support-development">❤️ Ủng hộ phát triển</a>
   </p>
+
+<!-- Dedicated to the **Pixaroma** community  
+[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
+-->
+
+<!--[![GitHub All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)-->
+<!--[![GitHub Downloads Latest](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=⬇+latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)-->
 
 ---
 
-![ComfyUI Screenshot](docs/ComfyUI-ivo.jpg)
+![ComfyUI Screenshot](ComfyUI-ivo.jpg)
 
 </div>
 
+<a id="features"></a>
+
 ## ✨ Tính năng
 
-****ComfyUI-Easy-Cài đặt** cung cấp môi trường ComfyUI portable cùng **EZi Desktop**.  
+****ComfyUI-Easy-Install** cung cấp môi trường ComfyUI portable cùng **EZi Desktop**.  
 Không cần thiết lập Python hoặc Git thủ công.
 
 Cài đặt các gói phức tạp như Nunchaku, SageAttention, FlashAttention, InsightFace và Trellis 2.0 chỉ bằng một cú nhấp.
@@ -99,6 +108,8 @@ Quản lý **model, package, phiên bản PyTorch/CUDA, Dynamic VRAM, phiên b�
 
 ---
 
+<a id="windows-installation"></a>
+
 ## 🖥️ Cài đặt Windows
 
 > [!IMPORTANT]
@@ -107,8 +118,8 @@ Quản lý **model, package, phiên bản PyTorch/CUDA, Dynamic VRAM, phiên b�
 > - Tránh khoảng trắng và ký tự đặc biệt trong tên thư mục.
 > - Đảm bảo driver NVIDIA đã được cập nhật.
 
-1. [**📥 TẢI PHIÊN BẢN MỚI NHẤT**](https://github.com/Tavris1/ComfyUI-Easy-Cài đặt/releases/latest/download/ComfyUI-Easy-Cài đặt.zip)
-2. Giải nén ZIP vào một thư mục mới và chạy **`ComfyUI-Easy-Cài đặt.bat`**
+1. [**📥 TẢI PHIÊN BẢN MỚI NHẤT**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+2. Giải nén ZIP vào một thư mục mới và chạy **`ComfyUI-Easy-Install.bat`**
 3. Sau khi thiết lập, bạn có thể cài đặt hoặc chạy các thành phần từ thư mục **Add-ons** hoặc **EZi Desktop Menu**:
     - **Easy-Model-Linker** - *Sử dụng thư mục **MODELS** hiện có thông qua **extra_model_paths.yaml**, không cần tải lại*
       - *Một số thư mục như **LLM** và **llm_gguf** không thể chuyển hướng theo cách này*
@@ -135,6 +146,8 @@ Quản lý **model, package, phiên bản PyTorch/CUDA, Dynamic VRAM, phiên b�
 <div align="center">
 
 ---
+
+<a id="support-development"></a>
 
 ## ❤️ Ủng hộ phát triển
 

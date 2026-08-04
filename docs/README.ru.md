@@ -2,7 +2,7 @@
 
 <p align="center">
 🌍 
-<a href="../README.md#english">English</a> |
+<a href="../README.md">English</a> |
 <a href="README.zh-CN.md#zh-cn">简体中文</a> |
 <a href="README.ja.md#ja">日本語</a> |
 <a href="README.ko.md#ko">한국어</a> |
@@ -11,15 +11,15 @@
 <a href="README.de.md#de">Deutsch</a> |
 <a href="README.fr.md#fr">Français</a> |
 <strong>Русский</strong> |
-<a href="README.tr.md#de">Türkçe</a> |
+<a href="README.tr.md#tr">Türkçe</a> |
 <a href="README.vi.md#vi">Tiếng Việt</a>
 </p>
 
 ---
 
 <div align="center">
-  <img src="docs/EZi-Logo.svg" width="120" alt="EZi Logo">
-  <h1>ComfyUI-Easy-Установка</h1>
+  <img src="EZi-Logo.svg" width="120" alt="EZi Logo">
+  <h1>ComfyUI-Easy-Install</h1>
   <p align="center">
     <strong>Портативный ComfyUI в один клик с EZi Desktop</strong><br />
     Windows • GPU NVIDIA • Community Edition Pixaroma
@@ -30,22 +30,31 @@
 [![Downloads](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Tavris1/ComfyUI-Easy-Install/Windows/.github/badges/downloads.json)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
 
   <p align="center">
-    <a href="#%EF%B8%8F-windows-installation">📥 Установка</a> &nbsp;·&nbsp;
-    <a href="#-features">✨ Возможности/Компоненты</a> &nbsp;·&nbsp;
-    <a href="https://github.com/Tavris1/ComfyUI-Easy-Установка/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
+    <a href="#windows-installation">📥 Установка</a> &nbsp;·&nbsp;
+    <a href="#features">✨ Возможности/Компоненты</a> &nbsp;·&nbsp;
+    <a href="https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
     <a href="https://discord.gg/gggpkVgBf3">💬 Pixaroma Discord</a> &nbsp;·&nbsp;
-    <a href="#%EF%B8%8F-support-development">❤️ Поддержать разработку</a>
+    <a href="#support-development">❤️ Поддержать разработку</a>
   </p>
+
+<!-- Dedicated to the **Pixaroma** community  
+[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
+-->
+
+<!--[![GitHub All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)-->
+<!--[![GitHub Downloads Latest](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=⬇+latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)-->
 
 ---
 
-![ComfyUI Screenshot](docs/ComfyUI-ivo.jpg)
+![ComfyUI Screenshot](ComfyUI-ivo.jpg)
 
 </div>
 
+<a id="features"></a>
+
 ## ✨ Возможности
 
-****ComfyUI-Easy-Установка** предоставляет портативную среду ComfyUI вместе с **EZi Desktop**.  
+****ComfyUI-Easy-Install** предоставляет портативную среду ComfyUI вместе с **EZi Desktop**.  
 Ручная настройка Python или Git не требуется.
 
 Устанавливайте сложные пакеты, такие как Nunchaku, SageAttention, FlashAttention, InsightFace и Trellis 2.0, одним кликом.
@@ -99,6 +108,8 @@
 
 ---
 
+<a id="windows-installation"></a>
+
 ## 🖥️ Установка Windows
 
 > [!IMPORTANT]
@@ -107,8 +118,8 @@
 > - Избегайте пробелов и специальных символов в именах папок.
 > - Убедитесь, что драйверы NVIDIA обновлены.
 
-1. [**📥 СКАЧАТЬ ПОСЛЕДНЮЮ ВЕРСИЮ**](https://github.com/Tavris1/ComfyUI-Easy-Установка/releases/latest/download/ComfyUI-Easy-Установка.zip)
-2. Распакуйте ZIP-файл в новую папку и запустите **`ComfyUI-Easy-Установка.bat`**
+1. [**📥 СКАЧАТЬ ПОСЛЕДНЮЮ ВЕРСИЮ**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+2. Распакуйте ZIP-файл в новую папку и запустите **`ComfyUI-Easy-Install.bat`**
 3. После установки при необходимости устанавливайте или запускайте компоненты из папки **Add-ons** или **EZi Desktop Menu**:
     - **Easy-Модели-Linker** - *Использует существующую папку **MODELS** через **extra_model_paths.yaml**, повторная загрузка не требуется*
       - *Некоторые папки, например **LLM** и **llm_gguf**, нельзя перенаправить таким способом*
@@ -135,6 +146,8 @@
 <div align="center">
 
 ---
+
+<a id="support-development"></a>
 
 ## ❤️ Поддержать разработку
 

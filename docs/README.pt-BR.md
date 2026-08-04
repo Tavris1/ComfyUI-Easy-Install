@@ -2,7 +2,7 @@
 
 <p align="center">
 🌍 
-<a href="../README.md#english">English</a> |
+<a href="../README.md">English</a> |
 <a href="README.zh-CN.md#zh-cn">简体中文</a> |
 <a href="README.ja.md#ja">日本語</a> |
 <a href="README.ko.md#ko">한국어</a> |
@@ -11,15 +11,15 @@
 <a href="README.de.md#de">Deutsch</a> |
 <a href="README.fr.md#fr">Français</a> |
 <a href="README.ru.md#ru">Русский</a> |
-<a href="README.tr.md#de">Türkçe</a> |
+<a href="README.tr.md#tr">Türkçe</a> |
 <a href="README.vi.md#vi">Tiếng Việt</a>
 </p>
 
 ---
 
 <div align="center">
-  <img src="docs/EZi-Logo.svg" width="120" alt="EZi Logo">
-  <h1>ComfyUI-Easy-Instalar</h1>
+  <img src="EZi-Logo.svg" width="120" alt="EZi Logo">
+  <h1>ComfyUI-Easy-Install</h1>
   <p align="center">
     <strong>ComfyUI portátil com um clique usando o EZi Desktop</strong><br />
     Windows • GPUs NVIDIA • Edição Comunitária Pixaroma
@@ -30,22 +30,31 @@
 [![Downloads](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Tavris1/ComfyUI-Easy-Install/Windows/.github/badges/downloads.json)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
 
   <p align="center">
-    <a href="#%EF%B8%8F-windows-installation">📥 Instalar</a> &nbsp;·&nbsp;
-    <a href="#-features">✨ Recursos/Componentees</a> &nbsp;·&nbsp;
-    <a href="https://github.com/Tavris1/ComfyUI-Easy-Instalar/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
+    <a href="#windows-installation">📥 Instalar</a> &nbsp;·&nbsp;
+    <a href="#features">✨ Recursos/Componentees</a> &nbsp;·&nbsp;
+    <a href="https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
     <a href="https://discord.gg/gggpkVgBf3">💬 Pixaroma Discord</a> &nbsp;·&nbsp;
-    <a href="#%EF%B8%8F-support-development">❤️ Apoiar o desenvolvimento</a>
+    <a href="#support-development">❤️ Apoiar o desenvolvimento</a>
   </p>
+
+<!-- Dedicated to the **Pixaroma** community  
+[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
+-->
+
+<!--[![GitHub All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)-->
+<!--[![GitHub Downloads Latest](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=⬇+latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)-->
 
 ---
 
-![ComfyUI Screenshot](docs/ComfyUI-ivo.jpg)
+![ComfyUI Screenshot](ComfyUI-ivo.jpg)
 
 </div>
 
+<a id="features"></a>
+
 ## ✨ Recursos
 
-**O **ComfyUI-Easy-Instalar** fornece um ambiente portátil do ComfyUI com o **EZi Desktop**.  
+**O **ComfyUI-Easy-Install** fornece um ambiente portátil do ComfyUI com o **EZi Desktop**.  
 Não é necessário configurar Python ou Git manualmente.
 
 Instale com um clique pacotes complexos como Nunchaku, SageAttention, FlashAttention, InsightFace e Trellis 2.0.
@@ -99,6 +108,8 @@ Gerencie em um só lugar **modelos, pacotes, versões do PyTorch/CUDA, Dynamic V
 
 ---
 
+<a id="windows-installation"></a>
+
 ## 🖥️ Instalação no Windows
 
 > [!IMPORTANT]
@@ -107,8 +118,8 @@ Gerencie em um só lugar **modelos, pacotes, versões do PyTorch/CUDA, Dynamic V
 > - Evite espaços e caracteres especiais nos nomes das pastas.
 > - Certifique-se de que os drivers NVIDIA estejam atualizados.
 
-1. [**📥 BAIXAR A VERSÃO MAIS RECENTE**](https://github.com/Tavris1/ComfyUI-Easy-Instalar/releases/latest/download/ComfyUI-Easy-Instalar.zip)
-2. Extraia o ZIP para uma nova pasta e execute **`ComfyUI-Easy-Instalar.bat`**
+1. [**📥 BAIXAR A VERSÃO MAIS RECENTE**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+2. Extraia o ZIP para uma nova pasta e execute **`ComfyUI-Easy-Install.bat`**
 3. Após a configuração, opcionalmente instale ou execute componentes pela pasta **Add-ons** ou pelo **EZi Desktop Menu**:
     - **Easy-Modelos-Linker** - *Usa a pasta **MODELS** existente por meio do **extra_model_paths.yaml**, sem necessidade de baixar novamente*
       - *Algumas pastas, como **LLM** e **llm_gguf**, não podem ser redirecionadas dessa forma*
@@ -135,6 +146,8 @@ Gerencie em um só lugar **modelos, pacotes, versões do PyTorch/CUDA, Dynamic V
 <div align="center">
 
 ---
+
+<a id="support-development"></a>
 
 ## ❤️ Apoiar o desenvolvimento
 
