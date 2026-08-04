@@ -2,7 +2,7 @@
 
 <p align="center">
 🌍 
-<a href="../README.md#english">English</a> |
+<a href="../README.md">English</a> |
 <a href="README.zh-CN.md#zh-cn">简体中文</a> |
 <a href="README.ja.md#ja">日本語</a> |
 <strong>한국어</strong> |
@@ -11,15 +11,15 @@
 <a href="README.de.md#de">Deutsch</a> |
 <a href="README.fr.md#fr">Français</a> |
 <a href="README.ru.md#ru">Русский</a> |
-<a href="README.tr.md#de">Türkçe</a> |
+<a href="README.tr.md#tr">Türkçe</a> |
 <a href="README.vi.md#vi">Tiếng Việt</a>
 </p>
 
 ---
 
 <div align="center">
-  <img src="docs/EZi-Logo.svg" width="120" alt="EZi Logo">
-  <h1>ComfyUI-Easy-설치</h1>
+  <img src="EZi-Logo.svg" width="120" alt="EZi Logo">
+  <h1>ComfyUI-Easy-Install</h1>
   <p align="center">
     <strong>EZi Desktop으로 원클릭 포터블 ComfyUI</strong><br />
     Windows • NVIDIA GPU • Pixaroma Community Edition
@@ -30,22 +30,31 @@
 [![Downloads](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Tavris1/ComfyUI-Easy-Install/Windows/.github/badges/downloads.json)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
 
   <p align="center">
-    <a href="#%EF%B8%8F-windows-installation">📥 설치</a> &nbsp;·&nbsp;
-    <a href="#-features">✨ 기능/구성 요소</a> &nbsp;·&nbsp;
-    <a href="https://github.com/Tavris1/ComfyUI-Easy-설치/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
+    <a href="#windows-installation">📥 설치</a> &nbsp;·&nbsp;
+    <a href="#features">✨ 기능/구성 요소</a> &nbsp;·&nbsp;
+    <a href="https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
     <a href="https://discord.gg/gggpkVgBf3">💬 Pixaroma Discord</a> &nbsp;·&nbsp;
-    <a href="#%EF%B8%8F-support-development">❤️ 개발 지원</a>
+    <a href="#support-development">❤️ 개발 지원</a>
   </p>
+
+<!-- Dedicated to the **Pixaroma** community  
+[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
+-->
+
+<!--[![GitHub All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)-->
+<!--[![GitHub Downloads Latest](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=⬇+latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)-->
 
 ---
 
-![ComfyUI Screenshot](docs/ComfyUI-ivo.jpg)
+![ComfyUI Screenshot](ComfyUI-ivo.jpg)
 
 </div>
 
+<a id="features"></a>
+
 ## ✨ 기능
 
-****ComfyUI-Easy-설치**은 **EZi Desktop**과 함께 포터블 ComfyUI 환경을 제공합니다.  
+****ComfyUI-Easy-Install**은 **EZi Desktop**과 함께 포터블 ComfyUI 환경을 제공합니다.  
 Python 또는 Git을 수동으로 설정할 필요가 없습니다.
 
 Nunchaku, SageAttention, FlashAttention, InsightFace, Trellis 2.0 같은 복잡한 패키지를 한 번의 클릭으로 설치할 수 있습니다.
@@ -99,6 +108,8 @@ Nunchaku, SageAttention, FlashAttention, InsightFace, Trellis 2.0 같은 복잡�
 
 ---
 
+<a id="windows-installation"></a>
+
 ## 🖥️ Windows 설치
 
 > [!IMPORTANT]
@@ -107,8 +118,8 @@ Nunchaku, SageAttention, FlashAttention, InsightFace, Trellis 2.0 같은 복잡�
 > - 폴더 이름에 공백과 특수 문자를 사용하지 마세요.
 > - NVIDIA 드라이버가 최신인지 확인하세요.
 
-1. [**📥 최신 버전 다운로드**](https://github.com/Tavris1/ComfyUI-Easy-설치/releases/latest/download/ComfyUI-Easy-설치.zip)
-2. ZIP 파일을 새 폴더에 압축 해제한 다음 **`ComfyUI-Easy-설치.bat`**을 실행하세요.
+1. [**📥 최신 버전 다운로드**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+2. ZIP 파일을 새 폴더에 압축 해제한 다음 **`ComfyUI-Easy-Install.bat`**을 실행하세요.
 3. 설정 후 필요에 따라 **Add-ons** 폴더 또는 **EZi Desktop Menu**에서 구성 요소를 설치하거나 실행할 수 있습니다:
     - **Easy-모델-Linker** - ***extra_model_paths.yaml**을 통해 기존 **MODELS** 폴더를 사용하므로 다시 다운로드할 필요가 없습니다*
       - ***LLM**, **llm_gguf** 같은 일부 폴더는 이 방법으로 경로를 변경할 수 없습니다*
@@ -135,6 +146,8 @@ Nunchaku, SageAttention, FlashAttention, InsightFace, Trellis 2.0 같은 복잡�
 <div align="center">
 
 ---
+
+<a id="support-development"></a>
 
 ## ❤️ 개발 지원
 

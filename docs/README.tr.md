@@ -2,7 +2,7 @@
 
 <p align="center">
 🌍 
-<a href="../README.md#english">English</a> |
+<a href="../README.md">English</a> |
 <a href="README.zh-CN.md#zh-cn">简体中文</a> |
 <a href="README.ja.md#ja">日本語</a> |
 <a href="README.ko.md#ko">한국어</a> |
@@ -18,8 +18,8 @@
 ---
 
 <div align="center">
-  <img src="docs/EZi-Logo.svg" width="120" alt="EZi Logo">
-  <h1>ComfyUI-Easy-Kurulum</h1>
+  <img src="EZi-Logo.svg" width="120" alt="EZi Logo">
+  <h1>ComfyUI-Easy-Install</h1>
   <p align="center">
     <strong>EZi Desktop ile Tek Tıkla Taşınabilir ComfyUI</strong><br />
     Windows • NVIDIA GPU'lar • Pixaroma Community Edition
@@ -30,22 +30,31 @@
 [![Downloads](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Tavris1/ComfyUI-Easy-Install/Windows/.github/badges/downloads.json)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
 
   <p align="center">
-    <a href="#%EF%B8%8F-windows-installation">📥 Kurulum</a> &nbsp;·&nbsp;
-    <a href="#-features">✨ Özellikler/Bileşenler</a> &nbsp;·&nbsp;
-    <a href="https://github.com/Tavris1/ComfyUI-Easy-Kurulum/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
+    <a href="#windows-installation">📥 Kurulum</a> &nbsp;·&nbsp;
+    <a href="#features">✨ Özellikler/Bileşenler</a> &nbsp;·&nbsp;
+    <a href="https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
     <a href="https://discord.gg/gggpkVgBf3">💬 Pixaroma Discord</a> &nbsp;·&nbsp;
-    <a href="#%EF%B8%8F-support-development">❤️ Geliştirmeyi Destekle</a>
+    <a href="#support-development">❤️ Geliştirmeyi Destekle</a>
   </p>
+
+<!-- Dedicated to the **Pixaroma** community  
+[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
+-->
+
+<!--[![GitHub All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)-->
+<!--[![GitHub Downloads Latest](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=⬇+latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)-->
 
 ---
 
-![ComfyUI Screenshot](docs/ComfyUI-ivo.jpg)
+![ComfyUI Screenshot](ComfyUI-ivo.jpg)
 
 </div>
 
+<a id="features"></a>
+
 ## ✨ Özellikler
 
-****ComfyUI-Easy-Kurulum**, **EZi Desktop** ile taşınabilir bir ComfyUI ortamı sağlar.  
+****ComfyUI-Easy-Install**, **EZi Desktop** ile taşınabilir bir ComfyUI ortamı sağlar.  
 Manuel Python veya Git kurulumu gerekmez.
 
 Nunchaku, SageAttention, FlashAttention, InsightFace ve Trellis 2.0 gibi karmaşık paketleri tek tıkla kurun.
@@ -99,6 +108,8 @@ Nunchaku, SageAttention, FlashAttention, InsightFace ve Trellis 2.0 gibi karmaş
 
 ---
 
+<a id="windows-installation"></a>
+
 ## 🖥️ Windows Kurulumu
 
 > [!IMPORTANT]
@@ -107,8 +118,8 @@ Nunchaku, SageAttention, FlashAttention, InsightFace ve Trellis 2.0 gibi karmaş
 > - Klasör adlarında boşluk ve özel karakter kullanmaktan kaçının.
 > - NVIDIA sürücülerinizin güncel olduğundan emin olun.
 
-1. [**📥 EN SON SÜRÜMÜ İNDİR**](https://github.com/Tavris1/ComfyUI-Easy-Kurulum/releases/latest/download/ComfyUI-Easy-Kurulum.zip)
-2. ZIP dosyasını yeni bir klasöre çıkarın ve **`ComfyUI-Easy-Kurulum.bat`** dosyasını çalıştırın.
+1. [**📥 EN SON SÜRÜMÜ İNDİR**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+2. ZIP dosyasını yeni bir klasöre çıkarın ve **`ComfyUI-Easy-Install.bat`** dosyasını çalıştırın.
 3. Kurulumdan sonra isteğe bağlı olarak **Add-ons** klasöründen veya **EZi Desktop Menu** üzerinden bileşenleri kurun ya da çalıştırın:
     - **Easy-Modeller-Linker** - ***extra_model_paths.yaml** üzerinden mevcut **MODELS** klasörünü kullanır; yeniden indirme gerekmez*
       - ***LLM** ve **llm_gguf** gibi bazı klasörler bu şekilde yönlendirilemez*
@@ -135,6 +146,8 @@ Nunchaku, SageAttention, FlashAttention, InsightFace ve Trellis 2.0 gibi karmaş
 <div align="center">
 
 ---
+
+<a id="support-development"></a>
 
 ## ❤️ Geliştirmeyi Destekle
 

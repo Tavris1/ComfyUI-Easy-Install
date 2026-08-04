@@ -2,7 +2,7 @@
 
 <p align="center">
 🌍 
-<a href="../README.md#english">English</a> |
+<a href="../README.md">English</a> |
 <strong>简体中文</strong> |
 <a href="README.ja.md#ja">日本語</a> |
 <a href="README.ko.md#ko">한국어</a> |
@@ -11,15 +11,15 @@
 <a href="README.de.md#de">Deutsch</a> |
 <a href="README.fr.md#fr">Français</a> |
 <a href="README.ru.md#ru">Русский</a> |
-<a href="README.tr.md#de">Türkçe</a> |
+<a href="README.tr.md#tr">Türkçe</a> |
 <a href="README.vi.md#vi">Tiếng Việt</a>
 </p>
 
 ---
 
 <div align="center">
-  <img src="docs/EZi-Logo.svg" width="120" alt="EZi Logo">
-  <h1>ComfyUI-Easy-安装</h1>
+  <img src="EZi-Logo.svg" width="120" alt="EZi Logo">
+  <h1>ComfyUI-Easy-Install</h1>
   <p align="center">
     <strong>使用 EZi Desktop 一键安装便携版 ComfyUI</strong><br />
     Windows • NVIDIA GPU • Pixaroma 社区版
@@ -30,22 +30,31 @@
 [![Downloads](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Tavris1/ComfyUI-Easy-Install/Windows/.github/badges/downloads.json)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
 
   <p align="center">
-    <a href="#%EF%B8%8F-windows-installation">📥 安装</a> &nbsp;·&nbsp;
-    <a href="#-features">✨ 功能/组件</a> &nbsp;·&nbsp;
-    <a href="https://github.com/Tavris1/ComfyUI-Easy-安装/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
+    <a href="#windows-installation">📥 安装</a> &nbsp;·&nbsp;
+    <a href="#features">✨ 功能/组件</a> &nbsp;·&nbsp;
+    <a href="https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
     <a href="https://discord.gg/gggpkVgBf3">💬 Pixaroma Discord</a> &nbsp;·&nbsp;
-    <a href="#%EF%B8%8F-support-development">❤️ 支持开发</a>
+    <a href="#support-development">❤️ 支持开发</a>
   </p>
+
+<!-- Dedicated to the **Pixaroma** community  
+[![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
+-->
+
+<!--[![GitHub All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)-->
+<!--[![GitHub Downloads Latest](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=⬇+latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)-->
 
 ---
 
-![ComfyUI Screenshot](docs/ComfyUI-ivo.jpg)
+![ComfyUI Screenshot](ComfyUI-ivo.jpg)
 
 </div>
 
+<a id="features"></a>
+
 ## ✨ 功能
 
-****ComfyUI-Easy-安装** 通过 **EZi Desktop** 提供便携式 ComfyUI 环境。  
+****ComfyUI-Easy-Install** 通过 **EZi Desktop** 提供便携式 ComfyUI 环境。  
 无需手动配置 Python 或 Git。
 
 一键安装 Nunchaku、SageAttention、FlashAttention、InsightFace 和 Trellis 2.0 等复杂软件包。
@@ -99,6 +108,8 @@
 
 ---
 
+<a id="windows-installation"></a>
+
 ## 🖥️ Windows 安装
 
 > [!IMPORTANT]
@@ -107,8 +118,8 @@
 > - 避免在文件夹名称中使用空格和特殊字符。
 > - 请确保 NVIDIA 驱动程序已更新到最新版本。
 
-1. [**📥 下载最新版本**](https://github.com/Tavris1/ComfyUI-Easy-安装/releases/latest/download/ComfyUI-Easy-安装.zip)
-2. 将 ZIP 文件解压到新文件夹，然后运行 **`ComfyUI-Easy-安装.bat`**
+1. [**📥 下载最新版本**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+2. 将 ZIP 文件解压到新文件夹，然后运行 **`ComfyUI-Easy-Install.bat`**
 3. 安装完成后，可选择从 **Add-ons** 文件夹或 **EZi Desktop Menu** 安装/运行组件：
     - **Easy-模型-Linker** - *通过 **extra_model_paths.yaml** 使用现有的 **MODELS** 文件夹，无需重新下载*
       - ***LLM** 和 **llm_gguf** 等部分文件夹无法通过此方式重定向*
@@ -135,6 +146,8 @@
 <div align="center">
 
 ---
+
+<a id="support-development"></a>
 
 ## ❤️ 支持开发
 
