@@ -25,9 +25,9 @@
     Windows • GPU NVIDIA • Community Edition Pixaroma
   </p>
 
-[![GitHub Release](https://img.shields.io/github/v/release/Tavris1/ComfyUI-Easy-Установка)](https://github.com/Tavris1/ComfyUI-Easy-Установка/releases/latest/download/ComfyUI-Easy-Установка.zip)
-[![GitHub Release Date](https://img.shields.io/github/release-date/Tavris1/ComfyUI-Easy-Установка?style=flat&label=date)](https://github.com/Tavris1/ComfyUI-Easy-Установка/releases)
-[![Downloads](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Tavris1/ComfyUI-Easy-Установка/Windows/.github/badges/downloads.json)](https://github.com/Tavris1/ComfyUI-Easy-Установка/releases)
+[![GitHub Release](https://img.shields.io/github/v/release/Tavris1/ComfyUI-Easy-Install)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+[![GitHub Release Date](https://img.shields.io/github/release-date/Tavris1/ComfyUI-Easy-Install?style=flat&label=date)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
+[![Downloads](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Tavris1/ComfyUI-Easy-Install/Windows/.github/badges/downloads.json)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
 
   <p align="center">
     <a href="#%EF%B8%8F-windows-installation">📥 Установка</a> &nbsp;·&nbsp;
