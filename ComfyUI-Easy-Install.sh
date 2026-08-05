@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v3.11.2
+# Title ComfyUI-Easy-Install  NEXT by ivo v3.12.2
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -156,68 +156,82 @@ install_comfyui() {
     mkdir -p "$PYTHON_EMBED_DIR"
     cd "$PYTHON_EMBED_DIR"
     
-    # Skip embedded Python (Windows-only) - go directly to source compilation
-    echo -e "${YELLOW}Embedded Python not available on $(uname -s), building from source${RESET}"
-    EMBED_TAR_OK=0
+    # Prefer an existing Python 3.12 (venv) over source builds.
+    # Source builds also break when the install path contains spaces (common on macOS Downloads).
+    find_python312() {
+        local candidate=""
+        local ver=""
 
-    if [ "$EMBED_TAR_OK" -eq 1 ]; then
-        # Extract embedded Python
-        echo "Extracting Python embedded..."
-        unzip -q python-embed.zip
-        rm python-embed.zip
-        
-        # Set up Python path configuration
-        echo "Configuring Python environment..."
-        
-        # Check for different Python binary names in embedded distribution
-        if [ -x "python.exe" ]; then
-            PYTHON_CMD="$(pwd)/python.exe"
-        elif [ -x "python3" ]; then
-            PYTHON_CMD="$(pwd)/python3"
-        elif [ -x "python" ]; then
-            PYTHON_CMD="$(pwd)/python"
-        else
-            echo -e "${RED}No Python binary found in embedded distribution${RESET}"
-            exit 1
+        if command -v python3.12 >/dev/null 2>&1; then
+            candidate="$(command -v python3.12)"
+            ver="$("$candidate" -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")' 2>/dev/null || true)"
+            if [ "$ver" = "3.12" ]; then
+                printf '%s\n' "$candidate"
+                return 0
+            fi
         fi
-        
-        # Create wrapper script
+
+        if [ "$(uname -s)" = "Darwin" ] && command -v brew >/dev/null 2>&1; then
+            echo "Ensuring Homebrew python@3.12 is available..."
+            brew install python@3.12 2>/dev/null || true
+            for candidate in \
+                "$(brew --prefix 2>/dev/null)/opt/python@3.12/bin/python3.12" \
+                "$(brew --prefix python@3.12 2>/dev/null)/bin/python3.12"
+            do
+                if [ -n "$candidate" ] && [ -x "$candidate" ]; then
+                    ver="$("$candidate" -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")' 2>/dev/null || true)"
+                    if [ "$ver" = "3.12" ]; then
+                        printf '%s\n' "$candidate"
+                        return 0
+                    fi
+                fi
+            done
+        fi
+
+        return 1
+    }
+
+    create_python_wrappers() {
         cat > python << 'EOL'
 #!/usr/bin/env sh
 SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
-
-# Try different Python binary names
-if [ -x "$SCRIPT_DIR/python.exe" ]; then
-    exec "$SCRIPT_DIR/python.exe" "$@"
-elif [ -x "$SCRIPT_DIR/python3" ]; then
-    exec "$SCRIPT_DIR/python3" "$@"
-elif [ -x "$SCRIPT_DIR/python" ]; then
-    exec "$SCRIPT_DIR/python" "$@"
+if [ -x "$SCRIPT_DIR/bin/python3" ]; then
+    exec "$SCRIPT_DIR/bin/python3" "$@"
+elif [ -x "$SCRIPT_DIR/bin/python3.12" ]; then
+    exec "$SCRIPT_DIR/bin/python3.12" "$@"
 else
-    echo "Error: No Python binary found"
+    echo "Error: No Python binary found in $SCRIPT_DIR/bin" >&2
     exit 1
 fi
 EOL
         chmod +x python
-        PYTHON_CMD="$(pwd)/python"
-        
-        # Create python312._pth
-        cat > python312._pth << 'EOL'
-../ComfyUI
-python312.zip
-.
-Lib/site-packages
-Lib
-Scripts
-import site
-EOL
 
-        # Install pip
-        echo "Installing pip..."
-        curl -sS https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-        $PYTHON_CMD -I get-pip.py
-        rm get-pip.py
+        cat > python3 << 'EOL'
+#!/usr/bin/env sh
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+if [ -x "$SCRIPT_DIR/bin/python3" ]; then
+    exec "$SCRIPT_DIR/bin/python3" "$@"
+elif [ -x "$SCRIPT_DIR/bin/python3.12" ]; then
+    exec "$SCRIPT_DIR/bin/python3.12" "$@"
+else
+    echo "Error: No Python binary found in $SCRIPT_DIR/bin" >&2
+    exit 1
+fi
+EOL
+        chmod +x python3
+    }
+
+    BASE_PYTHON312="$(find_python312 || true)"
+    if [ -n "$BASE_PYTHON312" ]; then
+        echo -e "${GREEN}Using existing Python 3.12 for a local venv:${RESET} $BASE_PYTHON312"
+        if ! "$BASE_PYTHON312" -m venv .; then
+            echo -e "${RED}Failed to create Python 3.12 virtual environment${RESET}"
+            exit 1
+        fi
+        create_python_wrappers
+        PYTHON_CMD="$(pwd)/python"
     else
+        echo -e "${YELLOW}No system/Homebrew Python 3.12 found; building from source${RESET}"
         echo -e "${YELLOW}Embedded Python archive not available/valid for this platform, falling back to building from source${RESET}"
         rm -f python-embed.zip
 
@@ -287,6 +301,16 @@ EOL
         tar -xzf Python-${PYTHON_VER}.tgz
         cd Python-${PYTHON_VER}
 
+        # make install breaks when --prefix contains spaces. Always install to a
+        # space-free temp prefix, then copy the tree into python_embeded/.
+        TARGET_PREFIX="$(CDPATH= cd -- "$(pwd)/.." && pwd)"
+        if [[ "$TARGET_PREFIX" == *" "* ]]; then
+            CONFIGURE_PREFIX="$(mktemp -d /tmp/comfyui-python-XXXXXX)"
+            echo -e "${YELLOW}Install path contains spaces; using temp prefix: ${CONFIGURE_PREFIX}${RESET}"
+        else
+            CONFIGURE_PREFIX="$TARGET_PREFIX"
+        fi
+
         echo "Configuring Python build..."
         if [ "$(uname -s)" = "Darwin" ] && command -v brew >/dev/null 2>&1; then
             # macOS: must explicitly link OpenSSL from Homebrew
@@ -299,14 +323,14 @@ EOL
                 LDFLAGS="-L${OPENSSL_PREFIX}/lib -L${XZ_PREFIX}/lib -L${READLINE_PREFIX}/lib" \
                 CPPFLAGS="-I${OPENSSL_PREFIX}/include -I${XZ_PREFIX}/include -I${READLINE_PREFIX}/include" \
                 LIBS="-llzma" \
-                ./configure --prefix="$(pwd)/.." \
+                ./configure --prefix="$CONFIGURE_PREFIX" \
                     --with-ensurepip=install \
                     --with-system-ffi \
                     --with-system-libm \
                     --with-openssl="$OPENSSL_PREFIX"
         else
             # Linux: system OpenSSL is usually found automatically
-            ./configure --prefix="$(pwd)/.." \
+            ./configure --prefix="$CONFIGURE_PREFIX" \
                 --enable-optimizations \
                 --with-ensurepip=install \
                 --with-system-ffi \
@@ -323,26 +347,21 @@ EOL
 
         cd ..
         rm -rf Python-${PYTHON_VER} Python-${PYTHON_VER}.tgz
+
+        # If we installed to a temp prefix (path had spaces), copy into place
+        if [ "$CONFIGURE_PREFIX" != "$TARGET_PREFIX" ]; then
+            echo "Copying Python install into $TARGET_PREFIX ..."
+            cp -a "$CONFIGURE_PREFIX"/. "$TARGET_PREFIX"/
+            rm -rf "$CONFIGURE_PREFIX"
+        fi
+
         REAL_PYTHON="$(pwd)/bin/python3"
         if [ ! -x "$REAL_PYTHON" ]; then
             echo -e "${RED}Python build did not produce expected binary: $REAL_PYTHON${RESET}"
             exit 1
         fi
 
-        cat > python << 'EOL'
-#!/usr/bin/env sh
-SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
-exec "$SCRIPT_DIR/bin/python3" "$@"
-EOL
-        chmod +x python
-
-        cat > python3 << 'EOL'
-#!/usr/bin/env sh
-SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
-exec "$SCRIPT_DIR/bin/python3" "$@"
-EOL
-        chmod +x python3
-
+        create_python_wrappers
         PYTHON_CMD="$(pwd)/python"
     fi
 
@@ -351,10 +370,14 @@ EOL
         exit 1
     fi
 
-    $PYTHON_CMD -m ensurepip --upgrade >/dev/null 2>&1 || true
+    "$PYTHON_CMD" -m ensurepip --upgrade >/dev/null 2>&1 || true
     # Upgrade pip with timeout to prevent hanging (skip if it fails)
     echo "Upgrading pip (timeout 60s)..."
-    timeout 60 $PYTHON_CMD -m pip install --no-cache-dir --timeout=30 --retries=2 --upgrade pip 2>/dev/null || echo -e "${YELLOW}pip upgrade skipped (timeout or network issue)${RESET}"
+    if command -v timeout >/dev/null 2>&1; then
+        timeout 60 "$PYTHON_CMD" -m pip install --no-cache-dir --timeout=30 --retries=2 --upgrade pip 2>/dev/null || echo -e "${YELLOW}pip upgrade skipped (timeout or network issue)${RESET}"
+    else
+        "$PYTHON_CMD" -m pip install --no-cache-dir --timeout=30 --retries=2 --upgrade pip 2>/dev/null || echo -e "${YELLOW}pip upgrade skipped (timeout or network issue)${RESET}"
+    fi
 
     # Set the full path to the embedded Python
     EMBEDDED_PYTHON="$PYTHON_CMD"
@@ -367,8 +390,15 @@ EOL
         export PATH="$PYTHON_BIN_DIR:$PATH"
     fi
     
-    # Update UV_ARGS to use the embedded Python
-    UV_ARGS="$UV_ARGS --python $EMBEDDED_PYTHON"
+    # Point uv at this interpreter via env var so paths with spaces work.
+    # Do NOT append --python to UV_ARGS: unquoted $UV_ARGS expansion breaks on spaces.
+    export UV_PYTHON="$EMBEDDED_PYTHON"
+    # venv installs should target the venv (no --system); source-built embeds use --system
+    if [ -f "$PYTHON_BIN_DIR/pyvenv.cfg" ] || [ -f "$PYTHON_BIN_DIR/../pyvenv.cfg" ]; then
+        UV_ARGS="--no-cache --link-mode=copy"
+    else
+        UV_ARGS="--system --no-cache --link-mode=copy"
+    fi
     
     # Return to the original directory
     cd ..
@@ -380,7 +410,7 @@ EOL
     echo -e "${GREEN}::::::::::::::: Installing required packages :::::::::::::::${RESET}"
     
     echo -e "${YELLOW}[1/6]${RESET} Installing uv package manager..."
-    $EMBEDDED_PYTHON -m pip install uv $PIP_ARGS
+    "$EMBEDDED_PYTHON" -m pip install uv $PIP_ARGS
     echo -e "${GREEN}✓${RESET} uv installed"
     
     echo -e "${YELLOW}[2/6]${RESET} Installing PyTorch 2.10.0..."
@@ -522,7 +552,7 @@ get_node() {
 
     if [ -f "./ComfyUI/custom_nodes/${GIT_FOLDER}/install.py" ]; then
         if [ -s "./ComfyUI/custom_nodes/${GIT_FOLDER}/install.py" ]; then
-            $EMBEDDED_PYTHON "./ComfyUI/custom_nodes/${GIT_FOLDER}/install.py"
+            "$EMBEDDED_PYTHON" "./ComfyUI/custom_nodes/${GIT_FOLDER}/install.py"
         fi
     fi
     echo ""
@@ -571,6 +601,7 @@ fi
 get_node https://github.com/kijai/ComfyUI-SCAIL-Pose ComfyUI-SCAIL-Pose
 get_node https://github.com/kijai/ComfyUI-MelBandRoFormer ComfyUI-MelBandRoFormer
 get_node https://github.com/capitan01R/ComfyUI-Krea2T-Enhancer ComfyUI-Krea2T-Enhancer
+get_node https://github.com/lbouaraba/comfyui-krea2edit ComfyUI-Krea2Edit
 
 if [ ! -d "ComfyUI/custom_nodes/.disabled" ]; then
     mkdir -p "ComfyUI/custom_nodes/.disabled"
@@ -633,7 +664,8 @@ echo -e "${GREEN}✓${RESET} python-ffmpeg installed"
 
 if [ "$(uname -s)" = "Darwin" ]; then
     echo -e "${YELLOW}Installing opencv-contrib-python for LayerStyle (ximgproc)...${RESET}"
-    uv pip uninstall --system --python "$EMBEDDED_PYTHON" opencv-python-headless opencv-python opencv-contrib-python 2>/dev/null || true
+    # uninstall does not accept --link-mode; keep only compatible flags
+    uv pip uninstall --no-cache opencv-python-headless opencv-python opencv-contrib-python 2>/dev/null || true
     uv pip install --force-reinstall opencv-contrib-python $UV_ARGS
 fi
 
@@ -659,10 +691,10 @@ find . -type f -name "*.sh" -exec chmod +x {} +
 # Install Triton matching Torch requirements (Linux only)
 if [ "$(uname -s)" = "Linux" ]; then
     echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}Triton${GREEN} :::::::::::::::${RESET}"
-    TRITON_VER=$($EMBEDDED_PYTHON -c "import importlib.metadata; dist = importlib.metadata.metadata('torch'); reqs = [r for r in (dist.get_all('Requires-Dist') or []) if r.startswith('triton')]; ver = reqs[0].split('==')[1].split(';')[0].strip() if reqs and '==' in reqs[0] else ''; print(ver)" 2>/dev/null)
+    TRITON_VER=$("$EMBEDDED_PYTHON" -c "import importlib.metadata; dist = importlib.metadata.metadata('torch'); reqs = [r for r in (dist.get_all('Requires-Dist') or []) if r.startswith('triton')]; ver = reqs[0].split('==')[1].split(';')[0].strip() if reqs and '==' in reqs[0] else ''; print(ver)" 2>/dev/null)
     if [ -n "$TRITON_VER" ]; then
         echo -e "${YELLOW}Torch requires triton==${TRITON_VER}${RESET}"
-        $EMBEDDED_PYTHON -m pip install --upgrade --force-reinstall "triton==${TRITON_VER}" $PIP_ARGS || echo -e "${YELLOW}Triton install skipped${RESET}"
+        "$EMBEDDED_PYTHON" -m pip install --upgrade --force-reinstall "triton==${TRITON_VER}" $PIP_ARGS || echo -e "${YELLOW}Triton install skipped${RESET}"
     else
         echo -e "${YELLOW}Could not determine triton version from torch metadata, skipping${RESET}"
     fi
@@ -670,7 +702,7 @@ if [ "$(uname -s)" = "Linux" ]; then
 fi
 
 # Postinstall: resync pydantic stack to avoid version mismatch issues
-uv pip uninstall --system --python "$EMBEDDED_PYTHON" pydantic pydantic-core || true
+uv pip uninstall --no-cache pydantic pydantic-core || true
 uv pip install $UV_ARGS pydantic
 
 # Copy additional files if they exist

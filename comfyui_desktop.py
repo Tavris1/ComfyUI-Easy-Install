@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Desktop EZi v3.11.2 — PyWebView wrapper
+Desktop EZi v3.12.2 — PyWebView wrapper
 Opens ComfyUI in a native desktop window instead of a browser.
 Part of ComfyUI-Easy-Install by Pixaroma / VenimK
 """
@@ -18,7 +18,7 @@ import base64
 import json
 import subprocess
 
-EZI_VERSION = "3.11.2"
+EZI_VERSION = "3.12.2"
 
 COMFYUI_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
 COMFYUI_PORT = int(os.environ.get("COMFYUI_PORT", 8188))
@@ -153,25 +153,35 @@ def get_system_info():
 
     # ComfyUI frontend package version
     try:
-        import glob as _glob
-        site = os.path.join(SCRIPT_DIR, "python_embeded", "lib",
-                            "python3.12", "site-packages")
-        if not os.path.isdir(site):
-            import site as _site
-            site = _site.getsitepackages()[0]
-        matches = sorted(_glob.glob(
-            os.path.join(site, "comfyui_frontend_package-*.dist-info", "METADATA")
-        ), reverse=True)
-        info["frontend"] = "not installed"
-        for meta in matches:
-            with open(meta, "r", errors="replace") as f:
-                for line in f:
-                    if line.startswith("Version:"):
-                        ver = line.split(":", 1)[1].strip()
-                        if ver and ver != "0.1.0":
-                            info["frontend"] = ver
-                        break
-            break
+        import importlib.metadata as _im
+        for _pkg in ("comfyui_frontend_package", "comfyui-frontend-package"):
+            try:
+                ver = _im.version(_pkg)
+                if ver and ver != "0.1.0":
+                    info["frontend"] = ver
+                    break
+            except Exception:
+                continue
+        if "frontend" not in info or info.get("frontend") == "0.1.0":
+            import glob as _glob
+            site = os.path.join(SCRIPT_DIR, "python_embeded", "lib",
+                                "python3.12", "site-packages")
+            if not os.path.isdir(site):
+                import site as _site
+                site = _site.getsitepackages()[0]
+            matches = sorted(_glob.glob(
+                os.path.join(site, "comfyui_frontend_package-*.dist-info", "METADATA")
+            ), reverse=True)
+            info["frontend"] = "not installed"
+            for meta in matches:
+                with open(meta, "r", errors="replace") as f:
+                    for line in f:
+                        if line.startswith("Version:"):
+                            ver = line.split(":", 1)[1].strip()
+                            if ver and ver != "0.1.0":
+                                info["frontend"] = ver
+                            break
+                break
     except Exception:
         info["frontend"] = "unknown"
 
@@ -259,19 +269,58 @@ def check_comfyui_update():
 
 
 def get_frontend_versions():
-    """Return recent comfyui_frontend_package versions from PyPI (newest first, max 20)."""
+    """Return dict with current, versions list, and isNightly flag."""
+    current = None
+    try:
+        import importlib.metadata as _im
+        for _pkg in ("comfyui_frontend_package", "comfyui-frontend-package"):
+            try:
+                ver = _im.version(_pkg)
+                if ver and ver != "0.1.0":
+                    current = ver
+                    break
+            except Exception:
+                continue
+    except Exception:
+        pass
+    if not current:
+        try:
+            import glob as _glob, site as _site
+            site_dir = _site.getsitepackages()[0]
+            matches = sorted(_glob.glob(
+                os.path.join(site_dir, "comfyui_frontend_package-*.dist-info", "METADATA")
+            ), reverse=True)
+            for meta_path in matches:
+                with open(meta_path, "r", errors="replace") as _f:
+                    for line in _f:
+                        if line.startswith("Version:"):
+                            ver = line.split(":", 1)[1].strip()
+                            if ver and ver != "0.1.0":
+                                current = ver
+                            break
+                if current:
+                    break
+        except Exception:
+            pass
     try:
         import urllib.request as _ur
         with _ur.urlopen(
             "https://pypi.org/pypi/comfyui_frontend_package/json", timeout=8
         ) as r:
             data = json.loads(r.read())
-        versions = sorted(data.get("releases", {}).keys(),
-                          key=lambda v: [int(x) for x in v.split(".") if x.isdigit()],
-                          reverse=True)
-        return versions[:20]
+        all_versions = sorted(
+            data.get("releases", {}).keys(),
+            key=lambda v: [int(x) for x in v.replace(".post", ".").split(".") if x.isdigit()],
+            reverse=True
+        )
+        versions = all_versions[:100]
+        if current and current not in versions:
+            versions.append(current)
+            versions.sort(key=lambda v: [int(x) for x in v.replace(".post", ".").split(".") if x.isdigit()], reverse=True)
     except Exception:
-        return []
+        versions = [current] if current else []
+    is_nightly = get_frontend_is_nightly()
+    return {"current": current, "versions": versions, "isNightly": bool(is_nightly)}
 
 
 def install_frontend_version(version):
@@ -293,7 +342,7 @@ def install_frontend_version(version):
 
 
 def get_frontend_is_nightly():
-    """Detect if installed frontend is a nightly/dev build. Returns bool."""
+    """Detect if installed frontend is a nightly/dev build. Returns bool or None."""
     try:
         import glob as _glob, site as _site, re as _re
         site_dir = _site.getsitepackages()[0]
@@ -304,60 +353,104 @@ def get_frontend_is_nightly():
                 pkg_dir = c
                 break
         if not pkg_dir:
-            return False
-        # Check if assets directory contains nightly-specific markers
+            return None
         assets_dir = os.path.join(pkg_dir, "static", "assets")
         if not os.path.isdir(assets_dir):
-            return False
-        # Look for version file or check for dev markers
-        for root, dirs, files in os.walk(pkg_dir):
-            for f in files:
-                if f.endswith(".js") or f.endswith(".txt"):
-                    try:
-                        with open(os.path.join(root, f), "r", errors="replace") as file:
-                            content = file.read()
-                            if "nightly" in content.lower() or "dev" in content.lower():
-                                return True
-                    except:
-                        pass
-        return False
+            return None
+        patterns = [
+            _re.compile(r'__IS_NIGHTLY__\s*[=:]\s*(true|false)', _re.IGNORECASE),
+            _re.compile(r'isNightly\s*=\s*(true|false)',           _re.IGNORECASE),
+        ]
+        js_files = sorted(
+            _glob.glob(os.path.join(assets_dir, "index-*.js")),
+            key=os.path.getsize, reverse=True
+        )
+        if not js_files:
+            js_files = _glob.glob(os.path.join(assets_dir, "*.js"))
+        for js_path in js_files[:3]:
+            try:
+                with open(js_path, "r", errors="replace") as f:
+                    chunk_size = 256 * 1024
+                    prev_tail = ""
+                    while True:
+                        chunk = f.read(chunk_size)
+                        if not chunk:
+                            break
+                        search_text = prev_tail + chunk
+                        for pat in patterns:
+                            m = pat.search(search_text)
+                            if m:
+                                return m.group(1).lower() == "true"
+                        prev_tail = chunk[-200:]
+            except Exception:
+                continue
+        return None
     except Exception:
-        return False
+        return None
 
 
 def get_comfyui_required_frontend(tag):
     """Read requirements.txt from a ComfyUI git tag to find required frontend version.
     Returns version string or None if not specified."""
+    if not tag or tag == "NIGHTLY":
+        return None
+    import re as _re
     comfy_dir = os.path.join(SCRIPT_DIR, "ComfyUI")
+
+    def _parse_fe_version(line):
+        m = _re.search(r'==\s*([^\s,;#]+)', line)
+        return m.group(1).strip() if m else None
+
+    def _find_in_lines(lines):
+        for line in lines:
+            line = line.strip()
+            if line.lower().startswith("comfyui-frontend-package"):
+                return _parse_fe_version(line)
+        return None
+
+    # Try git show first
     try:
-        # Try to read requirements.txt from the specific tag
         r = subprocess.run(
-            ["git", "show", f"{tag}:requirements.txt"],
+            ["git", "show", f"tags/{tag}:requirements.txt"],
             cwd=comfy_dir, capture_output=True, text=True, timeout=5,
         )
         if r.returncode == 0:
-            for line in r.stdout.splitlines():
-                line = line.strip()
-                if line.startswith("comfyui-frontend-package"):
-                    # Parse version specifier like comfyui-frontend-package==1.2.3
-                    if "==" in line:
-                        return line.split("==")[1].strip()
-                    if ">=" in line:
-                        return line.split(">=")[1].strip()
-        # Also check pyproject.toml if available
-        r2 = subprocess.run(
-            ["git", "show", f"{tag}:pyproject.toml"],
-            cwd=comfy_dir, capture_output=True, text=True, timeout=5,
-        )
-        if r2.returncode == 0:
-            import re as _re
-            for line in r2.stdout.splitlines():
-                match = _re.search(r'comfyui-frontend-package\s*[=<>]+\s*["\']?([0-9.]+)', line)
-                if match:
-                    return match.group(1)
-        return None
+            result = _find_in_lines(r.stdout.splitlines())
+            if result is not None:
+                return result
     except Exception:
-        return None
+        pass
+
+    # Fallback: fetch from GitHub raw URL
+    try:
+        import urllib.request as _ur
+        url = (f"https://raw.githubusercontent.com/comfyanonymous/ComfyUI"
+               f"/{tag}/requirements.txt")
+        req = _ur.Request(url, headers={"User-Agent": "ComfyUI-EZi"})
+        with _ur.urlopen(req, timeout=8) as resp:
+            text = resp.read().decode("utf-8", errors="replace")
+        result = _find_in_lines(text.splitlines())
+        if result is not None:
+            return result
+    except Exception:
+        pass
+
+    # Fallback: if tag matches current checkout, read local requirements.txt
+    try:
+        r = subprocess.run(
+            ["git", "describe", "--tags", "--exact-match", "HEAD"],
+            cwd=comfy_dir, capture_output=True, text=True, timeout=3,
+        )
+        current_tag = r.stdout.strip() if r.returncode == 0 else None
+        if current_tag and current_tag == tag:
+            req_path = os.path.join(comfy_dir, "requirements.txt")
+            if os.path.exists(req_path):
+                with open(req_path, "r", errors="replace") as f:
+                    return _find_in_lines(f)
+    except Exception:
+        pass
+
+    return None
 
 
 def switch_comfyui_and_frontend(tag, fe_version=None):
@@ -369,12 +462,12 @@ def switch_comfyui_and_frontend(tag, fe_version=None):
     # Step 1: Checkout ComfyUI tag
     try:
         subprocess.run(
-            ["git", "fetch", "--tags"], cwd=comfy_dir,
-            capture_output=True, timeout=10,
+            ["git", "fetch", "--tags", "--quiet"], cwd=comfy_dir,
+            capture_output=True, timeout=30,
         )
         r = subprocess.run(
-            ["git", "checkout", tag], cwd=comfy_dir,
-            capture_output=True, text=True, timeout=10,
+            ["git", "checkout", f"tags/{tag}"], cwd=comfy_dir,
+            capture_output=True, text=True, timeout=15,
         )
         if r.returncode != 0:
             return {"error": f"Git checkout failed: {r.stderr}"}
@@ -657,14 +750,227 @@ def enforce_pinned_packages():
         print(f"  Warning: pinned packages enforcement failed: {e}")
 
 
-_BUILTIN_PALETTES = {
-    'dark':      {'bg': '#202020', 'menu_bg': '#171718', 'fg': '#ffffff', 'border': '#4e4e4e', 'input_bg': '#222222', 'accent': '#9a9', 'node_bg': '#353535'},
-    'light':     {'bg': '#e9e9e9', 'menu_bg': '#f5f5f5', 'fg': '#222222', 'border': '#bbbbbb', 'input_bg': '#d0d0d0', 'accent': '#4CAF50', 'node_bg': '#f5f5f5'},
-    'solarized': {'bg': '#002b36', 'menu_bg': '#073642', 'fg': '#839496', 'border': '#0d525e', 'input_bg': '#003847', 'accent': '#2aa198', 'node_bg': '#073642'},
-    'arc':       {'bg': '#2f343f', 'menu_bg': '#383c4a', 'fg': '#d3dae3', 'border': '#4b5162', 'input_bg': '#404552', 'accent': '#5294e2', 'node_bg': '#383c4a'},
-    'nord':      {'bg': '#2e3440', 'menu_bg': '#3b4252', 'fg': '#d8dee9', 'border': '#4c566a', 'input_bg': '#434c5e', 'accent': '#88c0d0', 'node_bg': '#3b4252'},
-    'github':    {'bg': '#0d1117', 'menu_bg': '#161b22', 'fg': '#c9d1d9', 'border': '#30363d', 'input_bg': '#21262d', 'accent': '#388bfd', 'node_bg': '#161b22'},
+_COMMON_NODE_SLOT = {
+    'CLIP': '#FFD500', 'CLIP_VISION': '#A8DADC', 'CLIP_VISION_OUTPUT': '#ad7452',
+    'CONDITIONING': '#FFA931', 'CONTROL_NET': '#6EE7B7', 'IMAGE': '#64B5F6',
+    'LATENT': '#FF9CF9', 'MASK': '#81C784', 'MODEL': '#B39DDB',
+    'STYLE_MODEL': '#C2FFAE', 'VAE': '#FF6E6E', 'NOISE': '#B0B0B0',
+    'GUIDER': '#66FFFF', 'SAMPLER': '#ECB4B4', 'SIGMAS': '#CDFFCD', 'TAESD': '#DCC274',
 }
+
+_FALLBACK_PALETTES = {
+    'dark': {
+        'node_slot': _COMMON_NODE_SLOT,
+        'litegraph_base': {
+            'CLEAR_BACKGROUND_COLOR': '#141414', 'NODE_TITLE_COLOR': '#999',
+            'NODE_SELECTED_TITLE_COLOR': '#FFF', 'NODE_TEXT_COLOR': '#AAA',
+            'NODE_TEXT_HIGHLIGHT_COLOR': '#FFF', 'NODE_DEFAULT_COLOR': '#333',
+            'NODE_DEFAULT_BGCOLOR': '#353535', 'NODE_DEFAULT_BOXCOLOR': '#666',
+            'NODE_DEFAULT_SHAPE': 2, 'NODE_BOX_OUTLINE_COLOR': '#FFF',
+            'NODE_BYPASS_BGCOLOR': '#FF00FF', 'NODE_ERROR_COLOUR': '#E00',
+            'DEFAULT_SHADOW_COLOR': 'rgba(0,0,0,0.5)', 'WIDGET_BGCOLOR': '#222',
+            'WIDGET_OUTLINE_COLOR': '#666', 'WIDGET_TEXT_COLOR': '#DDD',
+            'WIDGET_SECONDARY_TEXT_COLOR': '#999', 'WIDGET_DISABLED_TEXT_COLOR': '#666',
+            'LINK_COLOR': '#9A9', 'EVENT_LINK_COLOR': '#A86', 'CONNECTING_LINK_COLOR': '#AFA',
+            'BADGE_FG_COLOR': '#FFF', 'BADGE_BG_COLOR': '#0F1F0F',
+        },
+        'comfy_base': {
+            'fg-color': '#fff', 'bg-color': '#202020', 'comfy-menu-bg': '#171718',
+            'comfy-menu-secondary-bg': '#303030', 'comfy-input-bg': '#222',
+            'input-text': '#ddd', 'descrip-text': '#999', 'drag-text': '#ccc',
+            'error-text': '#ff4444', 'border-color': '#4e4e4e',
+            'tr-even-bg-color': '#222', 'tr-odd-bg-color': '#353535',
+            'content-bg': '#4e4e4e', 'content-fg': '#fff',
+            'content-hover-bg': '#222', 'content-hover-fg': '#fff',
+            'bar-shadow': 'rgba(16, 16, 16, 0.5) 0 0 0.5rem',
+        },
+    },
+    'light': {
+        'node_slot': _COMMON_NODE_SLOT,
+        'litegraph_base': {
+            'CLEAR_BACKGROUND_COLOR': '#e0e0e0', 'NODE_TITLE_COLOR': '#222',
+            'NODE_SELECTED_TITLE_COLOR': '#000', 'NODE_TEXT_COLOR': '#333',
+            'NODE_TEXT_HIGHLIGHT_COLOR': '#000', 'NODE_DEFAULT_COLOR': '#ccc',
+            'NODE_DEFAULT_BGCOLOR': '#f5f5f5', 'NODE_DEFAULT_BOXCOLOR': '#999',
+            'NODE_DEFAULT_SHAPE': 2, 'NODE_BOX_OUTLINE_COLOR': '#000',
+            'NODE_BYPASS_BGCOLOR': '#FF00FF', 'NODE_ERROR_COLOUR': '#E00',
+            'DEFAULT_SHADOW_COLOR': 'rgba(0,0,0,0.1)', 'WIDGET_BGCOLOR': '#e0e0e0',
+            'WIDGET_OUTLINE_COLOR': '#999', 'WIDGET_TEXT_COLOR': '#333',
+            'WIDGET_SECONDARY_TEXT_COLOR': '#666', 'WIDGET_DISABLED_TEXT_COLOR': '#999',
+            'LINK_COLOR': '#4CAF50', 'EVENT_LINK_COLOR': '#FF9800', 'CONNECTING_LINK_COLOR': '#2196F3',
+            'BADGE_FG_COLOR': '#000', 'BADGE_BG_COLOR': '#e0f0e0',
+        },
+        'comfy_base': {
+            'fg-color': '#222', 'bg-color': '#e9e9e9', 'comfy-menu-bg': '#f5f5f5',
+            'comfy-menu-secondary-bg': '#e0e0e0', 'comfy-input-bg': '#d0d0d0',
+            'input-text': '#222', 'descrip-text': '#666', 'drag-text': '#888',
+            'error-text': '#cc0000', 'border-color': '#bbb',
+            'tr-even-bg-color': '#e5e5e5', 'tr-odd-bg-color': '#f0f0f0',
+            'content-bg': '#bbb', 'content-fg': '#222',
+            'content-hover-bg': '#d0d0d0', 'content-hover-fg': '#000',
+            'bar-shadow': 'rgba(0, 0, 0, 0.1) 0 0 0.5rem',
+        },
+    },
+    'solarized': {
+        'node_slot': _COMMON_NODE_SLOT,
+        'litegraph_base': {
+            'CLEAR_BACKGROUND_COLOR': '#002b36', 'NODE_TITLE_COLOR': '#93a1a1',
+            'NODE_SELECTED_TITLE_COLOR': '#fdf6e3', 'NODE_TEXT_COLOR': '#839496',
+            'NODE_TEXT_HIGHLIGHT_COLOR': '#fdf6e3', 'NODE_DEFAULT_COLOR': '#073642',
+            'NODE_DEFAULT_BGCOLOR': '#073642', 'NODE_DEFAULT_BOXCOLOR': '#586e75',
+            'NODE_DEFAULT_SHAPE': 2, 'NODE_BOX_OUTLINE_COLOR': '#268bd2',
+            'NODE_BYPASS_BGCOLOR': '#FF00FF', 'NODE_ERROR_COLOUR': '#dc322f',
+            'DEFAULT_SHADOW_COLOR': 'rgba(0,0,0,0.5)', 'WIDGET_BGCOLOR': '#003847',
+            'WIDGET_OUTLINE_COLOR': '#586e75', 'WIDGET_TEXT_COLOR': '#839496',
+            'WIDGET_SECONDARY_TEXT_COLOR': '#657b83', 'WIDGET_DISABLED_TEXT_COLOR': '#586e75',
+            'LINK_COLOR': '#2aa198', 'EVENT_LINK_COLOR': '#cb4b16', 'CONNECTING_LINK_COLOR': '#859900',
+            'BADGE_FG_COLOR': '#fdf6e3', 'BADGE_BG_COLOR': '#073642',
+        },
+        'comfy_base': {
+            'fg-color': '#839496', 'bg-color': '#002b36', 'comfy-menu-bg': '#073642',
+            'comfy-menu-secondary-bg': '#003847', 'comfy-input-bg': '#003847',
+            'input-text': '#839496', 'descrip-text': '#657b83', 'drag-text': '#586e75',
+            'error-text': '#dc322f', 'border-color': '#0d525e',
+            'tr-even-bg-color': '#003847', 'tr-odd-bg-color': '#073642',
+            'content-bg': '#0d525e', 'content-fg': '#839496',
+            'content-hover-bg': '#003847', 'content-hover-fg': '#93a1a1',
+            'bar-shadow': 'rgba(0, 0, 0, 0.5) 0 0 0.5rem',
+        },
+    },
+    'arc': {
+        'node_slot': _COMMON_NODE_SLOT,
+        'litegraph_base': {
+            'CLEAR_BACKGROUND_COLOR': '#2f343f', 'NODE_TITLE_COLOR': '#d3dae3',
+            'NODE_SELECTED_TITLE_COLOR': '#fff', 'NODE_TEXT_COLOR': '#d3dae3',
+            'NODE_TEXT_HIGHLIGHT_COLOR': '#fff', 'NODE_DEFAULT_COLOR': '#383c4a',
+            'NODE_DEFAULT_BGCOLOR': '#383c4a', 'NODE_DEFAULT_BOXCOLOR': '#4b5162',
+            'NODE_DEFAULT_SHAPE': 2, 'NODE_BOX_OUTLINE_COLOR': '#5294e2',
+            'NODE_BYPASS_BGCOLOR': '#FF00FF', 'NODE_ERROR_COLOUR': '#E00',
+            'DEFAULT_SHADOW_COLOR': 'rgba(0,0,0,0.5)', 'WIDGET_BGCOLOR': '#404552',
+            'WIDGET_OUTLINE_COLOR': '#4b5162', 'WIDGET_TEXT_COLOR': '#d3dae3',
+            'WIDGET_SECONDARY_TEXT_COLOR': '#9c9fa8', 'WIDGET_DISABLED_TEXT_COLOR': '#666',
+            'LINK_COLOR': '#5294e2', 'EVENT_LINK_COLOR': '#cba6f7', 'CONNECTING_LINK_COLOR': '#5294e2',
+            'BADGE_FG_COLOR': '#d3dae3', 'BADGE_BG_COLOR': '#2f343f',
+        },
+        'comfy_base': {
+            'fg-color': '#d3dae3', 'bg-color': '#2f343f', 'comfy-menu-bg': '#383c4a',
+            'comfy-menu-secondary-bg': '#404552', 'comfy-input-bg': '#404552',
+            'input-text': '#d3dae3', 'descrip-text': '#9c9fa8', 'drag-text': '#9c9fa8',
+            'error-text': '#ff4444', 'border-color': '#4b5162',
+            'tr-even-bg-color': '#404552', 'tr-odd-bg-color': '#383c4a',
+            'content-bg': '#4b5162', 'content-fg': '#d3dae3',
+            'content-hover-bg': '#404552', 'content-hover-fg': '#fff',
+            'bar-shadow': 'rgba(0, 0, 0, 0.5) 0 0 0.5rem',
+        },
+    },
+    'nord': {
+        'node_slot': _COMMON_NODE_SLOT,
+        'litegraph_base': {
+            'CLEAR_BACKGROUND_COLOR': '#2e3440', 'NODE_TITLE_COLOR': '#d8dee9',
+            'NODE_SELECTED_TITLE_COLOR': '#eceff4', 'NODE_TEXT_COLOR': '#d8dee9',
+            'NODE_TEXT_HIGHLIGHT_COLOR': '#eceff4', 'NODE_DEFAULT_COLOR': '#3b4252',
+            'NODE_DEFAULT_BGCOLOR': '#3b4252', 'NODE_DEFAULT_BOXCOLOR': '#4c566a',
+            'NODE_DEFAULT_SHAPE': 2, 'NODE_BOX_OUTLINE_COLOR': '#88c0d0',
+            'NODE_BYPASS_BGCOLOR': '#FF00FF', 'NODE_ERROR_COLOUR': '#bf616a',
+            'DEFAULT_SHADOW_COLOR': 'rgba(0,0,0,0.5)', 'WIDGET_BGCOLOR': '#434c5e',
+            'WIDGET_OUTLINE_COLOR': '#4c566a', 'WIDGET_TEXT_COLOR': '#d8dee9',
+            'WIDGET_SECONDARY_TEXT_COLOR': '#81a1c1', 'WIDGET_DISABLED_TEXT_COLOR': '#4c566a',
+            'LINK_COLOR': '#88c0d0', 'EVENT_LINK_COLOR': '#d08770', 'CONNECTING_LINK_COLOR': '#a3be8c',
+            'BADGE_FG_COLOR': '#eceff4', 'BADGE_BG_COLOR': '#2e3440',
+        },
+        'comfy_base': {
+            'fg-color': '#d8dee9', 'bg-color': '#2e3440', 'comfy-menu-bg': '#3b4252',
+            'comfy-menu-secondary-bg': '#434c5e', 'comfy-input-bg': '#434c5e',
+            'input-text': '#d8dee9', 'descrip-text': '#81a1c1', 'drag-text': '#81a1c1',
+            'error-text': '#bf616a', 'border-color': '#4c566a',
+            'tr-even-bg-color': '#434c5e', 'tr-odd-bg-color': '#3b4252',
+            'content-bg': '#4c566a', 'content-fg': '#d8dee9',
+            'content-hover-bg': '#434c5e', 'content-hover-fg': '#eceff4',
+            'bar-shadow': 'rgba(0, 0, 0, 0.5) 0 0 0.5rem',
+        },
+    },
+    'github': {
+        'node_slot': _COMMON_NODE_SLOT,
+        'litegraph_base': {
+            'CLEAR_BACKGROUND_COLOR': '#0d1117', 'NODE_TITLE_COLOR': '#c9d1d9',
+            'NODE_SELECTED_TITLE_COLOR': '#f0f6fc', 'NODE_TEXT_COLOR': '#c9d1d9',
+            'NODE_TEXT_HIGHLIGHT_COLOR': '#f0f6fc', 'NODE_DEFAULT_COLOR': '#161b22',
+            'NODE_DEFAULT_BGCOLOR': '#161b22', 'NODE_DEFAULT_BOXCOLOR': '#30363d',
+            'NODE_DEFAULT_SHAPE': 2, 'NODE_BOX_OUTLINE_COLOR': '#388bfd',
+            'NODE_BYPASS_BGCOLOR': '#FF00FF', 'NODE_ERROR_COLOUR': '#f85149',
+            'DEFAULT_SHADOW_COLOR': 'rgba(0,0,0,0.5)', 'WIDGET_BGCOLOR': '#21262d',
+            'WIDGET_OUTLINE_COLOR': '#30363d', 'WIDGET_TEXT_COLOR': '#c9d1d9',
+            'WIDGET_SECONDARY_TEXT_COLOR': '#8b949e', 'WIDGET_DISABLED_TEXT_COLOR': '#484f58',
+            'LINK_COLOR': '#3fb950', 'EVENT_LINK_COLOR': '#d29922', 'CONNECTING_LINK_COLOR': '#388bfd',
+            'BADGE_FG_COLOR': '#f0f6fc', 'BADGE_BG_COLOR': '#0d1117',
+        },
+        'comfy_base': {
+            'fg-color': '#c9d1d9', 'bg-color': '#0d1117', 'comfy-menu-bg': '#161b22',
+            'comfy-menu-secondary-bg': '#21262d', 'comfy-input-bg': '#21262d',
+            'input-text': '#c9d1d9', 'descrip-text': '#8b949e', 'drag-text': '#8b949e',
+            'error-text': '#f85149', 'border-color': '#30363d',
+            'tr-even-bg-color': '#21262d', 'tr-odd-bg-color': '#161b22',
+            'content-bg': '#30363d', 'content-fg': '#c9d1d9',
+            'content-hover-bg': '#21262d', 'content-hover-fg': '#f0f6fc',
+            'bar-shadow': 'rgba(0, 0, 0, 0.5) 0 0 0.5rem',
+        },
+    },
+}
+
+
+def _get_builtin_palettes_from_frontend():
+    """Try to load palette JSON files from the comfyui_frontend_package."""
+    try:
+        import glob as _glob, site as _site
+        site_dirs = _site.getsitepackages()
+    except Exception:
+        return {}
+    for site_pkgs in site_dirs:
+        if not os.path.isdir(site_pkgs):
+            continue
+        pkg_dir = os.path.join(site_pkgs, 'comfyui_frontend_package')
+        if not os.path.isdir(pkg_dir):
+            candidates = _glob.glob(os.path.join(site_pkgs, 'comfyui_frontend_package*'))
+            pkg_dir = next((c for c in candidates if os.path.isdir(c) and 'dist-info' not in c), None)
+            if not pkg_dir:
+                continue
+        palettes_dir = os.path.join(pkg_dir, 'static', 'assets', 'palettes')
+        if not os.path.isdir(palettes_dir):
+            continue
+        palettes = {}
+        try:
+            for fname in os.listdir(palettes_dir):
+                if not fname.endswith('.json'):
+                    continue
+                fpath = os.path.join(palettes_dir, fname)
+                try:
+                    with open(fpath, 'r', encoding='utf-8', errors='replace') as f:
+                        data = json.load(f)
+                    pid = data.get('id')
+                    colors = data.get('colors', {})
+                    if pid and colors:
+                        palettes[pid] = colors
+                except Exception:
+                    continue
+        except Exception:
+            return {}
+        if palettes:
+            return palettes
+    return {}
+
+
+_BUILTIN_PALETTES_CACHE = None
+
+def _get_builtin_palettes():
+    global _BUILTIN_PALETTES_CACHE
+    if _BUILTIN_PALETTES_CACHE is not None:
+        return _BUILTIN_PALETTES_CACHE
+    from_frontend = _get_builtin_palettes_from_frontend()
+    if from_frontend:
+        _BUILTIN_PALETTES_CACHE = from_frontend
+        return _BUILTIN_PALETTES_CACHE
+    _BUILTIN_PALETTES_CACHE = _FALLBACK_PALETTES
+    return _BUILTIN_PALETTES_CACHE
 
 
 def _blend_hex(hex1, hex2, t=0.35):
@@ -704,61 +1010,37 @@ def get_comfy_theme():
             palette_id = data.get("Comfy.ColorPalette", "") or "dark"
             custom_palettes = data.get("Comfy.CustomColorPalettes", {})
 
-        # Try to get colors from custom palette first, then builtins, then fallback
+        # Get colors from custom palette first, then builtins (frontend or fallback)
         colors = {}
         if palette_id in custom_palettes:
             c = custom_palettes[palette_id].get("colors", {})
             cb = c.get("comfy_base", {})
             lg = c.get("litegraph_base", {})
-            colors = {
-                "bg":       cb.get("bg-color", "#202020"),
-                "menu_bg":  cb.get("comfy-menu-bg", "#171718"),
-                "fg":       cb.get("fg-color", "#ffffff"),
-                "border":   cb.get("border-color", "#4e4e4e"),
-                "input_bg": cb.get("comfy-input-bg", "#222222"),
-                "accent":   lg.get("NODE_BOX_OUTLINE_COLOR") or lg.get("LINK_COLOR") or "#888",
-                "node_bg":  lg.get("NODE_DEFAULT_BGCOLOR", "#353535"),
-            }
         else:
-            # Try reading from the frontend package palette files
-            try:
-                import glob as _glob
-                import site as _site
-                site_dir = _site.getsitepackages()[0]
-                palette_files = _glob.glob(
-                    os.path.join(site_dir, "comfyui_frontend_package*",
-                                 "static", "assets", "palettes", f"{palette_id}.json"))
-                if palette_files:
-                    with open(palette_files[0], "r", errors="replace") as f:
-                        pdata = json.load(f)
-                    # Use 'id' from JSON as authoritative palette ID (matches EZi approach)
-                    _ = pdata.get("id") or palette_id
-                    cb = pdata.get("colors", {}).get("comfy_base", {})
-                    lg = pdata.get("colors", {}).get("litegraph_base", {})
-                    colors = {
-                        "bg":       cb.get("bg-color", "#202020"),
-                        "menu_bg":  cb.get("comfy-menu-bg", "#171718"),
-                        "fg":       cb.get("fg-color", "#ffffff"),
-                        "border":   cb.get("border-color", "#4e4e4e"),
-                        "input_bg": cb.get("comfy-input-bg", "#222222"),
-                        "accent":   lg.get("NODE_BOX_OUTLINE_COLOR") or lg.get("LINK_COLOR") or "#888",
-                        "node_bg":  lg.get("NODE_DEFAULT_BGCOLOR", "#353535"),
-                    }
-            except Exception:
-                pass
-            if not colors:
-                colors = _BUILTIN_PALETTES.get(palette_id, _BUILTIN_PALETTES["dark"])
+            builtin = _get_builtin_palettes()
+            c = builtin.get(palette_id, builtin.get("dark", {}))
+            cb = c.get("comfy_base", {})
+            lg = c.get("litegraph_base", {})
 
-        bg       = colors.get("bg", "#202020")
-        menu_bg  = colors.get("menu_bg", "#171718")
-        fg       = colors.get("fg", "#ffffff")
-        border   = colors.get("border", "#4e4e4e")
-        input_bg = colors.get("input_bg", "#222222")
-        accent   = colors.get("accent", "#888888")
-        node_bg  = colors.get("node_bg", "#353535")
+        bg       = cb.get("bg-color", "#202020")
+        menu_bg  = cb.get("comfy-menu-bg", "#171718")
+        fg       = cb.get("fg-color", "#ffffff")
+        border   = cb.get("border-color", "#4e4e4e")
+        input_bg = cb.get("comfy-input-bg", "#222222")
+        accent   = lg.get("NODE_BOX_OUTLINE_COLOR") or lg.get("LINK_COLOR") or "#888"
+        node_bg  = lg.get("NODE_DEFAULT_BGCOLOR", "#353535")
+
+        # If accent is too bright or too dark, try LINK_COLOR instead
+        acc_lum = _hex_luminance(accent)
+        if acc_lum > 0.80 or acc_lum < 0.05:
+            link_color = lg.get("LINK_COLOR", "")
+            if link_color:
+                link_lum = _hex_luminance(link_color)
+                if 0.05 <= link_lum <= 0.80:
+                    accent = link_color
+                    acc_lum = link_lum
 
         # Derive accent variants
-        acc_lum = _hex_luminance(accent)
         if acc_lum >= 0.18:
             acc_bg       = _blend_hex(accent, "#000000", 0.60)
             acc_bg_hover = _blend_hex(accent, "#000000", 0.45)
@@ -793,7 +1075,7 @@ def get_comfy_theme():
 
 def list_comfy_themes():
     """Return list of available palette IDs: builtins + any custom palettes."""
-    ids = list(_BUILTIN_PALETTES.keys())
+    ids = list(_get_builtin_palettes().keys())
     try:
         user_dir = os.path.join(SCRIPT_DIR, "ComfyUI", "user", "default")
         settings_file = os.path.join(user_dir, "comfy.settings.json")
@@ -802,23 +1084,6 @@ def list_comfy_themes():
                 data = json.load(f)
             custom = list(data.get("Comfy.CustomColorPalettes", {}).keys())
             ids = ids + [c for c in custom if c not in ids]
-        # Also scan frontend package palette JSON files — use 'id' field inside each JSON
-        try:
-            import glob as _glob, site as _site
-            site_dir = _site.getsitepackages()[0]
-            for p in sorted(_glob.glob(os.path.join(
-                    site_dir, "comfyui_frontend_package*",
-                    "static", "assets", "palettes", "*.json"))):
-                try:
-                    with open(p, "r", errors="replace") as f:
-                        pdata = json.load(f)
-                    pid = pdata.get("id") or os.path.splitext(os.path.basename(p))[0]
-                    if pid and pid not in ids:
-                        ids.append(pid)
-                except Exception:
-                    continue
-        except Exception:
-            pass
     except Exception:
         pass
     return ids
@@ -1167,7 +1432,7 @@ INJECTED_JS = """
                 '._cdp_tab{padding:4px 8px;font:bold 11px/1.4 inherit;border:1px solid var(--accent,#5294e2);border-radius:4px;background:none;color:var(--accent,#5294e2);cursor:pointer;transition:all .15s;white-space:nowrap}' +
                 '._cdp_tab:hover,._cdp_tab.on{background:var(--accent-bg,#0d419d);color:#fff}' +
                 '</style>' +
-                '<div id="_cdp_inner" style="background:var(--bg,#1e1e28);border:1px solid var(--border,#444);border-radius:14px;' +
+                '<div id="_cdp_inner" class="_ezi-theme-pixaroma" style="background:var(--bg,#1e1e28);border:1px solid var(--border,#444);border-radius:14px;' +
                 'min-width:500px;max-width:600px;color:var(--fg,#e0e0e0);max-height:88vh;overflow-y:auto">' +
                 /* header */
                 '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px 6px;flex-shrink:0">' +
@@ -1246,7 +1511,7 @@ INJECTED_JS = """
                 '<div id="_cdp_t_app">' +
                 box('EZi Panel Theme',
                     '<div style="display:flex;gap:8px;align-items:center">' +
-                    '<select id="_cdp_panel_theme" style="'+S+'"><option value="comfyui">ComfyUI (auto-sync)</option><option value="dark">EZi Dark</option><option value="pixaroma">Pixaroma \u2014 orange</option><option value="light">EZi Light</option></select>' +
+                    '<select id="_cdp_panel_theme" style="'+S+'"><option value="pixaroma" selected>Pixaroma \u2014 orange</option><option value="comfyui">ComfyUI (auto-sync)</option><option value="dark">EZi Dark</option><option value="light">EZi Light</option></select>' +
                     '<button id="_cdp_panel_theme_apply" style="'+btnStyle('#2a3a5a')+'">Apply</button></div>') +
                 box('ComfyUI Node Editor Theme',
                     '<div style="display:flex;gap:8px;align-items:center">' +
@@ -1302,12 +1567,115 @@ INJECTED_JS = """
                 showTab(st);
             })();
 
-            /* ── Apply ComfyUI theme to panel + populate theme selector ── */
+            /* ── Panel Theme (EZi Dark/Light/Pixaroma) ── */
+            /* Map ComfyUI theme IDs to EZi panel themes */
+            var _comfyToPanel = {
+                'dark': 'dark', 'light': 'light', 'github': 'dark', 'nord': 'dark',
+                'solarized': 'dark', 'arc': 'dark', 'pixaroma': 'pixaroma'
+            };
+            /* Current panel theme — default Pixaroma orange; never clobber with ComfyUI auto-sync unless chosen */
+            var _panelThemeId = 'pixaroma';
+            try {
+                _panelThemeId = localStorage.getItem('_comfy_panel_theme') || 'pixaroma';
+            } catch (e) {}
+
+            function clearInlineThemeVars(el) {
+                var toRemove = [];
+                for (var i = 0; i < el.style.length; i++) {
+                    var prop = el.style[i];
+                    if (prop.startsWith('--')) toRemove.push(prop);
+                }
+                toRemove.forEach(function(p) { el.style.removeProperty(p); });
+            }
+            function applyPanelTheme(themeId) {
+                var inner = document.getElementById('_cdp_inner');
+                if (!inner) return;
+                if (!themeId) themeId = 'pixaroma';
+                _panelThemeId = themeId;
+                /* Remove existing theme classes and inline vars (inline vars override class CSS) */
+                inner.classList.remove('_ezi-theme-dark', '_ezi-theme-pixaroma', '_ezi-theme-light', '_ezi-theme-comfyui');
+                clearInlineThemeVars(inner);
+                /* If auto-sync mode, fetch current ComfyUI theme and map to panel theme */
+                if (themeId === 'comfyui') {
+                    inner.classList.add('_ezi-theme-comfyui');
+                    pywebview.api.get_comfy_theme().then(function(raw) {
+                        /* Guard: user may have switched theme before this resolved */
+                        if (_panelThemeId !== 'comfyui') return;
+                        var t = JSON.parse(raw);
+                        if (!t.error) {
+                            var comfyId = t.palette_id || 'dark';
+                            var panelId = _comfyToPanel[comfyId] || 'dark';
+                            inner.classList.remove('_ezi-theme-dark', '_ezi-theme-pixaroma', '_ezi-theme-light', '_ezi-theme-comfyui');
+                            clearInlineThemeVars(inner);
+                            inner.classList.add('_ezi-theme-' + panelId);
+                            applyTheme(inner, t);
+                        }
+                    });
+                    return;
+                }
+                /* Fixed panel themes (pixaroma / dark / light) — class vars only, no inline override */
+                inner.classList.add('_ezi-theme-' + themeId);
+            }
+            function savePanelTheme(themeId) {
+                _panelThemeId = themeId;
+                try { localStorage.setItem('_comfy_panel_theme', themeId); } catch (e) {}
+                /* Persist to disk so it survives webview storage resets */
+                try {
+                    pywebview.api.get_ui_settings().then(function(raw) {
+                        var s = {};
+                        try { s = JSON.parse(raw) || {}; } catch (e2) {}
+                        s.panel_theme = themeId;
+                        pywebview.api.save_ui_settings(JSON.stringify(s));
+                    });
+                } catch (e3) {}
+            }
+
+            /* Apply immediately on open (no need to click Apply) */
+            applyPanelTheme(_panelThemeId);
+            var _panelSel = document.getElementById('_cdp_panel_theme');
+            if (_panelSel) _panelSel.value = _panelThemeId;
+            /* Prefer disk-backed preference when available */
+            try {
+                pywebview.api.get_ui_settings().then(function(raw) {
+                    var s = {};
+                    try { s = JSON.parse(raw) || {}; } catch (e) {}
+                    var diskTheme = s.panel_theme;
+                    if (diskTheme && diskTheme !== _panelThemeId) {
+                        _panelThemeId = diskTheme;
+                        try { localStorage.setItem('_comfy_panel_theme', diskTheme); } catch (e2) {}
+                        if (_panelSel) _panelSel.value = diskTheme;
+                        applyPanelTheme(diskTheme);
+                    } else if (!diskTheme) {
+                        /* Seed disk with current default (pixaroma) */
+                        savePanelTheme(_panelThemeId);
+                    }
+                });
+            } catch (e) {}
+
+            /* Auto-apply on dropdown change + Apply button (same action) */
+            if (_panelSel) {
+                _panelSel.onchange = function() {
+                    var themeId = _panelSel.value || 'pixaroma';
+                    savePanelTheme(themeId);
+                    applyPanelTheme(themeId);
+                    setMsg('✓ Panel theme: ' + themeId, '#8f8');
+                };
+            }
+            document.getElementById('_cdp_panel_theme_apply').onclick = function() {
+                var themeId = (_panelSel && _panelSel.value) || 'pixaroma';
+                savePanelTheme(themeId);
+                applyPanelTheme(themeId);
+                setMsg('✓ Panel theme: ' + themeId, '#8f8');
+            };
+
+            /* ── Populate ComfyUI node-editor theme selector (do NOT override panel theme) ── */
             pywebview.api.get_comfy_theme().then(function(raw) {
                 var t = JSON.parse(raw);
-                var inner = document.getElementById('_cdp_inner');
-                if (inner && !t.error) applyTheme(inner, t);
                 var currentPalette = t.palette_id || '';
+                /* Only sync panel from ComfyUI when user chose ComfyUI auto-sync */
+                if (_panelThemeId === 'comfyui' && !t.error) {
+                    applyPanelTheme('comfyui');
+                }
                 pywebview.api.list_comfy_themes().then(function(raw2) {
                     var themes = JSON.parse(raw2);
                     var sel = document.getElementById('_cdp_theme');
@@ -1326,66 +1694,11 @@ INJECTED_JS = """
                     var d = JSON.parse(raw);
                     if (d.error) { setMsg('Theme error: ' + d.error, '#f88'); return; }
                     setMsg('✓ Theme set to "' + pid + '" — reload page to see it', '#8f8');
-                    /* Re-apply panel colours from new theme */
-                    pywebview.api.get_comfy_theme().then(function(raw2) {
-                        var t = JSON.parse(raw2);
-                        var inner = document.getElementById('_cdp_inner');
-                        if (inner && !t.error) applyTheme(inner, t);
-                    });
-                    /* Trigger ComfyUI to reload so the theme takes effect */
+                    /* Keep EZi panel theme; only re-sync panel if in comfyui auto mode */
+                    if (_panelThemeId === 'comfyui') applyPanelTheme('comfyui');
+                    /* Trigger ComfyUI to reload so the node-editor theme takes effect */
                     setTimeout(function() { window.location.reload(); }, 800);
                 });
-            };
-
-            /* ── Panel Theme (EZi Dark/Light/Pixaroma) ── */
-            /* Map ComfyUI theme IDs to EZi panel themes */
-            var _comfyToPanel = {
-                'dark': 'dark', 'light': 'light', 'github': 'dark', 'nord': 'dark',
-                'solarized': 'dark', 'arc': 'dark', 'pixaroma': 'pixaroma'
-            };
-            function clearInlineThemeVars(el) {
-                var toRemove = [];
-                for (var i = 0; i < el.style.length; i++) {
-                    var prop = el.style[i];
-                    if (prop.startsWith('--')) toRemove.push(prop);
-                }
-                toRemove.forEach(function(p) { el.style.removeProperty(p); });
-            }
-            function applyPanelTheme(themeId) {
-                var inner = document.getElementById('_cdp_inner');
-                if (!inner) return;
-                /* Remove existing theme classes and inline vars */
-                inner.classList.remove('_ezi-theme-dark', '_ezi-theme-pixaroma', '_ezi-theme-light', '_ezi-theme-comfyui');
-                clearInlineThemeVars(inner);
-                /* If auto-sync mode, fetch current ComfyUI theme and map to panel theme */
-                if (!themeId || themeId === 'comfyui') {
-                    inner.classList.add('_ezi-theme-comfyui');
-                    pywebview.api.get_comfy_theme().then(function(raw) {
-                        var t = JSON.parse(raw);
-                        if (!t.error) {
-                            var comfyId = t.palette_id || 'dark';
-                            var panelId = _comfyToPanel[comfyId] || 'dark';
-                            inner.classList.remove('_ezi-theme-dark', '_ezi-theme-pixaroma', '_ezi-theme-light', '_ezi-theme-comfyui');
-                            inner.classList.add('_ezi-theme-' + panelId);
-                            applyTheme(inner, t);
-                        }
-                    });
-                    return;
-                }
-                /* Manual theme selection - clear inline vars so class vars work */
-                inner.classList.add('_ezi-theme-' + themeId);
-            }
-            /* Load saved panel theme */
-            var savedPanelTheme = localStorage.getItem('_comfy_panel_theme') || 'comfyui';
-            document.getElementById('_cdp_panel_theme').value = savedPanelTheme;
-            applyPanelTheme(savedPanelTheme);
-            /* Handle panel theme apply */
-            document.getElementById('_cdp_panel_theme_apply').onclick = function() {
-                var sel = document.getElementById('_cdp_panel_theme');
-                var themeId = sel.value;
-                localStorage.setItem('_comfy_panel_theme', themeId);
-                applyPanelTheme(themeId);
-                setMsg('✓ Panel theme: ' + themeId, '#8f8');
             };
 
             /* ── populate URL field ── */
@@ -1642,7 +1955,9 @@ INJECTED_JS = """
                 });
 
                 pywebview.api.get_frontend_versions().then(function(raw) {
-                    var vers = JSON.parse(raw);
+                    var d = JSON.parse(raw);
+                    var vers = d.versions || [];
+                    var isNightly = d.isNightly;
                     var sel = document.getElementById('_cdp_fe_ver');
                     if (!vers.length) { sel.innerHTML = '<option value="">No frontend versions found</option>'; return; }
                     sel.innerHTML = vers.map(function(v) {
@@ -1650,6 +1965,10 @@ INJECTED_JS = """
                         return '<option value="'+v+'"'+(isCur?' selected':'')+'>'+v+(isCur?' ✓':'')+' </option>';
                     }).join('');
                     if (!currentFe) sel.innerHTML = '<option value="">— select frontend version —</option>' + sel.innerHTML;
+                    if (isNightly && currentFe) {
+                        var badge = document.getElementById('_cdp_fe_nightly');
+                        if (badge) { badge.textContent = 'NIGHTLY'; badge.style.color = '#fc8'; }
+                    }
                 });
             });
 
@@ -1662,7 +1981,7 @@ INJECTED_JS = """
                 pywebview.api.set_frontend_version(ver).then(function(raw) {
                     var d = JSON.parse(raw);
                     if (d.error) setMsg('Frontend install failed: ' + d.error, '#f88');
-                    else { setMsg('✓ Frontend v' + ver + ' installed — restarting…', '#8f8'); pywebview.api.restart_server(); setTimeout(removePanel, 1500); }
+                    else { setMsg('Installing frontend v' + ver + ' — server will restart automatically…', '#fc8'); setTimeout(removePanel, 2000); }
                 });
             };
 
@@ -1757,7 +2076,7 @@ INJECTED_JS = """
                 pywebview.api.switch_version(tag).then(function(raw) {
                     var d = JSON.parse(raw);
                     if (d.error) setMsg('Switch failed: ' + d.error, '#f88');
-                    else removePanel();
+                    else { setMsg('Switching to ' + tag + ' — server will restart automatically…', '#fc8'); setTimeout(removePanel, 2000); }
                 });
             };
 
@@ -1777,17 +2096,8 @@ INJECTED_JS = """
                         setMsg('Switch failed: ' + d.error, '#f88');
                         return;
                     }
-                    var info = d.results || {};
-                    var feInfo = info.frontend || {};
-                    var autoVer = info.auto_detected || 'none';
-                    if (feInfo.ok) {
-                        setMsg('✓ Switched to ' + tag + ' + frontend v' + feInfo.version + ' — restarting…', '#8f8');
-                    } else if (autoVer !== 'none') {
-                        setMsg('✓ Switched to ' + tag + ' (frontend v' + autoVer + ' install pending) — restarting…', '#8f8');
-                    } else {
-                        setMsg('✓ Switched to ' + tag + ' — restarting…', '#8f8');
-                    }
-                    setTimeout(removePanel, 1000);
+                    setMsg('Switching to ' + tag + ' — server will restart automatically…', '#fc8');
+                    setTimeout(removePanel, 2000);
                 });
             };
 
@@ -1979,6 +2289,45 @@ def open_in_webview():
                 pass
             return None
 
+        def write_clipboard(self, text):
+            """Copy text to system clipboard (Mac: pbcopy, Linux: xclip/xsel)."""
+            if not text:
+                return
+            try:
+                if sys.platform == "darwin":
+                    p = subprocess.Popen(["pbcopy"], stdin=subprocess.PIPE)
+                    p.communicate(text.encode("utf-8"))
+                else:
+                    for cmd in (["xclip", "-selection", "clipboard"],
+                                ["xsel", "--clipboard", "--input"]):
+                        try:
+                            p = subprocess.Popen(cmd, stdin=subprocess.PIPE)
+                            p.communicate(text.encode("utf-8"))
+                            if p.returncode == 0:
+                                break
+                        except FileNotFoundError:
+                            continue
+            except Exception:
+                pass
+
+        def read_clipboard(self):
+            """Read text from system clipboard (Mac: pbpaste, Linux: xclip/xsel)."""
+            try:
+                if sys.platform == "darwin":
+                    r = subprocess.run(["pbpaste"], capture_output=True, text=True, timeout=5)
+                    return r.stdout if r.returncode == 0 else ""
+                for cmd in (["xclip", "-selection", "clipboard", "-o"],
+                            ["xsel", "--clipboard", "--output"]):
+                    try:
+                        r = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
+                        if r.returncode == 0:
+                            return r.stdout
+                    except FileNotFoundError:
+                        continue
+                return ""
+            except Exception:
+                return ""
+
         def save_file(self, url, filename="download"):
             """Download file from server and open native Save As dialog."""
             if not url or not isinstance(url, str):
@@ -2119,7 +2468,7 @@ def open_in_webview():
             return json.dumps(get_comfyui_versions())
 
         def get_frontend_is_nightly(self):
-            """Return True if installed frontend is a nightly/dev build."""
+            """Return true/false/None if installed frontend is a nightly/dev build."""
             return json.dumps(get_frontend_is_nightly())
 
         def get_required_frontend(self, tag):
@@ -2127,9 +2476,32 @@ def open_in_webview():
             return json.dumps(get_comfyui_required_frontend(tag))
 
         def switch_version_and_frontend(self, tag, fe_version=None):
-            """Switch ComfyUI version and auto-install matching frontend.
+            """Switch ComfyUI version and auto-install matching frontend (threaded).
             fe_version can be 'auto' to auto-detect from requirements.txt."""
-            return json.dumps(switch_comfyui_and_frontend(tag, fe_version))
+            if COMFYUI_REMOTE:
+                return json.dumps({"error": "Not available in remote mode"})
+            comfy_dir = os.path.join(SCRIPT_DIR, "ComfyUI")
+            if not tag or not os.path.isdir(os.path.join(comfy_dir, ".git")):
+                return json.dumps({"error": "Invalid tag or not a git repo"})
+            def _do_switch():
+                try:
+                    self.restart_server()
+                    import time as _time
+                    _time.sleep(1)
+                    subprocess.run(["git", "fetch", "--tags", "--quiet"],
+                                   cwd=comfy_dir, capture_output=True, timeout=30)
+                    r = subprocess.run(["git", "checkout", f"tags/{tag}"],
+                                       cwd=comfy_dir, capture_output=True, text=True, timeout=15)
+                    if r.returncode != 0:
+                        return
+                    if fe_version is None or fe_version == "auto":
+                        fe_version = get_comfyui_required_frontend(tag)
+                    if fe_version:
+                        install_frontend_version(fe_version)
+                except Exception:
+                    pass
+            threading.Thread(target=_do_switch, daemon=True).start()
+            return json.dumps({"ok": True, "tag": tag})
 
         def get_comfy_theme(self):
             """Return ComfyUI's active palette CSS vars for the desktop panel."""
@@ -2148,8 +2520,19 @@ def open_in_webview():
             return json.dumps(get_frontend_versions())
 
         def set_frontend_version(self, version):
-            """Install a specific frontend version via pip. Returns JSON."""
-            return json.dumps(install_frontend_version(version))
+            """Install a specific frontend version via pip (threaded, restarts server)."""
+            if COMFYUI_REMOTE:
+                return json.dumps({"error": "Not available in remote mode"})
+            def _do_install():
+                try:
+                    self.restart_server()
+                    import time as _time
+                    _time.sleep(1)
+                    install_frontend_version(version)
+                except Exception:
+                    pass
+            threading.Thread(target=_do_install, daemon=True).start()
+            return json.dumps({"ok": True, "version": version})
 
         def check_installer_update(self):
             """Check GitHub for a newer ComfyUI-Easy-Install release."""
@@ -2512,9 +2895,13 @@ def open_in_webview():
                 return json.dumps({"error": "Invalid tag or not a git repo"})
             def _do_switch():
                 try:
-                    subprocess.run(["git", "checkout", tag], cwd=comfy_dir,
-                                   capture_output=True, timeout=30)
                     self.restart_server()
+                    import time as _time
+                    _time.sleep(1)
+                    subprocess.run(["git", "fetch", "--tags", "--quiet"],
+                                   cwd=comfy_dir, capture_output=True, timeout=30)
+                    subprocess.run(["git", "checkout", f"tags/{tag}"],
+                                   cwd=comfy_dir, capture_output=True, timeout=15)
                 except Exception:
                     pass
             threading.Thread(target=_do_switch, daemon=True).start()

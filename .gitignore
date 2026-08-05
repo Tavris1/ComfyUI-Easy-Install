@@ -240,3 +240,5 @@ comfyui-lxc-standalone-no-clone.sh
 .devin/workflows/*
 run_comfyui_desktop.sh
 run_comfyui_desktop.sh.*
+comfyui_desktop.py
+comfyui_desktop.py
