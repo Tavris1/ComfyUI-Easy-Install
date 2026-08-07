@@ -1,7 +1,7 @@
 name: Update Download Count
 on:
   schedule:
-    - cron: "7,37 * * * *"
+    - cron: "23 * * * *"
   release:
     types: [published]
   workflow_dispatch:
@@ -13,21 +13,37 @@ concurrency:
 jobs:
   update-downloads:
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - name: Checkout
         uses: actions/checkout@v6
         with:
+          ref: data
           fetch-depth: 0
 
       - name: Calculate downloads
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          fetch_page() {
+            local page=$1
+            local attempt=1
+            while [ $attempt -le 3 ]; do
+              if result=$(gh api "/repos/${GITHUB_REPOSITORY}/releases?per_page=100&page=${page}" 2>/tmp/err.log); then
+                echo "$result"
+                return 0
+              fi
+              echo "gh api failed (attempt $attempt): $(cat /tmp/err.log)" >&2
+              attempt=$((attempt + 1))
+              sleep $((attempt * 5))
+            done
+            return 1
+          }
+
           total=0
           page=1
           while true; do
-            releases=$(gh api \
-              "/repos/${GITHUB_REPOSITORY}/releases?per_page=100&page=${page}")
+            releases=$(fetch_page "$page") || { echo "Giving up after retries on page $page"; exit 1; }
             count=$(echo "$releases" | jq 'length')
             if [ "$count" -eq 0 ]; then
               break
@@ -78,13 +94,13 @@ jobs:
           git commit -m "Update download count badge"
 
           for i in 1 2 3 4 5; do
-            if git push origin HEAD:Windows; then
+            if git push origin HEAD:data; then
               echo "Push succeeded."
               exit 0
             fi
             echo "Push rejected, attempt $i. Fetching and rebasing..."
-            git fetch origin Windows
-            git rebase origin/Windows || {
+            git fetch origin data
+            git rebase origin/data || {
               echo "Rebase conflict, aborting."
               git rebase --abort || true
               exit 1
