@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.12.2"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.13.0"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -100,9 +100,10 @@ REM .\python_embeded\python.exe -I -m uv pip install requests==2.31.0 urllib3==2
 .\python_embeded\python.exe -I -m uv pip install -r ".\ComfyUI\manager_requirements.txt" %UVargs%
 
 if "%CURRENT_CUDA%"=="12.8" (
-    .\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.38-cu128-Basic-win-20260504/llama_cpp_python-0.3.38+cu128.basic-cp312-cp312-win_amd64.whl %UVargs%
+    .\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.46-cu128-win-20260808/llama_cpp_python-0.3.46+cu128-cp312-cp312-win_amd64.whl %UVargs%
 ) else (
-    .\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.38-cu130-Basic-win-20260504/llama_cpp_python-0.3.38+cu130.basic-cp312-cp312-win_amd64.whl %UVargs%
+    .\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.46-cu130-win-20260808/llama_cpp_python-0.3.46+cu130-cp312-cp312-win_amd64.whl %UVargs%
+
 )
 
 :: Install working version of stringzilla (damn it) ::
