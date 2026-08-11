@@ -6,21 +6,12 @@ on:
     types: [published]
   workflow_dispatch:
 permissions:
-  contents: write
-concurrency:
-  group: update-downloads-badge
-  cancel-in-progress: false
+  contents: read
 jobs:
   update-downloads:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          ref: data
-          fetch-depth: 0
-
       - name: Calculate downloads
         env:
           GH_TOKEN: ${{ github.token }}
@@ -58,10 +49,10 @@ jobs:
           echo "Total downloads: $total"
           echo "$total" > downloads.txt
 
-      - name: Update badge data
+      - name: Format number
+        id: format
         run: |
           total=$(cat downloads.txt | tr -d '[:space:]')
-          mkdir -p .github/badges
 
           if ! [[ "$total" =~ ^[0-9]+$ ]]; then
             echo "ERROR: total is not a valid number: '$total'"
@@ -77,36 +68,20 @@ jobs:
           fi
 
           echo "Formatted: $formatted"
+          echo "formatted=$formatted" >> "$GITHUB_OUTPUT"
 
-          cat > .github/badges/downloads.json <<EOF
-          {"schemaVersion":1,"label":"downloads","message":"${formatted}","color":"blue"}
-          EOF
-
-      - name: Commit badge
+      - name: Update Gist
+        env:
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+          GIST_ID: 95cfc6f0535930f25591dcfe08f34cc1
+          FORMATTED: ${{ steps.format.outputs.formatted }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .github/badges/downloads.json
-          if git diff --cached --quiet; then
-            echo "No changes."
-            exit 0
-          fi
-          git commit -m "Update download count badge"
+          payload=$(jq -n \
+            --arg content "{\"schemaVersion\":1,\"label\":\"downloads\",\"message\":\"${FORMATTED}\",\"color\":\"blue\"}" \
+            '{files: {"downloads.json": {content: $content}}}')
 
-          for i in 1 2 3 4 5; do
-            if git push origin HEAD:data; then
-              echo "Push succeeded."
-              exit 0
-            fi
-            echo "Push rejected, attempt $i. Fetching and rebasing..."
-            git fetch origin data
-            git rebase origin/data || {
-              echo "Rebase conflict, aborting."
-              git rebase --abort || true
-              exit 1
-            }
-            sleep $((RANDOM % 5 + 2))
-          done
-
-          echo "Push failed after retries."
-          exit 1
+          curl -s -X PATCH \
+            -H "Authorization: token ${GIST_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/gists/${GIST_ID}" \
+            -d "$payload"
