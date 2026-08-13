@@ -120,7 +120,7 @@ ComfyUI/frontend versions, UV/PIP caches, and GGUF conversion** from one place.
     - **Easy-Models-Linker** - *Uses existing **MODELS** folder via **extra_model_paths.yaml**, no re-download needed*
       - *Some folders like **LLM** and **llm_gguf** cannot be redirected this way*
     - **Easy-System-Checker** - *Provides information about key hardware and software components*
-    - **Nunchaku** - *Installs Nunchaku. (Start `Nunchaku.bat` again if issues occur later)*
+    - **Nunchaku** - *Installs Nunchaku*
     - **SageAttention-Multi** - *Installs both SageAttention v2.2.0 and v3 (v3 effective only on NVIDIA 50-series GPUs)*
     - **FlashAttention** - *Installs FlashAttention v2.8.3*
     - **InsightFace** - *Installs InsightFace (Pretrained models for non-commercial research only)*
