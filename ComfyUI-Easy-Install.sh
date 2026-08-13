@@ -286,6 +286,12 @@ EOL
                 $SUDO_CMD dnf groupinstall -y "Development Tools"
                 $SUDO_CMD dnf install -y zlib-devel bzip2-devel openssl-devel ncurses-devel \
                     sqlite-devel readline-devel xz-devel libffi-devel libuuid-devel
+            elif command -v zypper >/dev/null 2>&1; then
+                # openSUSE
+                echo "Detected zypper package manager, installing dependencies..."
+                $SUDO_CMD zypper install -y gcc gcc-c++ make zlib-devel bzip2-devel \
+                    libopenssl-devel ncurses-devel sqlite3-devel readline-devel \
+                    xz-devel libffi-devel libuuid-devel tk-devel
             elif command -v pacman >/dev/null 2>&1; then
                 # Arch Linux
                 echo "Detected pacman package manager, installing dependencies..."
@@ -413,17 +419,51 @@ EOL
     "$EMBEDDED_PYTHON" -m pip install uv $PIP_ARGS
     echo -e "${GREEN}✓${RESET} uv installed"
     
-    echo -e "${YELLOW}[2/6]${RESET} Installing PyTorch 2.10.0..."
+    echo -e "${YELLOW}[2/6]${RESET} Installing PyTorch 2.11.0..."
     # Check if running on macOS and install appropriate PyTorch
     if [ "$(uname)" = "Darwin" ]; then
-        echo -e "${YELLOW}Installing PyTorch 2.10.0 for macOS (CPU/MPS)...${RESET}"
+        echo -e "${YELLOW}Installing PyTorch 2.11.0 for macOS (CPU/MPS)...${RESET}"
         # For macOS, install without CUDA index
-        uv pip install $UV_ARGS torch==2.10.0 torchvision==0.25.0 torchaudio==2.10.0
+        uv pip install $UV_ARGS torch==2.11.0 torchvision==0.26.0 torchaudio==2.11.0
         echo -e "${GREEN}✓${RESET} PyTorch installed (macOS version)"
     else
-        echo -e "${YELLOW}Installing PyTorch 2.10.0 + CUDA 13.0...${RESET}"
-        uv pip install $UV_ARGS torch==2.10.0 torchvision==0.25.0 torchaudio==2.10.0 --index-url https://download.pytorch.org/whl/cu130
-        echo -e "${GREEN}✓${RESET} PyTorch installed (CUDA version)"
+        echo -e "${YELLOW}Installing PyTorch 2.11.0 + CUDA 13.0...${RESET}"
+        # Retry up to 3 times — nvidia packages from pypi.nvidia.com can timeout
+        TORCH_INSTALL_RETRIES=3
+        TORCH_INSTALLED=false
+        for attempt in $(seq 1 $TORCH_INSTALL_RETRIES); do
+            if uv pip install $UV_ARGS torch==2.11.0 torchvision==0.26.0 torchaudio==2.11.0 --index-url https://download.pytorch.org/whl/cu130; then
+                echo -e "${GREEN}✓${RESET} PyTorch installed (CUDA version)"
+                TORCH_INSTALLED=true
+                break
+            else
+                echo -e "${YELLOW}Attempt $attempt failed (pytorch.org index), retrying... (${attempt}/${TORCH_INSTALL_RETRIES})${RESET}"
+                sleep 5
+            fi
+        done
+        # Fallback: use PyPI as extra index so nvidia packages download from pypi.org instead of pypi.nvidia.com
+        if [ "$TORCH_INSTALLED" = false ]; then
+            echo -e "${YELLOW}PyTorch.org index failed. Trying with PyPI fallback for nvidia packages...${RESET}"
+            for attempt in $(seq 1 $TORCH_INSTALL_RETRIES); do
+                if uv pip install $UV_ARGS torch==2.11.0 torchvision==0.26.0 torchaudio==2.11.0 \
+                    --index-url https://download.pytorch.org/whl/cu130 \
+                    --extra-index-url https://pypi.org/simple; then
+                    echo -e "${GREEN}✓${RESET} PyTorch installed (CUDA version via PyPI fallback)"
+                    TORCH_INSTALLED=true
+                    break
+                else
+                    echo -e "${YELLOW}Attempt $attempt failed (PyPI fallback), retrying... (${attempt}/${TORCH_INSTALL_RETRIES})${RESET}"
+                    sleep 5
+                fi
+            done
+        fi
+        if [ "$TORCH_INSTALLED" = false ]; then
+            echo -e "${RED}✗ Failed to install PyTorch after $TORCH_INSTALL_RETRIES attempts${RESET}"
+            echo -e "${YELLOW}This is usually a network timeout downloading nvidia packages${RESET}"
+            echo -e "${YELLOW}Try again, or install manually:${RESET}"
+            echo -e "  ${BOLD}uv pip install torch==2.11.0 torchvision==0.26.0 torchaudio==2.11.0 --index-url https://download.pytorch.org/whl/cu130 --extra-index-url https://pypi.org/simple${RESET}"
+            exit 1
+        fi
     fi
     
     echo -e "${GREEN}::::::::::::::: ${YELLOW}Pre-installation of required modules${GREEN} :::::::::::::::${RESET}"
@@ -489,19 +529,32 @@ EOL
     echo -e "${YELLOW}[5/6]${RESET} Installing ComfyUI requirements..."
     cd ComfyUI
     # Install requirements.txt if it exists, otherwise install essential packages
+    # Filter out torch/torchvision/torchaudio to prevent upgrading our pinned versions
     if [ -f "requirements.txt" ]; then
-        uv pip install -r requirements.txt $UV_ARGS
+        grep -viE "^(torch|torchvision|torchaudio)([<>=!~]|$)" requirements.txt > /tmp/comfyui_req_filtered.txt 2>/dev/null || true
+        if [ -s "/tmp/comfyui_req_filtered.txt" ]; then
+            uv pip install -r /tmp/comfyui_req_filtered.txt $UV_ARGS
+        fi
+        rm -f /tmp/comfyui_req_filtered.txt
     else
         echo -e "${YELLOW}requirements.txt not found, installing essential packages...${RESET}"
         uv pip install $UV_ARGS sqlalchemy alembic aiohttp pillow numpy opencv-python-headless sounddevice
     fi
-    # Install manager requirements if available
+    # Install manager requirements if available (also filter torch to be safe)
     if [ -f "custom_nodes/comfyui-manager/requirements.txt" ] || [ -f "manager_requirements.txt" ]; then
         echo -e "${YELLOW}Installing ComfyUI Manager requirements...${RESET}"
         if [ -f "manager_requirements.txt" ]; then
-            uv pip install -r manager_requirements.txt $UV_ARGS
+            grep -viE "^(torch|torchvision|torchaudio)([<>=!~]|$)" manager_requirements.txt > /tmp/manager_req_filtered.txt 2>/dev/null || true
+            if [ -s "/tmp/manager_req_filtered.txt" ]; then
+                uv pip install -r /tmp/manager_req_filtered.txt $UV_ARGS
+            fi
+            rm -f /tmp/manager_req_filtered.txt
         elif [ -f "custom_nodes/comfyui-manager/requirements.txt" ]; then
-            uv pip install -r custom_nodes/comfyui-manager/requirements.txt $UV_ARGS
+            grep -viE "^(torch|torchvision|torchaudio)([<>=!~]|$)" custom_nodes/comfyui-manager/requirements.txt > /tmp/manager_req_filtered.txt 2>/dev/null || true
+            if [ -s "/tmp/manager_req_filtered.txt" ]; then
+                uv pip install -r /tmp/manager_req_filtered.txt $UV_ARGS
+            fi
+            rm -f /tmp/manager_req_filtered.txt
         fi
     fi
     echo -e "${GREEN}✓${RESET} ComfyUI requirements installed"
@@ -544,8 +597,12 @@ get_node() {
                     uv pip install onnxruntime $UV_ARGS
                 fi
             else
-                # Linux: install as-is
-                uv pip install -r "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" $UV_ARGS
+                # Linux: install as-is but filter torch to prevent upgrading pinned version
+                grep -viE "^(torch|torchvision|torchaudio)([<>=!~]|$)" "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" > "/tmp/requirements_temp.txt" 2>/dev/null || true
+                if [ -s "/tmp/requirements_temp.txt" ]; then
+                    uv pip install -r "/tmp/requirements_temp.txt" $UV_ARGS
+                fi
+                rm -f "/tmp/requirements_temp.txt"
             fi
         fi
     fi
@@ -687,6 +744,28 @@ find . -type f -name "*.bat" -delete
 
 # Make all .sh files executable
 find . -type f -name "*.sh" -exec chmod +x {} +
+
+# Safety net: re-pin torch in case any custom node install.py upgraded it
+echo -e "${GREEN}::::::::::::::: Verifying ${YELLOW}PyTorch version${GREEN} :::::::::::::::${RESET}"
+CURRENT_TORCH=$("$EMBEDDED_PYTHON" -c "import torch; print(torch.__version__)" 2>/dev/null || echo "unknown")
+echo -e "${YELLOW}Current torch: ${CURRENT_TORCH}${RESET}"
+if [ "$(uname)" = "Darwin" ]; then
+    EXPECTED_TORCH="2.11.0"
+else
+    EXPECTED_TORCH="2.11.0+cu130"
+fi
+if [ "$CURRENT_TORCH" != "$EXPECTED_TORCH" ]; then
+    echo -e "${YELLOW}Torch was changed to ${CURRENT_TORCH}, re-pinning to ${EXPECTED_TORCH}...${RESET}"
+    if [ "$(uname)" = "Darwin" ]; then
+        uv pip install $UV_ARGS torch==2.11.0 torchvision==0.26.0 torchaudio==2.11.0
+    else
+        uv pip install $UV_ARGS torch==2.11.0 torchvision==0.26.0 torchaudio==2.11.0 --index-url https://download.pytorch.org/whl/cu130
+    fi
+    echo -e "${GREEN}✓${RESET} Torch re-pinned to ${EXPECTED_TORCH}"
+else
+    echo -e "${GREEN}✓${RESET} Torch version is correct"
+fi
+echo ""
 
 # Install Triton matching Torch requirements (Linux only)
 if [ "$(uname -s)" = "Linux" ]; then
