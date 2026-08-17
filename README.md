@@ -71,19 +71,9 @@ Dedicated to the **Pixaroma** team
    ```
 3. After installation, start ComfyUI:
    ```bash
-   cd ComfyUI-Easy-Install
    ./run_mac_mps.sh
    ```
-4. After setup, you can install the following from the **Add-ons** folder:
-    - **Easy-Models-Linker** - *Uses existing **MODELS** folder via **extra_model_paths.yaml**, no re-download needed*
-      - *Some folders like **LLM** and **llm_gguf** cannot be redirected this way*
-    - **Nunchaku** - *Installs Nunchaku*
-    - **SageAttention** - *Installs SageAttention v2.2.0*
-    - **InsightFace** - *Installs InsightFace (Pretrained models for non-commercial research only)*
-    - **Trellis2** - *Installs Trellis 2.0*
-    - **Torch-Pack** - *Quick switching between: `Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`, `Torch 2.9.1+cu130`, `Torch 2.10.0+cu130`, `Torch 2.13.0+cu130` and `Torch 2.13.0-mac`*
-    - **ComfyUI-Version-Switcher** - ***Reversible** rollback to a **previous** ComfyUI version on issues*
-    - **Backup ComfyUI** - *Backup, restore, and manage your ComfyUI data folders*
+4. See the [**Add-ons Installation**](#-add-ons-installation) section below for optional add-ons like Torch-Pack, SageAttention, and more.
 
 <details>
 <summary><b>Mac M1/M2 Optimization</b></summary>
@@ -107,7 +97,7 @@ The `run_mac_mps.sh` script includes optimizations for Apple Silicon (M1/M2) Mac
 
 > [!TIP]
 > - Multiple ComfyUI installs allowed without conflicts.
-> - You can rename/move `ComfyUI-Easy-Install` folder after installation.
+> - The installer automatically cleans up installer files and flattens the folder structure — no nested folders.
 
 ---
 
@@ -128,9 +118,9 @@ The `run_mac_mps.sh` script includes optimizations for Apple Silicon (M1/M2) Mac
    ```
 3. After installation, start ComfyUI:
    ```bash
-   cd ComfyUI-Easy-Install
    ./run_nvidia_gpu.sh
    ```
+4. See the [**Add-ons Installation**](#-add-ons-installation) section below for optional add-ons like CUDA Toolkit, SageAttention, Nunchaku, and more.
 
 </details>
 
@@ -171,18 +161,147 @@ The `run_mac_mps.sh` script includes optimizations for Apple Silicon (M1/M2) Mac
 > [!TIP]
 > - [**For Windows installation click here**](https://github.com/Tavris1/ComfyUI-Easy-Install)
 
+---
+
+## 🧩 Add-ons Installation
+
+After the main installation, you can install optional add-ons from the `Add-Ons/` folder. These scripts enhance ComfyUI with additional performance optimizations, model support, and utilities.
+
+> [!IMPORTANT]
+> The installer automatically flattens the folder structure. All add-on scripts are in `Add-Ons/` at the top level of your installation folder.
+
+### Recommended Order of Operations (Linux)
+
+For Linux users planning to install CUDA-dependent add-ons like SageAttention, follow this order:
+
+1. **Install CUDA Toolkit** (if not already installed) — see [CUDA Toolkit](#cuda-toolkit) below
+2. **Switch Torch version** (if needed) — see [Torch-Pack](#torch-pack) below
+3. **Install SageAttention** — see [SageAttention](#sageattention) below
+4. **Install Nunchaku** — see [Nunchaku](#nunchaku) below
+5. **Install other add-ons** — see [Other Add-ons](#other-add-ons) below
+
+### CUDA Toolkit
+
+> **Linux only** — macOS does not support NVIDIA CUDA.
+
+The CUDA Toolkit is **required** for compiling certain add-ons like SageAttention and FlashAttention. It provides `nvcc` (the CUDA compiler) and development headers.
+
+- The installer must match the CUDA version used by your PyTorch installation.
+- The main installer ships with **Torch 2.11.0+cu130** (CUDA 13.0). If you switch Torch versions via Torch-Pack, install the matching CUDA toolkit.
+
+```bash
+bash Add-Ons/cuda-toolkit-installer.sh
+```
+
+Available CUDA versions:
+
+| Option | CUDA Version |
+|---|---|
+| 1 | CUDA 12.8 |
+| 2 | CUDA 13.0 |
+| 3 | CUDA 13.1 |
+
+The script auto-detects your Linux distribution and installs the appropriate NVIDIA repository packages.
+
+### Torch-Pack
+
+Quickly switch between different Torch/CUDA versions. Available for both macOS and Linux.
+
+**Linux variants:**
+
+| Script | Torch | CUDA |
+|---|---|---|
+| `Torch2.7.1+cu128.sh` | 2.7.1 | 12.8 |
+| `Torch2.8.0+cu128.sh` | 2.8.0 | 12.8 |
+| `Torch2.9.1+cu130.sh` | 2.9.1 | 13.0 |
+| `Torch2.10.0+cu130.sh` | 2.10.0 | 13.0 |
+| `Torch2.13.0+cu130.sh` | 2.13.0 | 13.0 |
+
+**macOS variants:**
+
+| Script | Torch |
+|---|---|
+| `Torch2.12.0-mac.sh` | 2.12.0 |
+| `Torch2.13.0-mac.sh` | 2.13.0 |
+
+```bash
+bash Add-Ons/Torch-Pack/Torch2.13.0+cu130.sh    # Linux
+bash Add-Ons/Torch-Pack/Torch2.13.0-mac.sh       # macOS
+```
+
+> [!WARNING]
+> After switching Torch versions, install the matching CUDA Toolkit before compiling add-ons like SageAttention.
+
+### SageAttention
+
+> **Linux only** — requires NVIDIA CUDA for compilation. Not available on macOS.
+
+SageAttention (v2.2.0) provides accelerated attention computation for supported models.
+
+**Prerequisites:**
+- CUDA Toolkit installed (version must match PyTorch's CUDA version) — see [CUDA Toolkit](#cuda-toolkit)
+- Python development headers (`Python.h`)
+- GCC < 16 (GCC 15 works with compatibility patches; GCC 16+ is not supported)
+
+**Install Python dev headers by distribution:**
+
+| Distro | Command |
+|---|---|
+| Debian/Ubuntu | `sudo apt-get install python3-dev` |
+| Fedora/RHEL | `sudo dnf install python3-devel` |
+| openSUSE | `sudo zypper install python3-devel` |
+| Arch | `sudo pacman -S python` |
+
+```bash
+bash Add-Ons/SageAttention-NEXT.sh
+```
+
+The script automatically:
+- Detects PyTorch's CUDA version and finds the matching CUDA toolkit
+- Patches CUDA headers for GCC 15+ compatibility if needed
+- Clones and compiles SageAttention v2.2.0
+
+### Nunchaku
+
+> **Linux only** — requires NVIDIA GPU. Not available on macOS.
+
+Nunchaku provides optimized inference for certain model architectures.
+
+**Version compatibility:**
+
+| Python | Torch | CUDA |
+|---|---|---|
+| 3.11, 3.12 | 2.7, 2.8 | 12.8 |
+| 3.11, 3.12 | 2.9 | 13.0 |
+
+> [!WARNING]
+> **Torch 2.9 requires CUDA 13.0.** If you're on Torch 2.9 with CUDA 12.8, switch to Torch 2.8 or upgrade CUDA.
+
+```bash
+bash Add-Ons/Nunchaku-NEXT.sh
+```
+
+### Other Add-ons
+
+| Add-on | Platform | Description |
+|---|---|---|
+| **Easy-Models-Linker** | macOS & Linux | Links an existing **MODELS** folder via `extra_model_paths.yaml` — no re-download needed. Some folders like **LLM** and **llm_gguf** cannot be redirected. |
+| **InsightFace** | macOS & Linux | Installs InsightFace pretrained models (non-commercial research only) |
+| **Trellis2** | macOS & Linux | Installs Trellis 2.0 |
+| **FlashAttention** | Linux only | Installs FlashAttention (requires CUDA Toolkit) |
+| **ComfyUI-Version-Switcher** | macOS & Linux | Reversible rollback to a previous ComfyUI version on issues |
+| **Backup ComfyUI** | macOS & Linux | Backup, restore, and manage your ComfyUI data folders |
+
 <details>
-<summary><b>Backup ComfyUI</b></summary>
+<summary><b>Backup ComfyUI Details</b></summary>
 
-A small interactive utility to back up, restore, and manage your ComfyUI data folders.
-
-- **Script**: `Add-Ons/backup_comfyui.sh`
+- **Script**: `Add-Ons/Backup_ComfyUI.sh`
 - **Version**: V2.01.3 (Pixaroma Community Edition, macOS/Linux by VenimK)
 - **Backup location**: `~/ComfyUI_Backups/ComfyUI_backup_YYYYMMDD_HHMMSS`
 - **What gets backed up**: `user`, `input`, `output` (always) · `models` (optional)
 
 ```bash
-bash Add-Ons/backup_comfyui.sh
+bash Add-Ons/Backup_ComfyUI.sh
 ```
 
 </details>

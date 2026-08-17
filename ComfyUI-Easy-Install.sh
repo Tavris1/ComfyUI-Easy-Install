@@ -794,6 +794,56 @@ copy_files rgthree_config.json ComfyUI/custom_nodes/rgthree-comfy
 # Clear Pip and uv Cache (moved to end in v2.02.0) - Disabled for slow connections
 # clear_pip_uv_cache
 
+# ─── Flatten folder structure ───
+# The installation created a nested ComfyUI-Easy-Install/ComfyUI-Easy-Install/ structure.
+# Move all child contents to the parent directory and clean up installer-only files.
+echo ""
+echo -e "${GREEN}::::::::::::::: Cleaning up installation files...${RESET}"
+
+# Move to parent directory (where the git clone and Helper zip live)
+cd ..
+
+# Remove installer-only files from parent BEFORE copying child contents.
+# This includes the running script itself — bash keeps running from memory after the file is deleted.
+# If we cp over the running script, bash silently terminates on macOS.
+rm -f ComfyUI-Easy-Install.sh
+rm -f Helper-CEI-NEXT-unix.zip
+rm -f comfyui-lxc-custom-install.sh
+rm -f comfyui-lxc-diagnostic.sh
+rm -f comfyui-lxc-standalone-no-clone.sh
+rm -f comfyui-lxc-standalone.sh
+rm -f proxmox-comfyui-install.sh
+rm -f proxmoxinstall.md
+rm -f setup-gpu-passthrough.sh
+rm -f testinstaller
+rm -f testinstaller_linux.sh
+rm -f mac_use_brew_python312.sh
+rm -f generate_icon.py
+rm -f LICENSE
+rm -f fix-nunchaku-qwenimage.md
+rm -rf .git .gitignore .devin .DS_Store
+
+# Copy all child contents into parent (child has ComfyUI/, python_embeded/, Add-Ons/, run scripts, etc.)
+cp -a ComfyUI-Easy-Install/. .
+
+# Remove the now-redundant child folder
+rm -rf ComfyUI-Easy-Install
+
+# Remove installer files that were copied from the child (Helper zip includes old versions)
+rm -f ComfyUI-Easy-Install.sh
+rm -f Helper-CEI-NEXT-unix.zip
+rm -f comfyui-lxc-custom-install.sh
+rm -f comfyui-lxc-diagnostic.sh
+rm -f comfyui-lxc-standalone-no-clone.sh
+rm -f comfyui-lxc-standalone.sh
+rm -f proxmox-comfyui-install.sh
+rm -f proxmoxinstall.md
+rm -f mac_use_brew_python312.sh
+rm -f generate_icon.py
+rm -f LICENSE
+rm -f fix-nunchaku-qwenimage.md
+rm -rf .git .gitignore .devin .DS_Store
+
 # Capture the end time
 END_TIME=$(date +%s)
 DIFF=$(($END_TIME - $START_TIME))
@@ -802,4 +852,5 @@ DIFF=$(($END_TIME - $START_TIME))
 echo ""
 echo -e "${GREEN}::::::::::::::: Installation Complete :::::::::::::::${RESET}"
 echo -e "${GREEN}::::::::::::::: Total Running Time:${RED} ${DIFF} ${GREEN}seconds${RESET}"
+echo -e "${YELLOW}Installation files cleaned up. ComfyUI is ready in this folder.${RESET}"
 read -p "Press any key to exit"
