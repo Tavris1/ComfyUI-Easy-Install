@@ -12,6 +12,9 @@ YELLOW='\033[93m'
 BOLD='\033[1m'
 RESET='\033[0m'
 
+# Directory containing this script, used to locate bundled patches
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+
 PYTHON_VERSION="3.12"
 # And modify the version check to only allow 3.12
 if [ "$PYTHON_VERSION" != "3.12" ]; then
@@ -117,6 +120,11 @@ if [ ! -d "ComfyUI-Easy-Install" ]; then
     exit 1
 fi
 cd ComfyUI-Easy-Install
+
+# Copy bundled patches (e.g. RMBG SAM3 macOS fix) into the install directory
+if [ -d "$SCRIPT_DIR/patches" ]; then
+    cp -R "$SCRIPT_DIR/patches" ./patches 2>/dev/null || true
+fi
 
 # Install ComfyUI
 install_comfyui() {
@@ -573,11 +581,78 @@ get_node() {
     echo ""
     git clone "$GIT_URL" "ComfyUI/custom_nodes/${GIT_FOLDER}"
 
+    local RMBG_DECORD_BUILT=false
     if [ "$(uname -s)" = "Darwin" ] && [ "$GIT_FOLDER" = "comfyui-rmbg" ]; then
         RMBG_SAM3_FILE="./ComfyUI/custom_nodes/${GIT_FOLDER}/py/AILab_SAM3Segment.py"
         if [ -f "$RMBG_SAM3_FILE" ]; then
-            rm -f "$RMBG_SAM3_FILE"
-            echo -e "${YELLOW}Removed RMBG SAM3 Triton module on macOS (requires CUDA)${RESET}"
+            # The upstream file is shipped with CRLF line endings; normalize before
+            # applying the text patch so hunks apply cleanly.
+            "$EMBEDDED_PYTHON" -c "from pathlib import Path; p=Path('$RMBG_SAM3_FILE'); p.write_text(p.read_text())"
+
+            RMBG_PATCH="./patches/comfyui-rmbg-macos-sam3.patch"
+            if [ -f "$RMBG_PATCH" ]; then
+                if patch -d "ComfyUI/custom_nodes/${GIT_FOLDER}" -p1 < "$RMBG_PATCH"; then
+                    echo -e "${GREEN}Applied RMBG SAM3 macOS patch${RESET}"
+                else
+                    echo -e "${YELLOW}RMBG SAM3 macOS patch failed to apply; SAM3 may not work on MPS${RESET}"
+                fi
+            else
+                echo -e "${YELLOW}RMBG SAM3 macOS patch not found at $RMBG_PATCH${RESET}"
+            fi
+        fi
+
+        # Build native Decord wheel for embedded Python 3.12 on macOS.
+        # PyPI has no Apple Silicon wheel, so it must be compiled against ffmpeg@6.
+        if command -v brew >/dev/null 2>&1; then
+            echo -e "${YELLOW}Installing Decord build dependencies (cmake, ffmpeg@6)...${RESET}"
+            brew install cmake ffmpeg@6 2>/dev/null || true
+        fi
+
+        DECORD_PATCH="./patches/decord-ffmpeg6-macos.patch"
+        FFMPEG6_PREFIX=""
+        if [ -d "/opt/homebrew/opt/ffmpeg@6" ]; then
+            FFMPEG6_PREFIX="/opt/homebrew/opt/ffmpeg@6"
+        elif [ -d "/usr/local/opt/ffmpeg@6" ]; then
+            FFMPEG6_PREFIX="/usr/local/opt/ffmpeg@6"
+        fi
+
+        if [ -f "$DECORD_PATCH" ] && command -v cmake >/dev/null 2>&1 && [ -n "$FFMPEG6_PREFIX" ]; then
+            DECORD_BUILD_DIR="$(mktemp -d)/decord"
+            if git clone --depth 1 --recursive https://github.com/dmlc/decord.git "$DECORD_BUILD_DIR"; then
+                if patch -d "$DECORD_BUILD_DIR" -p1 < "$DECORD_PATCH"; then
+                    CMAKE_ARCH=$(uname -m)
+                    if cmake -S "$DECORD_BUILD_DIR" -B "$DECORD_BUILD_DIR/build" \
+                        -DUSE_CUDA=OFF \
+                        -DFFMPEG_DIR="$FFMPEG6_PREFIX" \
+                        -DCMAKE_BUILD_TYPE=Release \
+                        -DCMAKE_OSX_ARCHITECTURES="$CMAKE_ARCH" \
+                        -DCMAKE_INSTALL_RPATH="$FFMPEG6_PREFIX/lib" 2>&1; then
+                        if cmake --build "$DECORD_BUILD_DIR/build" --parallel 2>&1; then
+                            "$EMBEDDED_PYTHON" -m pip wheel "$DECORD_BUILD_DIR/python" \
+                                --no-deps --no-build-isolation --wheel-dir "$DECORD_BUILD_DIR/wheels" || true
+                            DECORD_WHEEL=$(find "$DECORD_BUILD_DIR/wheels" -name 'decord-0.6.0-*.whl' | head -n1)
+                            if [ -n "$DECORD_WHEEL" ]; then
+                                "$EMBEDDED_PYTHON" -m pip install --no-deps "$DECORD_WHEEL"
+                                echo -e "${GREEN}Installed native Decord wheel for macOS${RESET}"
+                                RMBG_DECORD_BUILT=true
+                            else
+                                echo -e "${YELLOW}Decord wheel build did not produce expected output; SAM3 video may not work${RESET}"
+                            fi
+                        else
+                            echo -e "${YELLOW}Decord C++ build failed; SAM3 video may not work${RESET}"
+                        fi
+                    else
+                        echo -e "${YELLOW}Decord CMake configuration failed; SAM3 video may not work${RESET}"
+                    fi
+                else
+                    echo -e "${YELLOW}Decord FFmpeg 6 patch failed to apply; SAM3 video may not work${RESET}"
+                fi
+                rm -rf "$DECORD_BUILD_DIR"
+            else
+                echo -e "${YELLOW}Failed to clone Decord source; SAM3 video may not work${RESET}"
+            fi
+        else
+            echo -e "${YELLOW}Skipping native Decord build (missing patch, cmake, or ffmpeg@6); SAM3 video may not work${RESET}"
         fi
     fi
 
@@ -586,9 +661,15 @@ get_node() {
         if [ -s "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" ]; then
             if [ "$(uname)" = "Darwin" ]; then
                 # macOS: filter out packages that have no macOS wheels
-                grep -vi "onnxruntime-gpu" "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" | \
-                grep -vi "decord" | \
-                grep -vi "triton" > "/tmp/requirements_temp.txt" 2>/dev/null || true
+                if [ "$GIT_FOLDER" = "comfyui-rmbg" ] && [ "$RMBG_DECORD_BUILT" = "true" ]; then
+                    # Native Decord was built above; keep its requirement so dependencies are satisfied
+                    grep -vi "onnxruntime-gpu" "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" | \
+                    grep -vi "triton" > "/tmp/requirements_temp.txt" 2>/dev/null || true
+                else
+                    grep -vi "onnxruntime-gpu" "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" | \
+                    grep -vi "decord" | \
+                    grep -vi "triton" > "/tmp/requirements_temp.txt" 2>/dev/null || true
+                fi
                 if [ -s "/tmp/requirements_temp.txt" ]; then
                     uv pip install -r "/tmp/requirements_temp.txt" $UV_ARGS
                 fi
