@@ -226,6 +226,17 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
+# mylocal
+comfyui-lxc-custom-install.sh
+comfyui-lxc-diagnostic.sh
+comfyui-lxc-standalone-no-clone.sh
+comfyui-lxc-standalone.sh
+proxmox-comfyui-install.sh
+proxmoxinstall.md
+mac_use_brew_python312.sh
+setup-gpu-passthrough.sh
+
+
 # Custom
 ComfyUI-Easy-Install/
 Scripts/prepared_images/
