@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.14.1"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.14.2"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -113,6 +113,13 @@ if "%CURRENT_CUDA%"=="12.8" (
 .\python_embeded\python.exe -I -m uv pip install descript-audio-codec %UVargs%
 echo.
 
+:: Install Triton ::
+if "%CURRENT_CUDA%"=="12.8" (
+	.\python_embeded\python.exe -I -m pip install --upgrade --force-reinstall "triton-windows<3.5" %PIPargs%
+) else (
+	.\python_embeded\python.exe -I -m pip install --upgrade --force-reinstall "triton-windows<3.7" %PIPargs%
+)
+
 :: Install Pixaroma's Related Nodes ::
 call :get_node https://github.com/Comfy-Org/ComfyUI-Manager					comfyui-manager
 call :get_node https://github.com/yolain/ComfyUI-Easy-Use					ComfyUI-Easy-Use
@@ -183,17 +190,18 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Microsoft.PowerShell
 cd ComfyUI-Easy-Install
 for %%e in (jpeg jpg png mp3 mp4) do move ".\Add-Ons\Tools\Helper-CEI\*.%%e" ".\ComfyUI\input\" >nul 2>&1
 
-:: Install Triton ::
-if "%CURRENT_CUDA%"=="12.8" (
-	.\python_embeded\python.exe -I -m pip install --upgrade --force-reinstall "triton-windows<3.5" %PIPargs%
-) else (
-	.\python_embeded\python.exe -I -m pip install --upgrade --force-reinstall "triton-windows<3.7" %PIPargs%
-)
-
 :: Postinstall
 .\python_embeded\python.exe -I -m uv pip uninstall pydantic pydantic-core
 .\python_embeded\python.exe -I -m uv pip install pydantic %UVargs%
 echo.
+
+:: Update ComfyUI to Stable version ::
+if exist ".\update\update_comfyui_stable.bat" (
+    cd ".\update"
+    call "update_comfyui_stable.bat" nopause
+    cd ..\
+    echo.
+)
 
 if exist ".\Add-Ons\Tools\AutoRun.bat" (
 	pushd %cd%
