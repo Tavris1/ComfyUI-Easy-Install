@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.14.0"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.14.1"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -273,6 +273,11 @@ erase python-3.12.10-embed-amd64.zip
 curl.exe -L --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
 if errorlevel 1 curl.exe -L --progress-bar --ssl-no-revoke -k --retry 5 --retry-delay 2 -o "get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
 if errorlevel 1 powershell -NoProfile -ExecutionPolicy Bypass -Command "Try{Start-BitsTransfer -Source 'https://bootstrap.pypa.io/get-pip.py' -Destination 'get-pip.py' -ErrorAction Stop}catch{exit 1}"
+
+if not exist "get-pip.py" curl.exe -L --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "get-pip.py" "https://raw.githubusercontent.com/pypa/get-pip/main/public/get-pip.py"
+if not exist "get-pip.py" curl.exe -L --progress-bar --ssl-no-revoke -k --retry 5 --retry-delay 2 -o "get-pip.py" "https://raw.githubusercontent.com/pypa/get-pip/main/public/get-pip.py"
+if not exist "get-pip.py" powershell -NoProfile -ExecutionPolicy Bypass -Command "Try{Start-BitsTransfer -Source 'https://raw.githubusercontent.com/pypa/get-pip/main/public/get-pip.py' -Destination 'get-pip.py' -ErrorAction Stop}catch{exit 1}"
+
 if not exist "get-pip.py" (
 echo.
 echo %red%Failed to download get-pip.py%reset%
