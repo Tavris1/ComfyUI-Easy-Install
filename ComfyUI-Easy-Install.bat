@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.14.2"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.14.3"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -195,13 +195,10 @@ for %%e in (jpeg jpg png mp3 mp4) do move ".\Add-Ons\Tools\Helper-CEI\*.%%e" ".\
 .\python_embeded\python.exe -I -m uv pip install pydantic %UVargs%
 echo.
 
-:: Update ComfyUI to Stable version ::
-if exist ".\update\update_comfyui_stable.bat" (
-    cd ".\update"
-    call "update_comfyui_stable.bat" nopause
-    cd ..\
-    echo.
-)
+:: Install working version of av!!! ::
+.\python_embeded\python.exe -I -m uv pip uninstall av -y
+.\python_embeded\python.exe -I -m uv pip install av==18.0.0 %UVargs%
+echo.
 
 if exist ".\Add-Ons\Tools\AutoRun.bat" (
 	pushd %cd%
@@ -323,7 +320,8 @@ if "%CURRENT_CUDA%"=="12.8" (
 cd ..\ComfyUI
 
 :: Install working version of av!!! ::
-..\python_embeded\python.exe -I -m uv pip install av==16.0.1 %UVargs%
+..\python_embeded\python.exe -I -m uv pip uninstall av -y
+..\python_embeded\python.exe -I -m uv pip install av==18.0.0 %UVargs%
 
 ..\python_embeded\python.exe -I -m uv pip install -r requirements.txt %UVargs%
 cd ..\
