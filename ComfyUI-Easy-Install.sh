@@ -521,8 +521,9 @@ EOL
     uv pip install $UV_ARGS pygit2
     echo -e "${GREEN}✓${RESET} pygit2 installed"
     
-    echo -e "${YELLOW}[4/6]${RESET} Installing av==16.0.1 (Thx @Ivo)..."
-    uv pip install $UV_ARGS av==16.0.1
+    echo -e "${YELLOW}[4/6]${RESET} Installing av==18.0.0 (Thx @Ivo)..."
+    uv pip uninstall av -y 2>/dev/null || true
+    uv pip install $UV_ARGS av==18.0.0
     echo -e "${GREEN}✓${RESET} av installed"
     
     # Install ComfyUI requirements
