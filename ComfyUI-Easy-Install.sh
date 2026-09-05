@@ -122,11 +122,18 @@ fi
 cd ComfyUI-Easy-Install
 
 # Copy bundled patches (e.g. RMBG SAM3 macOS fix) into the install directory.
-# Patches may be distributed next to the installer or inside a pre-extracted install tree.
-if [ -d "$SCRIPT_DIR/patches" ]; then
-    cp -R "$SCRIPT_DIR/patches" ./patches 2>/dev/null || true
-elif [ -d "./ComfyUI-Easy-Install/patches" ]; then
-    cp -R "./ComfyUI-Easy-Install/patches" ./patches 2>/dev/null || true
+# Patches may be distributed next to the installer or inside a pre-extracted
+# install tree. Patches inside the Helper zip are extracted too late to help
+# here, so they must be on disk before the installer runs.
+PATCH_SOURCE=""
+for d in "$SCRIPT_DIR/patches" "$SCRIPT_DIR/ComfyUI-Easy-Install/patches" "./ComfyUI-Easy-Install/patches" "../ComfyUI-Easy-Install/patches"; do
+    if [ -d "$d" ]; then
+        PATCH_SOURCE="$d"
+        break
+    fi
+done
+if [ -n "$PATCH_SOURCE" ]; then
+    cp -R "$PATCH_SOURCE" ./patches 2>/dev/null || true
 fi
 
 # Install ComfyUI
