@@ -30,6 +30,26 @@ export GIT_LFS_SKIP_SMUDGE=1
 export GIT_TERMINAL_PROMPT=0
 export GIT_ASKPASS=echo
 
+# Homebrew 5.x defaults to an interactive
+# "Do you want to proceed with the installation? [y/n]" prompt whenever a
+# formula pulls in dependencies. Keep this installer unattended.
+export HOMEBREW_NO_ASK=1
+export HOMEBREW_NO_ENV_HINTS=1
+export HOMEBREW_NO_AUTO_UPDATE=1
+
+brew_install_noconfirm() {
+    if ! command -v brew >/dev/null 2>&1; then
+        return 1
+    fi
+    # --yes is Homebrew 5.x (--no-ask). Older brew has no confirmation prompt
+    # and rejects unknown flags, so only pass it when the local brew supports it.
+    if brew install --help 2>&1 | grep -q -- '--yes'; then
+        brew install --yes "$@"
+    else
+        brew install "$@"
+    fi
+}
+
 # Disable IPv6 to prevent hanging in LXC containers
 echo -e "${YELLOW}Disabling IPv6 to prevent network hangs...${RESET}"
 sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1 || true
@@ -121,19 +141,25 @@ if [ ! -d "ComfyUI-Easy-Install" ]; then
 fi
 cd ComfyUI-Easy-Install
 
-# Copy bundled patches (e.g. RMBG SAM3 macOS fix) into the install directory.
-# Patches may be distributed next to the installer or inside a pre-extracted
-# install tree. Patches inside the Helper zip are extracted too late to help
-# here, so they must be on disk before the installer runs.
-PATCH_SOURCE=""
-for d in "$SCRIPT_DIR/patches" "$SCRIPT_DIR/ComfyUI-Easy-Install/patches" "./ComfyUI-Easy-Install/patches" "../ComfyUI-Easy-Install/patches"; do
-    if [ -d "$d" ]; then
-        PATCH_SOURCE="$d"
-        break
+# Copy bundled patches (e.g. RMBG SAM3 macOS fix) into the install directory
+# before custom nodes are cloned. get_node applies these during the RMBG
+# install; the full Helper zip extract happens at the end of the script,
+# which is too late. Prefer patches next to the installer, then pull them
+# out of the Helper zip if needed.
+mkdir -p ./patches
+if [ -d "$SCRIPT_DIR/patches" ]; then
+    cp -R "$SCRIPT_DIR/patches/." ./patches/ 2>/dev/null || true
+fi
+if [ ! -f "./patches/comfyui-rmbg-macos-sam3.patch" ] || [ ! -f "./patches/decord-ffmpeg6-macos.patch" ]; then
+    if [ -f "$SCRIPT_DIR/$HLPR_NAME" ]; then
+        echo -e "${YELLOW}Extracting bundled patches from ${HLPR_NAME}...${RESET}"
+        unzip -o -j "$SCRIPT_DIR/$HLPR_NAME" "ComfyUI-Easy-Install/patches/*" -d ./patches >/dev/null 2>&1 || true
     fi
-done
-if [ -n "$PATCH_SOURCE" ]; then
-    cp -R "$PATCH_SOURCE" ./patches 2>/dev/null || true
+fi
+if [ -f "./patches/comfyui-rmbg-macos-sam3.patch" ] && [ -f "./patches/decord-ffmpeg6-macos.patch" ]; then
+    echo -e "${GREEN}Bundled patches ready${RESET}"
+else
+    echo -e "${YELLOW}Warning: RMBG/Decord patches not found; SAM3 on macOS may not work${RESET}"
 fi
 
 # Install ComfyUI
@@ -191,7 +217,7 @@ install_comfyui() {
 
         if [ "$(uname -s)" = "Darwin" ] && command -v brew >/dev/null 2>&1; then
             echo "Ensuring Homebrew python@3.12 is available..."
-            brew install python@3.12 2>/dev/null || true
+            brew_install_noconfirm python@3.12 >/dev/null || true
             for candidate in \
                 "$(brew --prefix 2>/dev/null)/opt/python@3.12/bin/python3.12" \
                 "$(brew --prefix python@3.12 2>/dev/null)/bin/python3.12"
@@ -264,7 +290,7 @@ EOL
             # macOS
             if command -v brew >/dev/null 2>&1; then
                 echo "Detected Homebrew, installing dependencies..."
-                brew install openssl readline sqlite3 xz zlib tcl-tk libffi 2>/dev/null || true
+                brew_install_noconfirm openssl readline sqlite3 xz zlib tcl-tk libffi || true
             else
                 echo -e "${YELLOW}Warning: Homebrew not found. Please install build dependencies manually.${RESET}"
                 echo "Install Homebrew: /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
@@ -600,6 +626,9 @@ get_node() {
             "$EMBEDDED_PYTHON" -c "from pathlib import Path; p=Path('$RMBG_SAM3_FILE'); p.write_text(p.read_text())"
 
             RMBG_PATCH="./patches/comfyui-rmbg-macos-sam3.patch"
+            if [ ! -f "$RMBG_PATCH" ] && [ -f "$SCRIPT_DIR/patches/comfyui-rmbg-macos-sam3.patch" ]; then
+                RMBG_PATCH="$SCRIPT_DIR/patches/comfyui-rmbg-macos-sam3.patch"
+            fi
             if [ -f "$RMBG_PATCH" ]; then
                 if patch -d "ComfyUI/custom_nodes/${GIT_FOLDER}" -p1 < "$RMBG_PATCH"; then
                     echo -e "${GREEN}Applied RMBG SAM3 macOS patch${RESET}"
@@ -613,12 +642,28 @@ get_node() {
 
         # Build native Decord wheel for embedded Python 3.12 on macOS.
         # PyPI has no Apple Silicon wheel, so it must be compiled against ffmpeg@6.
+        # Skip formulae that are already present so Homebrew does not offer to
+        # upgrade unrelated outdated deps (and prompt y/n).
         if command -v brew >/dev/null 2>&1; then
-            echo -e "${YELLOW}Installing Decord build dependencies (cmake, ffmpeg@6)...${RESET}"
-            brew install cmake ffmpeg@6 2>/dev/null || true
+            local brew_pkgs=()
+            if ! command -v cmake >/dev/null 2>&1; then
+                brew_pkgs+=(cmake)
+            fi
+            if [ ! -d "/opt/homebrew/opt/ffmpeg@6" ] && [ ! -d "/usr/local/opt/ffmpeg@6" ]; then
+                brew_pkgs+=(ffmpeg@6)
+            fi
+            if [ ${#brew_pkgs[@]} -gt 0 ]; then
+                echo -e "${YELLOW}Installing Decord build dependencies (${brew_pkgs[*]})...${RESET}"
+                brew_install_noconfirm "${brew_pkgs[@]}" || true
+            else
+                echo -e "${GREEN}Decord build dependencies already present (cmake, ffmpeg@6)${RESET}"
+            fi
         fi
 
         DECORD_PATCH="./patches/decord-ffmpeg6-macos.patch"
+        if [ ! -f "$DECORD_PATCH" ] && [ -f "$SCRIPT_DIR/patches/decord-ffmpeg6-macos.patch" ]; then
+            DECORD_PATCH="$SCRIPT_DIR/patches/decord-ffmpeg6-macos.patch"
+        fi
         FFMPEG6_PREFIX=""
         if [ -d "/opt/homebrew/opt/ffmpeg@6" ]; then
             FFMPEG6_PREFIX="/opt/homebrew/opt/ffmpeg@6"
@@ -779,7 +824,7 @@ else
     echo -e "${GREEN}::::::::::::::: Installing ${YELLOW}SoX${GREEN} :::::::::::::::${RESET}"
     if [ "$(uname -s)" = "Darwin" ]; then
         if command -v brew >/dev/null 2>&1; then
-            brew install sox || true
+            brew_install_noconfirm sox || true
         else
             echo -e "${YELLOW}Homebrew not found. Please install SoX manually.${RESET}"
         fi
