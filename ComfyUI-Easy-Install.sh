@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo v3.12.2
+# Title ComfyUI-Easy-Install  NEXT by ivo 3.14.3
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -121,9 +121,12 @@ if [ ! -d "ComfyUI-Easy-Install" ]; then
 fi
 cd ComfyUI-Easy-Install
 
-# Copy bundled patches (e.g. RMBG SAM3 macOS fix) into the install directory
+# Copy bundled patches (e.g. RMBG SAM3 macOS fix) into the install directory.
+# Patches may be distributed next to the installer or inside a pre-extracted install tree.
 if [ -d "$SCRIPT_DIR/patches" ]; then
     cp -R "$SCRIPT_DIR/patches" ./patches 2>/dev/null || true
+elif [ -d "./ComfyUI-Easy-Install/patches" ]; then
+    cp -R "./ComfyUI-Easy-Install/patches" ./patches 2>/dev/null || true
 fi
 
 # Install ComfyUI
@@ -617,10 +620,13 @@ get_node() {
         fi
 
         if [ -f "$DECORD_PATCH" ] && command -v cmake >/dev/null 2>&1 && [ -n "$FFMPEG6_PREFIX" ]; then
-            DECORD_BUILD_DIR="$(mktemp -d)/decord"
-            if git clone --depth 1 --recursive https://github.com/dmlc/decord.git "$DECORD_BUILD_DIR"; then
+            DECORD_PARENT_DIR=$(mktemp -d)
+            DECORD_BUILD_DIR="$DECORD_PARENT_DIR/decord"
+            if [ -z "$DECORD_PARENT_DIR" ]; then
+                echo -e "${YELLOW}Failed to create temporary build directory; SAM3 video may not work${RESET}"
+            elif git clone --depth 1 --recursive https://github.com/dmlc/decord.git "$DECORD_BUILD_DIR"; then
                 if patch -d "$DECORD_BUILD_DIR" -p1 < "$DECORD_PATCH"; then
-                    CMAKE_ARCH=$(uname -m)
+                    CMAKE_ARCH=$("$EMBEDDED_PYTHON" -c "import platform; print(platform.machine())" 2>/dev/null || uname -m)
                     if cmake -S "$DECORD_BUILD_DIR" -B "$DECORD_BUILD_DIR/build" \
                         -DUSE_CUDA=OFF \
                         -DFFMPEG_DIR="$FFMPEG6_PREFIX" \
@@ -628,15 +634,20 @@ get_node() {
                         -DCMAKE_OSX_ARCHITECTURES="$CMAKE_ARCH" \
                         -DCMAKE_INSTALL_RPATH="$FFMPEG6_PREFIX/lib" 2>&1; then
                         if cmake --build "$DECORD_BUILD_DIR/build" --parallel 2>&1; then
-                            "$EMBEDDED_PYTHON" -m pip wheel "$DECORD_BUILD_DIR/python" \
-                                --no-deps --no-build-isolation --wheel-dir "$DECORD_BUILD_DIR/wheels" || true
-                            DECORD_WHEEL=$(find "$DECORD_BUILD_DIR/wheels" -name 'decord-0.6.0-*.whl' | head -n1)
-                            if [ -n "$DECORD_WHEEL" ]; then
-                                "$EMBEDDED_PYTHON" -m pip install --no-deps "$DECORD_WHEEL"
-                                echo -e "${GREEN}Installed native Decord wheel for macOS${RESET}"
-                                RMBG_DECORD_BUILT=true
+                            # Decord's --no-build-isolation wheel needs these in the active env
+                            "$EMBEDDED_PYTHON" -m pip install --no-cache-dir setuptools wheel pybind11 numpy 2>/dev/null || true
+                            if "$EMBEDDED_PYTHON" -m pip wheel "$DECORD_BUILD_DIR/python" \
+                                --no-deps --no-build-isolation --wheel-dir "$DECORD_BUILD_DIR/wheels"; then
+                                DECORD_WHEEL=$(find "$DECORD_BUILD_DIR/wheels" -name 'decord-*.whl' | head -n1)
+                                if [ -n "$DECORD_WHEEL" ]; then
+                                    "$EMBEDDED_PYTHON" -m pip install --no-deps "$DECORD_WHEEL"
+                                    echo -e "${GREEN}Installed native Decord wheel for macOS${RESET}"
+                                    RMBG_DECORD_BUILT=true
+                                else
+                                    echo -e "${YELLOW}Decord wheel build did not produce expected output; SAM3 video may not work${RESET}"
+                                fi
                             else
-                                echo -e "${YELLOW}Decord wheel build did not produce expected output; SAM3 video may not work${RESET}"
+                                echo -e "${YELLOW}Decord wheel build failed; SAM3 video may not work${RESET}"
                             fi
                         else
                             echo -e "${YELLOW}Decord C++ build failed; SAM3 video may not work${RESET}"
@@ -647,10 +658,10 @@ get_node() {
                 else
                     echo -e "${YELLOW}Decord FFmpeg 6 patch failed to apply; SAM3 video may not work${RESET}"
                 fi
-                rm -rf "$DECORD_BUILD_DIR"
             else
                 echo -e "${YELLOW}Failed to clone Decord source; SAM3 video may not work${RESET}"
             fi
+            rm -rf "$DECORD_PARENT_DIR"
         else
             echo -e "${YELLOW}Skipping native Decord build (missing patch, cmake, or ffmpeg@6); SAM3 video may not work${RESET}"
         fi
