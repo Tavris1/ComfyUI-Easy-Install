@@ -1,5 +1,3 @@
-<a id="pt-br"></a>
-
 <p align="center">
 🌍 
 <a href="../README.md">English</a> |
@@ -21,28 +19,29 @@
   <img src="EZi-Logo.svg" width="120" alt="EZi Logo">
   <h1>ComfyUI-Easy-Install</h1>
   <p align="center">
-    <strong>ComfyUI portátil com um clique usando o EZi Desktop</strong><br />
-    Windows • GPUs NVIDIA • Edição Comunitária Pixaroma
+    <strong>ComfyUI portátil com um clique e EZi Desktop: um painel completo para pacotes, ambientes e configuração</strong><br />
+    Windows • NVIDIA GPUs • Pixaroma Community Edition
   </p>
 
 [![GitHub Release](https://img.shields.io/github/v/release/Tavris1/ComfyUI-Easy-Install)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
 [![GitHub Release Date](https://img.shields.io/github/release-date/Tavris1/ComfyUI-Easy-Install?style=flat&label=date)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
-[![Downloads](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Tavris1/ComfyUI-Easy-Install/Windows/.github/badges/downloads.json)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
+[![Downloads](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/Tavris1/95cfc6f0535930f25591dcfe08f34cc1/raw/downloads.json)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)
+
+
+<!--[![GitHub All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)-->
+<!--[![GitHub Downloads Latest](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=⬇+latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)-->
 
   <p align="center">
-    <a href="#windows-installation">📥 Instalar</a> &nbsp;·&nbsp;
-    <a href="#features">✨ Recursos/Componentees</a> &nbsp;·&nbsp;
+    <a href="#%EF%B8%8F-instalação-no-windows">📥 Instalar</a> &nbsp;·&nbsp;
+    <a href="#-recursos">✨ Recursos/Componentes</a> &nbsp;·&nbsp;
     <a href="https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
     <a href="https://discord.gg/gggpkVgBf3">💬 Pixaroma Discord</a> &nbsp;·&nbsp;
-    <a href="#support-development">❤️ Apoiar o desenvolvimento</a>
+    <a href="#%EF%B8%8F-apoiar-o-desenvolvimento">❤️ Apoiar o desenvolvimento</a>
   </p>
 
 <!-- Dedicated to the **Pixaroma** community  
 [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
 -->
-
-<!--[![GitHub All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)-->
-<!--[![GitHub Downloads Latest](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=⬇+latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)-->
 
 ---
 
@@ -50,40 +49,39 @@
 
 </div>
 
-<a id="features"></a>
-
 ## ✨ Recursos
 
-**O **ComfyUI-Easy-Install** fornece um ambiente portátil do ComfyUI com o **EZi Desktop**.  
-Não é necessário configurar Python ou Git manualmente.
+**ComfyUI-Easy-Install** fornece um ambiente portátil do ComfyUI com **EZi Desktop**.  
+Não é necessária nenhuma configuração manual do Python ou Git.
 
-Instale com um clique pacotes complexos como Nunchaku, SageAttention, FlashAttention, InsightFace e Trellis 2.0.
+Instale pacotes complexos como Nunchaku, SageAttention, FlashAttention, InsightFace e Trellis 2.0 com um único clique.
 
-Gerencie em um só lugar **modelos, pacotes, versões do PyTorch/CUDA, Dynamic VRAM, versões do ComfyUI/frontend, caches do UV/PIP e conversão para GGUF**.
+Gerencie **modelos, pacotes, versões do PyTorch/CUDA, Dynamic VRAM,  
+versões do ComfyUI/frontend, caches do UV/PIP e conversão para GGUF** em um só lugar.
 
-## 📦 Componentees incluídos
+## 📦 Componentes incluídos
 <details open>
-<summary><b>Componentees principais</b></summary>
+<summary><b>Componentes principais</b></summary>
 
 | 🔧 Componente | 📝 Observação |
 |---|---|
-| [Git](https://git-scm.com/) | ![Git version](https://img.shields.io/github/v/tag/git/git?label=&display_name=tag&color=blue) - Mais recente (instala/atualiza se necessário) |
-| [Python](https://www.python.org/downloads/release/python-31210/) | ![Python version](https://img.shields.io/badge/3.12.10-blue) - Versão incorporada |
+| [Git](https://git-scm.com/) | ![Git version](https://img.shields.io/github/v/tag/git/git?label=&display_name=tag&color=blue) - Mais recente (será instalado/atualizado se necessário) |
+| [Python](https://www.python.org/downloads/release/python-31210/) | ![Python version](https://img.shields.io/badge/3.12.10-blue) - Versão Embedded |
 | [ComfyUI](https://github.com/Comfy-Org/ComfyUI) | ![ComfyUI version](https://img.shields.io/github/v/release/Comfy-Org/ComfyUI?label=&display_name=tag) - Versão estável mais recente |
 
 </details>
 
 <details>
-<summary><b>Nós usados nos tutoriais da Pixaroma</b></summary>
+<summary><b>Nodes usados nos tutoriais da Pixaroma</b></summary>
 
 | 🖼️ Imagem | 🎬 Vídeo | 🎵 Áudio | 🧩 Utilitário / WF | 🤖 Modelos |
 |---|---|---|---|---|
-| [Tiled Diffusion & VAE](https://github.com/shiimizu/ComfyUI-TiledDiffusion) | [VídeoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VídeoHelperSuite) | [MelBandRoFormer](https://github.com/kijai/ComfyUI-MelBandRoFormer) | [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager) | [QwenVL](https://github.com/1038lab/ComfyUI-QwenVL) |
-| [Inpaint CropAndStitch](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch) | [WanVídeoWrapper](https://github.com/kijai/ComfyUI-WanVídeoWrapper) | [Qwen3-TTS](https://github.com/flybirdxx/ComfyUI-Qwen-TTS) | [Easy-Use](https://github.com/yolain/ComfyUI-Easy-Use) | [GGUF](https://github.com/city96/ComfyUI-GGUF) |
-| [ControlNet Aux](https://github.com/Fannovel16/comfyui_controlnet_aux) | [WanAnimatePreprocess](https://github.com/kijai/ComfyUI-WanAnimatePreprocess) | [FishÁudioS2](https://github.com/Saganaki22/ComfyUI-FishÁudioS2) | [KJNós](https://github.com/kijai/ComfyUI-KJNós) | |
-| [LayerStyle](https://github.com/chflame163/ComfyUI_LayerStyle) | [SeedVR2 VídeoUpscaler](https://github.com/numz/ComfyUI-SeedVR2_VídeoUpscaler) | | [rgthree](https://github.com/rgthree/rgthree-comfy) | |
-| [RMBG](https://github.com/1038lab/ComfyUI-RMBG) | | | [iFerramentas](https://github.com/MohammadAboulEla/ComfyUI-iFerramentas) | |
-| [Easy-Sam3](https://github.com/yolain/ComfyUI-Easy-Sam3) | | | [ControlAltAI Nós](https://github.com/gseth/ControlAltAI-Nós) | |
+| [Tiled Diffusion & VAE](https://github.com/shiimizu/ComfyUI-TiledDiffusion) | [VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) | [MelBandRoFormer](https://github.com/kijai/ComfyUI-MelBandRoFormer) | [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager) | [QwenVL](https://github.com/1038lab/ComfyUI-QwenVL) |
+| [Inpaint CropAndStitch](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch) | [WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideoWrapper) | [Qwen3-TTS](https://github.com/flybirdxx/ComfyUI-Qwen-TTS) | [Easy-Use](https://github.com/yolain/ComfyUI-Easy-Use) | [GGUF](https://github.com/city96/ComfyUI-GGUF) |
+| [ControlNet Aux](https://github.com/Fannovel16/comfyui_controlnet_aux) | [WanAnimatePreprocess](https://github.com/kijai/ComfyUI-WanAnimatePreprocess) | [FishAudioS2](https://github.com/Saganaki22/ComfyUI-FishAudioS2) | [KJNodes](https://github.com/kijai/ComfyUI-KJNodes) | |
+| [LayerStyle](https://github.com/chflame163/ComfyUI_LayerStyle) | [SeedVR2 VideoUpscaler](https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler) | | [rgthree](https://github.com/rgthree/rgthree-comfy) | |
+| [RMBG](https://github.com/1038lab/ComfyUI-RMBG) | | | [iTools](https://github.com/MohammadAboulEla/ComfyUI-iTools) | |
+| [Easy-Sam3](https://github.com/yolain/ComfyUI-Easy-Sam3) | | | [ControlAltAI Nodes](https://github.com/gseth/ControlAltAI-Nodes) | |
 | [SCAIL-Pose](https://github.com/kijai/ComfyUI-SCAIL-Pose) | | | ✨[Pixaroma](https://github.com/pixaroma/ComfyUI-Pixaroma) | |
 | | | | [Krea2T-Enhancer](https://github.com/capitan01R/ComfyUI-Krea2T-Enhancer) | |
 | | | | [Krea2Edit](https://github.com/lbouaraba/comfyui-krea2edit) | |
@@ -91,63 +89,59 @@ Gerencie em um só lugar **modelos, pacotes, versões do PyTorch/CUDA, Dynamic V
 </details>
 
 <details>
-<summary><b>Complementos e ferramentas opcionais</b></summary>
+<summary><b>Add-ons e Tools opcionais</b></summary>
 
-| 🧩 Nós | 🛠️ Ferramentas |
+| 🧩 Nodes | 🛠️ Tools |
 |---|---|
-| [Nunchaku](https://github.com/nunchaku-ai/nunchaku) | Easy-Modelos-Linker |
+| [Nunchaku](https://github.com/nunchaku-ai/nunchaku) | Easy-Models-Linker |
 | [SageAttention (v2.2.0 and v3)](https://github.com/woct0rdho/SageAttention) | Easy-System-Checker |
 | [FlashAttention](https://github.com/Dao-AILab/flash-attention) | ComfyUI-Version-Switcher |
 | [InsightFace](https://github.com/deepinsight/insightface) | Easy-model2GGUF |
 | [Trellis 2.0](https://github.com/visualbruno/ComfyUI-Trellis2) | Long-Paths-Enabler |
 | | Torch-Pack |
 | | Toggle-DynamicVRAM |
-| | Update Easy-Instalar |
+| | Update Easy-Install |
 
 </details>
 
 ---
 
-<a id="windows-installation"></a>
-
 ## 🖥️ Instalação no Windows
 
 > [!IMPORTANT]
-> - Não execute o instalador como **Administrador**.
+> - Não execute o instalador como **Administrator**.
 > - Evite pastas do sistema (`Program Files`, `Windows`, raiz de `C:\`).
 > - Evite espaços e caracteres especiais nos nomes das pastas.
 > - Certifique-se de que os drivers NVIDIA estejam atualizados.
 
-1. [**📥 BAIXAR A VERSÃO MAIS RECENTE**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
-2. Extraia o ZIP para uma nova pasta e execute **`ComfyUI-Easy-Install.bat`**
-3. Após a configuração, opcionalmente instale ou execute componentes pela pasta **Add-ons** ou pelo **EZi Desktop Menu**:
-    - **Easy-Modelos-Linker** - *Usa a pasta **MODELS** existente por meio do **extra_model_paths.yaml**, sem necessidade de baixar novamente*
+1. [**📥 DOWNLOAD LATEST VERSION**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
+2. Extraia o arquivo ZIP para uma nova pasta e execute **`ComfyUI-Easy-Install.bat`**
+3. Opcionalmente, após a configuração, instale ou execute componentes da pasta **Add-ons** ou do **EZi Desktop Menu**:
+    - **Easy-Models-Linker** - *Usa a pasta **MODELS** existente por meio do **extra_model_paths.yaml**, sem necessidade de baixar novamente*
       - *Algumas pastas, como **LLM** e **llm_gguf**, não podem ser redirecionadas dessa forma*
     - **Easy-System-Checker** - *Fornece informações sobre os principais componentes de hardware e software*
-    - **Nunchaku** - *Instala o Nunchaku. (Execute `Nunchaku.bat` novamente se ocorrerem problemas depois)*
-    - **SageAttention-Multi** - *Instala o SageAttention v2.2.0 e v3 (v3 funciona apenas em GPUs NVIDIA série 50)*
+    - **Nunchaku** - *Instala o Nunchaku*
+    - **SageAttention-Multi** - *Instala tanto o SageAttention v2.2.0 quanto o v3 (v3 é efetivo apenas em NVIDIA 50-series GPUs)*
     - **FlashAttention** - *Instala o FlashAttention v2.8.3*
     - **InsightFace** - *Instala o InsightFace (modelos pré-treinados apenas para pesquisa não comercial)*
-    - **Trellis2** - *Instala o Trellis 2.0 e o modelo (requer `Torch 2.8.0+cu128` de `Add-ons/Torch-Pack`)*
-    - **Torch-Pack** - *Alternância rápida entre:*  
-      - *`Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`, `Torch 2.9.1+cu130`, `Torch 2.10+cu130` & `Torch 2.11+cu130`*
-    - **Easy-model2GGUF** - *Converte e quantiza modelos para GGUF (Q2_K–Q8_0), com correções de tensores 5D quando disponíveis*
+    - **Trellis2** - *Instala o Trellis 2.0 e o modelo (requer `Torch 2.8.0+cu128` do `Add-ons/Torch-Pack`)*
+    - **Torch-Pack** - *Alternância rápida entre: `Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`,  
+      `Torch 2.9.1+cu130`, `Torch 2.10+cu130`, `Torch 2.11+cu130`, `Torch 2.12.1+cu130` & `Torch 2.13.0+cu130`*
+    - **Easy-model2GGUF** - *Converte e quantiza modelos para GGUF (Q2_K–Q8_0), com correções de tensor 5D quando disponíveis*
     - **Long-Paths-Enabler** - *Ativa **Long Paths** no Windows 10/11. Essencial para Python/ComfyUI*
-    - **ComfyUI-Version-Switcher** - *Permite reverter de forma **reversível** para uma versão **anterior** do ComfyUI se ocorrerem problemas*
+    - **ComfyUI-Version-Switcher** - *Rollback **reversível** para uma versão **anterior** do ComfyUI caso ocorram problemas*
     - **Toggle-DynamicVRAM** - *Alterna a opção **--disable-dynamic-vram** nos arquivos de inicialização do ComfyUI*
-    - **Update Easy-Instalar** - *Atualiza **Add-ons** e outras pastas. Cria atalhos na área de trabalho*
-    - **EZi Desktop Themes** - *pelo EZi Desktop > Menu > Advanced*
-    - **Pastas Input, Output e User personalizadas** - *pelo EZi Desktop > Menu > Advanced*
-    - **Alterador de versões do ComfyUI e frontend** - *pelo EZi Desktop > Menu > Advanced*
-    - **Limpador de cache do UV e PIP** - *pelo EZi Desktop > Menu*
-    - **ComfyUI-Manager Security-Level Config** - *Configuração fácil de security_level pelo EZi Desktop > Menu*
-    - **Pinned-Packages-Manager** - *Fixe versões de pacotes como NumPy==1.26.4 pelo EZi Desktop > Menu*
+    - **Update Easy-Install** - *Atualiza **Add-ons** e outras pastas. Cria atalhos na área de trabalho*
+    - **EZi Desktop Themes** - *via EZi Desktop > Menu > Advanced*
+    - **Custom Input, Output & User folders** - *via EZi Desktop > Menu > Advanced*
+    - **ComfyUI & Frontend Version Changer** - *via EZi Desktop > Menu > Advanced*
+    - **UV & PIP cache cleaner** - *via EZi Desktop > Menu*
+    - **ComfyUI-Manager Security-Level Config** - *Configuração fácil de security_level via EZi Desktop > Menu*
+    - **Pinned-Packages-Manager** - *Fixe versões de pacotes, como NumPy==1.26.4, via EZi Desktop > Menu*
 
 <div align="center">
 
 ---
-
-<a id="support-development"></a>
 
 ## ❤️ Apoiar o desenvolvimento
 
