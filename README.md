@@ -19,7 +19,7 @@
   <img src="docs/EZi-Logo.svg" width="120" alt="EZi Logo">
   <h1>ComfyUI-Easy-Install</h1>
   <p align="center">
-    <strong>One-click Portable ComfyUI with EZi Desktop</strong><br />
+    <strong>Portable ComfyUI with EZi Desktop: a full dashboard for packages, environments and configuration</strong><br />
     Windows • NVIDIA GPUs • Pixaroma Community Edition
   </p>
 
