@@ -43,9 +43,9 @@
 [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
 -->
 
----
+</br>
 
-![ComfyUI Screenshot](ComfyUI-ivo.jpg)
+![ComfyUI Screenshot](ComfyUI-ivo.png)
 
 </div>
 
@@ -123,7 +123,7 @@ phiên bản ComfyUI/frontend, bộ nhớ đệm UV/PIP và chuyển đổi GGUF
     - **Nunchaku** - *Cài đặt Nunchaku*
     - **SageAttention-Multi** - *Cài đặt cả SageAttention v2.2.0 và v3 (v3 chỉ có hiệu quả trên NVIDIA 50-series GPUs)*
     - **FlashAttention** - *Cài đặt FlashAttention v2.8.3*
-    - **InsightFace** - *Cài đặt InsightFace (Pretrained models for non-commercial research only)*
+    - **InsightFace** - *Cài đặt InsightFace (Các model được huấn luyện sẵn chỉ dành cho nghiên cứu phi thương mại)*
     - **Trellis2** - *Cài đặt Trellis 2.0 và model (yêu cầu `Torch 2.8.0+cu128` từ `Add-ons/Torch-Pack`)*
     - **Torch-Pack** - *Chuyển đổi nhanh giữa:`Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`,  
       `Torch 2.9.1+cu130`, `Torch 2.10+cu130`, `Torch 2.11+cu130`, `Torch 2.12.1+cu130` & `Torch 2.13.0+cu130`*

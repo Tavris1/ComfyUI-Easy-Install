@@ -43,9 +43,9 @@
 [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
 -->
 
----
+</br>
 
-![ComfyUI Screenshot](ComfyUI-ivo.jpg)
+![ComfyUI Screenshot](ComfyUI-ivo.png)
 
 </div>
 

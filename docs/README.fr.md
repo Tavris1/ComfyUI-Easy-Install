@@ -43,9 +43,9 @@
 [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
 -->
 
----
+</br>
 
-![ComfyUI Screenshot](ComfyUI-ivo.jpg)
+![ComfyUI Screenshot](ComfyUI-ivo.png)
 
 </div>
 
@@ -123,7 +123,7 @@ les versions de ComfyUI/frontend, les caches UV/PIP et la conversion GGUF** depu
     - **Nunchaku** - *Installe Nunchaku*
     - **SageAttention-Multi** - *Installe SageAttention v2.2.0 et v3 (v3 est efficace uniquement sur les NVIDIA 50-series GPUs)*
     - **FlashAttention** - *Installe FlashAttention v2.8.3*
-    - **InsightFace** - *Installe InsightFace (Pretrained models for non-commercial research only)*
+    - **InsightFace** - *Installe InsightFace (Modèles préentraînés réservés à la recherche non commerciale)*
     - **Trellis2** - *Installe Trellis 2.0 et le modèle (nécessite `Torch 2.8.0+cu128` depuis `Add-ons/Torch-Pack`)*
     - **Torch-Pack** - *Permet de basculer rapidement entre:`Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`,  
       `Torch 2.9.1+cu130`, `Torch 2.10+cu130`, `Torch 2.11+cu130`, `Torch 2.12.1+cu130` & `Torch 2.13.0+cu130`*
