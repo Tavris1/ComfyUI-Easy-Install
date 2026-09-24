@@ -45,7 +45,7 @@
 
 ---
 
-![ComfyUI Screenshot](docs/ComfyUI-ivo.jpg)
+![ComfyUI Screenshot](docs/ComfyUI-ivo.png)
 
 </div>
 
