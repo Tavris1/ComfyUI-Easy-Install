@@ -254,3 +254,5 @@ run_comfyui_desktop.sh.*
 comfyui_desktop.py
 comfyui_desktop.py
 comfyui_nirin_launcher_v6.sh
+.devin/skills/check-windows-updates/SKILL.md
+.gitignore
