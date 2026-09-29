@@ -1,10 +1,11 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.16.1"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.16.2"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
 set "GIT_TERMINAL_PROMPT=0"
 set "GIT_ASKPASS=echo"
+set "GCM_INTERACTIVE=never"
 
 :: Set Ignoring Large File Storage ::
 set GIT_LFS_SKIP_SMUDGE=1
@@ -142,7 +143,7 @@ call :get_node https://github.com/yolain/ComfyUI-Easy-Sam3					comfyui-easy-sam3
 call :get_node https://github.com/kijai/ComfyUI-SCAIL-Pose					ComfyUI-SCAIL-Pose
 call :get_node https://github.com/kijai/ComfyUI-MelBandRoFormer				ComfyUI-MelBandRoFormer
 call :get_node https://github.com/flybirdxx/ComfyUI-Qwen-TTS				qwen3-tts-comfyui
-REM call :get_node https://github.com/Saganaki22/ComfyUI-FishAudioS2			ComfyUI-fish-audio-s2
+call :get_node https://github.com/Saganaki22/ComfyUI-FishAudioS2			ComfyUI-fish-audio-s2
 call :get_node https://gitlab.com/pixaroma/ComfyUI-Pixaroma.git				ComfyUI-Pixaroma
 call :get_node https://github.com/capitan01R/ComfyUI-Krea2T-Enhancer        ComfyUI-Krea2T-Enhancer
 call :get_node https://github.com/lbouaraba/comfyui-krea2edit               comfyui-krea2edit
@@ -196,7 +197,7 @@ for %%e in (jpeg jpg png mp3 mp4) do move ".\Add-Ons\Tools\Helper-CEI\*.%%e" ".\
 echo.
 
 :: Install working version of av!!! ::
-.\python_embeded\python.exe -I -m uv pip uninstall av -y
+.\python_embeded\python.exe -I -m uv pip uninstall av --quiet
 .\python_embeded\python.exe -I -m uv pip install av==18.0.0 %UVargs%
 echo.
 
@@ -319,10 +320,6 @@ if "%CURRENT_CUDA%"=="12.8" (
 .\python.exe -I -m uv pip install pygit2 %UVargs%
 cd ..\ComfyUI
 
-:: Install working version of av!!! ::
-..\python_embeded\python.exe -I -m uv pip uninstall av -y
-..\python_embeded\python.exe -I -m uv pip install av==18.0.0 %UVargs%
-
 ..\python_embeded\python.exe -I -m uv pip install -r requirements.txt %UVargs%
 cd ..\
 echo.
@@ -331,9 +328,23 @@ goto :eof
 :get_node
 set "git_url=%~1"
 set "git_folder=%~2"
+
+git.exe -c credential.interactive=never ls-remote --exit-code "%git_url%" HEAD >nul 2>&1
+if errorlevel 1 (
+    echo %yellow%[SKIPPED]%reset% %git_folder% - repository not reachable, skipping.
+    echo.
+    goto :eof
+)
+
 echo %green%::::::::::::::: Installing%yellow% %git_folder% %green%:::::::::::::::%reset%
 echo.
-git.exe clone %git_url% ComfyUI/custom_nodes/%git_folder%
+
+git.exe -c credential.interactive=never clone "%git_url%" "ComfyUI/custom_nodes/%git_folder%"
+if errorlevel 1 (
+    echo %yellow%[SKIPPED]%reset% %git_folder% could not be downloaded, skipping.
+    echo.
+    goto :eof
+)
 
 setlocal enabledelayedexpansion
 if exist ".\ComfyUI\custom_nodes\%git_folder%\requirements.txt" (
