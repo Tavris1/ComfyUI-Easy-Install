@@ -54,7 +54,7 @@
 **ComfyUI-Easy-Install** provides a portable ComfyUI environment with **EZi Desktop**.  
 No manual Python or Git setup required.
 
-Install complex packages such as Nunchaku, SageAttention, FlashAttention, InsightFace, and Trellis 2.0 with one click.
+Install complex packages such as Nunchaku, SageAttention, FlashAttention, InsightFace, and others with one click.
 
 Manage **models, packages, PyTorch/CUDA versions, Dynamic VRAM,  
 ComfyUI/frontend versions, UV/PIP caches, and GGUF conversion** from one place.
