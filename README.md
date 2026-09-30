@@ -124,7 +124,7 @@ ComfyUI/frontend versions, UV/PIP caches, and GGUF conversion** from one place.
     - **SageAttention-Multi** - *Installs both SageAttention v2.2.0 and v3 (v3 effective only on NVIDIA 50-series GPUs)*
     - **FlashAttention** - *Installs FlashAttention v2.8.3*
     - **InsightFace** - *Installs InsightFace (Pretrained models for non-commercial research only)*
-    - **Trellis2** - *Installs Trellis 2.0 and the model (requires `Torch 2.8.0+cu128` from the `Add-ons/Torch-Pack`)*
+    - **Trellis2+Pixal3D @visualbruno** - *Installs Trellis 2.0 + Pixal3D and the model (requires `Torch 2.8.0+cu128`)*
     - **Torch-Pack** - *Quick switch between:`Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`,  
       `Torch 2.9.1+cu130`, `Torch 2.10+cu130`, `Torch 2.11+cu130`, `Torch 2.12.1+cu130` & `Torch 2.13.0+cu130`*
     - **Easy-model2GGUF** - *Convert & quantize models to GGUF (Q2_K–Q8_0) with 5D tensor fixes if available*
