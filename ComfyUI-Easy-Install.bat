@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.16.2"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.16.3"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -55,7 +55,7 @@ echo    %BGR%0000%FGR%0000%BGR%000000000000%FGR%0000%BGR%0000
 echo    %BGR%0000%FGR%00000000000000000000%BGR%0000
 echo    %BGR%0000%FGR%00000000000000000000%BGR%0000
 echo    %BGR%0000000000000000000000000000
-echo    %BGR%000000000 %FGR%DESKTOP%BGR% 0000000000
+echo    %BGR%0000000 %FGR%EZi  DESKTOP%BGR% 0000000
 echo.
 
 :: Install/Update Git ::
@@ -120,6 +120,7 @@ if "%CURRENT_CUDA%"=="12.8" (
 ) else (
 	.\python_embeded\python.exe -I -m pip install --upgrade --force-reinstall "triton-windows<3.7" %PIPargs%
 )
+echo.
 
 :: Install Pixaroma's Related Nodes ::
 call :get_node https://github.com/Comfy-Org/ComfyUI-Manager					comfyui-manager
