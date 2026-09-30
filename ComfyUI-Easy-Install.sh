@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo 3.16.1
+# Title ComfyUI-Easy-Install  NEXT by ivo 3.16.2
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -29,6 +29,7 @@ fi
 export GIT_LFS_SKIP_SMUDGE=1
 export GIT_TERMINAL_PROMPT=0
 export GIT_ASKPASS=echo
+export GCM_INTERACTIVE=never
 
 # Homebrew 5.x defaults to an interactive
 # "Do you want to proceed with the installation? [y/n]" prompt whenever a
@@ -566,7 +567,7 @@ EOL
     echo -e "${GREEN}✓${RESET} pygit2 installed"
     
     echo -e "${YELLOW}[4/6]${RESET} Installing av==18.0.0 (Thx @Ivo)..."
-    uv pip uninstall av -y 2>/dev/null || true
+    uv pip uninstall av --quiet -y 2>/dev/null || true
     uv pip install $UV_ARGS av==18.0.0
     echo -e "${GREEN}✓${RESET} av installed"
     
@@ -613,9 +614,21 @@ EOL
 get_node() {
     GIT_URL=$1
     GIT_FOLDER=$2
+
+    if ! git -c credential.interactive=never ls-remote --exit-code "$GIT_URL" HEAD >/dev/null 2>&1; then
+        echo -e "${YELLOW}[SKIPPED]${RESET} ${GIT_FOLDER} - repository not reachable, skipping."
+        echo ""
+        return 0
+    fi
+
     echo -e "${GREEN}::::::::::::::: Installing${YELLOW} ${GIT_FOLDER} ${GREEN}:::::::::::::::${RESET}"
     echo ""
-    git clone "$GIT_URL" "ComfyUI/custom_nodes/${GIT_FOLDER}"
+
+    if ! git -c credential.interactive=never clone "$GIT_URL" "ComfyUI/custom_nodes/${GIT_FOLDER}"; then
+        echo -e "${YELLOW}[SKIPPED]${RESET} ${GIT_FOLDER} could not be downloaded, skipping."
+        echo ""
+        return 0
+    fi
 
     local RMBG_DECORD_BUILT=false
     if [ "$(uname -s)" = "Darwin" ] && [ "$GIT_FOLDER" = "comfyui-rmbg" ]; then
@@ -790,7 +803,7 @@ get_node https://github.com/kijai/ComfyUI-KJNodes comfyui-kjnodes
 get_node https://github.com/kijai/ComfyUI-WanVideoWrapper ComfyUI-WanVideoWrapper
 get_node https://github.com/1038lab/ComfyUI-QwenVL ComfyUI-QwenVL
 get_node https://github.com/flybirdxx/ComfyUI-Qwen-TTS qwen3-tts-comfyui
-# get_node https://github.com/Saganaki22/ComfyUI-FishAudioS2 ComfyUI-fish-audio-s2
+get_node https://github.com/Saganaki22/ComfyUI-FishAudioS2 ComfyUI-fish-audio-s2
 get_node https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler seedvr2_videoupscaler
 get_node https://github.com/chflame163/ComfyUI_LayerStyle comfyui_layerstyle
 get_node https://github.com/kijai/ComfyUI-WanAnimatePreprocess ComfyUI-WanAnimatePreprocess
