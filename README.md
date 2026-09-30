@@ -145,8 +145,7 @@ ComfyUI/frontend versions, UV/PIP caches, and GGUF conversion** from one place.
 
 ## ❤️ Support Development
 
-Enjoy the project?
-Your support helps keep it going.
+Enjoy the project? Your support helps keep it going.
 
 [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tavris1)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)
