@@ -54,7 +54,7 @@
 **ComfyUI-Easy-Install** fournit un environnement ComfyUI portable avec **EZi Desktop**.  
 Aucune configuration manuelle de Python ou Git n'est requise.
 
-Installez des packages complexes tels que Nunchaku, SageAttention, FlashAttention, InsightFace et Trellis 2.0 en un clic.
+Installez en un clic des packages complexes tels que Nunchaku, SageAttention, FlashAttention, InsightFace et d'autres.
 
 Gérez **les modèles, les packages, les versions de PyTorch/CUDA, Dynamic VRAM,  
 les versions de ComfyUI/frontend, les caches UV/PIP et la conversion GGUF** depuis un seul endroit.
@@ -78,7 +78,7 @@ les versions de ComfyUI/frontend, les caches UV/PIP et la conversion GGUF** depu
 |---|---|---|---|---|
 | [Tiled Diffusion & VAE](https://github.com/shiimizu/ComfyUI-TiledDiffusion) | [VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) | [MelBandRoFormer](https://github.com/kijai/ComfyUI-MelBandRoFormer) | [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager) | [QwenVL](https://github.com/1038lab/ComfyUI-QwenVL) |
 | [Inpaint CropAndStitch](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch) | [WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideoWrapper) | [Qwen3-TTS](https://github.com/flybirdxx/ComfyUI-Qwen-TTS) | [Easy-Use](https://github.com/yolain/ComfyUI-Easy-Use) | [GGUF](https://github.com/city96/ComfyUI-GGUF) |
-| [ControlNet Aux](https://github.com/Fannovel16/comfyui_controlnet_aux) | [WanAnimatePreprocess](https://github.com/kijai/ComfyUI-WanAnimatePreprocess) | [FishAudioS2](https://github.com/Saganaki22/ComfyUI-FishAudioS2) | [KJNodes](https://github.com/kijai/ComfyUI-KJNodes) | |
+| [ControlNet Aux](https://github.com/Fannovel16/comfyui_controlnet_aux) | [WanAnimatePreprocess](https://github.com/kijai/ComfyUI-WanAnimatePreprocess) |  | [KJNodes](https://github.com/kijai/ComfyUI-KJNodes) | |
 | [LayerStyle](https://github.com/chflame163/ComfyUI_LayerStyle) | [SeedVR2 VideoUpscaler](https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler) | | [rgthree](https://github.com/rgthree/rgthree-comfy) | |
 | [RMBG](https://github.com/1038lab/ComfyUI-RMBG) | | | [iTools](https://github.com/MohammadAboulEla/ComfyUI-iTools) | |
 | [Easy-Sam3](https://github.com/yolain/ComfyUI-Easy-Sam3) | | | [ControlAltAI Nodes](https://github.com/gseth/ControlAltAI-Nodes) | |
@@ -97,7 +97,7 @@ les versions de ComfyUI/frontend, les caches UV/PIP et la conversion GGUF** depu
 | [SageAttention (v2.2.0 and v3)](https://github.com/woct0rdho/SageAttention) | Easy-System-Checker |
 | [FlashAttention](https://github.com/Dao-AILab/flash-attention) | ComfyUI-Version-Switcher |
 | [InsightFace](https://github.com/deepinsight/insightface) | Easy-model2GGUF |
-| [Trellis 2.0](https://github.com/visualbruno/ComfyUI-Trellis2) | Long-Paths-Enabler |
+| [Trellis 2.0 + Pixal3D @visualbruno](https://github.com/visualbruno/ComfyUI-Trellis2) | Long-Paths-Enabler |
 | | Torch-Pack |
 | | Toggle-DynamicVRAM |
 | | Update Easy-Install |
@@ -123,8 +123,8 @@ les versions de ComfyUI/frontend, les caches UV/PIP et la conversion GGUF** depu
     - **Nunchaku** - *Installe Nunchaku*
     - **SageAttention-Multi** - *Installe SageAttention v2.2.0 et v3 (v3 est efficace uniquement sur les NVIDIA 50-series GPUs)*
     - **FlashAttention** - *Installe FlashAttention v2.8.3*
-    - **InsightFace** - *Installe InsightFace (Modèles préentraînés réservés à la recherche non commerciale)*
-    - **Trellis2** - *Installe Trellis 2.0 et le modèle (nécessite `Torch 2.8.0+cu128` depuis `Add-ons/Torch-Pack`)*
+    - **InsightFace** - *Installe InsightFace*
+    - **Trellis2+Pixal3D @visualbruno** - *Installe Trellis 2.0 + Pixal3D et le modèle (nécessite `Torch 2.8.0+cu128`)*
     - **Torch-Pack** - *Permet de basculer rapidement entre:`Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`,  
       `Torch 2.9.1+cu130`, `Torch 2.10+cu130`, `Torch 2.11+cu130`, `Torch 2.12.1+cu130` & `Torch 2.13.0+cu130`*
     - **Easy-model2GGUF** - *Convertit et quantifie les modèles en GGUF (Q2_K–Q8_0) avec des corrections des tenseurs 5D si disponibles*
@@ -145,8 +145,7 @@ les versions de ComfyUI/frontend, les caches UV/PIP et la conversion GGUF** depu
 
 ## ❤️ Soutenir le développement
 
-Vous appréciez le projet ?  
-S'il vous fait gagner du temps, votre soutien contribue à poursuivre son développement et sa maintenance.
+Vous appréciez le projet ? Votre soutien aide à le faire perdurer.
 
 [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tavris1)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)

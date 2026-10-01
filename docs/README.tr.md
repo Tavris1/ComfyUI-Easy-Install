@@ -54,7 +54,7 @@
 **ComfyUI-Easy-Install**, **EZi Desktop** ile taşınabilir bir ComfyUI ortamı sağlar.  
 Manuel Python veya Git kurulumu gerekmez.
 
-Nunchaku, SageAttention, FlashAttention, InsightFace ve Trellis 2.0 gibi karmaşık paketleri tek tıklamayla yükleyin.
+Nunchaku, SageAttention, FlashAttention, InsightFace ve diğer karmaşık paketleri tek tıklamayla yükleyin.
 
 **Modelleri, paketleri, PyTorch/CUDA sürümlerini, Dynamic VRAM'i,  
 ComfyUI/frontend sürümlerini, UV/PIP önbelleklerini ve GGUF dönüştürmeyi** tek bir yerden yönetin.
@@ -78,7 +78,7 @@ ComfyUI/frontend sürümlerini, UV/PIP önbelleklerini ve GGUF dönüştürmeyi*
 |---|---|---|---|---|
 | [Tiled Diffusion & VAE](https://github.com/shiimizu/ComfyUI-TiledDiffusion) | [VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) | [MelBandRoFormer](https://github.com/kijai/ComfyUI-MelBandRoFormer) | [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager) | [QwenVL](https://github.com/1038lab/ComfyUI-QwenVL) |
 | [Inpaint CropAndStitch](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch) | [WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideoWrapper) | [Qwen3-TTS](https://github.com/flybirdxx/ComfyUI-Qwen-TTS) | [Easy-Use](https://github.com/yolain/ComfyUI-Easy-Use) | [GGUF](https://github.com/city96/ComfyUI-GGUF) |
-| [ControlNet Aux](https://github.com/Fannovel16/comfyui_controlnet_aux) | [WanAnimatePreprocess](https://github.com/kijai/ComfyUI-WanAnimatePreprocess) | [FishAudioS2](https://github.com/Saganaki22/ComfyUI-FishAudioS2) | [KJNodes](https://github.com/kijai/ComfyUI-KJNodes) | |
+| [ControlNet Aux](https://github.com/Fannovel16/comfyui_controlnet_aux) | [WanAnimatePreprocess](https://github.com/kijai/ComfyUI-WanAnimatePreprocess) |  | [KJNodes](https://github.com/kijai/ComfyUI-KJNodes) | |
 | [LayerStyle](https://github.com/chflame163/ComfyUI_LayerStyle) | [SeedVR2 VideoUpscaler](https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler) | | [rgthree](https://github.com/rgthree/rgthree-comfy) | |
 | [RMBG](https://github.com/1038lab/ComfyUI-RMBG) | | | [iTools](https://github.com/MohammadAboulEla/ComfyUI-iTools) | |
 | [Easy-Sam3](https://github.com/yolain/ComfyUI-Easy-Sam3) | | | [ControlAltAI Nodes](https://github.com/gseth/ControlAltAI-Nodes) | |
@@ -97,7 +97,7 @@ ComfyUI/frontend sürümlerini, UV/PIP önbelleklerini ve GGUF dönüştürmeyi*
 | [SageAttention (v2.2.0 and v3)](https://github.com/woct0rdho/SageAttention) | Easy-System-Checker |
 | [FlashAttention](https://github.com/Dao-AILab/flash-attention) | ComfyUI-Version-Switcher |
 | [InsightFace](https://github.com/deepinsight/insightface) | Easy-model2GGUF |
-| [Trellis 2.0](https://github.com/visualbruno/ComfyUI-Trellis2) | Long-Paths-Enabler |
+| [Trellis 2.0 + Pixal3D @visualbruno](https://github.com/visualbruno/ComfyUI-Trellis2) | Long-Paths-Enabler |
 | | Torch-Pack |
 | | Toggle-DynamicVRAM |
 | | Update Easy-Install |
@@ -123,8 +123,8 @@ ComfyUI/frontend sürümlerini, UV/PIP önbelleklerini ve GGUF dönüştürmeyi*
     - **Nunchaku** - *Nunchaku'yu yükler*
     - **SageAttention-Multi** - *Hem SageAttention v2.2.0 hem de v3'ü yükler (v3 yalnızca NVIDIA 50-series GPUs üzerinde etkilidir)*
     - **FlashAttention** - *FlashAttention v2.8.3'ü yükler*
-    - **InsightFace** - *InsightFace'i yükler (Pretrained models for non-commercial research only)*
-    - **Trellis2** - *Trellis 2.0'ı ve modeli yükler (`Add-ons/Torch-Pack` içindeki `Torch 2.8.0+cu128` gereklidir)*
+    - **InsightFace** - *InsightFace'i yükler*
+    - **Trellis2+Pixal3D @visualbruno** - *Trellis 2.0 + Pixal3D ve modeli yükler (`Torch 2.8.0+cu128` gereklidir)*
     - **Torch-Pack** - *Şunlar arasında hızlı geçiş sağlar:`Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`,  
       `Torch 2.9.1+cu130`, `Torch 2.10+cu130`, `Torch 2.11+cu130`, `Torch 2.12.1+cu130` & `Torch 2.13.0+cu130`*
     - **Easy-model2GGUF** - *Modelleri GGUF'a (Q2_K–Q8_0) dönüştürür ve quantize eder; mevcutsa 5D tensor düzeltmelerini uygular*
@@ -145,8 +145,7 @@ ComfyUI/frontend sürümlerini, UV/PIP önbelleklerini ve GGUF dönüştürmeyi*
 
 ## ❤️ Geliştirmeyi Destekle
 
-Projeyi beğendiniz mi?  
-Size zaman kazandırıyorsa, desteğiniz geliştirme ve bakım çalışmalarının devam etmesine yardımcı olur.
+Projeyi beğendiniz mi? Desteğiniz projenin devam etmesine yardımcı olur.
 
 [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tavris1)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)

@@ -54,7 +54,7 @@
 **ComfyUI-Easy-Install** proporciona un entorno ComfyUI portátil con **EZi Desktop**.  
 No se requiere ninguna configuración manual de Python o Git.
 
-Instala con un solo clic paquetes complejos como Nunchaku, SageAttention, FlashAttention, InsightFace y Trellis 2.0.
+Instala con un solo clic paquetes complejos como Nunchaku, SageAttention, FlashAttention, InsightFace y otros.
 
 Gestiona **modelos, paquetes, versiones de PyTorch/CUDA, Dynamic VRAM,  
 versiones de ComfyUI/frontend, cachés de UV/PIP y conversión GGUF** desde un solo lugar.
@@ -78,7 +78,7 @@ versiones de ComfyUI/frontend, cachés de UV/PIP y conversión GGUF** desde un s
 |---|---|---|---|---|
 | [Tiled Diffusion & VAE](https://github.com/shiimizu/ComfyUI-TiledDiffusion) | [VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) | [MelBandRoFormer](https://github.com/kijai/ComfyUI-MelBandRoFormer) | [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager) | [QwenVL](https://github.com/1038lab/ComfyUI-QwenVL) |
 | [Inpaint CropAndStitch](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch) | [WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideoWrapper) | [Qwen3-TTS](https://github.com/flybirdxx/ComfyUI-Qwen-TTS) | [Easy-Use](https://github.com/yolain/ComfyUI-Easy-Use) | [GGUF](https://github.com/city96/ComfyUI-GGUF) |
-| [ControlNet Aux](https://github.com/Fannovel16/comfyui_controlnet_aux) | [WanAnimatePreprocess](https://github.com/kijai/ComfyUI-WanAnimatePreprocess) | [FishAudioS2](https://github.com/Saganaki22/ComfyUI-FishAudioS2) | [KJNodes](https://github.com/kijai/ComfyUI-KJNodes) | |
+| [ControlNet Aux](https://github.com/Fannovel16/comfyui_controlnet_aux) | [WanAnimatePreprocess](https://github.com/kijai/ComfyUI-WanAnimatePreprocess) |  | [KJNodes](https://github.com/kijai/ComfyUI-KJNodes) | |
 | [LayerStyle](https://github.com/chflame163/ComfyUI_LayerStyle) | [SeedVR2 VideoUpscaler](https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler) | | [rgthree](https://github.com/rgthree/rgthree-comfy) | |
 | [RMBG](https://github.com/1038lab/ComfyUI-RMBG) | | | [iTools](https://github.com/MohammadAboulEla/ComfyUI-iTools) | |
 | [Easy-Sam3](https://github.com/yolain/ComfyUI-Easy-Sam3) | | | [ControlAltAI Nodes](https://github.com/gseth/ControlAltAI-Nodes) | |
@@ -97,7 +97,7 @@ versiones de ComfyUI/frontend, cachés de UV/PIP y conversión GGUF** desde un s
 | [SageAttention (v2.2.0 and v3)](https://github.com/woct0rdho/SageAttention) | Easy-System-Checker |
 | [FlashAttention](https://github.com/Dao-AILab/flash-attention) | ComfyUI-Version-Switcher |
 | [InsightFace](https://github.com/deepinsight/insightface) | Easy-model2GGUF |
-| [Trellis 2.0](https://github.com/visualbruno/ComfyUI-Trellis2) | Long-Paths-Enabler |
+| [Trellis 2.0 + Pixal3D @visualbruno](https://github.com/visualbruno/ComfyUI-Trellis2) | Long-Paths-Enabler |
 | | Torch-Pack |
 | | Toggle-DynamicVRAM |
 | | Update Easy-Install |
@@ -123,8 +123,8 @@ versiones de ComfyUI/frontend, cachés de UV/PIP y conversión GGUF** desde un s
     - **Nunchaku** - *Instala Nunchaku*
     - **SageAttention-Multi** - *Instala tanto SageAttention v2.2.0 como v3 (v3 solo es efectivo en NVIDIA 50-series GPUs)*
     - **FlashAttention** - *Instala FlashAttention v2.8.3*
-    - **InsightFace** - *Instala InsightFace (los modelos preentrenados son solo para investigación no comercial)*
-    - **Trellis2** - *Instala Trellis 2.0 y el modelo (requiere `Torch 2.8.0+cu128` de `Add-ons/Torch-Pack`)*
+    - **InsightFace** - *Instala InsightFace*
+    - **Trellis2+Pixal3D @visualbruno** - *Instala Trellis 2.0 + Pixal3D y el modelo (requiere `Torch 2.8.0+cu128`)*
     - **Torch-Pack** - *Cambio rápido entre: `Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`,  
       `Torch 2.9.1+cu130`, `Torch 2.10+cu130`, `Torch 2.11+cu130`, `Torch 2.12.1+cu130` & `Torch 2.13.0+cu130`*
     - **Easy-model2GGUF** - *Convierte y cuantiza modelos a GGUF (Q2_K–Q8_0) con correcciones de tensor 5D si están disponibles*
@@ -145,8 +145,7 @@ versiones de ComfyUI/frontend, cachés de UV/PIP y conversión GGUF** desde un s
 
 ## ❤️ Apoyar el desarrollo
 
-¿Te gusta el proyecto?  
-Si te ahorra tiempo, tu apoyo ayuda a mantener el desarrollo y el mantenimiento.
+¿Te gusta el proyecto? Tu apoyo ayuda a mantenerlo en marcha.
 
 [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tavris1)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)

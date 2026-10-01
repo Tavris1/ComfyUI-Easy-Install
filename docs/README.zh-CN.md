@@ -54,7 +54,7 @@
 **ComfyUI-Easy-Install** 提供包含 **EZi Desktop** 的便携式 ComfyUI 环境。  
 无需手动安装或配置 Python 和 Git。
 
-只需一键即可安装 Nunchaku、SageAttention、FlashAttention、InsightFace 和 Trellis 2.0 等复杂软件包。
+只需一键即可安装 Nunchaku、SageAttention、FlashAttention、InsightFace 等复杂软件包。
 
 可在同一位置管理 **模型、软件包、PyTorch/CUDA 版本、Dynamic VRAM、  
 ComfyUI/frontend 版本、UV/PIP 缓存以及 GGUF 转换**。
@@ -78,7 +78,7 @@ ComfyUI/frontend 版本、UV/PIP 缓存以及 GGUF 转换**。
 |---|---|---|---|---|
 | [Tiled Diffusion & VAE](https://github.com/shiimizu/ComfyUI-TiledDiffusion) | [VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) | [MelBandRoFormer](https://github.com/kijai/ComfyUI-MelBandRoFormer) | [ComfyUI Manager](https://github.com/Comfy-Org/ComfyUI-Manager) | [QwenVL](https://github.com/1038lab/ComfyUI-QwenVL) |
 | [Inpaint CropAndStitch](https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch) | [WanVideoWrapper](https://github.com/kijai/ComfyUI-WanVideoWrapper) | [Qwen3-TTS](https://github.com/flybirdxx/ComfyUI-Qwen-TTS) | [Easy-Use](https://github.com/yolain/ComfyUI-Easy-Use) | [GGUF](https://github.com/city96/ComfyUI-GGUF) |
-| [ControlNet Aux](https://github.com/Fannovel16/comfyui_controlnet_aux) | [WanAnimatePreprocess](https://github.com/kijai/ComfyUI-WanAnimatePreprocess) | [FishAudioS2](https://github.com/Saganaki22/ComfyUI-FishAudioS2) | [KJNodes](https://github.com/kijai/ComfyUI-KJNodes) | |
+| [ControlNet Aux](https://github.com/Fannovel16/comfyui_controlnet_aux) | [WanAnimatePreprocess](https://github.com/kijai/ComfyUI-WanAnimatePreprocess) |  | [KJNodes](https://github.com/kijai/ComfyUI-KJNodes) | |
 | [LayerStyle](https://github.com/chflame163/ComfyUI_LayerStyle) | [SeedVR2 VideoUpscaler](https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler) | | [rgthree](https://github.com/rgthree/rgthree-comfy) | |
 | [RMBG](https://github.com/1038lab/ComfyUI-RMBG) | | | [iTools](https://github.com/MohammadAboulEla/ComfyUI-iTools) | |
 | [Easy-Sam3](https://github.com/yolain/ComfyUI-Easy-Sam3) | | | [ControlAltAI Nodes](https://github.com/gseth/ControlAltAI-Nodes) | |
@@ -97,7 +97,7 @@ ComfyUI/frontend 版本、UV/PIP 缓存以及 GGUF 转换**。
 | [SageAttention (v2.2.0 and v3)](https://github.com/woct0rdho/SageAttention) | Easy-System-Checker |
 | [FlashAttention](https://github.com/Dao-AILab/flash-attention) | ComfyUI-Version-Switcher |
 | [InsightFace](https://github.com/deepinsight/insightface) | Easy-model2GGUF |
-| [Trellis 2.0](https://github.com/visualbruno/ComfyUI-Trellis2) | Long-Paths-Enabler |
+| [Trellis 2.0 + Pixal3D @visualbruno](https://github.com/visualbruno/ComfyUI-Trellis2) | Long-Paths-Enabler |
 | | Torch-Pack |
 | | Toggle-DynamicVRAM |
 | | Update Easy-Install |
@@ -123,8 +123,8 @@ ComfyUI/frontend 版本、UV/PIP 缓存以及 GGUF 转换**。
     - **Nunchaku** - *安装 Nunchaku*
     - **SageAttention-Multi** - *同时安装 SageAttention v2.2.0 和 v3（v3 仅在 NVIDIA 50-series GPUs 上有效）*
     - **FlashAttention** - *安装 FlashAttention v2.8.3*
-    - **InsightFace** - *安装 InsightFace（预训练模型仅限非商业研究使用）*
-    - **Trellis2** - *安装 Trellis 2.0 和模型（需要 `Add-ons/Torch-Pack` 中的 `Torch 2.8.0+cu128`）*
+    - **InsightFace** - *安装 InsightFace*
+    - **Trellis2+Pixal3D @visualbruno** - *安装 Trellis 2.0 + Pixal3D 和模型（需要 `Torch 2.8.0+cu128`）*
     - **Torch-Pack** - *快速切换：`Torch 2.7.1+cu128`、`Torch 2.8.0+cu128`、  
       `Torch 2.9.1+cu130`、`Torch 2.10+cu130`、`Torch 2.11+cu130`、`Torch 2.12.1+cu130` 和 `Torch 2.13.0+cu130`*
     - **Easy-model2GGUF** - *将模型转换并量化为 GGUF（Q2_K–Q8_0），如可用则支持 5D tensor 修复*
@@ -145,8 +145,7 @@ ComfyUI/frontend 版本、UV/PIP 缓存以及 GGUF 转换**。
 
 ## ❤️ 支持开发
 
-喜欢这个项目吗？  
-如果它为你节省了时间，你的支持将帮助项目持续开发和维护。
+喜欢这个项目吗？你的支持有助于项目持续发展。
 
 [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tavris1)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/tavris1)
