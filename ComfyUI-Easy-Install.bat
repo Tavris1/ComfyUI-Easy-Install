@@ -1,5 +1,5 @@
 @echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.16.3"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.16.4"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -98,6 +98,7 @@ REM .\python_embeded\python.exe -I -m uv pip install requests==2.31.0 urllib3==2
 .\python_embeded\python.exe -I -m uv pip install onnx %UVargs%
 .\python_embeded\python.exe -I -m uv pip install flet %UVargs%
 .\python_embeded\python.exe -I -m uv pip install pywebview %UVargs%
+.\python_embeded\python.exe -I -m uv pip install pywinpty %UVargs%
 .\python_embeded\python.exe -I -m uv pip install -r ".\ComfyUI\manager_requirements.txt" %UVargs%
 
 if "%CURRENT_CUDA%"=="12.8" (
@@ -144,7 +145,6 @@ call :get_node https://github.com/yolain/ComfyUI-Easy-Sam3					comfyui-easy-sam3
 call :get_node https://github.com/kijai/ComfyUI-SCAIL-Pose					ComfyUI-SCAIL-Pose
 call :get_node https://github.com/kijai/ComfyUI-MelBandRoFormer				ComfyUI-MelBandRoFormer
 call :get_node https://github.com/flybirdxx/ComfyUI-Qwen-TTS				qwen3-tts-comfyui
-call :get_node https://github.com/Saganaki22/ComfyUI-FishAudioS2			ComfyUI-fish-audio-s2
 call :get_node https://gitlab.com/pixaroma/ComfyUI-Pixaroma.git				ComfyUI-Pixaroma
 call :get_node https://github.com/capitan01R/ComfyUI-Krea2T-Enhancer        ComfyUI-Krea2T-Enhancer
 call :get_node https://github.com/lbouaraba/comfyui-krea2edit               comfyui-krea2edit
