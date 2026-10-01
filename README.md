@@ -97,7 +97,7 @@ ComfyUI/frontend versions, UV/PIP caches, and GGUF conversion** from one place.
 | [SageAttention (v2.2.0 and v3)](https://github.com/woct0rdho/SageAttention) | Easy-System-Checker |
 | [FlashAttention](https://github.com/Dao-AILab/flash-attention) | ComfyUI-Version-Switcher |
 | [InsightFace](https://github.com/deepinsight/insightface) | Easy-model2GGUF |
-| [Trellis 2.0](https://github.com/visualbruno/ComfyUI-Trellis2) | Long-Paths-Enabler |
+| [Trellis 2.0 + Pixal3D @visualbruno](https://github.com/visualbruno/ComfyUI-Trellis2) | Long-Paths-Enabler |
 | | Torch-Pack |
 | | Toggle-DynamicVRAM |
 | | Update Easy-Install |
@@ -123,7 +123,7 @@ ComfyUI/frontend versions, UV/PIP caches, and GGUF conversion** from one place.
     - **Nunchaku** - *Installs Nunchaku*
     - **SageAttention-Multi** - *Installs both SageAttention v2.2.0 and v3 (v3 effective only on NVIDIA 50-series GPUs)*
     - **FlashAttention** - *Installs FlashAttention v2.8.3*
-    - **InsightFace** - *Installs InsightFace (Pretrained models for non-commercial research only)*
+    - **InsightFace** - *Installs InsightFace*
     - **Trellis2+Pixal3D @visualbruno** - *Installs Trellis 2.0 + Pixal3D and the model (requires `Torch 2.8.0+cu128`)*
     - **Torch-Pack** - *Quick switch between:`Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`,  
       `Torch 2.9.1+cu130`, `Torch 2.10+cu130`, `Torch 2.11+cu130`, `Torch 2.12.1+cu130` & `Torch 2.13.0+cu130`*
