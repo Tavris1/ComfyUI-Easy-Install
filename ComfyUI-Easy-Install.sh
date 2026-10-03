@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo 3.16.2
+# Title ComfyUI-Easy-Install  NEXT by ivo 3.17.2
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -803,7 +803,6 @@ get_node https://github.com/kijai/ComfyUI-KJNodes comfyui-kjnodes
 get_node https://github.com/kijai/ComfyUI-WanVideoWrapper ComfyUI-WanVideoWrapper
 get_node https://github.com/1038lab/ComfyUI-QwenVL ComfyUI-QwenVL
 get_node https://github.com/flybirdxx/ComfyUI-Qwen-TTS qwen3-tts-comfyui
-get_node https://github.com/Saganaki22/ComfyUI-FishAudioS2 ComfyUI-fish-audio-s2
 get_node https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler seedvr2_videoupscaler
 get_node https://github.com/chflame163/ComfyUI_LayerStyle comfyui_layerstyle
 get_node https://github.com/kijai/ComfyUI-WanAnimatePreprocess ComfyUI-WanAnimatePreprocess
