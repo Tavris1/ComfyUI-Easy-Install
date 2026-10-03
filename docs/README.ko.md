@@ -108,6 +108,10 @@ ComfyUI/frontend 버전, UV/PIP 캐시 및 GGUF 변환**을 관리할 수 있습
 
 ## 🖥️ Windows 설치
 
+> [!WARNING]
+> **Windows 11:** ComfyUI에서 **"Bad Image" (`0xc0e90002`)** 오류가 표시되면 **Smart App Control**을 끄고 ComfyUI를 다시 시작하세요.<br>
+> 이렇게 하면 신뢰할 수 없는 앱에 대한 보호가 약화됩니다. 확인하기 전에 Windows 경고를 읽으세요.
+
 > [!IMPORTANT]
 > - 설치 프로그램을 **Administrator**로 실행하지 마세요.
 > - 시스템 폴더(`Program Files`, `Windows`, `C:\` 루트)를 피하세요.

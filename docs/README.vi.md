@@ -108,6 +108,10 @@ phiên bản ComfyUI/frontend, bộ nhớ đệm UV/PIP và chuyển đổi GGUF
 
 ## 🖥️ Cài đặt Windows
 
+> [!WARNING]
+> **Windows 11:** Nếu ComfyUI hiển thị **"Bad Image" (`0xc0e90002`)**, hãy tắt **Smart App Control** và khởi động lại ComfyUI.<br>
+> Thao tác này làm giảm khả năng bảo vệ khỏi các ứng dụng không đáng tin cậy. Hãy đọc cảnh báo của Windows trước khi xác nhận.
+
 > [!IMPORTANT]
 > - Không chạy trình cài đặt với quyền **Administrator**.
 > - Tránh các thư mục hệ thống (`Program Files`, `Windows`, `C:\` root).

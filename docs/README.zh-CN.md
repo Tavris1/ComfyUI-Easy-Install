@@ -108,6 +108,10 @@ ComfyUI/frontend 版本、UV/PIP 缓存以及 GGUF 转换**。
 
 ## 🖥️ Windows 安装
 
+> [!WARNING]
+> **Windows 11:** 如果 ComfyUI 显示 **"Bad Image" (`0xc0e90002`)**，请关闭 **Smart App Control** 并重新启动 ComfyUI。<br>
+> 这会降低对不可信应用的防护。确认前请阅读 Windows 警告。
+
 > [!IMPORTANT]
 > - 请勿以 **Administrator** 身份运行安装程序。
 > - 避免安装到系统文件夹（`Program Files`、`Windows`、`C:\` 根目录）。

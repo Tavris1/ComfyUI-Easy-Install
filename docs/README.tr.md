@@ -108,6 +108,10 @@ ComfyUI/frontend sürümlerini, UV/PIP önbelleklerini ve GGUF dönüştürmeyi*
 
 ## 🖥️ Windows Kurulumu
 
+> [!WARNING]
+> **Windows 11:** ComfyUI **"Bad Image" (`0xc0e90002`)** hatasını gösteriyorsa **Smart App Control** özelliğini kapatın ve ComfyUI'yi yeniden başlatın.<br>
+> Bu, güvenilmeyen uygulamalara karşı korumayı azaltır. Onaylamadan önce Windows uyarısını okuyun.
+
 > [!IMPORTANT]
 > - Yükleyiciyi **Administrator** olarak çalıştırmayın.
 > - Sistem klasörlerinden kaçının (`Program Files`, `Windows`, `C:\` root).
@@ -129,7 +133,7 @@ ComfyUI/frontend sürümlerini, UV/PIP önbelleklerini ve GGUF dönüştürmeyi*
       `Torch 2.9.1+cu130`, `Torch 2.10+cu130`, `Torch 2.11+cu130`, `Torch 2.12.1+cu130` & `Torch 2.13.0+cu130`*
     - **Easy-model2GGUF** - *Modelleri GGUF'a (Q2_K–Q8_0) dönüştürür ve quantize eder; mevcutsa 5D tensor düzeltmelerini uygular*
     - **Long-Paths-Enabler** - *Windows 10/11'de **Long Paths** özelliğini etkinleştirir. Python/ComfyUI için gereklidir*
-    - **ComfyUI-Version-Switcher** - *Sorun oluşması durumunda **önceki** bir ComfyUI sürümüne ***geri alınabilir** rollback* sağlar*
+    - **ComfyUI-Version-Switcher** - *Sorun oluşması durumunda **önceki** bir ComfyUI sürümüne **geri alınabilir** rollback sağlar*
     - **Toggle-DynamicVRAM** - *ComfyUI başlangıç dosyalarındaki **--disable-dynamic-vram** seçeneğini açar/kapatır*
     - **Update Easy-Install** - ***Add-ons** ve diğer klasörleri günceller. Masaüstü kısayolları oluşturur*
     - **EZi Desktop Themes** - *EZi Desktop > Menu > Advanced üzerinden*

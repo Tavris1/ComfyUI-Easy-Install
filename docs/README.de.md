@@ -108,6 +108,10 @@ ComfyUI-/Frontend-Versionen, UV/PIP-Caches und GGUF-Konvertierung** an einem Ort
 
 ## 🖥️ Windows-Installation
 
+> [!WARNING]
+> **Windows 11:** Wenn ComfyUI **"Bad Image" (`0xc0e90002`)** anzeigt, deaktivieren Sie **Smart App Control** und starten Sie ComfyUI erneut.<br>
+> Dadurch wird der Schutz vor nicht vertrauenswürdigen Apps reduziert. Lesen Sie die Windows-Warnung, bevor Sie bestätigen.
+
 > [!IMPORTANT]
 > - Führen Sie den Installer nicht als **Administrator** aus.
 > - Vermeiden Sie Systemordner (`Program Files`, `Windows`, `C:\` root).
