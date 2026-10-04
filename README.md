@@ -109,7 +109,8 @@ ComfyUI/frontend versions, UV/PIP caches, and GGUF conversion** from one place.
 ## 🖥️ Windows Installation
 
 > [!WARNING]
-> **Windows 11:** If ComfyUI shows **"Bad Image" (`0xc0e90002`)**, turn off **Smart App Control** and restart ComfyUI.<br>
+> **Windows 11:**<br>
+> IF ComfyUI shows **"Bad Image" (`0xc0e90002`)**, turn off **Smart App Control** and restart ComfyUI.<br>
 > This reduces protection against untrusted apps. Read the Windows warning before confirming.
 
 > [!IMPORTANT]
