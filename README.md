@@ -32,8 +32,8 @@
 <!--[![GitHub Downloads Latest](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=⬇+latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)-->
 
   <p align="center">
-    <a href="#%EF%B8%8F-windows-installation">📥 Install</a> &nbsp;·&nbsp;
-    <a href="#-features">✨ Features/Components</a> &nbsp;·&nbsp;
+    <a href="#%EF%B8%8F-windows-installation">📥 <strong>INSTALL</strong></a> &nbsp;·&nbsp;
+    <a href="#-features">✨ Features</a> &nbsp;·&nbsp;
     <a href="https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
     <a href="https://discord.gg/gggpkVgBf3">💬 Pixaroma Discord</a> &nbsp;·&nbsp;
     <a href="#%EF%B8%8F-support-development">❤️ Support Development</a>
