@@ -1,5 +1,5 @@
-@echo off&&cd /D %~dp0
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.19.0"
+@echo off&&cd /D "%~dp0"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.20.0"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -18,15 +18,17 @@ set "UVargs=--no-cache --link-mode=copy"
 for /f "delims=" %%G in ('cmd /c "where.exe git.exe 2>nul"') do (set "GIT_PATH=%%~dpG")
 set "path=%GIT_PATH%;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0;%localappdata%\Microsoft\WindowsApps;%path%"
 
+set "FATAL="
 call :SET_COLORS
 call :NVIDIA_DRIVER_CHECK
+if defined FATAL exit /b 1
 
 :: Check for Existing ComfyUI Folder ::
-if exist ComfyUI-Easy-Install if exist "ComfyUI-Easy-Install" (
+if exist "ComfyUI-Easy-Install" (
 	echo %warning%WARNING:%reset% '%bold%ComfyUI-Easy-Install%reset%' folder already exists!
 	echo %green%Move this file to another folder and run it again.%reset%
 	echo Press any key to Exit...&Pause>nul
-	goto :eof
+	exit /b 1
 )
 
 :: Check for Existing Helper-CEI ::
@@ -35,7 +37,7 @@ if not exist "%HLPR_NAME%" (
 	echo %warning%WARNING:%reset% '%bold%%HLPR_NAME%%reset%' not exists!
 	echo %green%Unzip the entire package and try again.%reset%
 	echo Press any key to Exit...&Pause>nul
-	goto :eof
+	exit /b 1
 )
 
 :: Capture the start time ::
@@ -69,7 +71,7 @@ echo %gitversion% | findstr /C:"version">nul&&(
     echo %warning%WARNING:%reset% %bold%'git'%reset% is NOT installed
 	echo Please install %bold%'git'%reset% manually from %yellow%https://git-scm.com/%reset% and run this installer again
 	echo Press any key to Exit...&Pause>nul
-	exit
+	exit /b 1
 )
 
 :: System folder? ::
@@ -80,12 +82,13 @@ if not exist "ComfyUI-Easy-Install" (
 	echo Make sure you are NOT using system folders like %yellow%Program Files, Windows%reset% or system root %yellow%C:\%reset%
 	echo %green%Move this file to another folder and run it again.%reset%
 	echo Press any key to Exit...&Pause>nul
-	exit
+	exit /b 1
 )
 cd "ComfyUI-Easy-Install"
 
 :: Install ComfyUI ::
 call :install_comfyui
+if defined FATAL exit /b 1
 
 echo %green%::::::::::::::: %yellow%Pre-installation of required modules%green% :::::::::::::::%reset%
 echo.
@@ -161,24 +164,26 @@ set "SOX_ROOT=%LocalAppData%\SoX"
 set "SOX_DIR=%SOX_ROOT%\sox-14.4.2"
 set "SOX_ZIP=%TEMP%\sox-14.4.2-win32.zip"
 
-curl.exe -L --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "%SOX_ZIP%" "https://downloads.sourceforge.net/project/sox/sox/14.4.2/sox-14.4.2-win32.zip"
+curl.exe -fL --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "%SOX_ZIP%" "https://downloads.sourceforge.net/project/sox/sox/14.4.2/sox-14.4.2-win32.zip"
 if not exist "%SOX_ZIP%" (
-    powershell -NoProfile -ExecutionPolicy Bypass -Command "try { Start-BitsTransfer -Source 'https://downloads.sourceforge.net/project/sox/sox/14.4.2/sox-14.4.2-win32.zip' -Destination '%SOX_ZIP%' -ErrorAction Stop } catch { exit 1 }"
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "try { Start-BitsTransfer -Source 'https://downloads.sourceforge.net/project/sox/sox/14.4.2/sox-14.4.2-win32.zip' -Destination $env:SOX_ZIP -ErrorAction Stop } catch { exit 1 }"
 )
 
 if exist "%SOX_ZIP%" (
     if not exist "%SOX_ROOT%" mkdir "%SOX_ROOT%"
     tar.exe -xmf "%SOX_ZIP%" -C "%SOX_ROOT%"
     del "%SOX_ZIP%"
-    
-    set "path=%path%;%SOX_DIR%"
-    powershell -NoProfile -ExecutionPolicy Bypass -Command "$p=[Environment]::GetEnvironmentVariable('Path','User'); $d='%SOX_DIR%'; if(-not ($p -like \"*$d*\")){[Environment]::SetEnvironmentVariable('Path', $p+';'+$d, 'User')}"
-    echo %green%SoX installed successfully.%reset%
-) else (
-    echo %warning%WARNING:%reset% Could not download SoX. You can install it manually later from %yellow%https://sourceforge.net/projects/sox/%reset%
 )
 
+if exist "%SOX_DIR%\sox.exe" (
+    set "path=%path%;%SOX_DIR%"
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "$d=$env:SOX_DIR; $p=[Environment]::GetEnvironmentVariable('Path','User'); if(-not (($p -split ';') -contains $d)){[Environment]::SetEnvironmentVariable('Path', ([string]$p).TrimEnd(';')+';'+$d, 'User')}"
+    echo %green%SoX installed successfully.%reset%
+) else (
+    echo %warning%WARNING:%reset% Could not install SoX. You can install it manually later from %yellow%https://sourceforge.net/projects/sox/%reset%
+)
 :SkipSoX
+:: Reset errorlevel ::
 cd .\
 echo.
 
@@ -190,8 +195,20 @@ cd ..\
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Microsoft.PowerShell.Archive\Expand-Archive -LiteralPath '%HLPR_NAME%' -DestinationPath '.' -Force"
 
 cd ComfyUI-Easy-Install
-for %%e in (jpeg jpg png mp3 mp4) do move ".\Add-Ons\Tools\Helper-CEI\*.%%e" ".\ComfyUI\input\" >nul 2>&1
-
+:: Download media files ::
+set "MEDIA_ZIP=Media-CEI.zip"
+set "MEDIA_URL=https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/assets/%MEDIA_ZIP%"
+set "MEDIA_OK="
+curl.exe -fL --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "%MEDIA_ZIP%" "%MEDIA_URL%" && set "MEDIA_OK=1"
+if not defined MEDIA_OK curl.exe -fL --progress-bar --ssl-no-revoke -k --retry 5 --retry-delay 2 -o "%MEDIA_ZIP%" "%MEDIA_URL%" && set "MEDIA_OK=1"
+if defined MEDIA_OK (
+	if not exist ".\ComfyUI\input" mkdir ".\ComfyUI\input"
+	tar.exe -xf "%MEDIA_ZIP%" -C ".\ComfyUI\input" || echo %warning%WARNING:%reset% Could not extract %MEDIA_ZIP%
+) else (
+	echo %warning%WARNING:%reset% Media files were not downloaded.
+)
+if exist "%MEDIA_ZIP%" del "%MEDIA_ZIP%"
+echo.
 :: Postinstall
 .\python_embeded\python.exe -I -m uv pip uninstall pydantic pydantic-core
 .\python_embeded\python.exe -I -m uv pip install pydantic %UVargs%
@@ -203,7 +220,7 @@ echo.
 echo.
 
 if exist ".\Add-Ons\Tools\AutoRun.bat" (
-	pushd %cd%
+	pushd "%cd%"
 	call ".\Add-Ons\Tools\AutoRun.bat" nopause
 	popd
 	Title %CEI_Title%
@@ -226,7 +243,7 @@ echo %green%::::::::::::::::: Installation Complete ::::::::::::::::%reset%
 echo %green%::::::::::::::::: Total Running Time:%red% %diff% %green%seconds%reset%
 echo %yellow%::::::::::::::::: Press any key to exit ::::::::::::::::%reset%&Pause>nul
 
-exit
+exit /b 0
 
 ::::::::::::::::::::::::::::::::: END :::::::::::::::::::::::::::::::::
 
@@ -249,7 +266,7 @@ echo %green%::::::::::::::: Installing/Updating%yellow% Git %green%:::::::::::::
 echo.
 
 :: Winget Install: ms-windows-store://pdp/?productid=9NBLGGH4NNS1 ::
-winget.exe install --id Git.Git -e --source winget
+winget.exe install --id Git.Git -e --source winget --accept-source-agreements --accept-package-agreements
 set "path=%PATH%;%ProgramFiles%\Git\cmd"
 echo.
 goto :eof
@@ -260,36 +277,45 @@ echo %green%::::::::::::::: Installing%yellow% ComfyUI %green%:::::::::::::::%re
 echo.
 
 git.exe clone https://github.com/Comfy-Org/ComfyUI ComfyUI
+if not exist "ComfyUI\requirements.txt" (
+	echo.
+	echo %red%Failed to clone ComfyUI%reset%
+	echo Press any key to Exit...&Pause>nul
+	set "FATAL=1"
+	goto :eof
+)
 
 md python_embeded&&cd python_embeded
 
-curl.exe -L --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "python-3.12.10-embed-amd64.zip" "https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip"
-if errorlevel 1 curl.exe -L --progress-bar --ssl-no-revoke -k --retry 5 --retry-delay 2 -o "python-3.12.10-embed-amd64.zip" "https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip"
+curl.exe -fL --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "python-3.12.10-embed-amd64.zip" "https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip"
+if errorlevel 1 curl.exe -fL --progress-bar --ssl-no-revoke -k --retry 5 --retry-delay 2 -o "python-3.12.10-embed-amd64.zip" "https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip"
 if errorlevel 1 powershell -NoProfile -ExecutionPolicy Bypass -Command "Try{Start-BitsTransfer -Source 'https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip' -Destination 'python-3.12.10-embed-amd64.zip' -ErrorAction Stop}catch{exit 1}"
 if not exist "python-3.12.10-embed-amd64.zip" (
 echo.
 echo %red%Failed to download python-3.12.10-embed-amd64.zip%reset%
 echo Press any key to Exit...&Pause>nul
-exit
+set "FATAL=1"
+goto :eof
 )
 
 tar.exe -xmf python-3.12.10-embed-amd64.zip
 if errorlevel 1 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath 'python-3.12.10-embed-amd64.zip' -DestinationPath '.' -Force"
 erase python-3.12.10-embed-amd64.zip
 
-curl.exe -L --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
-if errorlevel 1 curl.exe -L --progress-bar --ssl-no-revoke -k --retry 5 --retry-delay 2 -o "get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
+curl.exe -fL --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
+if errorlevel 1 curl.exe -fL --progress-bar --ssl-no-revoke -k --retry 5 --retry-delay 2 -o "get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
 if errorlevel 1 powershell -NoProfile -ExecutionPolicy Bypass -Command "Try{Start-BitsTransfer -Source 'https://bootstrap.pypa.io/get-pip.py' -Destination 'get-pip.py' -ErrorAction Stop}catch{exit 1}"
 
-if not exist "get-pip.py" curl.exe -L --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "get-pip.py" "https://raw.githubusercontent.com/pypa/get-pip/main/public/get-pip.py"
-if not exist "get-pip.py" curl.exe -L --progress-bar --ssl-no-revoke -k --retry 5 --retry-delay 2 -o "get-pip.py" "https://raw.githubusercontent.com/pypa/get-pip/main/public/get-pip.py"
+if not exist "get-pip.py" curl.exe -fL --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "get-pip.py" "https://raw.githubusercontent.com/pypa/get-pip/main/public/get-pip.py"
+if not exist "get-pip.py" curl.exe -fL --progress-bar --ssl-no-revoke -k --retry 5 --retry-delay 2 -o "get-pip.py" "https://raw.githubusercontent.com/pypa/get-pip/main/public/get-pip.py"
 if not exist "get-pip.py" powershell -NoProfile -ExecutionPolicy Bypass -Command "Try{Start-BitsTransfer -Source 'https://raw.githubusercontent.com/pypa/get-pip/main/public/get-pip.py' -Destination 'get-pip.py' -ErrorAction Stop}catch{exit 1}"
 
 if not exist "get-pip.py" (
 echo.
 echo %red%Failed to download get-pip.py%reset%
 echo Press any key to Exit...&Pause>nul
-exit
+set "FATAL=1"
+goto :eof
 )
 
 echo ../ComfyUI> python312._pth
@@ -369,19 +395,34 @@ goto :eof
 :NVIDIA_DRIVER_CHECK
 set "NV_MIN=580"
 set "CURRENT_CUDA=13.0"
+set "NV_FULL="
+set "NV_MAJOR="
+
+:: Older drivers install nvidia-smi here ::
+if exist "%ProgramFiles%\NVIDIA Corporation\NVSMI\nvidia-smi.exe" set "path=%path%;%ProgramFiles%\NVIDIA Corporation\NVSMI"
 
 where.exe nvidia-smi.exe >nul 2>&1
-if %errorLevel% neq 0 (
-    echo %red%   NVIDIA driver not detected
-    GOTO :EOF
+if errorlevel 1 (
+    echo.
+    echo %warning%WARNING:%reset% %red%NVIDIA driver not detected%reset%
+    echo This installer requires an %yellow%NVIDIA GPU%reset% with an installed driver
+    echo Install the latest driver from %yellow%https://www.nvidia.com/drivers%reset% and run this installer again
+    echo Press any key to Exit...&Pause>nul
+    set "FATAL=1"
+    goto :eof
 )
 
 for /f %%a in ('nvidia-smi --query-gpu^=driver_version --format^=csv^,noheader 2^>nul') do set "NV_FULL=%%a"
 for /f "tokens=1 delims=." %%a in ("%NV_FULL%") do set "NV_MAJOR=%%a"
 
-if not defined NV_MAJOR (
-    echo %red%   Unable to read NVIDIA driver version
-    GOTO :EOF
+echo %NV_MAJOR%| findstr /R "^[0-9][0-9]*$" >nul
+if errorlevel 1 (
+    echo.
+    echo %warning%WARNING:%reset% %red%Unable to read NVIDIA driver version%reset%
+    echo Make sure the NVIDIA driver is working ^(run %yellow%nvidia-smi%reset% in a terminal to check^)
+    echo Press any key to Exit...&Pause>nul
+    set "FATAL=1"
+    goto :eof
 )
 
 if %NV_MAJOR% LSS %NV_MIN% (
