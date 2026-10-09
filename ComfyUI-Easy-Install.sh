@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo 3.17.2
+# Title ComfyUI-Easy-Install  NEXT by ivo 3.20.0
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -174,6 +174,11 @@ install_comfyui() {
     git clone https://github.com/Comfy-Org/ComfyUI ComfyUI
     if [ ! -d "ComfyUI" ]; then
         echo -e "${RED}Failed to clone ComfyUI. Please check your internet connection and git setup.${RESET}"
+        exit 1
+    fi
+    if [ ! -f "ComfyUI/requirements.txt" ]; then
+        echo -e "${RED}ComfyUI clone appears incomplete (requirements.txt missing).${RESET}"
+        echo -e "${YELLOW}Please remove the ComfyUI directory and try again.${RESET}"
         exit 1
     fi
 
@@ -464,6 +469,32 @@ EOL
     "$EMBEDDED_PYTHON" -m pip install uv $PIP_ARGS
     echo -e "${GREEN}✓${RESET} uv installed"
     
+    # Detect NVIDIA driver on Linux before attempting CUDA install
+    check_nvidia_driver() {
+        local nvidia_smi=""
+        local driver_version=""
+        if command -v nvidia-smi >/dev/null 2>&1; then
+            nvidia_smi="nvidia-smi"
+        elif [ -x "/usr/bin/nvidia-smi" ]; then
+            nvidia_smi="/usr/bin/nvidia-smi"
+        elif [ -x "/usr/local/bin/nvidia-smi" ]; then
+            nvidia_smi="/usr/local/bin/nvidia-smi"
+        fi
+        if [ -z "$nvidia_smi" ]; then
+            echo -e "${RED}NVIDIA driver not detected (nvidia-smi not found).${RESET}"
+            echo -e "${YELLOW}Install an NVIDIA driver first, or use a CPU-only environment.${RESET}"
+            return 1
+        fi
+        driver_version="$($nvidia_smi --query-gpu=driver_version --format=csv,noheader 2>/dev/null | head -n1 | tr -d '[:space:]')"
+        if [ -z "$driver_version" ]; then
+            echo -e "${RED}NVIDIA driver detected but driver version could not be read.${RESET}"
+            echo -e "${YELLOW}Make sure the GPU is visible and the driver is loaded.${RESET}"
+            return 1
+        fi
+        echo -e "${GREEN}NVIDIA driver ${driver_version} detected${RESET}"
+        return 0
+    }
+
     echo -e "${YELLOW}[2/6]${RESET} Installing PyTorch 2.11.0..."
     # Check if running on macOS and install appropriate PyTorch
     if [ "$(uname)" = "Darwin" ]; then
@@ -473,6 +504,9 @@ EOL
         echo -e "${GREEN}✓${RESET} PyTorch installed (macOS version)"
     else
         echo -e "${YELLOW}Installing PyTorch 2.11.0 + CUDA 13.0...${RESET}"
+        if ! check_nvidia_driver; then
+            exit 1
+        fi
         # Retry up to 3 times — nvidia packages from pypi.nvidia.com can timeout
         TORCH_INSTALL_RETRIES=3
         TORCH_INSTALLED=false

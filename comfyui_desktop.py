@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Desktop EZi v3.17.2 — PyWebView wrapper
+Desktop EZi v3.20.0 — PyWebView wrapper
 Opens ComfyUI in a native desktop window instead of a browser.
 Part of ComfyUI-Easy-Install by Pixaroma / VenimK
 """
@@ -17,8 +17,20 @@ import urllib.parse
 import base64
 import json
 import subprocess
+import traceback
 
-EZI_VERSION = "3.17.2"
+EZI_VERSION = "3.20.0"
+
+
+def _log_error(label=''):
+    """Log exception details to stderr for debugging without crashing."""
+    try:
+        msg = traceback.format_exc()
+        if label:
+            msg = f"[EZi:{label}] {msg}"
+        print(msg, file=sys.stderr, flush=True)
+    except Exception:
+        pass
 
 COMFYUI_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
 COMFYUI_PORT = int(os.environ.get("COMFYUI_PORT", 8188))
@@ -104,6 +116,39 @@ def save_window_state(window):
         pass
 
 
+def _installed_frontend_version():
+    """Return installed comfyui_frontend_package version, or None/0.1.0."""
+    try:
+        import importlib.metadata as _im
+        for _pkg in ("comfyui_frontend_package", "comfyui-frontend-package"):
+            try:
+                ver = _im.version(_pkg)
+                if ver and ver != "0.1.0":
+                    return ver
+            except Exception:
+                continue
+    except Exception:
+        _log_error('_installed_frontend_version/importlib')
+    try:
+        import glob as _glob, site as _site
+        site_dir = _site.getsitepackages()[0]
+        matches = sorted(_glob.glob(
+            os.path.join(site_dir, "comfyui_frontend_package-*.dist-info", "METADATA")
+        ), reverse=True)
+        for meta_path in matches:
+            with open(meta_path, "r", errors="replace") as _f:
+                for line in _f:
+                    if line.startswith("Version:"):
+                        ver = line.split(":", 1)[1].strip()
+                        if ver and ver != "0.1.0":
+                            return ver
+                        break
+            break
+    except Exception:
+        _log_error('_installed_frontend_version/metadata')
+    return None
+
+
 def get_system_info():
     """Return a dict with Python, Torch, ComfyUI and platform info."""
     info = {}
@@ -123,6 +168,7 @@ def get_system_info():
         else:
             info["gpu"] = "CPU only"
     except Exception:
+        _log_error('get_system_info/torch')
         info["torch"] = "not installed"
         info["gpu"] = "unknown"
 
@@ -149,40 +195,15 @@ def get_system_info():
             desc = r2.stdout.strip() if r2.returncode == 0 else ""
             info["comfyui_rev"] = desc if desc else rev
     except Exception:
+        _log_error('get_system_info/git')
         info["comfyui_rev"] = "unknown"
 
     # ComfyUI frontend package version
     try:
-        import importlib.metadata as _im
-        for _pkg in ("comfyui_frontend_package", "comfyui-frontend-package"):
-            try:
-                ver = _im.version(_pkg)
-                if ver and ver != "0.1.0":
-                    info["frontend"] = ver
-                    break
-            except Exception:
-                continue
-        if "frontend" not in info or info.get("frontend") == "0.1.0":
-            import glob as _glob
-            site = os.path.join(SCRIPT_DIR, "python_embeded", "lib",
-                                "python3.12", "site-packages")
-            if not os.path.isdir(site):
-                import site as _site
-                site = _site.getsitepackages()[0]
-            matches = sorted(_glob.glob(
-                os.path.join(site, "comfyui_frontend_package-*.dist-info", "METADATA")
-            ), reverse=True)
-            info["frontend"] = "not installed"
-            for meta in matches:
-                with open(meta, "r", errors="replace") as f:
-                    for line in f:
-                        if line.startswith("Version:"):
-                            ver = line.split(":", 1)[1].strip()
-                            if ver and ver != "0.1.0":
-                                info["frontend"] = ver
-                            break
-                break
+        fe_ver = _installed_frontend_version()
+        info["frontend"] = fe_ver if fe_ver else "not installed"
     except Exception:
+        _log_error('get_system_info/frontend')
         info["frontend"] = "unknown"
 
     # Free disk space
@@ -191,7 +212,7 @@ def get_system_info():
         _, _, free = shutil.disk_usage(SCRIPT_DIR)
         info["disk_free_gb"] = f"{free / 1e9:.1f}"
     except Exception:
-        pass
+        _log_error('get_system_info/disk')
 
     return info
 
@@ -212,6 +233,7 @@ def get_cache_info():
             )
             result[name] = round(total / 1_048_576, 1)
         except Exception:
+            _log_error('get_cache_info')
             result[name] = 0
     return result
 
@@ -265,6 +287,7 @@ def check_comfyui_update():
             "commits_behind": int(behind) if behind.isdigit() else 0,
         }
     except Exception as e:
+        _log_error('check_comfyui_update')
         return {"error": str(e)}
 
 
@@ -272,36 +295,9 @@ def get_frontend_versions():
     """Return dict with current, versions list, and isNightly flag."""
     current = None
     try:
-        import importlib.metadata as _im
-        for _pkg in ("comfyui_frontend_package", "comfyui-frontend-package"):
-            try:
-                ver = _im.version(_pkg)
-                if ver and ver != "0.1.0":
-                    current = ver
-                    break
-            except Exception:
-                continue
+        current = _installed_frontend_version()
     except Exception:
-        pass
-    if not current:
-        try:
-            import glob as _glob, site as _site
-            site_dir = _site.getsitepackages()[0]
-            matches = sorted(_glob.glob(
-                os.path.join(site_dir, "comfyui_frontend_package-*.dist-info", "METADATA")
-            ), reverse=True)
-            for meta_path in matches:
-                with open(meta_path, "r", errors="replace") as _f:
-                    for line in _f:
-                        if line.startswith("Version:"):
-                            ver = line.split(":", 1)[1].strip()
-                            if ver and ver != "0.1.0":
-                                current = ver
-                            break
-                if current:
-                    break
-        except Exception:
-            pass
+        _log_error('get_frontend_versions/current')
     try:
         import urllib.request as _ur
         with _ur.urlopen(
@@ -338,6 +334,7 @@ def install_frontend_version(version):
             return {"ok": True, "version": version}
         return {"error": r.stderr.strip()[-300:]}
     except Exception as e:
+        _log_error('install_frontend_version')
         return {"error": str(e)}
 
 
@@ -490,6 +487,7 @@ def switch_comfyui_and_frontend(tag, fe_version=None):
     return {"ok": True, "results": results}
 
 
+
 def check_installer_update():
     """Check if the local installer is behind the MAC-Linux branch HEAD on GitHub."""
     try:
@@ -547,6 +545,7 @@ def check_installer_update():
             "release_url":    "https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux",
         }
     except Exception as e:
+        _log_error('check_installer_update')
         return {"error": str(e)}
 
 
@@ -1070,6 +1069,7 @@ def get_comfy_theme():
             "--text-on-accent": text_on_accent,
         }
     except Exception as e:
+        _log_error('check_installer_update')
         return {"error": str(e)}
 
 
@@ -1237,6 +1237,87 @@ INJECTED_JS = """
     window._comfyDesktopReady = true;
 
     /* Cmd+B / Ctrl+B → open in browser */
+    /* ── Restore persisted localStorage (matches Windows v3.18+ behavior) ── */
+    try {
+        if (window._eziRestoreStorage && typeof window._eziRestoreStorage === 'function') {
+            window._eziRestoreStorage();
+        }
+    } catch(e) {}
+
+    /* ── Bridge to Python for storage/WS events ── */
+    window._eziPostToShell = function(msg) {
+        try {
+            if (!msg || !msg.type) return;
+            if (msg.type === 'ezi_storage_save') {
+                pywebview.api._ezi_storage_save(JSON.stringify(msg.ls || {}), msg.settled ? 1 : 0);
+            } else if (msg.type === 'ezi_comfy_ready') {
+                pywebview.api._ezi_comfy_ready();
+            } else if (msg.type === 'ezi_ws_lost') {
+                pywebview.api._ezi_ws_lost();
+            }
+        } catch(e) {}
+    };
+
+    /* ── Flush localStorage back to Python before pagehide/unload ── */
+    window.__eziFlushStorageNow = function() {
+        try {
+            var out = {};
+            var ls = window.localStorage;
+            for (var i = 0; i < ls.length; i++) {
+                var k = ls.key(i);
+                if (k) out[k] = ls.getItem(k);
+            }
+            window._eziPostToShell({ type: 'ezi_storage_save', settled: performance.now() > 5000, ls: out });
+        } catch(e) {}
+    };
+    window.addEventListener('pagehide', window.__eziFlushStorageNow);
+    window.addEventListener('beforeunload', window.__eziFlushStorageNow);
+
+    /* ── WebSocket readiness / disconnect detector (matches Windows v3.19+) ── */
+    var _eziComfyReady = false;
+    var _OrigWS = window.WebSocket;
+    function _eziCheckMsg(data) {
+        if (_eziComfyReady) return;
+        try {
+            var d = JSON.parse(data);
+            if (d && d.type === 'status') {
+                _eziComfyReady = true;
+                if (window._eziPostToShell) window._eziPostToShell({ type: 'ezi_comfy_ready' });
+            }
+        } catch(e) {}
+    }
+    window.WebSocket = function(url, protocols) {
+        var ws = protocols ? new _OrigWS(url, protocols) : new _OrigWS(url);
+        var _origAEL = ws.addEventListener.bind(ws);
+        ws.addEventListener = function(type, fn, opts) {
+            if (type === 'message' && !_eziComfyReady) {
+                return _origAEL('message', function(ev) { _eziCheckMsg(ev.data); return fn.apply(this, arguments); }, opts);
+            }
+            if (type === 'close' || type === 'error') {
+                return _origAEL(type, function(ev) {
+                    if (_eziComfyReady && window._eziPostToShell) window._eziPostToShell({ type: 'ezi_ws_lost' });
+                    return fn.apply(this, arguments);
+                }, opts);
+            }
+            return _origAEL(type, fn, opts);
+        };
+        var _onmsg = null;
+        Object.defineProperty(ws, 'onmessage', {
+            get: function() { return _onmsg; },
+            set: function(fn) {
+                _onmsg = fn ? function(ev) { _eziCheckMsg(ev.data); return fn.apply(this, arguments); } : fn;
+            },
+            configurable: true
+        });
+        return ws;
+    };
+    window.WebSocket.prototype = _OrigWS.prototype;
+    window.WebSocket.CONNECTING = _OrigWS.CONNECTING;
+    window.WebSocket.OPEN = _OrigWS.OPEN;
+    window.WebSocket.CLOSING = _OrigWS.CLOSING;
+    window.WebSocket.CLOSED = _OrigWS.CLOSED;
+
+
     document.addEventListener('keydown', function(e) {
         if ((e.metaKey || e.ctrlKey) && e.key === 'b') {
             e.preventDefault();
@@ -2541,23 +2622,7 @@ def open_in_webview():
         def _check_ezi_update(self):
             """Background: poll GitHub releases to see if a newer EZi Desktop is available."""
             try:
-                import urllib.request as _ur
-                headers = {"User-Agent": "ComfyUI-Desktop-Mac"}
-                try:
-                    req = _ur.Request(
-                        "https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest",
-                        headers=headers,
-                        method="HEAD",
-                    )
-                    with _ur.urlopen(req, timeout=8) as r:
-                        tag = r.geturl().rstrip("/").rsplit("/", 1)[-1].strip().lstrip("v")
-                except Exception:
-                    req = _ur.Request(
-                        "https://api.github.com/repos/Tavris1/ComfyUI-Easy-Install/releases/latest",
-                        headers=headers,
-                    )
-                    with _ur.urlopen(req, timeout=8) as r:
-                        tag = json.loads(r.read()).get("tag_name", "").strip().lstrip("v")
+                tag = _latest_release_tag("Tavris1", "ComfyUI-Easy-Install").lstrip("v")
                 if not tag:
                     return
                 local_parts = [int(x) for x in EZI_VERSION.split(".") if x.isdigit()]
@@ -2567,7 +2632,7 @@ def open_in_webview():
                     safe = display.replace("'", "\\'")
                     self._toast(f"EZi Desktop {safe} available — visit GitHub to update")
             except Exception:
-                pass
+                _log_error('_check_ezi_update')
 
         def get_ui_settings(self):
             """Return persisted UI settings as JSON."""
@@ -3015,16 +3080,86 @@ def open_in_webview():
             """Called from JS when the ComfyUI UI becomes visible."""
             self._ui_shown = True
 
+        def _ezi_storage_save(self, ls_json, settled=0):
+            """Called from JS when localStorage is flushed."""
+            try:
+                data = json.loads(ls_json or "{}") if isinstance(ls_json, str) else dict(ls_json or {})
+                if not isinstance(data, dict):
+                    return
+                _DRAFT_PREFIXES = (
+                    "Comfy.Workflow.DraftIndex.v2:",
+                    "Comfy.Workflow.Draft.v2:",
+                    "Comfy.Workflow.LastActivePath:",
+                    "Comfy.Workflow.LastOpenPaths:",
+                    "workflow",
+                )
+                data = {k: v for k, v in data.items() if not any(k.startswith(p) for p in _DRAFT_PREFIXES)}
+                if len(json.dumps(data)) > 2 * 1024 * 1024:
+                    return
+                state = load_window_state()
+                state["comfy_storage"] = data
+                with open(WINDOW_STATE_FILE, "w") as f:
+                    json.dump(state, f)
+            except Exception:
+                _log_error('_ezi_storage_save')
+            finally:
+                self._storage_ack.set()
+
+        def _ezi_comfy_ready(self):
+            """Called from JS when the first status WebSocket message arrives."""
+            try:
+                self._ws_lost.clear()
+            except Exception:
+                _log_error('_ezi_comfy_ready')
+
+        def _ezi_ws_lost(self):
+            """Called from JS when the ComfyUI WebSocket drops unexpectedly."""
+            try:
+                self._ws_lost.set()
+            except Exception:
+                _log_error('_ezi_ws_lost')
+
+        def _restore_storage_from_disk(self):
+            """Push persisted localStorage back into the webview after ComfyUI loads."""
+            state = load_window_state()
+            data = state.get("comfy_storage", {})
+            if not isinstance(data, dict) or not data:
+                return
+            data_str = json.dumps(data, ensure_ascii=False)
+            data_str = data_str.replace("\\", "\\\\").replace("'", "\'")
+            js = (
+                "(function(){"
+                "  try {"
+                "    var data = '" + data_str + "';"
+                "    data = JSON.parse(data);"
+                "    if (data && Object.keys(data).length && !sessionStorage.getItem('__ezi_restored')) {"
+                "      localStorage.clear();"
+                "      Object.keys(data).forEach(function(k){ try { localStorage.setItem(k, data[k]); } catch(e){} });"
+                "    }"
+                "    sessionStorage.setItem('__ezi_restored', '1');"
+                "  } catch(e) {}"
+                "})();"
+            )
+            try:
+                window.evaluate_js(js)
+            except Exception:
+                _log_error('_restore_storage_from_disk')
+
         def _graceful_close(self):
             """Flush storage to disk then destroy the window."""
-            self._flush_state_to_disk()
+            self._flush_state_to_disk(timeout=3.0)
             try:
                 window.destroy()
             except Exception:
                 pass
 
-        def _flush_state_to_disk(self):
-            """Backup ComfyUI localStorage/sessionStorage with draft-filtering and 2 MB cap."""
+        def _flush_state_to_disk(self, timeout=3.0):
+            """Backup ComfyUI localStorage with draft-filtering and 2 MB cap.
+
+            Uses a storage-ack event so callers can wait for the JS side to finish.
+            Only localStorage is persisted; sessionStorage is intentionally ignored
+            to match the Windows v3.18+ behavior.
+            """
             _DRAFT_PREFIXES = (
                 "Comfy.Workflow.DraftIndex.v2:",
                 "Comfy.Workflow.Draft.v2:",
@@ -3034,22 +3169,16 @@ def open_in_webview():
             )
             _MAX_STORAGE_BYTES = 2 * 1024 * 1024
             try:
+                self._storage_ack.clear()
                 result = window.evaluate_js("""
                     (function() {
                         try {
-                            var out = { ls: {}, ss: {} };
+                            var out = {};
                             try {
                                 var ls = window.localStorage;
                                 for (var i = 0; i < ls.length; i++) {
                                     var k = ls.key(i);
-                                    if (k) out.ls[k] = ls.getItem(k);
-                                }
-                            } catch(e) {}
-                            try {
-                                var ss = window.sessionStorage;
-                                for (var j = 0; j < ss.length; j++) {
-                                    var sk = ss.key(j);
-                                    if (sk) out.ss[sk] = ss.getItem(sk);
+                                    if (k) out[k] = ls.getItem(k);
                                 }
                             } catch(e) {}
                             return JSON.stringify(out);
@@ -3057,28 +3186,30 @@ def open_in_webview():
                     })();
                 """)
                 if not result:
+                    self._storage_ack.set()
                     return
                 data = json.loads(result)
-                if not data or (isinstance(data.get("ls"), dict) and not data["ls"]
-                                and isinstance(data.get("ss"), dict) and not data["ss"]):
+                if not data or (isinstance(data, dict) and not data):
+                    self._storage_ack.set()
                     return
                 def _should_skip(k):
                     return any(k.startswith(p) for p in _DRAFT_PREFIXES)
-                if isinstance(data.get("ls"), dict):
-                    data["ls"] = {k: v for k, v in data["ls"].items() if not _should_skip(k)}
-                if isinstance(data.get("ss"), dict):
-                    data["ss"] = {k: v for k, v in data["ss"].items() if not _should_skip(k)}
+                if isinstance(data, dict):
+                    data = {k: v for k, v in data.items() if not _should_skip(k)}
                 try:
                     if len(json.dumps(data)) > _MAX_STORAGE_BYTES:
+                        self._storage_ack.set()
                         return
                 except Exception:
-                    pass
+                    _log_error('_flush_state_to_disk/oversize')
                 state = load_window_state()
                 state["comfy_storage"] = data
                 with open(WINDOW_STATE_FILE, "w") as f:
                     json.dump(state, f)
             except Exception:
-                pass
+                _log_error('_flush_state_to_disk')
+            finally:
+                self._storage_ack.set()
 
         def _toast(self, msg):
             """Show a toast message in the webview."""
@@ -3096,6 +3227,8 @@ def open_in_webview():
     api._window = None
     api._confirm_close = False
     api._ui_shown = False
+    api._storage_ack = threading.Event()
+    api._ws_lost = threading.Event()
 
     # Restore saved geometry (falls back to defaults if no state saved)
     _state = load_window_state()
@@ -3155,11 +3288,15 @@ def open_in_webview():
             t = threading.Thread(target=poll_and_navigate, daemon=True)
             t.start()
             return
-        # Subsequent loads = ComfyUI page — inject JS
+        # Subsequent loads = ComfyUI page — inject JS and restore persisted localStorage
         try:
             window.evaluate_js(f"const EZI_VERSION={repr(EZI_VERSION)};\n" + INJECTED_JS)
         except Exception:
             pass
+        try:
+            api._restore_storage_from_disk()
+        except Exception:
+            _log_error('on_loaded/restore_storage')
 
     def on_closing():
         """Intercept window close — show native confirm dialog if ComfyUI is running.
@@ -3221,7 +3358,7 @@ def open_in_webview():
 
     def on_closed():
         """When the window is closed, save state, backup ComfyUI storage, and signal the server process."""
-        api._flush_state_to_disk()
+        api._flush_state_to_disk(timeout=3.0)
         save_window_state(window)
         if COMFYUI_REMOTE:
             return
@@ -3234,32 +3371,71 @@ def open_in_webview():
             except (ValueError, OSError):
                 pass
 
+    def _http_alive(port, timeout=5):
+        """Return True if ComfyUI responds on /system_stats."""
+        try:
+            req = urllib.request.Request(
+                f"http://{COMFYUI_HOST}:{port}/system_stats",
+                headers={"User-Agent": "EZiDesktop"},
+            )
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                return r.status == 200
+        except Exception:
+            return False
+
     def port_monitor():
-        """Background: detect ComfyUI restart and reload the webview."""
+        """Background: detect ComfyUI restart and reload the webview.
+
+        Uses WebSocket-lost signal (Windows v3.19+) for faster detection and
+        falls back to HTTP /system_stats probe when reconnecting.
+        """
         _was_up = False
-        _down_ticks = 0
+        _down_since = 0
+        restart_start_time = 0
+        _SOCK_DOWN_SECONDS = 12.0
+        ws_lost_at = -1e9
+        gave_up = False
         while True:
-            time.sleep(1)
+            if api._ws_lost.wait(0.5):
+                api._ws_lost.clear()
+                ws_lost_at = time.monotonic()
             if COMFYUI_REMOTE:
                 break
             up = is_port_in_use(COMFYUI_PORT)
             if up:
-                _down_ticks = 0
-                if not _was_up:
-                    _was_up = True
-            else:
+                _down_since = 0
                 if _was_up:
-                    _down_ticks += 1
-                    if _down_ticks >= 3:
-                        _was_up = False
-                        _down_ticks = 0
-                        print("ComfyUI went offline — watching for restart...")
-                        if wait_for_server(COMFYUI_HOST, COMFYUI_PORT, timeout=300):
-                            print("ComfyUI restarted — reloading window.")
-                            try:
-                                window.load_url(COMFYUI_URL)
-                            except Exception:
-                                pass
+                    if restart_start_time and not gave_up:
+                        print(f"ComfyUI back online after {int(time.time() - restart_start_time)}s.")
+                        restart_start_time = 0
+                        try:
+                            window.load_url(COMFYUI_URL)
+                        except Exception:
+                            _log_error('port_monitor/reload')
+                elif not gave_up:
+                    _was_up = True
+                    print("ComfyUI is ready!")
+            else:
+                if _was_up and not restart_start_time:
+                    ws_dropped = time.monotonic() - ws_lost_at < 10
+                    if not _down_since:
+                        _down_since = time.monotonic()
+                    if ws_dropped or (time.monotonic() - _down_since) >= _SOCK_DOWN_SECONDS:
+                        if ws_dropped or not _http_alive(COMFYUI_PORT, timeout=2):
+                            _was_up = False
+                            _down_since = 0
+                            ws_lost_at = -1e9
+                            restart_start_time = time.time()
+                            gave_up = False
+                            print("\nComfyUI is restarting...")
+                            api._flush_state_to_disk(timeout=3.0)
+                        else:
+                            _down_since = 0
+                if restart_start_time and not _was_up:
+                    if time.time() - restart_start_time > 300:
+                        restart_start_time = 0
+                        gave_up = True
+                        print("\nRestart timed out. ComfyUI did not come back online.")
 
     api._window = window  # now safe for Api methods to use
 
