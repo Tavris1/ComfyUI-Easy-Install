@@ -1512,6 +1512,45 @@ INJECTED_JS = """
                 '#_cdp_inner._ezi-theme-light{--bg:#f0f2f5;--border:#c8cdd5;--fg:#24292f;--muted:#57606a;--input-bg:#fff;--accent:#0969da;--accent-bg:#d4e8ff}' +
                 '._cdp_tab{padding:4px 8px;font:bold 11px/1.4 inherit;border:1px solid var(--accent,#5294e2);border-radius:4px;background:none;color:var(--accent,#5294e2);cursor:pointer;transition:all .15s;white-space:nowrap}' +
                 '._cdp_tab:hover,._cdp_tab.on{background:var(--accent-bg,#0d419d);color:#fff}' +
+                '#_cdp_t_pxr{--px-coral:#f66744;color:#f5f3f1}' +
+                '#_cdp_t_pxr *{box-sizing:border-box}' +
+                '#_cdp_t_pxr .px-card{position:relative;overflow:hidden;margin-top:10px;padding:18px 24px;border:1px solid #574039;border-radius:16px;background:radial-gradient(ellipse at 100% 0%,#f667441c,transparent 65%),#1d1d1d}' +
+                '#_cdp_t_pxr .px-hero-copy{position:relative;z-index:1;max-width:calc(100% - 190px)}' +
+                '#_cdp_t_pxr .px-eyebrow{display:flex;align-items:center;gap:8px;color:#ff967c;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}' +
+                '#_cdp_t_pxr .px-eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--px-coral)}' +
+                '#_cdp_t_pxr .px-lead{margin:8px 0;max-width:390px;font-size:clamp(24px,3.6cqi,26px);font-weight:700;letter-spacing:-.035em;line-height:1.15;color:#fff5f1}' +
+                '#_cdp_t_pxr .px-sub{max-width:360px;color:#bdb6b2;font-size:14px;line-height:1.55}' +
+                '#_cdp_t_pxr .px-actions{margin-top:14px}' +
+                '#_cdp_t_pxr .px-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:44px;padding:0 18px;border:1px solid transparent;border-radius:9px;color:#fff;font-size:13px;font-weight:650;cursor:pointer;transition:background .16s,border-color .16s,transform .16s;line-height:1.3;background:var(--px-coral)}' +
+                '#_cdp_t_pxr .px-btn:hover{background:#e95735;transform:translateY(-1px)}' +
+                '#_cdp_t_pxr .px-btn svg{flex-shrink:0}' +
+                '#_cdp_t_pxr .px-ext{opacity:.7;flex-shrink:0;margin-left:8px}' +
+                '#_cdp_t_pxr .px-cadence{display:flex;align-items:center;gap:7px;margin-top:10px;color:#aaa19c;font-size:12px}' +
+                '#_cdp_t_pxr .px-cadence svg{color:#d78670}' +
+                '#_cdp_t_pxr .px-flow-art{position:absolute;right:16px;top:50%;width:200px;height:180px;transform:translateY(-50%);opacity:.85;pointer-events:none}' +
+                '#_cdp_t_pxr .px-community{display:flex;align-items:center;gap:16px;margin-top:12px;padding:16px;border:1px solid #3b3633;border-radius:12px;background:#2a2a2a}' +
+                '#_cdp_t_pxr .px-community-icon{display:grid;place-items:center;flex-shrink:0;width:44px;height:44px;border-radius:12px;background:#f6674414;color:#ff967c}' +
+                '#_cdp_t_pxr .px-community-copy{flex:1;min-width:0}' +
+                '#_cdp_t_pxr .px-community-title{font-size:15px;font-weight:650;line-height:1.4}' +
+                '#_cdp_t_pxr .px-community-sub{margin-top:3px;color:#bdb6b2;font-size:12px;line-height:1.5}' +
+                '#_cdp_t_pxr .px-discord{background:#34302e;border-color:#6b4a40;color:#ffb5a1;white-space:nowrap}' +
+                '#_cdp_t_pxr .px-discord:hover{background:#40332e;border-color:var(--px-coral)}' +
+                '#_cdp_t_pxr .px-badge-link{display:inline-flex;margin-top:10px;border-radius:4px}' +
+                '#_cdp_t_pxr .px-badge{display:block;height:20px;max-width:100%;border-radius:4px}' +
+                '#_cdp_t_pxr .px-resources{margin-top:16px}' +
+                '#_cdp_t_pxr .px-resource-head{margin:0 0 12px;color:#bdb6b2;font-size:11px;font-weight:650;letter-spacing:.12em;text-transform:uppercase}' +
+                '#_cdp_t_pxr .px-resource-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}' +
+                '#_cdp_t_pxr .px-link{display:flex;align-items:center;gap:12px;width:100%;min-width:0;padding:14px 16px;text-align:left;background:#1d1d1d;border:1px solid #3b3633;border-radius:12px;color:#f5f3f1;font-size:14px;cursor:pointer;transition:border-color .16s,background .16s}' +
+                '#_cdp_t_pxr .px-link:hover{background:#2a2522;border-color:#875344}' +
+                '#_cdp_t_pxr .px-link-icon{display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;color:#ff967c;background:#f6674410;border-radius:9px}' +
+                '#_cdp_t_pxr .px-link-copy{flex:1;min-width:0}' +
+                '#_cdp_t_pxr .px-link-name{display:block;font-size:14px;font-weight:650}' +
+                '#_cdp_t_pxr .px-link-desc{display:block;margin-top:3px;color:#bdb6b2;font-size:12px;line-height:1.4}' +
+                '#_cdp_t_pxr .px-link-url{display:block;margin-top:7px;color:#d78670;font-size:10px;overflow-wrap:anywhere}' +
+                '#_cdp_t_pxr .px-link .px-ext{color:#bdb6b2;transition:transform .16s}' +
+                '#_cdp_t_pxr .px-link:hover .px-ext{transform:translate(2px,-2px)}' +
+                '@media (max-width:620px){#_cdp_t_pxr .px-flow-art{display:none}#_cdp_t_pxr .px-hero-copy{max-width:100%}#_cdp_t_pxr .px-community{flex-wrap:wrap}#_cdp_t_pxr .px-community .px-discord{margin-left:60px}}' +
+                '@media (max-width:450px){#_cdp_t_pxr .px-card{padding:22px}#_cdp_t_pxr .px-resource-grid{grid-template-columns:1fr}#_cdp_t_pxr .px-community{padding:16px;gap:12px}#_cdp_t_pxr .px-community .px-discord{margin-left:0;width:100%}}' +
                 '</style>' +
                 '<div id="_cdp_inner" class="_ezi-theme-pixaroma" style="background:var(--bg,#1e1e28);border:1px solid var(--border,#444);border-radius:14px;' +
                 'min-width:500px;max-width:600px;color:var(--fg,#e0e0e0);max-height:88vh;overflow-y:auto">' +
@@ -1524,6 +1563,7 @@ INJECTED_JS = """
                 /* tab bar */
                 '<div style="padding:6px 20px 0;border-bottom:1px solid var(--border,#444);flex-shrink:0">' +
                 '<div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;padding-bottom:8px">' +
+                '<button class="_cdp_tab" data-tab="pxr">Pixaroma</button>' +
                 '<button class="_cdp_tab" data-tab="sys">System Info</button>' +
                 '<button class="_cdp_tab" data-tab="add">Add-ons</button>' +
                 '<button class="_cdp_tab" data-tab="tls">Tools</button>' +
@@ -1533,6 +1573,47 @@ INJECTED_JS = """
                 '</div></div>' +
                 /* scrollable content */
                 '<div id="_cdp_content" style="padding:16px 20px">' +
+                /* TAB: Pixaroma */
+                '<div id="_cdp_t_pxr">' +
+                '<div class="px-card">' +
+                '<div class="px-hero-copy">' +
+                '<div class="px-eyebrow">Pixaroma ComfyUI course</div>' +
+                '<h2 class="px-lead">Your next idea starts with a workflow.</h2>' +
+                '<div class="px-sub">Free workflow files for every course episode. Follow the lessons, then bring your own ideas to life.</div>' +
+                '<div class="px-actions"><button class="px-btn" onclick="pywebview.api.open_url('https://workflows.pixaroma.com/')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><path d="M10 6.5h4a3.5 3.5 0 0 1 3.5 3.5v4"/></svg><span>ComfyUI Workflows</span><svg class="px-ext" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></button></div>' +
+                '<div class="px-cadence"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>A new episode lands almost every week.</div>' +
+                '</div>' +
+                '<svg class="px-flow-art" viewBox="0 0 200 180" fill="none" aria-hidden="true">' +
+                '<path d="M56 40h34q14 0 14 14v63h27M56 140h20q14 0 14-14V75q0-14 14-14h27" stroke="#f66744" stroke-width="1.5" opacity=".45"/>' +
+                '<rect x="4" y="16" width="52" height="48" rx="9" fill="#2a2a2a" stroke="#705044"/><rect x="4" y="16" width="52" height="12" rx="6" fill="#f66744" opacity=".45"/>' +
+                '<path d="M15 39h29M15 47h18" stroke="#84716a" stroke-width="3" stroke-linecap="round"/>' +
+                '<rect x="4" y="116" width="52" height="48" rx="9" fill="#2a2a2a" stroke="#705044"/><rect x="4" y="116" width="52" height="12" rx="6" fill="#f66744" opacity=".45"/>' +
+                '<path d="M15 139h29M15 147h18" stroke="#84716a" stroke-width="3" stroke-linecap="round"/>' +
+                '<rect x="131" y="40" width="65" height="98" rx="10" fill="#2a2a2a" stroke="#b56750"/>' +
+                '<rect x="131" y="40" width="65" height="14" rx="7" fill="#f66744" opacity=".8"/>' +
+                '<rect x="143" y="66" width="41" height="39" rx="5" fill="#3b302b"/>' +
+                '<path d="m150 97 10-15 7 9 5-6 7 12" stroke="#f66744" stroke-width="1.5" stroke-linejoin="round"/>' +
+                '<path d="M143 118h32M143 126h21" stroke="#84716a" stroke-width="3" stroke-linecap="round"/>' +
+                '<circle cx="56" cy="40" r="3" fill="#f66744"/><circle cx="56" cy="140" r="3" fill="#f66744"/><circle cx="131" cy="61" r="3" fill="#f66744"/><circle cx="131" cy="117" r="3" fill="#f66744"/>' +
+                '</svg>' +
+                '</div>' +
+                '<div class="px-community">' +
+                '<div class="px-community-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a16.2 16.2 0 0 0-5.487 0c-.163-.394-.405-.875-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.95 4.37a.07.07 0 0 0-.032.027C.533 9.046-.319 13.58.099 18.058a.082.082 0 0 0 .031.056c2.053 1.508 4.041 2.423 5.993 3.03a.078.078 0 0 0 .084-.028c.462-.63.873-1.295 1.226-1.994a.076.076 0 0 0-.042-.106 12.3 12.3 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .079.01c.12.099.246.198.373.292a.077.077 0 0 1-.007.128 12.298 12.298 0 0 1-1.873.891.077.077 0 0 0-.041.107c.36.698.772 1.363 1.225 1.993a.076.076 0 0 0 .084.029c1.961-.607 3.95-1.522 6.002-3.03a.077.077 0 0 0 .032-.055c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.029zM8.02 15.331a2.157 2.157 0 1 1 0-4.314 2.157 2.157 0 0 1 0 4.314zm7.975 0a2.157 2.157 0 1 1 0-4.314 2.157 2.157 0 0 1 0 4.314z"/></svg></div>' +
+                '<div class="px-community-copy">' +
+                '<div class="px-community-title">Create together.</div>' +
+                '<div class="px-community-sub">Join the Pixaroma Discord community.</div>' +
+                '<a class="px-badge-link" href="https://discord.com/invite/gggpkVgBf3" onclick="pywebview.api.open_url(this.href);return false" aria-label="Join Pixaroma Discord"><img class="px-badge" alt="Join Pixaroma Discord" title="Join Pixaroma Discord" loading="lazy" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&labelColor=3b3633&label=Community&color=f66744&suffix=%20users" onerror="this.parentElement.style.display='none'"></a>' +
+                '</div>' +
+                '<button class="px-btn px-discord" onclick="pywebview.api.open_url('https://discord.com/invite/gggpkVgBf3')"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a16.2 16.2 0 0 0-5.487 0c-.163-.394-.405-.875-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.95 4.37a.07.07 0 0 0-.032.027C.533 9.046-.319 13.58.099 18.058a.082.082 0 0 0 .031.056c2.053 1.508 4.041 2.423 5.993 3.03a.078.078 0 0 0 .084-.028c.462-.63.873-1.295 1.226-1.994a.076.076 0 0 0-.042-.106 12.3 12.3 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .079.01c.12.099.246.198.373.292a.077.077 0 0 1-.007.128 12.298 12.298 0 0 1-1.873.891.077.077 0 0 0-.041.107c.36.698.772 1.363 1.225 1.993a.076.076 0 0 0 .084.029c1.961-.607 3.95-1.522 6.002-3.03a.077.077 0 0 0 .032-.055c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.029zM8.02 15.331a2.157 2.157 0 1 1 0-4.314 2.157 2.157 0 0 1 0 4.314zm7.975 0a2.157 2.157 0 1 1 0-4.314 2.157 2.157 0 0 1 0 4.314z"/></svg><span>Join Discord</span><svg class="px-ext" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></button>' +
+                '</div>' +
+                '<div class="px-resources">' +
+                '<h3 class="px-resource-head">Keep exploring</h3>' +
+                '<div class="px-resource-grid">' +
+                '<button class="px-link" onclick="pywebview.api.open_url('https://workflows.pixaroma.com/help/')"><span class="px-link-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1.1 1-1.1 1.8M12 17h.01"/></svg></span><span class="px-link-copy"><span class="px-link-name">Help</span><span class="px-link-desc">Guides &amp; troubleshooting</span><span class="px-link-url">workflows.pixaroma.com/help</span></span><svg class="px-ext" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></button>' +
+                '<button class="px-link" onclick="pywebview.api.open_url('https://www.youtube.com/@pixaroma')"><span class="px-link-icon"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="1.5" y="4.5" width="21" height="15" rx="4.5" fill="#FF0000"/><path d="M10 9l5.2 3-5.2 3z" fill="#fff"/></svg></span><span class="px-link-copy"><span class="px-link-name">YouTube</span><span class="px-link-desc">Watch the ComfyUI course</span><span class="px-link-url">@pixaroma</span></span><svg class="px-ext" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></button>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
                 /* TAB: System Info */
                 '<div id="_cdp_t_sys">' +
                 '<table id="_cdp_info" style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:8px"><tr><td colspan="2" style="color:var(--muted,#555)">Loading\u2026</td></tr></table>' +
@@ -1631,7 +1712,7 @@ INJECTED_JS = """
 
             /* ── Tab switching ── */
             (function() {
-                var _tabs = ['sys','add','tls','app','adv'];
+                var _tabs = ['pxr','sys','add','tls','app','adv'];
                 function showTab(name) {
                     _tabs.forEach(function(t) {
                         document.getElementById('_cdp_t_' + t).style.display = (t === name) ? 'block' : 'none';
