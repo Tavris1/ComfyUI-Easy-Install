@@ -1109,6 +1109,35 @@ def set_comfy_theme(palette_id):
         return {"error": str(e)}
 
 
+def _latest_release_tag(repo_owner, repo_name):
+    """Get latest release tag from GitHub redirect or API. Returns tag string or ''."""
+    try:
+        import urllib.request as _ur
+        headers = {"User-Agent": "ComfyUI-EZi"}
+        req = _ur.Request(
+            f"https://github.com/{repo_owner}/{repo_name}/releases/latest",
+            headers=headers, method="HEAD",
+        )
+        with _ur.urlopen(req, timeout=8) as r:
+            tag = r.geturl().rstrip("/").rsplit("/", 1)[-1].strip()
+        if tag:
+            return tag
+    except Exception:
+        _log_error('_latest_release_tag/head')
+    try:
+        import urllib.request as _ur, json as _json
+        req = _ur.Request(
+            f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest",
+            headers={"User-Agent": "ComfyUI-EZi"},
+        )
+        with _ur.urlopen(req, timeout=8) as r:
+            data = _json.loads(r.read())
+        return (data.get("tag_name") or "").strip()
+    except Exception:
+        _log_error('_latest_release_tag/api')
+    return ""
+
+
 def get_comfyui_versions():
     """Return ComfyUI git tags (local + remote GitHub, newest first, max 20) with stable label."""
     import re as _re
@@ -1173,13 +1202,7 @@ def get_comfyui_versions():
     # Latest stable release from GitHub
     stable_version = None
     try:
-        req = _ur.Request(
-            "https://api.github.com/repos/comfyanonymous/ComfyUI/releases/latest",
-            headers={"User-Agent": "ComfyUI-EZi"},
-        )
-        with _ur.urlopen(req, timeout=8) as resp:
-            rel_data = json.loads(resp.read())
-        stable_version = rel_data.get("tag_name") or None
+        stable_version = _latest_release_tag("comfyanonymous", "ComfyUI")
         if stable_version:
             try:
                 state = load_window_state()
@@ -1187,13 +1210,15 @@ def get_comfyui_versions():
                 with open(WINDOW_STATE_FILE, "w") as _sf:
                     json.dump(state, _sf)
             except Exception:
-                pass
+                _log_error('get_comfyui_versions/cache_stable')
     except Exception:
+        _log_error('get_comfyui_versions/stable')
+    if not stable_version:
         try:
             state = load_window_state()
             stable_version = state.get("cached_comfy_stable_version") or None
         except Exception:
-            pass
+            _log_error('get_comfyui_versions/cache_read')
 
     return {"current": current, "versions": all_tags, "stableVersion": stable_version}
 
