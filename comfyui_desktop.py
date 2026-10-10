@@ -1498,7 +1498,7 @@ INJECTED_JS = """
         else init();
     })();
 
-    /* ── Desktop Settings Panel (Cmd+Shift+I / Ctrl+Shift+I) ── */
+    /* ── Desktop Settings Panel (Cmd+Shift+U / Ctrl+Shift+U) ── */
     (function() {
         var PANEL_ID = '_comfy_desktop_panel';
 
@@ -1605,7 +1605,7 @@ INJECTED_JS = """
                 '<div class="px-eyebrow">Pixaroma ComfyUI course</div>' +
                 '<h2 class="px-lead">Your next idea starts with a workflow.</h2>' +
                 '<div class="px-sub">Free workflow files for every course episode. Follow the lessons, then bring your own ideas to life.</div>' +
-                '<div class="px-actions"><button class="px-btn" onclick="pywebview.api.open_url('https://workflows.pixaroma.com/')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><path d="M10 6.5h4a3.5 3.5 0 0 1 3.5 3.5v4"/></svg><span>ComfyUI Workflows</span><svg class="px-ext" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></button></div>' +
+                '<div class="px-actions"><button class="px-btn" onclick="pywebview.api.open_url(\\'https://workflows.pixaroma.com/\\')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><path d="M10 6.5h4a3.5 3.5 0 0 1 3.5 3.5v4"/></svg><span>ComfyUI Workflows</span><svg class="px-ext" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></button></div>' +
                 '<div class="px-cadence"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>A new episode lands almost every week.</div>' +
                 '</div>' +
                 '<svg class="px-flow-art" viewBox="0 0 200 180" fill="none" aria-hidden="true">' +
@@ -1627,15 +1627,15 @@ INJECTED_JS = """
                 '<div class="px-community-copy">' +
                 '<div class="px-community-title">Create together.</div>' +
                 '<div class="px-community-sub">Join the Pixaroma Discord community.</div>' +
-                '<a class="px-badge-link" href="https://discord.com/invite/gggpkVgBf3" onclick="pywebview.api.open_url(this.href);return false" aria-label="Join Pixaroma Discord"><img class="px-badge" alt="Join Pixaroma Discord" title="Join Pixaroma Discord" loading="lazy" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&labelColor=3b3633&label=Community&color=f66744&suffix=%20users" onerror="this.parentElement.style.display='none'"></a>' +
+                '<a class="px-badge-link" href="https://discord.com/invite/gggpkVgBf3" onclick="pywebview.api.open_url(this.href);return false" aria-label="Join Pixaroma Discord"><img class="px-badge" alt="Join Pixaroma Discord" title="Join Pixaroma Discord" loading="lazy" src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&labelColor=3b3633&label=Community&color=f66744&suffix=%20users" onerror="this.parentElement.style.display=\\'none\\'"></a>' +
                 '</div>' +
-                '<button class="px-btn px-discord" onclick="pywebview.api.open_url('https://discord.com/invite/gggpkVgBf3')"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a16.2 16.2 0 0 0-5.487 0c-.163-.394-.405-.875-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.95 4.37a.07.07 0 0 0-.032.027C.533 9.046-.319 13.58.099 18.058a.082.082 0 0 0 .031.056c2.053 1.508 4.041 2.423 5.993 3.03a.078.078 0 0 0 .084-.028c.462-.63.873-1.295 1.226-1.994a.076.076 0 0 0-.042-.106 12.3 12.3 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .079.01c.12.099.246.198.373.292a.077.077 0 0 1-.007.128 12.298 12.298 0 0 1-1.873.891.077.077 0 0 0-.041.107c.36.698.772 1.363 1.225 1.993a.076.076 0 0 0 .084.029c1.961-.607 3.95-1.522 6.002-3.03a.077.077 0 0 0 .032-.055c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.029zM8.02 15.331a2.157 2.157 0 1 1 0-4.314 2.157 2.157 0 0 1 0 4.314zm7.975 0a2.157 2.157 0 1 1 0-4.314 2.157 2.157 0 0 1 0 4.314z"/></svg><span>Join Discord</span><svg class="px-ext" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></button>' +
+                '<button class="px-btn px-discord" onclick="pywebview.api.open_url(\\'https://discord.com/invite/gggpkVgBf3\\')"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a16.2 16.2 0 0 0-5.487 0c-.163-.394-.405-.875-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.95 4.37a.07.07 0 0 0-.032.027C.533 9.046-.319 13.58.099 18.058a.082.082 0 0 0 .031.056c2.053 1.508 4.041 2.423 5.993 3.03a.078.078 0 0 0 .084-.028c.462-.63.873-1.295 1.226-1.994a.076.076 0 0 0-.042-.106 12.3 12.3 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .079.01c.12.099.246.198.373.292a.077.077 0 0 1-.007.128 12.298 12.298 0 0 1-1.873.891.077.077 0 0 0-.041.107c.36.698.772 1.363 1.225 1.993a.076.076 0 0 0 .084.029c1.961-.607 3.95-1.522 6.002-3.03a.077.077 0 0 0 .032-.055c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.029zM8.02 15.331a2.157 2.157 0 1 1 0-4.314 2.157 2.157 0 0 1 0 4.314zm7.975 0a2.157 2.157 0 1 1 0-4.314 2.157 2.157 0 0 1 0 4.314z"/></svg><span>Join Discord</span><svg class="px-ext" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></button>' +
                 '</div>' +
                 '<div class="px-resources">' +
                 '<h3 class="px-resource-head">Keep exploring</h3>' +
                 '<div class="px-resource-grid">' +
-                '<button class="px-link" onclick="pywebview.api.open_url('https://workflows.pixaroma.com/help/')"><span class="px-link-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1.1 1-1.1 1.8M12 17h.01"/></svg></span><span class="px-link-copy"><span class="px-link-name">Help</span><span class="px-link-desc">Guides &amp; troubleshooting</span><span class="px-link-url">workflows.pixaroma.com/help</span></span><svg class="px-ext" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></button>' +
-                '<button class="px-link" onclick="pywebview.api.open_url('https://www.youtube.com/@pixaroma')"><span class="px-link-icon"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="1.5" y="4.5" width="21" height="15" rx="4.5" fill="#FF0000"/><path d="M10 9l5.2 3-5.2 3z" fill="#fff"/></svg></span><span class="px-link-copy"><span class="px-link-name">YouTube</span><span class="px-link-desc">Watch the ComfyUI course</span><span class="px-link-url">@pixaroma</span></span><svg class="px-ext" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></button>' +
+                '<button class="px-link" onclick="pywebview.api.open_url(\\'https://workflows.pixaroma.com/help/\\')"><span class="px-link-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1.1 1-1.1 1.8M12 17h.01"/></svg></span><span class="px-link-copy"><span class="px-link-name">Help</span><span class="px-link-desc">Guides &amp; troubleshooting</span><span class="px-link-url">workflows.pixaroma.com/help</span></span><svg class="px-ext" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></button>' +
+                '<button class="px-link" onclick="pywebview.api.open_url(\\'https://www.youtube.com/@pixaroma\\')"><span class="px-link-icon"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="1.5" y="4.5" width="21" height="15" rx="4.5" fill="#FF0000"/><path d="M10 9l5.2 3-5.2 3z" fill="#fff"/></svg></span><span class="px-link-copy"><span class="px-link-name">YouTube</span><span class="px-link-desc">Watch the ComfyUI course</span><span class="px-link-url">@pixaroma</span></span><svg class="px-ext" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></button>' +
                 '</div>' +
                 '</div>' +
                 '</div>' +
@@ -2303,13 +2303,30 @@ INJECTED_JS = """
                    'padding:7px 16px;font-size:13px;cursor:pointer';
         }
 
-        /* Keyboard shortcut: Cmd+Shift+I (mac) or Ctrl+Shift+I (linux) */
+        /* Keyboard shortcut: Cmd+Shift+U (mac) or Ctrl+Shift+U (linux) */
         document.addEventListener('keydown', function(e) {
-            if (e.shiftKey && e.key === 'I' && (e.metaKey || e.ctrlKey)) {
+            var isU = e.key === 'U' || e.code === 'KeyU' || e.keyCode === 85;
+            if (e.shiftKey && isU && (e.metaKey || e.ctrlKey)) {
                 e.preventDefault();
+                e.stopPropagation();
                 buildPanel();
+                return false;
             }
-        });
+        }, true);
+
+        /* Floating settings button as a reliable fallback */
+        (function() {
+            if (document.getElementById('_ezi_settings_btn')) return;
+            var btn = document.createElement('button');
+            btn.id = '_ezi_settings_btn';
+            btn.innerHTML = '⚙';
+            btn.title = 'EZi Settings (Cmd+Shift+U / Ctrl+Shift+U)';
+            btn.style.cssText = 'position:fixed;bottom:16px;right:16px;z-index:99999;width:38px;height:38px;border-radius:50%;border:1px solid var(--accent,#e8530a);background:rgba(0,0,0,.75);color:var(--accent,#e8530a);font-size:18px;line-height:1;cursor:pointer;opacity:.75;transition:opacity .2s,transform .2s';
+            btn.onmouseenter = function() { btn.style.opacity = '1'; btn.style.transform = 'scale(1.1)'; };
+            btn.onmouseleave = function() { btn.style.opacity = '.75'; btn.style.transform = 'scale(1)'; };
+            btn.onclick = function() { buildPanel(); };
+            document.body.appendChild(btn);
+        })();
 
         /* Also expose globally so it can be called from console */
         window._comfyDesktopPanel = buildPanel;
@@ -3553,8 +3570,28 @@ def open_in_webview():
 
     print(f"  Tip: Press Cmd+B (macOS) or Ctrl+B (Linux) to open in browser for file uploads")
 
+    def _open_settings_menu():
+        try:
+            w = getattr(api, '_window', None)
+            if w:
+                w.evaluate_js("window._comfyDesktopPanel && window._comfyDesktopPanel();")
+        except Exception:
+            pass
+
+    # Add a menu bar item so macOS users can open settings even if Cmd+Shift+I is intercepted
+    try:
+        from webview.menu import Menu, MenuAction
+        _menu = [
+            Menu("EZi Desktop", [MenuAction("Settings", _open_settings_menu)])
+        ]
+    except Exception:
+        _menu = None
+
     # Start pywebview — private_mode=False may fix file upload dialogs on macOS
-    webview.start(icon=icon, private_mode=False, debug=False)
+    if _menu:
+        webview.start(menu=_menu, icon=icon, private_mode=False, debug=False)
+    else:
+        webview.start(icon=icon, private_mode=False, debug=False)
 
 
 def main():
