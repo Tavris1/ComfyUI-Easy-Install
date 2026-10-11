@@ -1,5 +1,5 @@
 @echo off&&cd /D "%~dp0"
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.20.0"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.21.0"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -324,7 +324,7 @@ echo .>> python312._pth
 echo Lib/site-packages>> python312._pth
 echo Lib>> python312._pth
 echo Scripts>> python312._pth
-echo # import site>> python312._pth
+echo import site>> python312._pth
 
 echo [global]> pip.ini
 echo trusted-host =>> pip.ini
