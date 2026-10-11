@@ -1,5 +1,5 @@
 @echo off&&cd /D "%~dp0"
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.21.0"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.21.1"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -203,7 +203,7 @@ curl.exe -fL --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "%MEDIA
 if not defined MEDIA_OK curl.exe -fL --progress-bar --ssl-no-revoke -k --retry 5 --retry-delay 2 -o "%MEDIA_ZIP%" "%MEDIA_URL%" && set "MEDIA_OK=1"
 if defined MEDIA_OK (
 	if not exist ".\ComfyUI\input" mkdir ".\ComfyUI\input"
-	tar.exe -xf "%MEDIA_ZIP%" -C ".\ComfyUI\input" || echo %warning%WARNING:%reset% Could not extract %MEDIA_ZIP%
+	tar.exe -xmf "%MEDIA_ZIP%" -C ".\ComfyUI\input" || echo %warning%WARNING:%reset% Could not extract %MEDIA_ZIP%
 ) else (
 	echo %warning%WARNING:%reset% Media files were not downloaded.
 )
