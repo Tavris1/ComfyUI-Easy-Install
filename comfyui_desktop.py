@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Desktop EZi v3.20.0 — PyWebView wrapper
+Desktop EZi v3.20.1 — PyWebView wrapper
 Opens ComfyUI in a native desktop window instead of a browser.
 Part of ComfyUI-Easy-Install by Pixaroma / VenimK
 """
@@ -19,7 +19,7 @@ import json
 import subprocess
 import traceback
 
-EZI_VERSION = "3.20.0"
+EZI_VERSION = "3.20.1"
 
 
 def _log_error(label=''):
