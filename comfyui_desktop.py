@@ -101,19 +101,44 @@ def load_window_state():
 def save_window_state(window):
     """Persist current window size/position to disk."""
     try:
-        state = {
+        geometry = {
             "width":  window.width,
             "height": window.height,
             "x":      window.x,
             "y":      window.y,
         }
         # Filter out None / negative values that pywebview may return on some platforms
-        if any(v is None or v < 0 for v in state.values()):
+        if any(v is None or v < 0 for v in geometry.values()):
             return
+        state = load_window_state()
+        state.update(geometry)
         with open(WINDOW_STATE_FILE, "w") as f:
             json.dump(state, f)
     except Exception:
         pass
+
+
+_STORAGE_SKIP_PREFIXES = (
+    "Comfy.Workflow.DraftIndex.v2:",
+    "Comfy.Workflow.Draft.v2:",
+    "Comfy.Workflow.LastActivePath:",
+    "Comfy.Workflow.LastOpenPaths:",
+    "workflow",
+)
+_MAX_STORAGE_BYTES = 2 * 1024 * 1024
+
+
+def save_comfy_storage(data):
+    """Persist ComfyUI localStorage without workflow drafts, capped at 2 MB."""
+    if not isinstance(data, dict) or not data:
+        return
+    data = {k: v for k, v in data.items() if not k.startswith(_STORAGE_SKIP_PREFIXES)}
+    if len(json.dumps(data)) > _MAX_STORAGE_BYTES:
+        return
+    state = load_window_state()
+    state["comfy_storage"] = data
+    with open(WINDOW_STATE_FILE, "w") as f:
+        json.dump(state, f)
 
 
 def _installed_frontend_version():
@@ -1069,7 +1094,7 @@ def get_comfy_theme():
             "--text-on-accent": text_on_accent,
         }
     except Exception as e:
-        _log_error('check_installer_update')
+        _log_error('get_comfy_theme')
         return {"error": str(e)}
 
 
@@ -1107,6 +1132,24 @@ def set_comfy_theme(palette_id):
         return {"ok": True, "palette_id": palette_id}
     except Exception as e:
         return {"error": str(e)}
+
+
+def _mac_linux_ezi_version():
+    """Return EZI_VERSION from comfyui_desktop.py on the MAC-Linux branch, or ''."""
+    try:
+        import re as _re
+        import urllib.request as _ur
+        req = _ur.Request(
+            "https://raw.githubusercontent.com/Tavris1/ComfyUI-Easy-Install/MAC-Linux/comfyui_desktop.py",
+            headers={"User-Agent": "ComfyUI-EZi"},
+        )
+        with _ur.urlopen(req, timeout=8) as r:
+            head = r.read(8192).decode("utf-8", errors="replace")
+        m = _re.search(r'^EZI_VERSION = "([^"]+)"', head, _re.MULTILINE)
+        return m.group(1) if m else ""
+    except Exception:
+        _log_error('_mac_linux_ezi_version')
+    return ""
 
 
 def _latest_release_tag(repo_owner, repo_name):
@@ -1261,7 +1304,6 @@ INJECTED_JS = """
     if (window._comfyDesktopReady) return;
     window._comfyDesktopReady = true;
 
-    /* Cmd+B / Ctrl+B → open in browser */
     /* ── Restore persisted localStorage (matches Windows v3.18+ behavior) ── */
     try {
         if (window._eziRestoreStorage && typeof window._eziRestoreStorage === 'function') {
@@ -1274,11 +1316,11 @@ INJECTED_JS = """
         try {
             if (!msg || !msg.type) return;
             if (msg.type === 'ezi_storage_save') {
-                pywebview.api._ezi_storage_save(JSON.stringify(msg.ls || {}), msg.settled ? 1 : 0);
+                pywebview.api.ezi_storage_save(JSON.stringify(msg.ls || {}), msg.settled ? 1 : 0);
             } else if (msg.type === 'ezi_comfy_ready') {
-                pywebview.api._ezi_comfy_ready();
+                pywebview.api.ezi_comfy_ready();
             } else if (msg.type === 'ezi_ws_lost') {
-                pywebview.api._ezi_ws_lost();
+                pywebview.api.ezi_ws_lost();
             }
         } catch(e) {}
     };
@@ -1315,12 +1357,15 @@ INJECTED_JS = """
         var ws = protocols ? new _OrigWS(url, protocols) : new _OrigWS(url);
         var _origAEL = ws.addEventListener.bind(ws);
         ws.addEventListener = function(type, fn, opts) {
-            if (type === 'message' && !_eziComfyReady) {
+            if (type === 'message') {
                 return _origAEL('message', function(ev) { _eziCheckMsg(ev.data); return fn.apply(this, arguments); }, opts);
             }
             if (type === 'close' || type === 'error') {
                 return _origAEL(type, function(ev) {
-                    if (_eziComfyReady && window._eziPostToShell) window._eziPostToShell({ type: 'ezi_ws_lost' });
+                    if (_eziComfyReady && window._eziPostToShell) {
+                        _eziComfyReady = false;
+                        window._eziPostToShell({ type: 'ezi_ws_lost' });
+                    }
                     return fn.apply(this, arguments);
                 }, opts);
             }
@@ -1342,7 +1387,7 @@ INJECTED_JS = """
     window.WebSocket.CLOSING = _OrigWS.CLOSING;
     window.WebSocket.CLOSED = _OrigWS.CLOSED;
 
-
+    /* Cmd+B / Ctrl+B → open in browser */
     document.addEventListener('keydown', function(e) {
         if ((e.metaKey || e.ctrlKey) && e.key === 'b') {
             e.preventDefault();
@@ -2743,9 +2788,9 @@ def open_in_webview():
             return json.dumps(check_installer_update())
 
         def _check_ezi_update(self):
-            """Background: poll GitHub releases to see if a newer EZi Desktop is available."""
+            """Background: check the MAC-Linux branch to see if a newer EZi Desktop is available."""
             try:
-                tag = _latest_release_tag("Tavris1", "ComfyUI-Easy-Install").lstrip("v")
+                tag = _mac_linux_ezi_version().lstrip("v")
                 if not tag:
                     return
                 local_parts = [int(x) for x in EZI_VERSION.split(".") if x.isdigit()]
@@ -3203,44 +3248,26 @@ def open_in_webview():
             """Called from JS when the ComfyUI UI becomes visible."""
             self._ui_shown = True
 
-        def _ezi_storage_save(self, ls_json, settled=0):
+        def ezi_storage_save(self, ls_json, settled=0):
             """Called from JS when localStorage is flushed."""
             try:
-                data = json.loads(ls_json or "{}") if isinstance(ls_json, str) else dict(ls_json or {})
-                if not isinstance(data, dict):
-                    return
-                _DRAFT_PREFIXES = (
-                    "Comfy.Workflow.DraftIndex.v2:",
-                    "Comfy.Workflow.Draft.v2:",
-                    "Comfy.Workflow.LastActivePath:",
-                    "Comfy.Workflow.LastOpenPaths:",
-                    "workflow",
-                )
-                data = {k: v for k, v in data.items() if not any(k.startswith(p) for p in _DRAFT_PREFIXES)}
-                if len(json.dumps(data)) > 2 * 1024 * 1024:
-                    return
-                state = load_window_state()
-                state["comfy_storage"] = data
-                with open(WINDOW_STATE_FILE, "w") as f:
-                    json.dump(state, f)
+                save_comfy_storage(json.loads(ls_json or "{}") if isinstance(ls_json, str) else dict(ls_json or {}))
             except Exception:
-                _log_error('_ezi_storage_save')
-            finally:
-                self._storage_ack.set()
+                _log_error('ezi_storage_save')
 
-        def _ezi_comfy_ready(self):
+        def ezi_comfy_ready(self):
             """Called from JS when the first status WebSocket message arrives."""
             try:
                 self._ws_lost.clear()
             except Exception:
-                _log_error('_ezi_comfy_ready')
+                _log_error('ezi_comfy_ready')
 
-        def _ezi_ws_lost(self):
+        def ezi_ws_lost(self):
             """Called from JS when the ComfyUI WebSocket drops unexpectedly."""
             try:
                 self._ws_lost.set()
             except Exception:
-                _log_error('_ezi_ws_lost')
+                _log_error('ezi_ws_lost')
 
         def _restore_storage_from_disk(self):
             """Push persisted localStorage back into the webview after ComfyUI loads."""
@@ -3248,16 +3275,14 @@ def open_in_webview():
             data = state.get("comfy_storage", {})
             if not isinstance(data, dict) or not data:
                 return
-            data_str = json.dumps(data, ensure_ascii=False)
-            data_str = data_str.replace("\\", "\\\\").replace("'", "\'")
             js = (
                 "(function(){"
                 "  try {"
-                "    var data = '" + data_str + "';"
-                "    data = JSON.parse(data);"
-                "    if (data && Object.keys(data).length && !sessionStorage.getItem('__ezi_restored')) {"
-                "      localStorage.clear();"
-                "      Object.keys(data).forEach(function(k){ try { localStorage.setItem(k, data[k]); } catch(e){} });"
+                "    var data = " + json.dumps(data) + ";"
+                "    if (data && !sessionStorage.getItem('__ezi_restored')) {"
+                "      Object.keys(data).forEach(function(k){"
+                "        try { if (localStorage.getItem(k) === null) localStorage.setItem(k, data[k]); } catch(e){}"
+                "      });"
                 "    }"
                 "    sessionStorage.setItem('__ezi_restored', '1');"
                 "  } catch(e) {}"
@@ -3270,29 +3295,19 @@ def open_in_webview():
 
         def _graceful_close(self):
             """Flush storage to disk then destroy the window."""
-            self._flush_state_to_disk(timeout=3.0)
+            self._flush_state_to_disk()
             try:
                 window.destroy()
             except Exception:
                 pass
 
-        def _flush_state_to_disk(self, timeout=3.0):
+        def _flush_state_to_disk(self):
             """Backup ComfyUI localStorage with draft-filtering and 2 MB cap.
 
-            Uses a storage-ack event so callers can wait for the JS side to finish.
             Only localStorage is persisted; sessionStorage is intentionally ignored
             to match the Windows v3.18+ behavior.
             """
-            _DRAFT_PREFIXES = (
-                "Comfy.Workflow.DraftIndex.v2:",
-                "Comfy.Workflow.Draft.v2:",
-                "Comfy.Workflow.LastActivePath:",
-                "Comfy.Workflow.LastOpenPaths:",
-                "workflow",
-            )
-            _MAX_STORAGE_BYTES = 2 * 1024 * 1024
             try:
-                self._storage_ack.clear()
                 result = window.evaluate_js("""
                     (function() {
                         try {
@@ -3308,31 +3323,10 @@ def open_in_webview():
                         } catch(e) { return null; }
                     })();
                 """)
-                if not result:
-                    self._storage_ack.set()
-                    return
-                data = json.loads(result)
-                if not data or (isinstance(data, dict) and not data):
-                    self._storage_ack.set()
-                    return
-                def _should_skip(k):
-                    return any(k.startswith(p) for p in _DRAFT_PREFIXES)
-                if isinstance(data, dict):
-                    data = {k: v for k, v in data.items() if not _should_skip(k)}
-                try:
-                    if len(json.dumps(data)) > _MAX_STORAGE_BYTES:
-                        self._storage_ack.set()
-                        return
-                except Exception:
-                    _log_error('_flush_state_to_disk/oversize')
-                state = load_window_state()
-                state["comfy_storage"] = data
-                with open(WINDOW_STATE_FILE, "w") as f:
-                    json.dump(state, f)
+                if result:
+                    save_comfy_storage(json.loads(result))
             except Exception:
                 _log_error('_flush_state_to_disk')
-            finally:
-                self._storage_ack.set()
 
         def _toast(self, msg):
             """Show a toast message in the webview."""
@@ -3350,7 +3344,6 @@ def open_in_webview():
     api._window = None
     api._confirm_close = False
     api._ui_shown = False
-    api._storage_ack = threading.Event()
     api._ws_lost = threading.Event()
 
     # Restore saved geometry (falls back to defaults if no state saved)
@@ -3481,7 +3474,7 @@ def open_in_webview():
 
     def on_closed():
         """When the window is closed, save state, backup ComfyUI storage, and signal the server process."""
-        api._flush_state_to_disk(timeout=3.0)
+        api._flush_state_to_disk()
         save_window_state(window)
         if COMFYUI_REMOTE:
             return
@@ -3535,7 +3528,15 @@ def open_in_webview():
                             window.load_url(COMFYUI_URL)
                         except Exception:
                             _log_error('port_monitor/reload')
-                elif not gave_up:
+                elif gave_up:
+                    gave_up = False
+                    _was_up = True
+                    print("ComfyUI is back online.")
+                    try:
+                        window.load_url(COMFYUI_URL)
+                    except Exception:
+                        _log_error('port_monitor/reload')
+                else:
                     _was_up = True
                     print("ComfyUI is ready!")
             else:
@@ -3551,7 +3552,7 @@ def open_in_webview():
                             restart_start_time = time.time()
                             gave_up = False
                             print("\nComfyUI is restarting...")
-                            api._flush_state_to_disk(timeout=3.0)
+                            api._flush_state_to_disk()
                         else:
                             _down_since = 0
                 if restart_start_time and not _was_up:

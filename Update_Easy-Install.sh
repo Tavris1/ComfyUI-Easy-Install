@@ -113,10 +113,13 @@ echo -e "${GREEN}::::: EZi version: ${YELLOW}${OLD_VER:-unknown}${GREEN} -> ${YE
 # before an existing file is replaced.
 FILES=()
 while IFS= read -r -d '' file; do
-    FILES+=("${file#"$SRC"/}")
+    case "$file" in
+        ComfyUI/user/default/workflows/*) [ -e "$INSTALL_DIR/$file" ] && continue ;;
+    esac
+    FILES+=("$file")
 done < <(cd "$SRC" && for p in "${UPDATE_PATHS[@]}"; do
     [ -e "$p" ] && find "$p" -type f ! -name '*.bat' ! -name '.DS_Store' -print0
-done | sed -z "s|^|$SRC/|")
+done)
 
 [ ${#FILES[@]} -gt 0 ] || fail "No helper files found in the update."
 

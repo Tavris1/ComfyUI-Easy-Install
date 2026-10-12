@@ -481,13 +481,12 @@ EOL
             nvidia_smi="/usr/local/bin/nvidia-smi"
         fi
         if [ -z "$nvidia_smi" ]; then
-            echo -e "${RED}NVIDIA driver not detected (nvidia-smi not found).${RESET}"
-            echo -e "${YELLOW}Install an NVIDIA driver first, or use a CPU-only environment.${RESET}"
+            echo -e "${YELLOW}Warning: NVIDIA driver not detected (nvidia-smi not found).${RESET}"
             return 1
         fi
         driver_version="$($nvidia_smi --query-gpu=driver_version --format=csv,noheader 2>/dev/null | head -n1 | tr -d '[:space:]')"
         if [ -z "$driver_version" ]; then
-            echo -e "${RED}NVIDIA driver detected but driver version could not be read.${RESET}"
+            echo -e "${YELLOW}Warning: NVIDIA driver detected but driver version could not be read.${RESET}"
             echo -e "${YELLOW}Make sure the GPU is visible and the driver is loaded.${RESET}"
             return 1
         fi
@@ -505,7 +504,7 @@ EOL
     else
         echo -e "${YELLOW}Installing PyTorch 2.11.0 + CUDA 13.0...${RESET}"
         if ! check_nvidia_driver; then
-            exit 1
+            echo -e "${YELLOW}Continuing with the CUDA build of PyTorch. ComfyUI will run on CPU until an NVIDIA driver is installed.${RESET}"
         fi
         # Retry up to 3 times — nvidia packages from pypi.nvidia.com can timeout
         TORCH_INSTALL_RETRIES=3
