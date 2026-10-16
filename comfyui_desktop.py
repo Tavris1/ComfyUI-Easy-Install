@@ -2230,7 +2230,8 @@ INJECTED_JS = """
                 var currentFe  = sysInfo.frontend || '';
 
                 pywebview.api.get_versions().then(function(raw) {
-                    var tags = JSON.parse(raw);
+                    var d = JSON.parse(raw);
+                    var tags = d.versions || [];
                     var sel = document.getElementById('_cdp_ver');
                     if (!tags.length) { sel.innerHTML = '<option value="">No ComfyUI tags found</option>'; return; }
                     sel.innerHTML = tags.map(function(t) {
@@ -2537,6 +2538,117 @@ INJECTED_JS = """
         document.addEventListener('mousedown', function(e){ if (!pop.contains(e.target)) hide(); });
         window.addEventListener('scroll', hide, {passive:true});
         window.addEventListener('resize', hide);
+    })();
+
+    /* ── EZi top toolbar (Folders / Easy menu) ── */
+    (function() {
+        if (document.getElementById('_ezi_topbar')) return;
+        function btnStyle(bg) {
+            return 'background:' + bg + ';color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:5px;padding:4px 10px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:opacity .15s;';
+        }
+        function menuStyle() {
+            return 'display:none;position:absolute;top:100%;right:0;margin-top:4px;min-width:150px;background:#1e1e28;border:1px solid #444;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.55);overflow:hidden;z-index:100000;';
+        }
+        function itemStyle() {
+            return 'display:block;width:100%;text-align:left;padding:7px 12px;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,.08);color:#e0e0e0;font-family:inherit;font-size:12px;cursor:pointer;transition:background .15s;';
+        }
+        function sepStyle() {
+            return 'height:1px;background:rgba(255,255,255,.1);margin:4px 0;';
+        }
+
+        var bar = document.createElement('div');
+        bar.id = '_ezi_topbar';
+        bar.style.cssText = 'position:fixed;top:0;right:0;z-index:99999;display:flex;gap:6px;padding:6px 10px;';
+
+        // Folders dropdown
+        var folWrap = document.createElement('div');
+        folWrap.style.cssText = 'position:relative;';
+        var folBtn = document.createElement('button');
+        folBtn.innerHTML = '\uD83D\uDCC2 Folders &#9662;';
+        folBtn.style.cssText = btnStyle('#2a3a5a');
+        var folMenu = document.createElement('div');
+        folMenu.style.cssText = menuStyle();
+        folMenu.innerHTML =
+            '<button style="' + itemStyle() + '" data-act="folder" data-target="output">\uD83D\uDCC2 Output</button>' +
+            '<button style="' + itemStyle() + '" data-act="folder" data-target="input">\uD83D\uDCC2 Input</button>' +
+            '<button style="' + itemStyle() + '" data-act="subfolder" data-target="workflows">\uD83D\uDCC2 Workflows</button>' +
+            '<button style="' + itemStyle() + '" data-act="folder" data-target="models">\uD83D\uDCC2 Models</button>' +
+            '<button style="' + itemStyle() + '" data-act="folder" data-target="comfyui">\uD83D\uDCC2 ComfyUI</button>';
+        folWrap.appendChild(folBtn);
+        folWrap.appendChild(folMenu);
+
+        // Easy menu dropdown
+        var easyWrap = document.createElement('div');
+        easyWrap.style.cssText = 'position:relative;';
+        var easyBtn = document.createElement('button');
+        easyBtn.innerHTML = '&#9776; Easy';
+        easyBtn.style.cssText = btnStyle('#3a2a5a');
+        var easyMenu = document.createElement('div');
+        easyMenu.style.cssText = menuStyle();
+        easyMenu.innerHTML =
+            '<button style="' + itemStyle() + '" data-act="save_log">\uD83D\uDCF0 Save log as .txt</button>' +
+            '<div style="' + sepStyle() + '"></div>' +
+            '<button style="' + itemStyle() + '" data-act="sel_copy">Copy selection</button>' +
+            '<button style="' + itemStyle() + '" data-act="sel_save">Save selection</button>' +
+            '<button style="' + itemStyle() + '" data-act="sel_google">Google selection</button>' +
+            '<button style="' + itemStyle() + '" data-act="sel_chatgpt">Ask ChatGPT</button>' +
+            '<button style="' + itemStyle() + '" data-act="sel_claude">Ask Claude</button>';
+        easyWrap.appendChild(easyBtn);
+        easyWrap.appendChild(easyMenu);
+
+        bar.appendChild(folWrap);
+        bar.appendChild(easyWrap);
+        document.body.appendChild(bar);
+
+        function toggleMenu(menu, other) {
+            var showing = menu.style.display === 'block';
+            if (other) other.style.display = 'none';
+            menu.style.display = showing ? 'none' : 'block';
+        }
+        function hideAll() {
+            folMenu.style.display = 'none';
+            easyMenu.style.display = 'none';
+        }
+
+        folBtn.onclick = function(e) { e.stopPropagation(); toggleMenu(folMenu, easyMenu); };
+        easyBtn.onclick = function(e) { e.stopPropagation(); toggleMenu(easyMenu, folMenu); };
+        document.addEventListener('click', function(e) {
+            if (!folWrap.contains(e.target) && !easyWrap.contains(e.target)) hideAll();
+        });
+
+        folMenu.addEventListener('click', function(e) {
+            var t = e.target;
+            if (t.tagName !== 'BUTTON') return;
+            var act = t.getAttribute('data-act');
+            var target = t.getAttribute('data-target');
+            if (act === 'folder') pywebview.api.open_folder(target);
+            else if (act === 'subfolder') pywebview.api.open_sub_folder(target);
+            hideAll();
+        });
+
+        function getSel() { return window.getSelection().toString().trim(); }
+        easyMenu.addEventListener('click', function(e) {
+            var t = e.target;
+            if (t.tagName !== 'BUTTON') return;
+            var act = t.getAttribute('data-act');
+            var sel = getSel();
+            if (act === 'save_log') {
+                pywebview.api.save_server_log();
+            } else if (!sel) {
+                alert('Select some text first.');
+            } else if (act === 'sel_copy') {
+                try { pywebview.api.write_clipboard(sel); } catch(err) {}
+            } else if (act === 'sel_save') {
+                try { pywebview.api.save_text(sel); } catch(err) {}
+            } else if (act === 'sel_google') {
+                try { pywebview.api.open_url('https://www.google.com/search?q=' + encodeURIComponent(sel)); } catch(err) {}
+            } else if (act === 'sel_chatgpt') {
+                try { pywebview.api.open_url('https://chatgpt.com/?q=' + encodeURIComponent(sel)); } catch(err) {}
+            } else if (act === 'sel_claude') {
+                try { pywebview.api.open_url('https://claude.ai/new?q=' + encodeURIComponent(sel)); } catch(err) {}
+            }
+            hideAll();
+        });
     })();
 })();
 """
