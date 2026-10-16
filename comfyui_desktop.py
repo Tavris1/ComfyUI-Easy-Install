@@ -1621,42 +1621,53 @@ INJECTED_JS = """
             function box(title, body) { return '<div style="border:1px solid var(--accent,#5294e2);border-radius:6px;overflow:hidden;margin-bottom:10px"><div style="'+BOX_HD+'">'+title+'</div><div style="padding:8px 10px">'+body+'</div></div>'; }
             overlay.innerHTML =
                 '<style>' +
-                '#_cdp_inner._ezi-theme-dark{--bg:#0c0e12;--border:#30363d;--fg:#ccc;--muted:#8b949e;--input-bg:#0d1117;--accent:#388bfd;--accent-bg:#0d419d}' +
-                '#_cdp_inner._ezi-theme-pixaroma{--bg:#111;--border:#2e2e2e;--fg:#ccc;--muted:#888;--input-bg:#0d0d0d;--accent:#e8530a;--accent-bg:#6e2200}' +
-                '#_cdp_inner._ezi-theme-light{--bg:#f0f2f5;--border:#c8cdd5;--fg:#24292f;--muted:#57606a;--input-bg:#fff;--accent:#0969da;--accent-bg:#d4e8ff}' +
-                '._cdp_tab{padding:4px 8px;font:bold 11px/1.4 inherit;border:1px solid var(--accent,#5294e2);border-radius:4px;background:none;color:var(--accent,#5294e2);cursor:pointer;transition:all .15s;white-space:nowrap}' +
-                '._cdp_tab:hover,._cdp_tab.on{background:var(--accent-bg,#0d419d);color:#fff}' +
-                '#_cdp_t_pxr{--px-coral:#f66744;color:#f5f3f1}' +
-                '#_cdp_t_pxr *{box-sizing:border-box}' +
-                '#_cdp_t_pxr .px-card{position:relative;overflow:hidden;margin-top:10px;padding:18px 24px;border:1px solid #574039;border-radius:16px;background:radial-gradient(ellipse at 100% 0%,#f667441c,transparent 65%),#1d1d1d}' +
-                '#_cdp_t_pxr .px-hero-copy{position:relative;z-index:1;max-width:calc(100% - 190px)}' +
-                '#_cdp_t_pxr .px-eyebrow{display:flex;align-items:center;gap:8px;color:#ff967c;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}' +
-                '#_cdp_t_pxr .px-eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--px-coral)}' +
-                '#_cdp_t_pxr .px-lead{margin:8px 0;max-width:390px;font-size:clamp(24px,3.6cqi,26px);font-weight:700;letter-spacing:-.035em;line-height:1.15;color:#fff5f1}' +
-                '#_cdp_t_pxr .px-sub{max-width:360px;color:#bdb6b2;font-size:14px;line-height:1.55}' +
-                '#_cdp_t_pxr .px-actions{margin-top:14px}' +
-                '#_cdp_t_pxr .px-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:44px;padding:0 18px;border:1px solid transparent;border-radius:9px;color:#fff;font-size:13px;font-weight:650;cursor:pointer;transition:background .16s,border-color .16s,transform .16s;line-height:1.3;background:var(--px-coral)}' +
-                '#_cdp_t_pxr .px-btn:hover{background:#e95735;transform:translateY(-1px)}' +
-                '#_cdp_t_pxr .px-btn svg{flex-shrink:0}' +
-                '#_cdp_t_pxr .px-ext{opacity:.7;flex-shrink:0;margin-left:8px}' +
-                '#_cdp_t_pxr .px-cadence{display:flex;align-items:center;gap:7px;margin-top:10px;color:#aaa19c;font-size:12px}' +
-                '#_cdp_t_pxr .px-cadence svg{color:#d78670}' +
-                '#_cdp_t_pxr .px-flow-art{position:absolute;right:16px;top:50%;width:200px;height:180px;transform:translateY(-50%);opacity:.85;pointer-events:none}' +
-                '#_cdp_t_pxr .px-community{display:flex;align-items:center;gap:16px;margin-top:12px;padding:16px;border:1px solid #3b3633;border-radius:12px;background:#2a2a2a}' +
-                '#_cdp_t_pxr .px-community-icon{display:grid;place-items:center;flex-shrink:0;width:44px;height:44px;border-radius:12px;background:#f6674414;color:#ff967c}' +
-                '#_cdp_t_pxr .px-community-copy{flex:1;min-width:0}' +
-                '#_cdp_t_pxr .px-community-title{font-size:15px;font-weight:650;line-height:1.4}' +
-                '#_cdp_t_pxr .px-community-sub{margin-top:3px;color:#bdb6b2;font-size:12px;line-height:1.5}' +
-                '#_cdp_t_pxr .px-discord{background:#34302e;border-color:#6b4a40;color:#ffb5a1;white-space:nowrap}' +
-                '#_cdp_t_pxr .px-discord:hover{background:#40332e;border-color:var(--px-coral)}' +
-                '#_cdp_t_pxr .px-badge-link{display:inline-flex;margin-top:10px;border-radius:4px}' +
-                '#_cdp_t_pxr .px-badge{display:block;height:20px;max-width:100%;border-radius:4px}' +
-                '#_cdp_t_pxr .px-resources{margin-top:16px}' +
-                '#_cdp_t_pxr .px-resource-head{margin:0 0 12px;color:#bdb6b2;font-size:11px;font-weight:650;letter-spacing:.12em;text-transform:uppercase}' +
-                '#_cdp_t_pxr .px-resource-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}' +
-                '#_cdp_t_pxr .px-link{display:flex;align-items:center;gap:12px;width:100%;min-width:0;padding:14px 16px;text-align:left;background:#1d1d1d;border:1px solid #3b3633;border-radius:12px;color:#f5f3f1;font-size:14px;cursor:pointer;transition:border-color .16s,background .16s}' +
-                '#_cdp_t_pxr .px-link:hover{background:#2a2522;border-color:#875344}' +
-                '#_cdp_t_pxr .px-link-icon{display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;color:#ff967c;background:#f6674410;border-radius:9px}' +
+                '#_cdp_inner._ezi-theme-dark{--bg:#0c0e12;--border:#30363d;--fg:#ccc;--muted:#8b949e;--input-bg:#0d1117;--accent:#388bfd;--accent-hover:#58a6ff;--accent-bg:#1f6feb;--accent-bg-hover:#388bfd;--text-on-accent:#fff}' +
+                '#_cdp_inner._ezi-theme-light{--bg:#f6f8fa;--border:#d0d7de;--fg:#24292f;--muted:#57606a;--input-bg:#fff;--accent:#0969da;--accent-hover:#218bff;--accent-bg:#daf0ff;--accent-bg-hover:#b6e3ff;--text-on-accent:#fff}' +
+                '#_cdp_inner._ezi-theme-pixaroma{--bg:#1a1a1a;--border:#444;--fg:#e0e0e0;--muted:#888;--input-bg:#111;--accent:#e8530a;--accent-hover:#ff7040;--accent-bg:#6e2200;--accent-bg-hover:#8a3000;--text-on-accent:#fff}' +
+                '#_cdp_inner{--bg:#161616;--border:#2a2a2a;--fg:#e0e0e0;--muted:#888;--input-bg:#111;--accent:#e8530a;--accent-hover:#ff7040;--accent-bg:#6e2200;--accent-bg-hover:#8a3000;--text-on-accent:#fff}' +
+                '#_cdp_overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99998;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center}' +
+                '#_cdp_inner{background:var(--bg,#161616);border:1px solid var(--border,#2a2a2a);border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.7);width:min(920px,94vw);height:min(680px,88vh);display:flex;overflow:hidden;color:var(--fg,#e0e0e0);font-family:system-ui,-apple-system,sans-serif}' +
+                '#_cdp_sidebar{width:190px;background:#111;border-right:1px solid var(--border,#2a2a2a);display:flex;flex-direction:column;flex-shrink:0}' +
+                '#_cdp_sidebar .search{padding:10px 10px 8px;border-bottom:1px solid var(--border,#2a2a2a)}' +
+                '#_cdp_sidebar .search input{width:100%;padding:7px 10px;background:var(--input-bg,#1e1e28);border:1px solid var(--border,#333);border-radius:6px;color:var(--fg,#e0e0e0);font-size:12px;outline:none}' +
+                '#_cdp_nav_list{flex:1;overflow-y:auto;padding:6px 4px}' +
+                '._cdp_nav{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;margin-bottom:2px;background:none;border:none;border-radius:6px;color:#ccc;font-size:12px;font-weight:500;cursor:pointer;text-align:left;transition:background .15s,color .15s}' +
+                '._cdp_nav:hover{background:#222;color:#fff}' +
+                '._cdp_nav.on{background:#2a4a7a;color:#fff}' +
+                '#_cdp_nav_bottom{border-top:1px solid var(--border,#2a2a2a);padding:6px 4px}' +
+                '._cdp_nav_bottom .label{padding:6px 10px 4px;font-size:10px;color:#666;text-transform:uppercase;letter-spacing:.05em}' +
+                '#_cdp_content{flex:1;overflow-y:auto;padding:16px 20px;align-items:flex-start}' +
+                '#_cdp_content .title{font-size:18px;font-weight:600;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border,#2a2a2a)}' +
+                '#_cdp_content .item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border,#2a2a2a)}' +
+                '#_cdp_content .item:last-child{border-bottom:none}' +
+                '#_cdp_content .item .name{color:#4a9eff;font-size:13px;font-weight:500}' +
+                '#_cdp_content .item .run{padding:4px 14px;background:#2a4a7a;color:#fff;border:none;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer}' +
+                '#_cdp_content .item .run:hover{background:#3a5a8a}' +
+                '#_cdp_footer{padding:10px 16px;border-top:1px solid var(--border,#2a2a2a);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}' +
+                '#_cdp_footer button{padding:6px 16px;background:#2a2a2a;color:#ccc;border:1px solid #444;border-radius:5px;font-size:12px;cursor:pointer}' +
+                '#_cdp_footer button:hover{background:#333;color:#fff}' +
+                '#_cdp_msg{font-size:12px;color:var(--muted,#888);min-height:16px}' +
+                '._cdp_tab{display:none}' +
+                '#_cdp_t_pxr .px-card{background:#1d1d1d;border:1px solid #2a2a2a;border-radius:12px;padding:28px 30px;display:flex;gap:24px;align-items:flex-start}' +
+                '#_cdp_t_pxr .px-card .px-hero-copy{flex:1;min-width:0}' +
+                '#_cdp_t_pxr .px-eyebrow{font-size:12px;color:#f66744;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}' +
+                '#_cdp_t_pxr .px-lead{font-size:24px;font-weight:700;line-height:1.2;margin:0 0 10px}' +
+                '#_cdp_t_pxr .px-sub{font-size:14px;color:#bdb6b2;line-height:1.5;margin-bottom:16px}' +
+                '#_cdp_t_pxr .px-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#f66744;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer}' +
+                '#_cdp_t_pxr .px-btn:hover{background:#ff7040}' +
+                '#_cdp_t_pxr .px-cadence{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:12px;color:#bdb6b2}' +
+                '#_cdp_t_pxr .px-flow-art{width:200px;flex-shrink:0}' +
+                '#_cdp_t_pxr .px-community{background:#1d1d1d;border:1px solid #2a2a2a;border-radius:12px;padding:20px;margin-top:16px;display:flex;align-items:center;gap:16px}' +
+                '#_cdp_t_pxr .px-community-icon{width:40px;height:40px;background:#2a2a2a;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#f66744}' +
+                '#_cdp_t_pxr .px-community-copy{flex:1}' +
+                '#_cdp_t_pxr .px-community-title{font-size:16px;font-weight:600;margin-bottom:2px}' +
+                '#_cdp_t_pxr .px-community-sub{font-size:13px;color:#bdb6b2}' +
+                '#_cdp_t_pxr .px-badge-link{margin-left:auto}' +
+                '#_cdp_t_pxr .px-badge{height:32px;border-radius:6px}' +
+                '#_cdp_t_pxr .px-resource-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}' +
+                '#_cdp_t_pxr .px-link{display:flex;align-items:center;gap:12px;background:#1d1d1d;border:1px solid #2a2a2a;border-radius:10px;padding:14px;text-decoration:none;color:inherit;transition:border-color .15s}' +
+                '#_cdp_t_pxr .px-link:hover{border-color:#f66744}' +
+                '#_cdp_t_pxr .px-link-icon{width:36px;height:36px;background:#2a2a2a;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}' +
                 '#_cdp_t_pxr .px-link-copy{flex:1;min-width:0}' +
                 '#_cdp_t_pxr .px-link-name{display:block;font-size:14px;font-weight:650}' +
                 '#_cdp_t_pxr .px-link-desc{display:block;margin-top:3px;color:#bdb6b2;font-size:12px;line-height:1.4}' +
@@ -1666,26 +1677,25 @@ INJECTED_JS = """
                 '@media (max-width:620px){#_cdp_t_pxr .px-flow-art{display:none}#_cdp_t_pxr .px-hero-copy{max-width:100%}#_cdp_t_pxr .px-community{flex-wrap:wrap}#_cdp_t_pxr .px-community .px-discord{margin-left:60px}}' +
                 '@media (max-width:450px){#_cdp_t_pxr .px-card{padding:22px}#_cdp_t_pxr .px-resource-grid{grid-template-columns:1fr}#_cdp_t_pxr .px-community{padding:16px;gap:12px}#_cdp_t_pxr .px-community .px-discord{margin-left:0;width:100%}}' +
                 '</style>' +
-                '<div id="_cdp_inner" class="_ezi-theme-pixaroma" style="background:var(--bg,#1e1e28);border:1px solid var(--border,#444);border-radius:14px;' +
-                'min-width:500px;max-width:600px;color:var(--fg,#e0e0e0);max-height:88vh;overflow-y:auto">' +
-                /* header */
-                '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px 6px;flex-shrink:0">' +
-                '<span style="font-size:16px;font-weight:600">\u2699 EZi Desktop</span>' +
-                '<span style="font-size:11px;color:var(--muted,#888);margin-left:8px">v' + EZI_VERSION + '</span>' +
-                '<button id="_cdp_close" style="background:none;border:none;color:var(--muted,#888);font-size:20px;cursor:pointer;line-height:1">\u2715</button>' +
+                '<div id="_cdp_inner">' +
+                '<div id="_cdp_sidebar">' +
+                '<div class="search"><input type="text" placeholder="Search settings\u2026"></div>' +
+                '<div id="_cdp_nav_list">' +
+                '<button class="_cdp_nav" data-tab="sys">📌 System Info</button>' +
+                '<button class="_cdp_nav" data-tab="add">📦 Add-ons</button>' +
+                '<button class="_cdp_nav" data-tab="torch">⚡ Torch Pack</button>' +
+                '<button class="_cdp_nav" data-tab="tls">🛠 Tools</button>' +
+                '<button class="_cdp_nav" data-tab="app">🎨 Appearance</button>' +
+                '<button class="_cdp_nav" data-tab="adv">⚙️ Advanced</button>' +
+                '<button class="_cdp_nav" data-tab="log">📋 Logs</button>' +
                 '</div>' +
-                /* tab bar */
-                '<div style="padding:6px 20px 0;border-bottom:1px solid var(--border,#444);flex-shrink:0">' +
-                '<div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;padding-bottom:8px">' +
-                '<button class="_cdp_tab" data-tab="pxr">Pixaroma</button>' +
-                '<button class="_cdp_tab" data-tab="sys">System Info</button>' +
-                '<button class="_cdp_tab" data-tab="log">Logs</button>' +
-                '<button class="_cdp_tab" data-tab="add">Add-ons</button>' +
-                '<button class="_cdp_tab" data-tab="tls">Tools</button>' +
-                '<button class="_cdp_tab" data-tab="app">Appearance</button>' +
-                '<button class="_cdp_tab" data-tab="adv">Advanced</button>' +
-                '<button onclick="pywebview.api.open_url(\\'https://github.com/Tavris1/ComfyUI-Easy-Install\\')" style="margin-left:auto;padding:4px 12px;font:bold 11px/1.4 inherit;border:1px solid var(--accent,#5294e2);border-radius:4px;background:none;color:var(--accent,#5294e2);cursor:pointer">\uD83C\uDFE0 Home page</button>' +
-                '</div></div>' +
+                '<div id="_cdp_nav_bottom">' +
+                '<div class="label">About</div>' +
+                '<button class="_cdp_nav" data-tab="pxr">🌍 Pixaroma Workflows</button>' +
+                '<button class="_cdp_nav" data-tab="about">ℹ️ About EZi</button>' +
+                '</div>' +
+                '</div>' +
+                '<div style="flex:1;display:flex;flex-direction:column;overflow:hidden">' +
                 /* scrollable content */
                 '<div id="_cdp_content" style="padding:16px 20px">' +
                 /* TAB: Pixaroma */
@@ -1698,7 +1708,7 @@ INJECTED_JS = """
                 '<div class="px-actions"><button class="px-btn" onclick="pywebview.api.open_url(\\'https://workflows.pixaroma.com/\\')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><path d="M10 6.5h4a3.5 3.5 0 0 1 3.5 3.5v4"/></svg><span>ComfyUI Workflows</span><svg class="px-ext" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></button></div>' +
                 '<div class="px-cadence"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>A new episode lands almost every week.</div>' +
                 '</div>' +
-                '<svg class="px-flow-art" viewBox="0 0 200 180" fill="none" aria-hidden="true">' +
+                '<svg class="px-flow-art" viewBox="0 0 200 180" fill="none" aria-hidden="true" style="flex-shrink:0">' +
                 '<path d="M56 40h34q14 0 14 14v63h27M56 140h20q14 0 14-14V75q0-14 14-14h27" stroke="#f66744" stroke-width="1.5" opacity=".45"/>' +
                 '<rect x="4" y="16" width="52" height="48" rx="9" fill="#2a2a2a" stroke="#705044"/><rect x="4" y="16" width="52" height="12" rx="6" fill="#f66744" opacity=".45"/>' +
                 '<path d="M15 39h29M15 47h18" stroke="#84716a" stroke-width="3" stroke-linecap="round"/>' +
@@ -1764,12 +1774,20 @@ INJECTED_JS = """
                     '<select id="_cdp_fe_ver" style="'+S+'"><option value="">loading\u2026</option></select>' +
                     '<button id="_cdp_fe_switch" style="'+btnStyle('#3a2a5a')+'">Switch</button></div>') +
                 box('Updates', '<button id="_cdp_inst_upd" style="'+btnStyle('#1a3a3a')+'">Check installer update</button>') +
-                box('\uD83D\uDD25 Torch Pack Installer',
+                box('🔥 Torch Pack Installer',
                     '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">' +
                     '<select id="_cdp_tp_sel" style="'+S+';flex:1"><option value="">Loading\u2026</option></select>' +
                     '<button id="_cdp_tp_run" style="'+btnStyle('#3a5a2a')+'">Install</button>' +
                     '<button id="_cdp_tp_cancel" style="'+btnStyle('#5a2a2a')+'">Cancel</button></div>' +
                     '<pre id="_cdp_tp_log" style="margin:0;background:var(--input-bg,#0d0d0d);border:1px solid var(--border,#444);border-radius:5px;padding:8px;font-size:11px;color:#c8c8c8;height:180px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;font-family:monospace">Select a script and click Install\u2026</pre>') +
+                box('Add-on Scripts', '<div id="_cdp_add_list" style="min-height:40px"><div style="color:var(--muted,#888);padding:10px 0">Loading\u2026</div></div>') +
+                '</div>' +
+                /* TAB: Torch Pack */
+                '<div id="_cdp_t_torch">' +
+                '<div class="title">Torch Pack</div>' +
+                '<div id="_cdp_tp_list" style="min-height:100px">' +
+                '<div style="color:var(--muted,#888);padding:10px 0">Loading…</div>' +
+                '</div>' +
                 '</div>' +
                 /* TAB: Tools */
                 '<div id="_cdp_t_tls">' +
@@ -1778,11 +1796,11 @@ INJECTED_JS = """
                     '<code id="_cdp_url" style="flex:1;background:var(--input-bg,#111);border:1px solid var(--border,#333);border-radius:5px;padding:5px 10px;font-size:12px;color:#7ec8e3;cursor:pointer;overflow:hidden;white-space:nowrap" title="Click to copy"></code>' +
                     '<button id="_cdp_browser" style="'+btnStyle('#2a3a5a')+'">Open in browser</button></div>') +
                 box('Open Folder', '<div style="display:flex;gap:6px;flex-wrap:wrap">' +
-                    '<button id="_cdp_fol_out"       style="'+btnStyle('#2a3a5a')+'">\uD83D\uDCC2 Output</button>' +
-                    '<button id="_cdp_fol_in"        style="'+btnStyle('#2a3a5a')+'">\uD83D\uDCC2 Input</button>' +
-                    '<button id="_cdp_fol_workflows" style="'+btnStyle('#2a3a5a')+'">\uD83D\uDCC2 Workflows</button>' +
-                    '<button id="_cdp_fol_models"    style="'+btnStyle('#2a3a5a')+'">\uD83D\uDCC2 Models</button>' +
-                    '<button id="_cdp_fol_root"      style="'+btnStyle('#2a3a5a')+'">\uD83D\uDCC2 ComfyUI</button></div>') +
+                    '<button id="_cdp_fol_out"       style="'+btnStyle('#2a3a5a')+'">📂 Output</button>' +
+                    '<button id="_cdp_fol_in"        style="'+btnStyle('#2a3a5a')+'">📂 Input</button>' +
+                    '<button id="_cdp_fol_workflows" style="'+btnStyle('#2a3a5a')+'">📂 Workflows</button>' +
+                    '<button id="_cdp_fol_models"    style="'+btnStyle('#2a3a5a')+'">📂 Models</button>' +
+                    '<button id="_cdp_fol_root"      style="'+btnStyle('#2a3a5a')+'">📂 ComfyUI</button></div>') +
                 box('Launch Args (applied on next start)',
                     '<div style="display:flex;gap:8px"><input id="_cdp_args" type="text" placeholder="e.g. --lowvram --cpu" style="'+S+';outline:none">' +
                     '<button id="_cdp_args_save" style="'+btnStyle('#2d5a27')+';padding:5px 12px">Save</button></div>') +
@@ -1825,27 +1843,60 @@ INJECTED_JS = """
                     '<div id="_cdp_pins" style="margin-bottom:6px"></div>' +
                     '<div style="display:flex;gap:8px"><input id="_cdp_pin_inp" type="text" placeholder="e.g. numpy==1.26.4" style="'+S+';outline:none">' +
                     '<button id="_cdp_pin_add" style="'+btnStyle('#2d5a27')+';padding:5px 12px">Add</button></div>') +
+                box('Fixes & Utilities',
+                    '<div id="_cdp_fixes_list" style="min-height:40px"><div style="color:var(--muted,#888);padding:10px 0">Loading…</div></div>') +
+                '</div>' +
+                /* TAB: About EZi */
+                '<div id="_cdp_t_about">' +
+                '<div class="title">About EZi</div>' +
+                '<div style="background:#1d1d1d;border:1px solid #2a2a2a;border-radius:12px;padding:24px;text-align:center">' +
+                '<div style="font-size:28px;margin-bottom:8px">⚡ EZi Desktop</div>' +
+                '<div style="color:#888;margin-bottom:16px">COMFYUI EASY INSTALL</div>' +
+                '<div style="font-size:20px;font-weight:600;margin-bottom:6px">Portable ComfyUI.</div>' +
+                '<div style="color:#aaa;margin-bottom:16px">A dashboard for your packages, environments, and configuration.</div>' +
+                '<div style="display:flex;gap:10px;justify-content:center;margin-bottom:16px">' +
+                '<button onclick="pywebview.api.open_url(\\'https://github.com/Tavris1/ComfyUI-Easy-Install\\')" style="padding:8px 16px;background:#2a2a2a;color:#ccc;border:1px solid #444;border-radius:6px;cursor:pointer">Packages</button>' +
+                '<button onclick="pywebview.api.open_url(\\'https://github.com/Tavris1/ComfyUI-Easy-Install\\')" style="padding:8px 16px;background:#2a2a2a;color:#ccc;border:1px solid #444;border-radius:6px;cursor:pointer">Environments</button>' +
+                '<button onclick="pywebview.api.open_url(\\'https://github.com/Tavris1/ComfyUI-Easy-Install\\')" style="padding:8px 16px;background:#2a2a2a;color:#ccc;border:1px solid #444;border-radius:6px;cursor:pointer">Configuration</button>' +
+                '</div>' +
+                '<div style="color:#888;font-size:13px">Made with love by <b>Ivo</b>, a.k.a. Tavris1</div>' +
+                '</div>' +
+                '<div style="margin-top:16px;display:flex;gap:10px">' +
+                '<button onclick="pywebview.api.open_url(\\'https://github.com/Tavris1/ComfyUI-Easy-Install\\')" style="flex:1;padding:12px;background:#1d1d1d;border:1px solid #2a2a2a;border-radius:8px;color:#4a9eff;cursor:pointer;text-align:left">🏠 Home Page<br><span style="color:#888;font-size:12px">Explore the project on GitHub</span></button>' +
+                '<button onclick="pywebview.api.open_url(\\'https://github.com/Tavris1/ComfyUI-Easy-Install/releases\\')" style="flex:1;padding:12px;background:#1d1d1d;border:1px solid #2a2a2a;border-radius:8px;color:#4a9eff;cursor:pointer;text-align:left">📥 See what\\'s new<br><span style="color:#888;font-size:12px">Latest release &amp; improvements</span></button>' +
+                '</div>' +
+                '<div style="margin-top:20px;text-align:center">' +
+                '<div style="color:#f00;font-size:18px">♥ Like Easy Install?</div>' +
+                '<div style="color:#888;margin:6px 0 12px">Support Ivo and the future of EZi.</div>' +
+                '<div style="display:flex;gap:10px;justify-content:center">' +
+                '<button onclick="pywebview.api.open_url(\\'https://paypal.me/tavris1\\')" style="padding:10px 20px;background:#2a2a2a;color:#ccc;border:1px solid #444;border-radius:8px;cursor:pointer">PayPal</button>' +
+                '<button onclick="pywebview.api.open_url(\\'https://buymeacoffee.com/tavris1\\')" style="padding:10px 20px;background:#2a2a2a;color:#ccc;border:1px solid #444;border-radius:8px;cursor:pointer">Buy Me a Coffee</button>' +
+                '<button onclick="pywebview.api.open_url(\\'https://github.com/sponsors/Tavris1\\')" style="padding:10px 20px;background:#2a2a2a;color:#ccc;border:1px solid #444;border-radius:8px;cursor:pointer">♥ Sponsor</button>' +
+                '</div>' +
+                '</div>' +
                 '</div>' +
                 '</div>' +
                 /* footer */
-                '<div style="padding:6px 20px 12px;flex-shrink:0"><div id="_cdp_msg" style="font-size:12px;color:var(--muted,#888);min-height:16px"></div></div>' +
+                '<div id="_cdp_footer"><div id="_cdp_msg"></div><button id="_cdp_close">Close</button></div>' +
+                '</div>' +
                 '</div>';
 
             document.body.appendChild(overlay);
             document.getElementById('_cdp_close').onclick = removePanel;
 
-            /* ── Tab switching ── */
+            /* ── Sidebar tab switching ── */
             (function() {
-                var _tabs = ['pxr','sys','log','add','tls','app','adv'];
+                var _tabs = ['sys','add','torch','tls','app','adv','log','pxr','about'];
                 function showTab(name) {
                     _tabs.forEach(function(t) {
-                        document.getElementById('_cdp_t_' + t).style.display = (t === name) ? 'block' : 'none';
-                        var b = document.querySelector('._cdp_tab[data-tab="' + t + '"]');
+                        var el = document.getElementById('_cdp_t_' + t);
+                        if (el) el.style.display = (t === name) ? 'block' : 'none';
+                        var b = document.querySelector('._cdp_nav[data-tab="' + t + '"]');
                         if (b) b.classList.toggle('on', t === name);
                     });
                     try { localStorage.setItem('_cdp_tab', name); } catch(e) {}
                 }
-                document.querySelectorAll('._cdp_tab').forEach(function(b) {
+                document.querySelectorAll('._cdp_nav').forEach(function(b) {
                     b.addEventListener('click', function() { showTab(this.getAttribute('data-tab')); });
                 });
                 var st = 'sys';
@@ -2257,6 +2308,51 @@ INJECTED_JS = """
                         if (badge) { badge.textContent = 'NIGHTLY'; badge.style.color = '#fc8'; }
                     }
                 });
+
+            /* ── Add-on lists (Torch Pack / Tools / Fixes) ── */
+            pywebview.api.list_addons().then(function(raw) {
+                try {
+                    var d = JSON.parse(raw);
+                    if (d.error) { console.error('list_addons error:', d.error); return; }
+                    function renderList(elId, items) {
+                        var el = document.getElementById(elId);
+                        if (!el) return;
+                        if (!items || !items.length) {
+                            el.innerHTML = '<div style="color:var(--muted,#888);padding:10px 0">No scripts found.</div>';
+                            return;
+                        }
+                        el.innerHTML = items.map(function(it) {
+                            return '<div class="item"><span class="name">' + it.name + '</span><button class="run" data-path="' + it.path + '">Run</button></div>';
+                        }).join('');
+                    }
+                    renderList('_cdp_add_list', d.addons);
+                    renderList('_cdp_tp_list', d.torch_packs);
+                    renderList('_cdp_tls_list', d.tools);
+                    renderList('_cdp_fixes_list', d.fixes);
+                } catch(e) { console.error('list_addons parse:', e); }
+            });
+
+            // Delegate Run button clicks
+            document.getElementById('_cdp_t_add').addEventListener('click', function(e) {
+                if (e.target.classList.contains('run')) {
+                    pywebview.api.run_addon(e.target.getAttribute('data-path'));
+                }
+            });
+            document.getElementById('_cdp_t_torch').addEventListener('click', function(e) {
+                if (e.target.classList.contains('run')) {
+                    pywebview.api.run_addon(e.target.getAttribute('data-path'));
+                }
+            });
+            document.getElementById('_cdp_t_tls').addEventListener('click', function(e) {
+                if (e.target.classList.contains('run')) {
+                    pywebview.api.run_addon(e.target.getAttribute('data-path'));
+                }
+            });
+            document.getElementById('_cdp_t_adv').addEventListener('click', function(e) {
+                if (e.target.classList.contains('run')) {
+                    pywebview.api.run_addon(e.target.getAttribute('data-path'));
+                }
+            });
             });
 
             document.getElementById('_cdp_fe_switch').onclick = function() {
@@ -2390,14 +2486,14 @@ INJECTED_JS = """
                 if (_logTimer) { clearInterval(_logTimer); _logTimer = null; }
             }
             // Hook into tab switching without relying on the local showTab variable
-            var _logTabBtn = document.querySelector('._cdp_tab[data-tab="log"]');
+            var _logTabBtn = document.querySelector('._cdp_nav[data-tab="log"]');
             if (_logTabBtn) {
                 _logTabBtn.addEventListener('click', function() {
                     startLogRefresh();
                 });
             }
             // Stop auto-refresh when any other tab is clicked
-            document.querySelectorAll('._cdp_tab:not([data-tab="log"])').forEach(function(btn) {
+            document.querySelectorAll('._cdp_nav:not([data-tab="log"])').forEach(function(btn) {
                 btn.addEventListener('click', stopLogRefresh);
             });
             } catch(e) { console.error('[EZi log viewer] init failed:', e); }
@@ -2564,16 +2660,16 @@ INJECTED_JS = """
         var folWrap = document.createElement('div');
         folWrap.style.cssText = 'position:relative;';
         var folBtn = document.createElement('button');
-        folBtn.innerHTML = '\uD83D\uDCC2 Folders &#9662;';
+        folBtn.innerHTML = '📂 Folders &#9662;';
         folBtn.style.cssText = btnStyle('#2a3a5a');
         var folMenu = document.createElement('div');
         folMenu.style.cssText = menuStyle();
         folMenu.innerHTML =
-            '<button style="' + itemStyle() + '" data-act="folder" data-target="output">\uD83D\uDCC2 Output</button>' +
-            '<button style="' + itemStyle() + '" data-act="folder" data-target="input">\uD83D\uDCC2 Input</button>' +
-            '<button style="' + itemStyle() + '" data-act="subfolder" data-target="workflows">\uD83D\uDCC2 Workflows</button>' +
-            '<button style="' + itemStyle() + '" data-act="folder" data-target="models">\uD83D\uDCC2 Models</button>' +
-            '<button style="' + itemStyle() + '" data-act="folder" data-target="comfyui">\uD83D\uDCC2 ComfyUI</button>';
+            '<button style="' + itemStyle() + '" data-act="folder" data-target="output">📂 Output</button>' +
+            '<button style="' + itemStyle() + '" data-act="folder" data-target="input">📂 Input</button>' +
+            '<button style="' + itemStyle() + '" data-act="subfolder" data-target="workflows">📂 Workflows</button>' +
+            '<button style="' + itemStyle() + '" data-act="folder" data-target="models">📂 Models</button>' +
+            '<button style="' + itemStyle() + '" data-act="folder" data-target="comfyui">📂 ComfyUI</button>';
         folWrap.appendChild(folBtn);
         folWrap.appendChild(folMenu);
 
@@ -2586,7 +2682,7 @@ INJECTED_JS = """
         var easyMenu = document.createElement('div');
         easyMenu.style.cssText = menuStyle();
         easyMenu.innerHTML =
-            '<button style="' + itemStyle() + '" data-act="save_log">\uD83D\uDCF0 Save log as .txt</button>' +
+            '<button style="' + itemStyle() + '" data-act="save_log">📰 Save log as .txt</button>' +
             '<div style="' + sepStyle() + '"></div>' +
             '<button style="' + itemStyle() + '" data-act="sel_copy">Copy selection</button>' +
             '<button style="' + itemStyle() + '" data-act="sel_save">Save selection</button>' +
@@ -3576,6 +3672,46 @@ def open_in_webview():
                 webbrowser.open("https://github.com/Tavris1/ComfyUI-Easy-Install/releases")
             except Exception:
                 pass
+
+        def list_addons(self):
+            """Return add-on scripts organized by category."""
+            try:
+                base = os.path.join(SCRIPT_DIR, "Add-Ons")
+                def _scripts_in(d):
+                    out = []
+                    if os.path.isdir(d):
+                        for f in sorted(os.listdir(d)):
+                            if f.endswith('.sh') and not f.startswith('.'):
+                                out.append({"name": os.path.splitext(f)[0], "path": os.path.relpath(os.path.join(d, f), SCRIPT_DIR)})
+                    return out
+                return json.dumps({
+                    "addons": _scripts_in(os.path.join(base)),
+                    "torch_packs": _scripts_in(os.path.join(base, "Torch-Pack")),
+                    "tools": _scripts_in(os.path.join(base, "Tools")),
+                    "fixes": _scripts_in(os.path.join(base, "Fixes")),
+                })
+            except Exception as e:
+                return json.dumps({"error": str(e)})
+
+        def run_addon(self, rel_path):
+            """Execute an add-on script and return output."""
+            import threading
+            def _run():
+                try:
+                    script = os.path.join(SCRIPT_DIR, rel_path)
+                    if not os.path.isfile(script):
+                        self._toast('Script not found')
+                        return
+                    # Run in terminal/background depending on OS
+                    if os.name == 'posix':
+                        subprocess.Popen([script], cwd=SCRIPT_DIR)
+                    else:
+                        subprocess.Popen([script], cwd=SCRIPT_DIR)
+                    self._toast('Started ' + os.path.basename(rel_path))
+                except Exception as e:
+                    self._toast('Failed: ' + str(e))
+            threading.Thread(target=_run, daemon=True).start()
+            return json.dumps({"ok": True})
 
         def confirm_close(self):
             """Called from JS confirm-close dialog — destroy the window."""
