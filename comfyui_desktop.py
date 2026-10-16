@@ -92,6 +92,7 @@ WINDOW_HEIGHT = 900
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ICON_PATH = os.path.join(SCRIPT_DIR, "comfyui_icon.png")
 WINDOW_STATE_FILE = os.path.join(SCRIPT_DIR, ".comfyui_desktop_state.json")
+SERVER_LOG_FILE = os.path.join(SCRIPT_DIR, ".comfyui_server.log")
 
 # Embed icon as base64 for the loading splash
 _ICON_B64 = ""
@@ -1678,6 +1679,7 @@ INJECTED_JS = """
                 '<div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;padding-bottom:8px">' +
                 '<button class="_cdp_tab" data-tab="pxr">Pixaroma</button>' +
                 '<button class="_cdp_tab" data-tab="sys">System Info</button>' +
+                '<button class="_cdp_tab" data-tab="log">Logs</button>' +
                 '<button class="_cdp_tab" data-tab="add">Add-ons</button>' +
                 '<button class="_cdp_tab" data-tab="tls">Tools</button>' +
                 '<button class="_cdp_tab" data-tab="app">Appearance</button>' +
@@ -1736,6 +1738,15 @@ INJECTED_JS = """
                     '<button id="_cdp_clr" style="'+btnStyle('#5a2727')+'">Clear cache</button>' +
                     '<button id="_cdp_rst" style="'+btnStyle('#5a4010')+'">Restart server</button>' +
                     '</div>') +
+                '</div>' +
+                /* TAB: Logs */
+                '<div id="_cdp_t_log">' +
+                box('Server Log',
+                    '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">' +
+                    '<button id="_cdp_log_save" style="'+btnStyle('#2a3a5a')+'">Save log</button>' +
+                    '<button id="_cdp_log_refresh" style="'+btnStyle('#333')+'">Refresh</button>' +
+                    '<button id="_cdp_log_whatsnew" style="'+btnStyle('#3a2a5a')+'">What\\'s new</button></div>' +
+                    '<pre id="_cdp_log_view" style="margin:0;background:#0d0d0d;border:1px solid var(--border,#444);border-radius:5px;padding:8px;font-size:11px;color:#c8c8c8;height:320px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;font-family:monospace">Loading log...</pre>') +
                 '</div>' +
                 /* TAB: Add-ons */
                 '<div id="_cdp_t_add">' +
@@ -1825,7 +1836,7 @@ INJECTED_JS = """
 
             /* ── Tab switching ── */
             (function() {
-                var _tabs = ['pxr','sys','add','tls','app','adv'];
+                var _tabs = ['pxr','sys','log','add','tls','app','adv'];
                 function showTab(name) {
                     _tabs.forEach(function(t) {
                         document.getElementById('_cdp_t_' + t).style.display = (t === name) ? 'block' : 'none';
@@ -2341,6 +2352,54 @@ INJECTED_JS = """
             document.getElementById('_cdp_browser').onclick = function() {
                 pywebview.api.open_browser(); removePanel();
             };
+
+            /* ── Log viewer ── */
+            try {
+            var _logTimer = null;
+            function refreshLog() {
+                var view = document.getElementById('_cdp_log_view');
+                if (!view) { console.log('[EZi log] view not found'); return; }
+                pywebview.api.get_server_log(300).then(function(raw) {
+                    try {
+                        var d = JSON.parse(raw);
+                        if (d.error) { console.log('[EZi log] error:', d.error); return; }
+                        var lines = d.lines || [];
+                        view.textContent = lines.join('\\n') || 'No log lines yet.';
+                        view.scrollTop = view.scrollHeight;
+                    } catch(e) { console.log('[EZi log] parse error:', e); }
+                }).catch(function(err) { console.log('[EZi log] api error:', err); });
+            }
+            document.getElementById('_cdp_log_refresh').onclick = refreshLog;
+            document.getElementById('_cdp_log_save').onclick = function() {
+                var btn = this; btn.disabled = true;
+                pywebview.api.save_server_log().then(function() {
+                    btn.disabled = false;
+                });
+            };
+            document.getElementById('_cdp_log_whatsnew').onclick = function() {
+                pywebview.api.open_whats_new();
+            };
+            // Auto-refresh log while the log tab is active
+            function startLogRefresh() {
+                if (_logTimer) return;
+                refreshLog();
+                _logTimer = setInterval(refreshLog, 2000);
+            }
+            function stopLogRefresh() {
+                if (_logTimer) { clearInterval(_logTimer); _logTimer = null; }
+            }
+            // Hook into tab switching without relying on the local showTab variable
+            var _logTabBtn = document.querySelector('._cdp_tab[data-tab="log"]');
+            if (_logTabBtn) {
+                _logTabBtn.addEventListener('click', function() {
+                    startLogRefresh();
+                });
+            }
+            // Stop auto-refresh when any other tab is clicked
+            document.querySelectorAll('._cdp_tab:not([data-tab="log"])').forEach(function(btn) {
+                btn.addEventListener('click', stopLogRefresh);
+            });
+            } catch(e) { console.error('[EZi log viewer] init failed:', e); }
 
             document.getElementById('_cdp_switch').onclick = function() {
                 var sel = document.getElementById('_cdp_ver');
@@ -3361,6 +3420,50 @@ def open_in_webview():
                     pass
             self._tp_done = True
             return json.dumps({"ok": True})
+
+        def get_server_log(self, lines=200):
+            """Return the last N lines of the ComfyUI server log."""
+            try:
+                if not os.path.isfile(SERVER_LOG_FILE):
+                    return json.dumps({"lines": []})
+                with open(SERVER_LOG_FILE, "r", encoding="utf-8", errors="replace") as f:
+                    all_lines = f.read().splitlines()
+                # Strip ANSI escape codes and keep last N lines
+                import re as _re
+                ansi = _re.compile(r"\x1b\[[0-9;]*[mGKHF]")
+                out = [ansi.sub("", ln).rstrip() for ln in all_lines[-int(lines):]]
+                return json.dumps({"lines": out})
+            except Exception as e:
+                return json.dumps({"error": str(e), "lines": []})
+
+        def save_server_log(self):
+            """Copy the current server log to a user-selected location."""
+            if not os.path.isfile(SERVER_LOG_FILE):
+                self._toast('No server log available')
+                return json.dumps({"error": "no log"})
+            threading.Thread(target=self._do_save_log, daemon=True).start()
+            return json.dumps({"ok": True})
+
+        def _do_save_log(self):
+            from datetime import datetime
+            default = f"ComfyUI-server-log-{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+            save_path = self._native_save_dialog(default)
+            if not save_path:
+                self._toast('Save cancelled')
+                return
+            try:
+                import shutil
+                shutil.copy2(SERVER_LOG_FILE, save_path)
+                self._toast(f'Saved: {os.path.basename(save_path)}')
+            except Exception as e:
+                self._toast(f'Save failed: {e}')
+
+        def open_whats_new(self):
+            """Open the release notes / changelog in the default browser."""
+            try:
+                webbrowser.open("https://github.com/Tavris1/ComfyUI-Easy-Install/releases")
+            except Exception:
+                pass
 
         def confirm_close(self):
             """Called from JS confirm-close dialog — destroy the window."""
