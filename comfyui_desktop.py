@@ -2268,8 +2268,16 @@ INJECTED_JS = """
                 pywebview.api.check_installer_update().then(function(raw) {
                     var d = JSON.parse(raw);
                     if (d.error) setMsg('Installer check failed: ' + d.error, '#f88');
-                    else if (d.up_to_date) setMsg('✓ Installer up to date  local: ' + d.local + ' (' + (d.local_date||'?') + ')', '#8f8');
-                    else setMsg('↑ ' + d.commits_behind + ' commit(s) behind MAC-Linux  local: ' + d.local + ' (' + (d.local_date||'?') + ')  remote: ' + d.remote + ' (' + (d.remote_date||'?') + ')', '#fc8');
+                    else if (d.up_to_date) {
+                        var msg = '✓ Installer up to date';
+                        if (d.local && d.local !== 'unknown') msg += '  local: ' + d.local + ' (' + (d.local_date||'?') + ')';
+                        setMsg(msg, '#8f8');
+                    } else {
+                        var msg = '↑ ' + d.commits_behind + ' commit(s) behind MAC-Linux';
+                        if (d.local && d.local !== 'unknown') msg += '  local: ' + d.local + ' (' + (d.local_date||'?') + ')';
+                        msg += '  remote: ' + d.remote + ' (' + (d.remote_date||'?') + ')';
+                        setMsg(msg, '#fc8');
+                    }
                     btn.disabled = false; btn.textContent = 'Check installer update';
                 });
             };
@@ -3694,7 +3702,7 @@ def open_in_webview():
                 return json.dumps({"error": str(e)})
 
         def run_addon(self, rel_path):
-            """Execute an add-on script and return output."""
+            """Run an add-on script in a terminal, then restart the desktop."""
             import threading
             def _run():
                 try:
@@ -3702,12 +3710,56 @@ def open_in_webview():
                     if not os.path.isfile(script):
                         self._toast('Script not found')
                         return
-                    # Run in terminal/background depending on OS
-                    if os.name == 'posix':
-                        subprocess.Popen([script], cwd=SCRIPT_DIR)
+                    # Build a wrapper: run add-on, then restart desktop launcher
+                    wrapper = os.path.join(SCRIPT_DIR, '.run_addon.sh')
+                    with open(wrapper, 'w') as f:
+                        f.write('#!/bin/bash\n')
+                        f.write('cd "' + SCRIPT_DIR + '"\n')
+                        f.write('echo "Running ' + os.path.basename(rel_path) + '..."\n')
+                        f.write('"' + script + '"\n')
+                        f.write('echo "Waiting for server to stop..."\n')
+                        f.write('for i in {1..15}; do\n')
+                        f.write('    if [ -f .comfyui_server.pid ]; then\n')
+                        f.write('        sleep 1\n')
+                        f.write('    else\n')
+                        f.write('        break\n')
+                        f.write('    fi\n')
+                        f.write('done\n')
+                        f.write('echo "Restarting EZi Desktop..."\n')
+                        f.write('sleep 1\n')
+                        f.write('"./run_comfyui_desktop.sh"\n')
+                    os.chmod(wrapper, 0o755)
+
+                    # Open in a terminal
+                    if sys.platform == 'darwin':
+                        # macOS: open Terminal.app
+                        subprocess.Popen(['open', '-a', 'Terminal', wrapper])
+                    elif os.name == 'posix':
+                        # Linux: try common terminal emulators
+                        for term in ('x-terminal-emulator', 'gnome-terminal', 'konsole', 'xterm'):
+                            try:
+                                if term == 'gnome-terminal':
+                                    subprocess.Popen([term, '--', wrapper])
+                                elif term == 'konsole':
+                                    subprocess.Popen([term, '-e', wrapper])
+                                else:
+                                    subprocess.Popen([term, '-e', wrapper])
+                                break
+                            except FileNotFoundError:
+                                continue
+                        else:
+                            self._toast('No terminal found')
+                            return
                     else:
-                        subprocess.Popen([script], cwd=SCRIPT_DIR)
+                        # Windows: use cmd (shouldn't reach here on Mac/Linux)
+                        subprocess.Popen(['cmd', '/c', 'start', 'cmd', '/k', wrapper])
+
                     self._toast('Started ' + os.path.basename(rel_path))
+                    # Close the desktop window so the terminal can run unblocked
+                    try:
+                        window.destroy()
+                    except Exception:
+                        pass
                 except Exception as e:
                     self._toast('Failed: ' + str(e))
             threading.Thread(target=_run, daemon=True).start()
