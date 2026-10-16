@@ -614,6 +614,9 @@ def check_installer_update():
             "release_url":    "https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux",
         }
     except Exception as e:
+        import urllib.error as _ue
+        if isinstance(e, _ue.HTTPError) and e.code == 403:
+            return {"error": "GitHub API rate limit exceeded"}
         _log_error('check_installer_update')
         return {"error": str(e)}
 
