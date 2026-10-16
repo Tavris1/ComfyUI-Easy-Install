@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo 3.20.2
+# Title ComfyUI-Easy-Install  NEXT by ivo 3.22.0
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -989,12 +989,6 @@ copy_files run_nvidia_gpu_SageAttention.sh .
 copy_files extra_model_paths.yaml ComfyUI
 copy_files comfy.settings.json ComfyUI/user/default
 
-# Patch rgthree-comfy: disable recursive execution to avoid workflow loops
-if [ -d "ComfyUI/custom_nodes/rgthree-comfy" ]; then
-    mkdir -p ComfyUI/custom_nodes/rgthree-comfy
-    echo '{"patch_recursive_execution": false}' > ComfyUI/custom_nodes/rgthree-comfy/rgthree_config.json
-fi
-
 # Clear Pip and uv Cache (moved to end in v2.02.0) - Disabled for slow connections
 # clear_pip_uv_cache
 
@@ -1029,6 +1023,12 @@ rm -rf .git .gitignore .devin .DS_Store
 
 # Copy all child contents into parent (child has ComfyUI/, python_embeded/, Add-Ons/, run scripts, etc.)
 cp -a ComfyUI-Easy-Install/. .
+
+# Patch rgthree-comfy: disable recursive execution to avoid workflow loops
+if [ -d "ComfyUI/custom_nodes/rgthree-comfy" ]; then
+    mkdir -p ComfyUI/custom_nodes/rgthree-comfy
+    echo '{"patch_recursive_execution": false}' > ComfyUI/custom_nodes/rgthree-comfy/rgthree_config.json
+fi
 
 # Remove the now-redundant child folder
 rm -rf ComfyUI-Easy-Install

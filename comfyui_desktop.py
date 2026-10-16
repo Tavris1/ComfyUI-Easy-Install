@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Desktop EZi v3.20.2 — PyWebView wrapper
+Desktop EZi v3.22.0 — PyWebView wrapper
 Opens ComfyUI in a native desktop window instead of a browser.
 Part of ComfyUI-Easy-Install by Pixaroma / VenimK
 """
@@ -19,7 +19,7 @@ import json
 import subprocess
 import traceback
 
-EZI_VERSION = "3.20.2"
+EZI_VERSION = "3.22.0"
 
 
 def _log_error(label=''):
@@ -35,7 +35,50 @@ def _log_error(label=''):
 COMFYUI_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
 COMFYUI_PORT = int(os.environ.get("COMFYUI_PORT", 8188))
 COMFYUI_REMOTE = os.environ.get("COMFYUI_REMOTE", "0") == "1"
-COMFYUI_URL = f"http://{COMFYUI_HOST}:{COMFYUI_PORT}"
+
+# Mutable scheme so --tls-keyfile/--tls-certfile can switch ComfyUI URLs to https
+_COMFY_SCHEME = ["http"]
+_LOOPBACK_SSL = [None]
+
+
+def _detect_comfy_scheme_from_state():
+    """If saved launch args include both TLS flags, default to https."""
+    try:
+        with open(WINDOW_STATE_FILE, "r") as f:
+            state = json.load(f)
+        args = state.get("launch_args", "")
+        if "--tls-keyfile" in args and "--tls-certfile" in args:
+            return "https"
+    except Exception:
+        pass
+    return "http"
+
+
+def _comfy_ssl():
+    """Return an unverified SSL context for https://127.0.0.1 (self-signed certs)."""
+    if _COMFY_SCHEME[0] != "https":
+        return None
+    if _LOOPBACK_SSL[0] is None:
+        import ssl
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        _LOOPBACK_SSL[0] = ctx
+    return _LOOPBACK_SSL[0]
+
+
+def _comfy_origin(port=None):
+    port = port if port is not None else COMFYUI_PORT
+    return f"{_COMFY_SCHEME[0]}://{COMFYUI_HOST}:{port}"
+
+
+def comfyui_url():
+    """Return the current ComfyUI URL (http or https depending on launch args)."""
+    return _comfy_origin(COMFYUI_PORT)
+
+
+# Initialise scheme early from saved state; updated later when launch args change
+_COMFY_SCHEME[0] = _detect_comfy_scheme_from_state()
 
 if COMFYUI_REMOTE:
     WINDOW_TITLE = f"ComfyUI \u2014 {COMFYUI_HOST}"
@@ -71,8 +114,8 @@ def wait_for_server(host, port, timeout=120):
 
 def open_in_browser():
     """Fallback: open ComfyUI in the default browser."""
-    print(f"Opening ComfyUI in browser: {COMFYUI_URL}")
-    webbrowser.open(COMFYUI_URL)
+    print(f"Opening ComfyUI in browser: {comfyui_url()}")
+    webbrowser.open(comfyui_url())
 
 
 def is_port_in_use(port, host="127.0.0.1"):
@@ -2376,6 +2419,66 @@ INJECTED_JS = """
         /* Also expose globally so it can be called from console */
         window._comfyDesktopPanel = buildPanel;
     })();
+
+    /* ── Text selection popup (Copy / Google / ChatGPT / Claude / Save) ── */
+    (function() {
+        var pop = document.createElement('div');
+        pop.id = '_ezi_sel_pop';
+        pop.style.cssText = 'display:none;position:fixed;z-index:99999;background:#1e1e28;border:1px solid #e8530a;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.55);overflow:hidden;user-select:none;';
+        var buttons = [
+            {key:'copy', label:'Copy'},
+            {key:'google', label:'Google'},
+            {key:'chatgpt', label:'ChatGPT'},
+            {key:'claude', label:'Claude'},
+            {key:'save', label:'Save'}
+        ];
+        buttons.forEach(function(btn){
+            var b = document.createElement('button');
+            b.textContent = btn.label;
+            b.style.cssText = 'padding:5px 11px;font-family:inherit;font-size:11px;font-weight:bold;background:transparent;border:none;border-right:1px solid rgba(232,83,10,0.6);color:#e0e0e0;cursor:pointer;line-height:1;transition:background .15s,color .15s;';
+            b.addEventListener('mousedown', function(e){ e.preventDefault(); });
+            b.addEventListener('click', function(e){
+                e.preventDefault();
+                var t = window.getSelection().toString().trim();
+                if (!t) return;
+                if (btn.key === 'copy') {
+                    try { pywebview.api.write_clipboard(t); } catch(err) {}
+                } else if (btn.key === 'google') {
+                    try { pywebview.api.open_url('https://www.google.com/search?q=' + encodeURIComponent(t)); } catch(err) {}
+                } else if (btn.key === 'chatgpt') {
+                    try { pywebview.api.open_url('https://chatgpt.com/?q=' + encodeURIComponent(t)); } catch(err) {}
+                } else if (btn.key === 'claude') {
+                    try { pywebview.api.open_url('https://claude.ai/new?q=' + encodeURIComponent(t)); } catch(err) {}
+                } else if (btn.key === 'save') {
+                    try { pywebview.api.save_text(t); } catch(err) {}
+                }
+                hide();
+            });
+            pop.appendChild(b);
+        });
+        document.body.appendChild(pop);
+
+        function hide(){ pop.style.display = 'none'; }
+        function show(x, y){
+            pop.style.display = 'flex';
+            var rect = pop.getBoundingClientRect();
+            var px = Math.min(window.innerWidth - rect.width - 8, Math.max(8, x));
+            var py = Math.min(window.innerHeight - rect.height - 8, Math.max(8, y));
+            pop.style.left = px + 'px';
+            pop.style.top = py + 'px';
+        }
+
+        document.addEventListener('mouseup', function(e){
+            setTimeout(function(){
+                var sel = window.getSelection().toString().trim();
+                if (sel && e.button === 0) show(e.clientX + 10, e.clientY + 10);
+                else hide();
+            }, 10);
+        });
+        document.addEventListener('mousedown', function(e){ if (!pop.contains(e.target)) hide(); });
+        window.addEventListener('scroll', hide, {passive:true});
+        window.addEventListener('resize', hide);
+    })();
 })();
 """
 
@@ -2394,7 +2497,7 @@ def open_in_webview():
     class Api:
         def open_browser(self):
             """Called from JS when user presses Cmd+B / Ctrl+B."""
-            webbrowser.open(COMFYUI_URL)
+            webbrowser.open(comfyui_url())
 
         def pick_and_upload(self, accept="*"):
             """Open native file picker and upload selected file to ComfyUI."""
@@ -2445,7 +2548,10 @@ def open_in_webview():
                     f'\r\n--{boundary}--\r\n'
                 ).encode()
 
-                conn = http.client.HTTPConnection(COMFYUI_HOST, COMFYUI_PORT, timeout=30)
+                if _COMFY_SCHEME[0] == "https":
+                    conn = http.client.HTTPSConnection(COMFYUI_HOST, COMFYUI_PORT, timeout=30, context=_comfy_ssl())
+                else:
+                    conn = http.client.HTTPConnection(COMFYUI_HOST, COMFYUI_PORT, timeout=30)
                 conn.request(
                     'POST', '/upload/image',
                     body=body,
@@ -2559,6 +2665,29 @@ def open_in_webview():
             except Exception:
                 pass
 
+        def save_text(self, text):
+            """Open a native Save As dialog for the selected text."""
+            if not text or not isinstance(text, str):
+                return
+            threading.Thread(
+                target=self._do_save_text, args=(text,), daemon=True
+            ).start()
+
+        def _do_save_text(self, text):
+            """Actual save-text logic."""
+            from datetime import datetime
+            default_name = f"ComfyUI-EZi-selection-{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+            save_path = self._native_save_dialog(default_name)
+            if not save_path:
+                self._toast('Save cancelled')
+                return
+            try:
+                with open(save_path, "w", encoding="utf-8") as f:
+                    f.write(text.replace("\r\n", "\n").replace("\r", "\n"))
+                self._toast(f'Saved: {os.path.basename(save_path)}')
+            except Exception as e:
+                self._toast(f'Save failed: {e}')
+
         def read_clipboard(self):
             """Read text from system clipboard (Mac: pbpaste, Linux: xclip/xsel)."""
             try:
@@ -2593,7 +2722,13 @@ def open_in_webview():
                 self._toast('Save cancelled')
                 return
             try:
-                urllib.request.urlretrieve(url, save_path)
+                if url.startswith(comfyui_url()) or url.startswith('https://127.0.0.1') or url.startswith('http://127.0.0.1'):
+                    req = urllib.request.Request(url, headers={"User-Agent": "EZiDesktop"})
+                    with _comfy_urlopen(req, timeout=30) as src, open(save_path, 'wb') as dst:
+                        import shutil
+                        shutil.copyfileobj(src, dst)
+                else:
+                    urllib.request.urlretrieve(url, save_path)
                 basename = os.path.basename(save_path)
                 self._toast(f'Saved: {basename}')
                 print(f"  Saved: {save_path}")
@@ -2663,7 +2798,7 @@ def open_in_webview():
             """Return system/platform info as a JSON string (called from JS)."""
             if COMFYUI_REMOTE:
                 try:
-                    url = f"{COMFYUI_URL}/system_stats"
+                    url = f"{comfyui_url()}/system_stats"
                     req = urllib.request.Request(url, headers={"User-Agent": "EZiDesktop"})
                     with urllib.request.urlopen(req, timeout=5) as resp:
                         raw = json.loads(resp.read().decode())
@@ -2940,7 +3075,7 @@ def open_in_webview():
             """Return RAM usage of the ComfyUI server process and system RAM."""
             if COMFYUI_REMOTE:
                 try:
-                    url = f"{COMFYUI_URL}/system_stats"
+                    url = f"{comfyui_url()}/system_stats"
                     req = urllib.request.Request(url, headers={"User-Agent": "EZiDesktop"})
                     with urllib.request.urlopen(req, timeout=5) as resp:
                         raw = json.loads(resp.read().decode())
@@ -3052,6 +3187,11 @@ def open_in_webview():
                 state["launch_args"] = args.strip()
                 with open(WINDOW_STATE_FILE, "w") as f:
                     json.dump(state, f)
+                # Refresh scheme if TLS flags were added/removed
+                if "--tls-keyfile" in args and "--tls-certfile" in args:
+                    _COMFY_SCHEME[0] = "https"
+                else:
+                    _COMFY_SCHEME[0] = "http"
                 return json.dumps({"ok": True})
             except Exception as e:
                 return json.dumps({"error": str(e)})
@@ -3375,7 +3515,7 @@ def open_in_webview():
         if wait_for_server(COMFYUI_HOST, COMFYUI_PORT, timeout=timeout):
             print("ComfyUI server is ready!")
             try:
-                window.load_url(COMFYUI_URL)
+                window.load_url(comfyui_url())
             except Exception:
                 pass
             # After server is up, check for EZi Desktop updates in background
@@ -3491,10 +3631,10 @@ def open_in_webview():
         """Return True if ComfyUI responds on /system_stats."""
         try:
             req = urllib.request.Request(
-                f"http://{COMFYUI_HOST}:{port}/system_stats",
+                f"{comfyui_url()}/system_stats",
                 headers={"User-Agent": "EZiDesktop"},
             )
-            with urllib.request.urlopen(req, timeout=timeout) as r:
+            with _comfy_urlopen(req, timeout=timeout) as r:
                 return r.status == 200
         except Exception:
             return False
@@ -3525,7 +3665,7 @@ def open_in_webview():
                         print(f"ComfyUI back online after {int(time.time() - restart_start_time)}s.")
                         restart_start_time = 0
                         try:
-                            window.load_url(COMFYUI_URL)
+                            window.load_url(comfyui_url())
                         except Exception:
                             _log_error('port_monitor/reload')
                 elif gave_up:
@@ -3533,7 +3673,7 @@ def open_in_webview():
                     _was_up = True
                     print("ComfyUI is back online.")
                     try:
-                        window.load_url(COMFYUI_URL)
+                        window.load_url(comfyui_url())
                     except Exception:
                         _log_error('port_monitor/reload')
                 else:
@@ -3616,14 +3756,14 @@ def main():
 
     if has_display:
         # Window opens instantly — server polling happens in background
-        print(f"Launching EZi Desktop → {COMFYUI_URL}")
+        print(f"Launching EZi Desktop → {comfyui_url()}")
         open_in_webview()
     else:
         # Headless: must wait for server before opening browser
         timeout = 10 if COMFYUI_REMOTE else 120
-        print(f"Waiting for ComfyUI server at {COMFYUI_URL}...")
+        print(f"Waiting for ComfyUI server at {comfyui_url()}...")
         if not wait_for_server(COMFYUI_HOST, COMFYUI_PORT, timeout=timeout):
-            print(f"ERROR: Cannot reach ComfyUI at {COMFYUI_URL}")
+            print(f"ERROR: Cannot reach ComfyUI at {comfyui_url()}")
             sys.exit(1)
         open_in_browser()
 
