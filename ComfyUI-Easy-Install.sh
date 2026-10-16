@@ -600,8 +600,17 @@ EOL
     echo -e "${GREEN}✓${RESET} pygit2 installed"
     
     echo -e "${YELLOW}[4/6]${RESET} Installing av==18.0.0 (Thx @Ivo)..."
-    uv pip uninstall av --quiet -y 2>/dev/null || true
-    uv pip install $UV_ARGS av==18.0.0
+    # Repair a half-installed av (dist-info without RECORD) before reinstalling
+    VENV_SITE_PACKAGES=$("$EMBEDDED_PYTHON" -c "import site; print(site.getsitepackages()[0])")
+    for av_dist in "$VENV_SITE_PACKAGES"/av-*.dist-info; do
+        if [ -d "$av_dist" ] && [ ! -f "$av_dist/RECORD" ]; then
+            echo -e "${YELLOW}Repairing a half-installed av...${RESET}"
+            rm -rf "$VENV_SITE_PACKAGES"/av "$VENV_SITE_PACKAGES"/av.libs "$av_dist" 2>/dev/null || true
+        fi
+    done
+    uv pip install $UV_ARGS av==18.0.0 || {
+        echo -e "${RED}Could not install av 18.0.0. Close every ComfyUI window and run this installer again.${RESET}"
+    }
     echo -e "${GREEN}✓${RESET} av installed"
     
     # Install ComfyUI requirements
@@ -979,7 +988,12 @@ copy_files run_nvidia_gpu.sh .
 copy_files run_nvidia_gpu_SageAttention.sh .
 copy_files extra_model_paths.yaml ComfyUI
 copy_files comfy.settings.json ComfyUI/user/default
-copy_files rgthree_config.json ComfyUI/custom_nodes/rgthree-comfy
+
+# Patch rgthree-comfy: disable recursive execution to avoid workflow loops
+if [ -d "ComfyUI/custom_nodes/rgthree-comfy" ]; then
+    mkdir -p ComfyUI/custom_nodes/rgthree-comfy
+    echo '{"patch_recursive_execution": false}' > ComfyUI/custom_nodes/rgthree-comfy/rgthree_config.json
+fi
 
 # Clear Pip and uv Cache (moved to end in v2.02.0) - Disabled for slow connections
 # clear_pip_uv_cache
