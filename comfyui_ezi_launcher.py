@@ -798,20 +798,21 @@ def main():
         print(f"  {PYTHON_EXEC} -m pip install pywebview", file=sys.stderr)
         sys.exit(1)
 
+    api = LauncherApi(None)
+
     window = webview.create_window(
         title=f"ComfyUI EZi Launcher v{EZI_VERSION}",
         html=HTML,
+        js_api=api,
         width=880,
         height=520,
         resizable=False,
-        minimizable=True,
-        maximizable=False,
         on_top=False,
         confirm_close=False,
     )
 
-    api = LauncherApi(window)
-    webview.start(api, window, debug=False, http_server=False)
+    api.window = window
+    webview.start(debug=False, http_server=False)
 
 
 if __name__ == "__main__":
