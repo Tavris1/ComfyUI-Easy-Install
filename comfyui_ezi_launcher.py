@@ -241,8 +241,8 @@ class LauncherApi:
                 {
                     "id": "kitchenattention",
                     "name": "Kitchen Attention",
-                    "status": "Ready" if is_addon_installed("kitchenattention") else "Not installed",
-                    "status_color": "ready" if is_addon_installed("kitchenattention") else "missing",
+                    "status": "Ready",
+                    "status_color": "ready",
                     "attention": "kitchenattention",
                     "icon": "grid",
                 },
