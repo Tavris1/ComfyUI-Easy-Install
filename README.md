@@ -335,6 +335,26 @@ Run ComfyUI in a native desktop window instead of a browser:
 
 ---
 
+## 🚀 EZi Launcher (Graphical Launcher)
+
+A cross-platform graphical launcher that mirrors the Windows EZi Launcher UI:
+
+```bash
+./run_ezi_launcher.sh
+```
+
+Features:
+
+- **Desktop / Browser / Hybrid** launch modes
+- One-click launch for ComfyUI and attention backends (Sage, Flash, Kitchen)
+- Update buttons for Easy-Install, ComfyUI Stable, ComfyUI Latest, and ComfyUI + Nodes
+- Quick-access buttons for Output, Input, Workflows, and Models folders
+
+> [!NOTE]
+> The launcher requires the same pywebview backend as EZi Desktop. `run_ezi_launcher.sh` will install it automatically if needed.
+
+---
+
 <div align="center">
 
 ## ❤️ Support Me

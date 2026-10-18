@@ -21,9 +21,11 @@ UPDATE_PATHS=(
     patches
     "ComfyUI/user/default/workflows"
     comfyui_desktop.py
+    comfyui_ezi_launcher.py
     comfyui_icon.png
     comfyui_nirin_launcher_v6.sh
     run_comfyui_desktop.sh
+    run_ezi_launcher.sh
     run_mac_intel.sh
     run_mac_mps.sh
     run_nvidia_gpu.sh
