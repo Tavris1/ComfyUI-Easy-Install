@@ -1030,6 +1030,11 @@ if [ -d "ComfyUI/custom_nodes/rgthree-comfy" ]; then
     echo '{"patch_recursive_execution": false}' > ComfyUI/custom_nodes/rgthree-comfy/rgthree_config.json
 fi
 
+# Install EZi Console Filter (removes [DEPRECATION WARNING] noise)
+if [ -d "Add-Ons/ComfyUI-EZi-Console-Filter" ]; then
+    cp -a "Add-Ons/ComfyUI-EZi-Console-Filter" "ComfyUI/custom_nodes/"
+fi
+
 # Remove the now-redundant child folder
 rm -rf ComfyUI-Easy-Install
 
