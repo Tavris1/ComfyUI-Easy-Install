@@ -245,6 +245,7 @@ class LauncherApi:
                     "status_color": "ready",
                     "attention": "kitchenattention",
                     "icon": "grid",
+                    "builtin": True,
                 },
                 {
                     "id": "sageattention",
@@ -717,7 +718,9 @@ function renderItems() {
   const list = document.getElementById('item-list');
   list.innerHTML = state.items.map(item => {
     const isComfyUI = item.id === 'comfyui';
+    const isBuiltin = !!item.builtin;
     const canLaunch = isComfyUI || item.status_color === 'ready';
+    const showInstall = !isComfyUI && !isBuiltin && item.status_color !== 'ready';
     return `
       <div class="item">
         <div class="item-icon">${ICONS[item.icon] || ICONS.comfyui}</div>
@@ -730,7 +733,7 @@ function renderItems() {
         </div>
         <div class="item-actions">
           <button class="btn btn-primary" ${canLaunch ? '' : 'disabled'} onclick="doLaunch('${item.id}', '${item.attention || ''}')">Launch</button>
-          ${!isComfyUI ? `<button class="btn btn-ghost" onclick="doOpenFolder('ComfyUI/custom_nodes')">Install</button>` : ''}
+          ${showInstall ? `<button class="btn btn-ghost" onclick="doOpenFolder('ComfyUI/custom_nodes')">Install</button>` : ''}
         </div>
       </div>
     `;
