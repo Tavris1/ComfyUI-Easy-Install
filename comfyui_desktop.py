@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Desktop EZi v3.22.0 — PyWebView wrapper
+Desktop EZi v3.23.0 — PyWebView wrapper
 Opens ComfyUI in a native desktop window instead of a browser.
 Part of ComfyUI-Easy-Install by Pixaroma / VenimK
 """
@@ -18,8 +18,9 @@ import base64
 import json
 import subprocess
 import traceback
+import locale
 
-EZI_VERSION = "3.22.0"
+EZI_VERSION = "3.23.0"
 
 
 def _log_error(label=''):
@@ -31,6 +32,40 @@ def _log_error(label=''):
         print(msg, file=sys.stderr, flush=True)
     except Exception:
         pass
+
+
+_EZI_AI_LANGS = (
+    "en", "zh-CN", "zh-TW", "es", "ru", "ja", "ko", "de", "fr", "pt-BR", "it", "tr", "ar", "hi", "id", "vi", "pl", "uk", "nl",
+    "th", "fa", "bg", "cs", "ro", "el", "hu", "sr", "he", "bn", "sv", "ms", "fil"
+)
+
+
+def _ezi_system_lang():
+    try:
+        name = ""
+        try:
+            loc = locale.getlocale()
+            if loc and loc[0]:
+                name = loc[0]
+        except Exception:
+            pass
+        if not name:
+            name = os.environ.get("LANG", "") or os.environ.get("LC_ALL", "") or os.environ.get("LC_MESSAGES", "")
+        low = name.lower().replace("_", "-").split(".")[0].split("@")[0]
+        if not low:
+            return "en"
+        primary = low.split("-")[0]
+        if primary == "zh":
+            return "zh-TW" if any(t in low for t in ("tw", "hk", "mo", "hant")) else "zh-CN"
+        if primary == "pt":
+            return "pt-BR"
+        primary = {"tl": "fil", "iw": "he", "in": "id"}.get(primary, primary)
+        for code in _EZI_AI_LANGS:
+            if code.lower() == primary:
+                return code
+    except Exception:
+        pass
+    return "en"
 
 COMFYUI_HOST = os.environ.get("COMFYUI_HOST", "127.0.0.1")
 COMFYUI_PORT = int(os.environ.get("COMFYUI_PORT", 8188))
@@ -1454,6 +1489,7 @@ INJECTED_JS = """
         '._ezi-theme-dark{--bg:#1a1a1a;--panel-bg:#1e1e28;--node-bg:#252530;--fg:#e0e0e0;--muted:#888;--border:#444;--input-bg:#111;--accent:#e8530a;--accent-hover:#ff7040;--accent-bg:#6e2200;--accent-bg-hover:#8a3000;--text-on-accent:#fff}',
         '._ezi-theme-pixaroma{--bg:#1a1a1a;--panel-bg:#1e1e28;--node-bg:#252530;--fg:#cccccc;--muted:#888;--border:#444;--input-bg:#111;--accent:#e8530a;--accent-hover:#ff7040;--accent-bg:#6e2200;--accent-bg-hover:#8a3000;--text-on-accent:#fff}',
         '._ezi-theme-light{--bg:#f0f2f5;--panel-bg:#ffffff;--node-bg:#e2e6eb;--fg:#333;--muted:#666;--border:#c8cdd5;--input-bg:#fff;--accent:#e8530a;--accent-hover:#ff7040;--accent-bg:#ffdcc8;--accent-bg-hover:#ffcbb0;--text-on-accent:#000}',
+        '._ezi-theme-aurora{--bg:#0b1926;--panel-bg:#102638;--node-bg:#122438;--fg:#edf3ff;--muted:#a1b3cc;--border:#304659;--input-bg:#09232d;--accent:#82dfcd;--accent-hover:#9be9d9;--accent-bg:#224c56;--accent-bg-hover:#2b616c;--text-on-accent:#0b1926}',
         '._ezi-theme-comfyui{/* Uses ComfyUI theme vars applied via JS */}',
     ].join('\\n');
     document.head.appendChild(style);
@@ -1627,6 +1663,7 @@ INJECTED_JS = """
                 '#_cdp_inner._ezi-theme-dark{--bg:#0c0e12;--border:#30363d;--fg:#ccc;--muted:#8b949e;--input-bg:#0d1117;--accent:#388bfd;--accent-hover:#58a6ff;--accent-bg:#1f6feb;--accent-bg-hover:#388bfd;--text-on-accent:#fff}' +
                 '#_cdp_inner._ezi-theme-light{--bg:#f6f8fa;--border:#d0d7de;--fg:#24292f;--muted:#57606a;--input-bg:#fff;--accent:#0969da;--accent-hover:#218bff;--accent-bg:#daf0ff;--accent-bg-hover:#b6e3ff;--text-on-accent:#fff}' +
                 '#_cdp_inner._ezi-theme-pixaroma{--bg:#1a1a1a;--border:#444;--fg:#e0e0e0;--muted:#888;--input-bg:#111;--accent:#e8530a;--accent-hover:#ff7040;--accent-bg:#6e2200;--accent-bg-hover:#8a3000;--text-on-accent:#fff}' +
+                '#_cdp_inner._ezi-theme-aurora{--bg:#0b1926;--border:#304659;--fg:#edf3ff;--muted:#a1b3cc;--input-bg:#09232d;--accent:#82dfcd;--accent-hover:#9be9d9;--accent-bg:#224c56;--accent-bg-hover:#2b616c;--text-on-accent:#0b1926}' +
                 '#_cdp_inner{--bg:#161616;--border:#2a2a2a;--fg:#e0e0e0;--muted:#888;--input-bg:#111;--accent:#e8530a;--accent-hover:#ff7040;--accent-bg:#6e2200;--accent-bg-hover:#8a3000;--text-on-accent:#fff}' +
                 '#_cdp_overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99998;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center}' +
                 '#_cdp_inner{background:var(--bg,#161616);border:1px solid var(--border,#2a2a2a);border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.7);width:min(920px,94vw);height:min(680px,88vh);display:flex;overflow:hidden;color:var(--fg,#e0e0e0);font-family:system-ui,-apple-system,sans-serif}' +
@@ -1818,7 +1855,7 @@ INJECTED_JS = """
                 '<div id="_cdp_t_app">' +
                 box('EZi Panel Theme',
                     '<div style="display:flex;gap:8px;align-items:center">' +
-                    '<select id="_cdp_panel_theme" style="'+S+'"><option value="pixaroma" selected>Pixaroma \u2014 orange</option><option value="comfyui">ComfyUI (auto-sync)</option><option value="dark">EZi Dark</option><option value="light">EZi Light</option></select>' +
+                    '<select id="_cdp_panel_theme" style="'+S+'"><option value="pixaroma" selected>Pixaroma \u2014 orange</option><option value="comfyui">ComfyUI (auto-sync)</option><option value="dark">EZi Dark</option><option value="light">EZi Light</option><option value="aurora">Aurora</option></select>' +
                     '<button id="_cdp_panel_theme_apply" style="'+btnStyle('#2a3a5a')+'">Apply</button></div>') +
                 box('ComfyUI Node Editor Theme',
                     '<div style="display:flex;gap:8px;align-items:center">' +
@@ -1832,6 +1869,13 @@ INJECTED_JS = """
                     '<button id="_cdp_zm_in"  style="'+btnStyle('#333')+';padding:4px 10px">+</button>' +
                     '<button id="_cdp_zm_rst" style="'+btnStyle('#333')+';padding:4px 10px;font-size:11px">Reset</button></div>' +
                     '<label style="font-size:12px;color:var(--muted,#888);display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="_cdp_aot"> Always on top</label>') +
+                box('AI Language',
+                    '<div style="display:flex;gap:8px;align-items:center">' +
+                    '<select id="_cdp_ai_lang" style="'+S+'">' +
+                    '<option value="en">English</option><option value="zh-CN">Chinese (Simplified)</option><option value="zh-TW">Chinese (Traditional)</option><option value="es">Spanish</option><option value="ru">Russian</option><option value="ja">Japanese</option><option value="ko">Korean</option><option value="de">German</option><option value="fr">French</option><option value="pt-BR">Portuguese (BR)</option><option value="it">Italian</option><option value="tr">Turkish</option><option value="ar">Arabic</option><option value="hi">Hindi</option><option value="id">Indonesian</option><option value="vi">Vietnamese</option><option value="pl">Polish</option><option value="uk">Ukrainian</option><option value="nl">Dutch</option><option value="th">Thai</option><option value="fa">Persian</option><option value="bg">Bulgarian</option><option value="cs">Czech</option><option value="ro">Romanian</option><option value="el">Greek</option><option value="hu">Hungarian</option><option value="sr">Serbian</option><option value="he">Hebrew</option><option value="bn">Bengali</option><option value="sv">Swedish</option><option value="ms">Malay</option><option value="fil">Filipino</option>' +
+                    '</select>' +
+                    '<button id="_cdp_ai_lang_apply" style="'+btnStyle('#2a3a5a')+'">Apply</button></div>' +
+                    '<div style="font-size:11px;color:var(--muted,#888);margin-top:6px">Language for ChatGPT / Claude links</div>') +
                 '</div>' +
                 /* TAB: Advanced */
                 '<div id="_cdp_t_adv">' +
@@ -1933,7 +1977,7 @@ INJECTED_JS = """
                 if (!themeId) themeId = 'pixaroma';
                 _panelThemeId = themeId;
                 /* Remove existing theme classes and inline vars (inline vars override class CSS) */
-                inner.classList.remove('_ezi-theme-dark', '_ezi-theme-pixaroma', '_ezi-theme-light', '_ezi-theme-comfyui');
+                inner.classList.remove('_ezi-theme-dark', '_ezi-theme-pixaroma', '_ezi-theme-light', '_ezi-theme-aurora', '_ezi-theme-comfyui');
                 clearInlineThemeVars(inner);
                 /* If auto-sync mode, fetch current ComfyUI theme and map to panel theme */
                 if (themeId === 'comfyui') {
@@ -1945,7 +1989,7 @@ INJECTED_JS = """
                         if (!t.error) {
                             var comfyId = t.palette_id || 'dark';
                             var panelId = _comfyToPanel[comfyId] || 'dark';
-                            inner.classList.remove('_ezi-theme-dark', '_ezi-theme-pixaroma', '_ezi-theme-light', '_ezi-theme-comfyui');
+                            inner.classList.remove('_ezi-theme-dark', '_ezi-theme-pixaroma', '_ezi-theme-light', '_ezi-theme-aurora', '_ezi-theme-comfyui');
                             clearInlineThemeVars(inner);
                             inner.classList.add('_ezi-theme-' + panelId);
                             applyTheme(inner, t);
@@ -2007,6 +2051,41 @@ INJECTED_JS = """
                 applyPanelTheme(themeId);
                 setMsg('✓ Panel theme: ' + themeId, '#8f8');
             };
+
+            /* ── AI Language selector ── */
+            var _aiLangSel = document.getElementById('_cdp_ai_lang');
+            var _aiLangBtn = document.getElementById('_cdp_ai_lang_apply');
+            if (_aiLangSel && _aiLangBtn) {
+                try {
+                    pywebview.api.get_ui_settings().then(function(raw) {
+                        var s = {};
+                        try { s = JSON.parse(raw) || {}; } catch (e) {}
+                        if (s.sel_ai_lang && _aiLangSel.querySelector('option[value="' + s.sel_ai_lang + '"]')) {
+                            _aiLangSel.value = s.sel_ai_lang;
+                        } else {
+                            /* Auto-detect system language on first load */
+                            pywebview.api.get_system_lang().then(function(raw2) {
+                                var d = JSON.parse(raw2);
+                                if (d.lang && _aiLangSel.querySelector('option[value="' + d.lang + '"]')) {
+                                    _aiLangSel.value = d.lang;
+                                }
+                            });
+                        }
+                    });
+                } catch (e) {}
+                _aiLangBtn.onclick = function() {
+                    var lang = _aiLangSel.value || 'en';
+                    try {
+                        pywebview.api.get_ui_settings().then(function(raw) {
+                            var s = {};
+                            try { s = JSON.parse(raw) || {}; } catch (e) {}
+                            s.sel_ai_lang = lang;
+                            pywebview.api.save_ui_settings(JSON.stringify(s));
+                        });
+                    } catch (e) {}
+                    setMsg('✓ AI language: ' + lang, '#8f8');
+                };
+            }
 
             /* ── Populate ComfyUI node-editor theme selector (do NOT override panel theme) ── */
             pywebview.api.get_comfy_theme().then(function(raw) {
@@ -3236,6 +3315,10 @@ def open_in_webview():
                 return json.dumps({"ok": True})
             except Exception as e:
                 return json.dumps({"error": str(e)})
+
+        def get_system_lang(self):
+            """Return detected system language code for AI links."""
+            return json.dumps({"lang": _ezi_system_lang()})
 
         def get_custom_paths(self):
             """Return saved custom input/output/user paths."""
