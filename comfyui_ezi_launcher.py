@@ -13,6 +13,7 @@ import subprocess
 import platform
 import webbrowser
 import base64
+import re
 from pathlib import Path
 
 EZI_VERSION = "3.24.0"
@@ -95,6 +96,142 @@ def attention_flag(name: str) -> str:
         "flashattention": "--use-flash-attention",
         "kitchenattention": "--use-kitchen-attention",
     }.get(name.lower(), "")
+
+# ---------------------------------------------------------------------------
+# Launcher themes (ported from upstream ComfyUI-EZi-Launcher.py v3.24.0)
+# ---------------------------------------------------------------------------
+LAUNCHER_THEMES = {
+    'dark': {
+        'bg': '#0c0e12', 'bar-bg': '#161b22', 'border': '#21262d', 'border2': '#30363d', 'border3': '#484f58',
+        'btn-bg': '#21262d', 'btn-bg2': '#2d333b', 'input-bg': '#0d1117', 'modal-bg': '#161b22',
+        'hover-row': '#1c2128', 'text': '#cccccc', 'text2': '#8b949e', 'text3': '#e6edf3',
+        'accent': '#388bfd', 'accent-hover': '#58a6ff', 'accent-bg': '#0d419d', 'accent-bg-hover': '#1158c7',
+    },
+    'pixaroma': {
+        'bg': '#111111', 'bar-bg': '#1a1a1a', 'border': '#252525', 'border2': '#2e2e2e', 'border3': '#444444',
+        'btn-bg': '#222222', 'btn-bg2': '#2a2a2a', 'input-bg': '#0d0d0d', 'modal-bg': '#1a1a1a',
+        'hover-row': '#1f1f1f', 'text': '#cccccc', 'text2': '#888888', 'text3': '#e0e0e0',
+        'accent': '#e8530a', 'accent-hover': '#ff7040', 'accent-bg': '#6e2200', 'accent-bg-hover': '#8a3000',
+    },
+    'aurora': {
+        'bg': '#0b1926', 'bar-bg': '#102638', 'border': '#304659', 'border2': '#3b566f', 'border3': '#49758a',
+        'btn-bg': '#22374b', 'btn-bg2': '#304b63', 'input-bg': '#09232d', 'modal-bg': '#122438',
+        'hover-row': '#203649', 'text': '#edf3ff', 'text2': '#a1b3cc', 'text3': '#edf3ff',
+        'accent': '#82dfcd', 'accent-hover': '#9be9d9', 'accent-bg': '#224c56', 'accent-bg-hover': '#2b616c',
+    },
+    'light': {
+        'bg': '#f0f2f5', 'bar-bg': '#dde1e7', 'border': '#c8cdd5', 'border2': '#b0b7c0', 'border3': '#8a9199',
+        'btn-bg': '#e2e6eb', 'btn-bg2': '#d0d5dc', 'input-bg': '#ffffff', 'modal-bg': '#ffffff',
+        'hover-row': '#d8dce3', 'text': '#24292f', 'text2': '#57606a', 'text3': '#1c2026',
+        'accent': '#0969da', 'accent-hover': '#0550ae', 'accent-bg': '#0969da', 'accent-bg-hover': '#0550ae',
+    },
+}
+
+def _rgb(h):
+    return tuple(int(h[i:i+2], 16) for i in (1, 3, 5))
+
+def _gamma_lum(h):
+    def lin(c): return c/12.92 if c <= 0.04045 else ((c+0.055)/1.055)**2.4
+    r, g, b = [lin(c/255) for c in _rgb(h)]
+    return 0.2126*r + 0.7152*g + 0.0722*b
+
+def _blend(a, b, t):
+    ra, rb = _rgb(a), _rgb(b)
+    return '#%02x%02x%02x' % tuple(int(x*(1-t) + y*t) for x, y in zip(ra, rb))
+
+def _hex_ok(value):
+    v = str(value).strip()
+    if re.fullmatch(r'#[0-9a-fA-F]{6}', v):
+        return v.lower()
+    m = re.fullmatch(r'#([0-9a-fA-F]{3})', v)
+    if m:
+        return '#' + ''.join(c*2 for c in m.group(1)).lower()
+    return None
+
+def _builtin_palette(pid):
+    """Read a builtin ComfyUI palette from the installed frontend package."""
+    import glob as _glob
+    for cand in _glob.glob(str(SCRIPT_DIR / 'python_embeded' / '**' / 'site-packages'), recursive=True):
+        for pkg in _glob.glob(os.path.join(cand, 'comfyui_frontend_package*')):
+            if 'dist-info' in pkg or not os.path.isdir(pkg):
+                continue
+            pdir = os.path.join(pkg, 'static', 'assets', 'palettes')
+            if not os.path.isdir(pdir):
+                continue
+            for fn in os.listdir(pdir):
+                if not fn.endswith('.json'):
+                    continue
+                try:
+                    with open(os.path.join(pdir, fn), encoding='utf-8', errors='replace') as f:
+                        d = json.load(f)
+                except (OSError, ValueError):
+                    continue
+                if d.get('id') == pid and d.get('colors'):
+                    return d['colors']
+    return {}
+
+def _comfy_theme_vars():
+    """Derive launcher theme vars from ComfyUI's active palette."""
+    try:
+        path = SCRIPT_DIR / 'ComfyUI' / 'user' / 'comfy.settings.json'
+        if not path.is_file():
+            path = SCRIPT_DIR / 'ComfyUI' / 'user' / 'default' / 'comfy.settings.json'
+        with open(path, encoding='utf-8', errors='replace') as f:
+            data = json.load(f)
+        pid = data.get('Comfy.ColorPalette', '') or 'dark'
+        custom = data.get('Comfy.CustomColorPalettes', {})
+        colors = custom[pid].get('colors', {}) if isinstance(custom, dict) and pid in custom else _builtin_palette(pid)
+        cb, lg = colors.get('comfy_base', {}), colors.get('litegraph_base', {})
+        def c(k, fb=''): return _hex_ok(cb.get(k, '')) or fb
+        def l(k, fb=''): return _hex_ok(lg.get(k, '')) or fb
+        bg = c('bg-color', '#202020')
+        menu_bg = c('comfy-menu-bg', bg)
+        input_bg = c('comfy-input-bg', bg)
+        fg = c('fg-color', '#cccccc')
+        border = c('border-color', '#444444')
+        lg_bg = l('CLEAR_BACKGROUND_COLOR', bg)
+        node_bg = l('NODE_DEFAULT_BGCOLOR', menu_bg)
+        node_title = l('NODE_TITLE_COLOR', fg)
+        accent = l('NODE_BOX_OUTLINE_COLOR', c('border-color', '#388bfd'))
+        lum = _gamma_lum(accent)
+        if lum > 0.80 or lum < 0.05:
+            link = l('LINK_COLOR', '')
+            if link and 0.05 <= _gamma_lum(link) <= 0.80:
+                accent, lum = link, _gamma_lum(link)
+        target = '#000000' if lum >= 0.18 else '#ffffff'
+        return pid, {
+            'bg': lg_bg, 'bar-bg': menu_bg, 'border': border, 'border2': border, 'border3': border,
+            'btn-bg': node_bg, 'btn-bg2': node_bg, 'input-bg': input_bg, 'modal-bg': menu_bg,
+            'hover-row': lg_bg, 'text': fg, 'text2': node_title, 'text3': fg,
+            'accent': accent, 'accent-hover': _blend(accent, '#ffffff', .30),
+            'accent-bg': _blend(accent, target, .60), 'accent-bg-hover': _blend(accent, target, .45),
+        }
+    except (OSError, ValueError, AttributeError, KeyError, TypeError):
+        return '', {}
+
+def launcher_theme_css(theme_name):
+    """Return (resolved_name, {css-var: value}) for the launcher UI."""
+    comfy_pid = ''
+    if theme_name == 'comfyui':
+        comfy_pid, v = _comfy_theme_vars()
+        if not v:
+            theme_name = 'aurora'
+            v = dict(LAUNCHER_THEMES['aurora'])
+    else:
+        v = dict(LAUNCHER_THEMES.get(theme_name, LAUNCHER_THEMES['aurora']))
+        theme_name = theme_name if theme_name in LAUNCHER_THEMES else 'aurora'
+    acc = v['accent']
+    on_acc = _blend(acc, '#000000', .85) if _gamma_lum(acc) >= 0.35 else '#ffffff'
+    css = {
+        '--bg': v['bg'], '--bg-light': v['bar-bg'], '--bg-lighter': v['btn-bg2'],
+        '--panel': v['bar-bg'], '--modal': v['modal-bg'], '--row': v['hover-row'],
+        '--accent': acc, '--accent-hover': v['accent-hover'], '--ready': acc,
+        '--on-accent': on_acc,
+        '--text': v['text3'], '--text-muted': v['text2'],
+        '--border': v['border'], '--border2': v['border2'],
+        '--g1': _blend(v['bg'], acc, .18), '--g2': _blend(v['bg'], v['border3'], .45),
+    }
+    return theme_name, comfy_pid, css
 
 # ---------------------------------------------------------------------------
 # Launch helpers
@@ -223,11 +360,15 @@ class LauncherApi:
     def get_state(self):
         state = load_state()
         mode = state.get("mode", "desktop")
+        theme_name, comfy_pid, theme_css = launcher_theme_css(state.get("launcher_theme", "aurora"))
         return {
             "version": EZI_VERSION,
             "platform": PLATFORM,
             "valid_dir": INSTALL_DIR is not None,
             "mode": mode,
+            "theme": theme_name,
+            "theme_css": theme_css,
+            "comfy_theme": comfy_pid,
             "python": PYTHON_EXEC,
             "items": [
                 {
@@ -283,6 +424,13 @@ class LauncherApi:
         state["mode"] = mode
         save_state(state)
         return {"ok": True}
+
+    def set_theme(self, theme: str):
+        theme_name, comfy_pid, theme_css = launcher_theme_css(theme)
+        state = load_state()
+        state["launcher_theme"] = theme if theme in LAUNCHER_THEMES or theme == "comfyui" else "aurora"
+        save_state(state)
+        return {"ok": True, "theme": theme_name, "theme_css": theme_css, "comfy_theme": comfy_pid}
 
     def launch(self, item_id: str, attention: str = ""):
         state = load_state()
@@ -342,7 +490,7 @@ HTML = r"""<!DOCTYPE html>
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: linear-gradient(135deg, #151925 0%, #1e2333 100%);
+  background: linear-gradient(135deg, var(--g1, #151925) 0%, var(--g2, #1e2333) 100%);
   color: var(--text);
   height: 100vh;
   overflow: hidden;
@@ -361,7 +509,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 14px 18px;
-  background: rgba(21, 25, 37, 0.85);
+  background: color-mix(in srgb, var(--panel, #151925) 85%, transparent);
   border-bottom: 1px solid var(--border);
   -webkit-app-region: drag;
 }
@@ -389,6 +537,17 @@ body {
   font-size: 13px;
   color: var(--text-muted);
   margin-left: 10px;
+}
+.theme-select {
+  -webkit-app-region: no-drag;
+  background: var(--bg-light);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+  padding: 4px 8px;
+  margin-right: 12px;
+  cursor: pointer;
 }
 .version {
   font-size: 13px;
@@ -454,7 +613,7 @@ body {
 .tab:hover { background: var(--bg-lighter); color: var(--text); }
 .tab.active {
   background: var(--accent);
-  color: #0f1620;
+  color: var(--on-accent, #0f1620);
   font-weight: 600;
   border-color: var(--accent);
 }
@@ -520,7 +679,7 @@ body {
 }
 .btn-primary {
   background: var(--accent);
-  color: #0f1620;
+  color: var(--on-accent, #0f1620);
 }
 .btn-primary:hover { background: var(--accent-hover); }
 .btn-ghost {
@@ -619,6 +778,7 @@ body {
         <h1>ComfyUI EZi <span>Launcher</span></h1>
       </div>
     </div>
+    <select class="theme-select" id="theme-select" title="Launcher theme"></select>
     <div class="version" id="version">v""" + EZI_VERSION + r"""</div>
     <button class="close-btn" onclick="pywebview.api.close()">×</button>
   </div>
@@ -667,6 +827,35 @@ const ICONS = {
 
 let state = {};
 let currentMode = 'desktop';
+
+const THEME_OPTIONS = [
+  {value:'aurora',  label:'EZi Aurora'},
+  {value:'dark',    label:'EZi Dark'},
+  {value:'pixaroma',label:'Pixaroma'},
+  {value:'light',   label:'EZi Light'},
+  {value:'comfyui', label:'ComfyUI'},
+];
+
+function applyTheme(css) {
+  const r = document.documentElement;
+  for (const k in css) r.style.setProperty(k, css[k]);
+}
+
+async function setTheme(t) {
+  const res = await call('set_theme', t);
+  if (res && res.ok) { applyTheme(res.theme_css); rebuildThemeSelect(res.theme, res.comfy_theme); }
+}
+
+function rebuildThemeSelect(current, comfyPid) {
+  const sel = document.getElementById('theme-select');
+  sel.innerHTML = THEME_OPTIONS.map(o => {
+    let label = o.label;
+    if (o.value === 'comfyui') label += comfyPid ? ' (' + comfyPid + ')' : '';
+    if (o.value === 'aurora') label += ' (default)';
+    const disabled = o.value === 'comfyui' && !comfyPid ? ' disabled' : '';
+    return `<option value="${o.value}"${o.value === current ? ' selected' : ''}${disabled}>${label}</option>`;
+  }).join('');
+}
 
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -776,6 +965,9 @@ async function init() {
     return;
   }
   currentMode = state.mode || 'desktop';
+  applyTheme(state.theme_css || {});
+  rebuildThemeSelect(state.theme || 'aurora', state.comfy_theme || '');
+  document.getElementById('theme-select').addEventListener('change', e => setTheme(e.target.value));
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.mode === currentMode));
   document.getElementById('version').textContent = 'v' + state.version;
   document.getElementById('logo').innerHTML = '""" + (('<img src="data:image/png;base64,' + _ICON_B64 + '">') if _ICON_B64 else '🎨') + r"""';

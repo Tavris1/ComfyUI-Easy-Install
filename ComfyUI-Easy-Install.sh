@@ -57,9 +57,14 @@ sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1 || true
 sysctl -w net.ipv6.conf.default.disable_ipv6=1 >/dev/null 2>&1 || true
 
 # Set arguments
-PIP_ARGS="--no-cache-dir --no-warn-script-location --timeout=120 --retries 3 --progress-bar on --root-user-action=ignore --trusted-host pypi.org --trusted-host files.pythonhosted.org --trusted-host pypi.python.org"
+PIP_ARGS="$PIP_NC --no-warn-script-location --timeout=120 --retries 3 --progress-bar on --root-user-action=ignore --trusted-host pypi.org --trusted-host files.pythonhosted.org --trusted-host pypi.python.org"
 CURL_ARGS="--retry 200 --retry-all-errors"
-UV_ARGS="--system --no-cache --link-mode=copy"
+UV_ARGS="--system $UV_NC --link-mode=copy"
+
+# Keep downloaded package cache when Add-Ons/Tools/Helper-CEI/keep_cache.flag exists
+KEEP_CACHE_FLAG="$(pwd -P)/Add-Ons/Tools/Helper-CEI/keep_cache.flag"
+PIP_NC="--no-cache-dir"; UV_NC="--no-cache"
+if [ -f "$KEEP_CACHE_FLAG" ]; then PIP_NC=""; UV_NC=""; fi
 
 # Check for Existing ComfyUI Folder
 if [ -d "ComfyUI-Easy-Install" ]; then
@@ -430,9 +435,9 @@ EOL
     # Upgrade pip with timeout to prevent hanging (skip if it fails)
     echo "Upgrading pip (timeout 60s)..."
     if command -v timeout >/dev/null 2>&1; then
-        timeout 60 "$PYTHON_CMD" -m pip install --no-cache-dir --timeout=30 --retries=2 --upgrade pip 2>/dev/null || echo -e "${YELLOW}pip upgrade skipped (timeout or network issue)${RESET}"
+        timeout 60 "$PYTHON_CMD" -m pip install $PIP_NC --timeout=30 --retries=2 --upgrade pip 2>/dev/null || echo -e "${YELLOW}pip upgrade skipped (timeout or network issue)${RESET}"
     else
-        "$PYTHON_CMD" -m pip install --no-cache-dir --timeout=30 --retries=2 --upgrade pip 2>/dev/null || echo -e "${YELLOW}pip upgrade skipped (timeout or network issue)${RESET}"
+        "$PYTHON_CMD" -m pip install $PIP_NC --timeout=30 --retries=2 --upgrade pip 2>/dev/null || echo -e "${YELLOW}pip upgrade skipped (timeout or network issue)${RESET}"
     fi
 
     # Set the full path to the embedded Python
@@ -451,9 +456,9 @@ EOL
     export UV_PYTHON="$EMBEDDED_PYTHON"
     # venv installs should target the venv (no --system); source-built embeds use --system
     if [ -f "$PYTHON_BIN_DIR/pyvenv.cfg" ] || [ -f "$PYTHON_BIN_DIR/../pyvenv.cfg" ]; then
-        UV_ARGS="--no-cache --link-mode=copy"
+        UV_ARGS="$UV_NC --link-mode=copy"
     else
-        UV_ARGS="--system --no-cache --link-mode=copy"
+        UV_ARGS="--system $UV_NC --link-mode=copy"
     fi
     
     # Return to the original directory
@@ -742,7 +747,7 @@ get_node() {
                         -DCMAKE_INSTALL_RPATH="$FFMPEG6_PREFIX/lib" 2>&1; then
                         if cmake --build "$DECORD_BUILD_DIR/build" --parallel 2>&1; then
                             # Decord's --no-build-isolation wheel needs these in the active env
-                            "$EMBEDDED_PYTHON" -m pip install --no-cache-dir setuptools wheel pybind11 numpy 2>/dev/null || true
+                            "$EMBEDDED_PYTHON" -m pip install $PIP_NC setuptools wheel pybind11 numpy 2>/dev/null || true
                             if "$EMBEDDED_PYTHON" -m pip wheel "$DECORD_BUILD_DIR/python" \
                                 --no-deps --no-build-isolation --wheel-dir "$DECORD_BUILD_DIR/wheels"; then
                                 DECORD_WHEEL=$(find "$DECORD_BUILD_DIR/wheels" -name 'decord-*.whl' | head -n1)
@@ -921,7 +926,7 @@ echo -e "${GREEN}✓${RESET} python-ffmpeg installed"
 if [ "$(uname -s)" = "Darwin" ]; then
     echo -e "${YELLOW}Installing opencv-contrib-python for LayerStyle (ximgproc)...${RESET}"
     # uninstall does not accept --link-mode; keep only compatible flags
-    uv pip uninstall --no-cache opencv-python-headless opencv-python opencv-contrib-python 2>/dev/null || true
+    uv pip uninstall $UV_NC opencv-python-headless opencv-python opencv-contrib-python 2>/dev/null || true
     uv pip install --force-reinstall opencv-contrib-python $UV_ARGS
 fi
 
@@ -980,7 +985,7 @@ if [ "$(uname -s)" = "Linux" ]; then
 fi
 
 # Postinstall: resync pydantic stack to avoid version mismatch issues
-uv pip uninstall --no-cache pydantic pydantic-core || true
+uv pip uninstall $UV_NC pydantic pydantic-core || true
 uv pip install $UV_ARGS pydantic
 
 # Copy additional files if they exist
