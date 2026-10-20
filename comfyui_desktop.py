@@ -20,7 +20,7 @@ import subprocess
 import traceback
 import locale
 
-EZI_VERSION = "3.23.0"
+EZI_VERSION = "3.24.0"
 
 
 def _log_error(label=''):

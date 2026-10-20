@@ -15,7 +15,7 @@ import webbrowser
 import base64
 from pathlib import Path
 
-EZI_VERSION = "3.23.0"
+EZI_VERSION = "3.24.0"
 
 # ---------------------------------------------------------------------------
 # Paths and constants

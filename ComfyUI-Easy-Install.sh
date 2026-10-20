@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo 3.23.0
+# Title ComfyUI-Easy-Install  NEXT by ivo 3.24.0
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -856,7 +856,7 @@ else
 fi
 get_node https://github.com/kijai/ComfyUI-SCAIL-Pose ComfyUI-SCAIL-Pose
 get_node https://github.com/kijai/ComfyUI-MelBandRoFormer ComfyUI-MelBandRoFormer
-get_node https://github.com/capitan01R/ComfyUI-Krea2T-Enhancer ComfyUI-Krea2T-Enhancer
+# get_node https://github.com/capitan01R/ComfyUI-Krea2T-Enhancer ComfyUI-Krea2T-Enhancer
 get_node https://github.com/lbouaraba/comfyui-krea2edit ComfyUI-Krea2Edit
 
 if [ ! -d "ComfyUI/custom_nodes/.disabled" ]; then
