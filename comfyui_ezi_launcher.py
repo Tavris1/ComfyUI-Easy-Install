@@ -24,6 +24,7 @@ EZI_VERSION = "3.24.0"
 SCRIPT_DIR = Path(__file__).resolve().parent
 ICON_PATH = SCRIPT_DIR / "comfyui_icon.png"
 WINDOW_STATE_FILE = SCRIPT_DIR / ".comfyui_ezi_launcher_state.json"
+KEEP_CACHE_FLAG = SCRIPT_DIR / "Add-Ons" / "Tools" / "Helper-CEI" / "keep_cache.flag"
 
 # ---------------------------------------------------------------------------
 # Platform helpers
@@ -209,6 +210,19 @@ def _comfy_theme_vars():
     except (OSError, ValueError, AttributeError, KeyError, TypeError):
         return '', {}
 
+def _persist_comfy_theme_vars():
+    """Persist derived theme vars to the launcher state when the ComfyUI theme is active."""
+    pid, vars_ = _comfy_theme_vars()
+    if not vars_:
+        return
+    try:
+        state = load_state()
+        if state.get("launcher_theme") == "comfyui" and state.get("comfy_theme_vars") != vars_:
+            state["comfy_theme_vars"] = vars_
+            save_state(state)
+    except Exception:
+        pass
+
 def launcher_theme_css(theme_name):
     """Return (resolved_name, {css-var: value}) for the launcher UI."""
     comfy_pid = ''
@@ -361,6 +375,8 @@ class LauncherApi:
         state = load_state()
         mode = state.get("mode", "desktop")
         theme_name, comfy_pid, theme_css = launcher_theme_css(state.get("launcher_theme", "aurora"))
+        if theme_name == "comfyui":
+            _persist_comfy_theme_vars()
         return {
             "version": EZI_VERSION,
             "platform": PLATFORM,
@@ -369,6 +385,7 @@ class LauncherApi:
             "theme": theme_name,
             "theme_css": theme_css,
             "comfy_theme": comfy_pid,
+            "keep_cache": KEEP_CACHE_FLAG.exists(),
             "python": PYTHON_EXEC,
             "items": [
                 {
@@ -430,7 +447,20 @@ class LauncherApi:
         state = load_state()
         state["launcher_theme"] = theme if theme in LAUNCHER_THEMES or theme == "comfyui" else "aurora"
         save_state(state)
+        if theme_name == "comfyui":
+            _persist_comfy_theme_vars()
         return {"ok": True, "theme": theme_name, "theme_css": theme_css, "comfy_theme": comfy_pid}
+
+    def set_keep_cache(self, enabled: bool):
+        try:
+            if enabled:
+                KEEP_CACHE_FLAG.parent.mkdir(parents=True, exist_ok=True)
+                KEEP_CACHE_FLAG.touch()
+            elif KEEP_CACHE_FLAG.exists():
+                KEEP_CACHE_FLAG.unlink()
+        except OSError:
+            pass
+        return KEEP_CACHE_FLAG.exists()
 
     def launch(self, item_id: str, attention: str = ""):
         state = load_state()
@@ -549,6 +579,17 @@ body {
   margin-right: 12px;
   cursor: pointer;
 }
+.cache-toggle {
+  -webkit-app-region: no-drag;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-right: 12px;
+  cursor: pointer;
+}
+.cache-toggle input { accent-color: var(--accent); cursor: pointer; }
 .version {
   font-size: 13px;
   color: var(--accent);
@@ -779,6 +820,7 @@ body {
       </div>
     </div>
     <select class="theme-select" id="theme-select" title="Launcher theme"></select>
+    <label class="cache-toggle" title="Keep pip/uv package cache"><input type="checkbox" id="keep-cache" onchange="setKeepCache(this.checked)"> keep cache</label>
     <div class="version" id="version">v""" + EZI_VERSION + r"""</div>
     <button class="close-btn" onclick="pywebview.api.close()">×</button>
   </div>
@@ -844,6 +886,12 @@ function applyTheme(css) {
 async function setTheme(t) {
   const res = await call('set_theme', t);
   if (res && res.ok) { applyTheme(res.theme_css); rebuildThemeSelect(res.theme, res.comfy_theme); }
+}
+
+async function setKeepCache(on) {
+  const res = await call('set_keep_cache', on);
+  const chk = document.getElementById('keep-cache');
+  if (chk) chk.checked = !!res;
 }
 
 function rebuildThemeSelect(current, comfyPid) {
@@ -968,6 +1016,8 @@ async function init() {
   applyTheme(state.theme_css || {});
   rebuildThemeSelect(state.theme || 'aurora', state.comfy_theme || '');
   document.getElementById('theme-select').addEventListener('change', e => setTheme(e.target.value));
+  const cacheChk = document.getElementById('keep-cache');
+  if (cacheChk) cacheChk.checked = !!state.keep_cache;
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.mode === currentMode));
   document.getElementById('version').textContent = 'v' + state.version;
   document.getElementById('logo').innerHTML = '""" + (('<img src="data:image/png;base64,' + _ICON_B64 + '">') if _ICON_B64 else '🎨') + r"""';

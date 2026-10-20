@@ -56,15 +56,15 @@ echo -e "${YELLOW}Disabling IPv6 to prevent network hangs...${RESET}"
 sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1 || true
 sysctl -w net.ipv6.conf.default.disable_ipv6=1 >/dev/null 2>&1 || true
 
-# Set arguments
-PIP_ARGS="$PIP_NC --no-warn-script-location --timeout=120 --retries 3 --progress-bar on --root-user-action=ignore --trusted-host pypi.org --trusted-host files.pythonhosted.org --trusted-host pypi.python.org"
-CURL_ARGS="--retry 200 --retry-all-errors"
-UV_ARGS="--system $UV_NC --link-mode=copy"
-
 # Keep downloaded package cache when Add-Ons/Tools/Helper-CEI/keep_cache.flag exists
 KEEP_CACHE_FLAG="$(pwd -P)/Add-Ons/Tools/Helper-CEI/keep_cache.flag"
 PIP_NC="--no-cache-dir"; UV_NC="--no-cache"
 if [ -f "$KEEP_CACHE_FLAG" ]; then PIP_NC=""; UV_NC=""; fi
+
+# Set arguments
+PIP_ARGS="$PIP_NC --no-warn-script-location --timeout=120 --retries 3 --progress-bar on --root-user-action=ignore --trusted-host pypi.org --trusted-host files.pythonhosted.org --trusted-host pypi.python.org"
+CURL_ARGS="--retry 200 --retry-all-errors"
+UV_ARGS="--system $UV_NC --link-mode=copy"
 
 # Check for Existing ComfyUI Folder
 if [ -d "ComfyUI-Easy-Install" ]; then
