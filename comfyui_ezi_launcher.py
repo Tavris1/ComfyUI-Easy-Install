@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ComfyUI EZi Launcher v3.23.0 — macOS/Linux port of the Windows launcher UI.
+ComfyUI EZi Launcher v3.24.0 — macOS/Linux port of the Windows launcher UI.
 PyWebView + HTML/CSS/JS single-file application.
 Part of ComfyUI-Easy-Install by Pixaroma / VenimK.
 """
