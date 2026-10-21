@@ -14,6 +14,8 @@ import platform
 import webbrowser
 import base64
 import re
+import time
+import tempfile
 from pathlib import Path
 
 EZI_VERSION = "3.24.0"
@@ -345,6 +347,551 @@ def open_folder(name: str) -> dict:
     return {"ok": True}
 
 # ---------------------------------------------------------------------------
+# Snapshots — ported from Windows launcher v3.25.0 (ComfyUI-Manager cm-cli)
+# ---------------------------------------------------------------------------
+SNAP_NAME_RE = re.compile(r"^(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2}-\d{2})_(.+)$")
+SNAP_MENU_MAX = 15
+
+CM_USER_DIR = SCRIPT_DIR / "ComfyUI" / "user"
+CM_CLI_PATH = SCRIPT_DIR / "ComfyUI" / "custom_nodes" / "ComfyUI-Manager" / "cm-cli.py"
+SNAPSHOTS_DIR = CM_USER_DIR / "__manager" / "snapshots"
+
+
+def _find_cm_cli():
+    return str(CM_CLI_PATH) if CM_CLI_PATH.is_file() else None
+
+
+def _list_snapshots():
+    found = []
+    try:
+        for name in os.listdir(SNAPSHOTS_DIR):
+            full = SNAPSHOTS_DIR / name
+            if name.lower().endswith(".json") and full.is_file():
+                found.append((full.stat().st_mtime, str(full)))
+    except OSError:
+        return []
+    found.sort(reverse=True)
+    return [p for _, p in found]
+
+
+def _snapshot_title(path):
+    stem = os.path.splitext(os.path.basename(path))[0]
+    m = SNAP_NAME_RE.match(stem)
+    if m:
+        return m.group(1) + " " + m.group(2).replace("-", ":"), m.group(3)
+    try:
+        stamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(os.path.getmtime(path)))
+    except OSError:
+        stamp = ""
+    return stamp, stem
+
+
+def _snapshot_age(path, now=None):
+    match = SNAP_NAME_RE.match(os.path.splitext(os.path.basename(path))[0])
+    try:
+        stamp = time.mktime(time.strptime(match.group(1) + " " + match.group(2), "%Y-%m-%d %H-%M-%S")) if match else os.path.getmtime(path)
+    except (OSError, ValueError, OverflowError):
+        try:
+            stamp = os.path.getmtime(path)
+        except OSError:
+            return ""
+    seconds = max(0, int((time.time() if now is None else now) - stamp))
+    for duration, unit in [(31536000, "year"), (2592000, "month"), (604800, "week"),
+                           (86400, "day"), (3600, "hour"), (60, "min")]:
+        count = seconds // duration
+        if count:
+            return str(count) + " " + unit + ("s" if count != 1 and unit != "min" else "") + " ago"
+    return "just now"
+
+
+def _snapshot_torch(path):
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            pips = json.load(f).get("pips", {})
+        for key in pips:
+            if str(key).lower().startswith("torch=="):
+                return str(key).split("==", 1)[1]
+    except (OSError, ValueError, AttributeError, TypeError):
+        pass
+    return None
+
+
+def _installed_torch():
+    import glob
+    for cand in glob.glob(str(SCRIPT_DIR / "python_embeded" / "lib" / "python3*" / "site-packages")):
+        try:
+            for name in os.listdir(cand):
+                m = re.match(r"(?i)^torch-(.+)\.dist-info$", name)
+                if m:
+                    return m.group(1)
+        except OSError:
+            pass
+    return None
+
+
+def _snap_note():
+    if not _find_cm_cli():
+        return "Manager (cm-cli) not found"
+    count = len(_list_snapshots())
+    if not count:
+        return "No snapshots yet"
+    return str(count) + (" snapshot" if count == 1 else " snapshots")
+
+
+def _stamped(tag):
+    SNAPSHOTS_DIR.mkdir(parents=True, exist_ok=True)
+    return str(SNAPSHOTS_DIR / (time.strftime("%Y-%m-%d_%H-%M-%S") + "_" + tag + ".json"))
+
+
+def _snap_env():
+    env = os.environ.copy()
+    env["COMFYUI_PATH"] = str(SCRIPT_DIR / "ComfyUI")
+    env["PYTHONIOENCODING"] = "utf-8"
+    return env
+
+
+def _run_snap(cmd):
+    try:
+        r = subprocess.run(cmd, capture_output=True, text=True, cwd=str(SCRIPT_DIR), env=_snap_env(), timeout=3600)
+    except subprocess.TimeoutExpired:
+        return 1, "Timed out: " + " ".join(cmd)
+    return r.returncode, ((r.stdout or "") + (r.stderr or "")).strip()
+
+
+def _restore_script_path():
+    script = os.path.join(tempfile.gettempdir(), "ezi_snapshot_restore.py")
+    with open(script, "w", encoding="utf-8", newline="\n") as f:
+        f.write(SNAP_RESTORE_SCRIPT)
+    return script
+
+
+SNAP_RESTORE_SCRIPT = r'''import json
+import os
+import re
+import subprocess
+import sys
+from importlib import metadata
+
+PROTECTED = {'torch', 'torchvision', 'torchaudio', 'triton', 'triton-windows', 'pip', 'setuptools', 'wheel'}
+
+
+def git(repo, *args):
+    try:
+        done = subprocess.run(['git', '-C', repo] + list(args), capture_output=True, text=True,
+                              encoding='utf-8', errors='replace')
+    except OSError as error:
+        return 1, '', str(error)
+    return done.returncode, done.stdout.strip(), done.stderr.strip()
+
+
+def head_of(repo):
+    code, out, _ = git(repo, 'rev-parse', 'HEAD')
+    return out if code == 0 else None
+
+
+def same_commit(a, b):
+    return bool(a) and bool(b) and (a.startswith(b) or b.startswith(a))
+
+
+def switch_commit(repo, target):
+    code, _, err = git(repo, 'checkout', target)
+    if code == 0:
+        return True, ''
+    for fetch in (['--unshallow', '--tags', 'origin'], ['--tags', 'origin'],
+                  ['origin', '+refs/heads/master:refs/remotes/origin/master']):
+        if git(repo, 'fetch', *fetch)[0] == 0:
+            code, _, err = git(repo, 'checkout', target)
+            if code == 0:
+                return True, ''
+    return False, '\n'.join(err.splitlines()[-6:])
+
+
+def restore_core(snapshot, comfy_dir):
+    target = snapshot.get('comfyui')
+    if not target or not re.fullmatch(r'[0-9a-f]{7,40}', str(target)):
+        print('ComfyUI: no commit in the snapshot, left unchanged')
+        return 0
+    head = head_of(comfy_dir)
+    if same_commit(head, target):
+        print('ComfyUI: already at ' + target[:7])
+        return 0
+    if not os.path.isdir(os.path.join(comfy_dir, '.git')):
+        print('ComfyUI: .git folder not found, the commit cannot be restored')
+        return 1
+    print('ComfyUI: ' + str(head)[:7] + ' -> ' + target[:7])
+    ok, detail = switch_commit(comfy_dir, target)
+    if not ok:
+        print('ComfyUI: git checkout failed')
+        if detail:
+            print(detail)
+        return 1
+    print('ComfyUI: now at ' + str(head_of(comfy_dir))[:7])
+    return 0
+
+
+def norm_url(url):
+    url = re.sub(r'^[a-z+]+://', '', url.strip().lower())
+    url = re.sub(r'^[^@/]*@', '', url)
+    url = url.replace(':', '/', 1)
+    url = re.sub(r'^www\.', '', url)
+    return re.sub(r'(\.git)?/*$', '', url)
+
+
+def origin_url(repo):
+    try:
+        with open(os.path.join(repo, '.git', 'config'), 'r', encoding='utf-8', errors='ignore') as f:
+            text = f.read()
+    except OSError:
+        return None
+    match = re.search(r'\[remote "origin"\][^\[]*?url\s*=\s*(\S+)', text)
+    return match.group(1) if match else None
+
+
+def local_repos(nodes_dir):
+    found = []
+    for folder, off in ((nodes_dir, False), (os.path.join(nodes_dir, '.disabled'), True)):
+        try:
+            names = sorted(os.listdir(folder))
+        except OSError:
+            continue
+        for name in names:
+            path = os.path.join(folder, name)
+            if name != '.disabled' and os.path.isdir(os.path.join(path, '.git')):
+                found.append((path, off or name.endswith('.disabled')))
+    return found
+
+
+def restore_nodes(snapshot, nodes_dir):
+    wanted_nodes = snapshot.get('git_custom_nodes') or {}
+    local = {}
+    for path, off in local_repos(nodes_dir):
+        url = origin_url(path)
+        if url:
+            local.setdefault(norm_url(url), []).append((path, off))
+    ok, fixed, problems = 0, [], []
+    for url, info in wanted_nodes.items():
+        if 'comfyui-manager' in url.lower():
+            continue
+        target = info.get('hash')
+        wanted_off = bool(info.get('disabled'))
+        name = re.sub(r'\.git$', '', url.rstrip('/').split('/')[-1])
+        entries = local.get(norm_url(url), [])
+        if not entries:
+            if wanted_off:
+                continue
+            code, _, err = git(nodes_dir, 'clone', url, name)
+            if code != 0:
+                problems.append(name + ': missing, clone failed: ' + (err.splitlines() or [''])[-1])
+                continue
+            path = os.path.join(nodes_dir, name)
+            done, detail = switch_commit(path, target)
+            if done:
+                fixed.append(name + ': cloned at ' + str(target)[:7])
+            else:
+                problems.append(name + ': cloned, checkout failed: ' + (detail.splitlines() or [''])[-1])
+            continue
+        entries.sort(key=lambda e: e[1] != wanted_off)
+        path, off = entries[0]
+        good = True
+        if target and not same_commit(head_of(path), target):
+            before = str(head_of(path))[:7]
+            done, detail = switch_commit(path, target)
+            if done:
+                fixed.append(name + ': ' + before + ' -> ' + target[:7])
+            else:
+                problems.append(name + ': checkout of ' + target[:7] + ' failed: ' + (detail.splitlines() or [''])[-1])
+                good = False
+        if off != wanted_off:
+            problems.append(name + ': is ' + ('disabled' if off else 'enabled') +
+                            ', snapshot has it ' + ('disabled' if wanted_off else 'enabled'))
+            good = False
+        if good and not any(f.startswith(name + ':') for f in fixed):
+            ok += 1
+    print('Custom nodes: ' + str(ok) + ' ok, ' + str(len(fixed)) + ' fixed, ' + str(len(problems)) + ' problems')
+    for line in fixed:
+        print('  fixed ' + line)
+    for line in problems:
+        print('  PROBLEM ' + line)
+    return 1 if problems else 0
+
+
+def norm(name):
+    return re.sub(r'[-_.]+', '-', name).lower()
+
+
+def same(a, b):
+    for module in ('packaging.version', 'pip._vendor.packaging.version'):
+        try:
+            version = __import__(module, fromlist=['Version']).Version
+            return version(a) == version(b)
+        except Exception:
+            continue
+    return a.lower() == b.lower()
+
+
+def installed():
+    found = {}
+    for dist in metadata.distributions():
+        name = dist.metadata['Name']
+        if name:
+            found[norm(name)] = dist.version
+    return found
+
+
+def build_plan(pips, current):
+    todo, skipped, absent, unchanged, direct = [], [], [], 0, 0
+    for key, value in pips.items():
+        name = norm(key.split('==')[0])
+        have = current.get(name)
+        if value:
+            direct += 1
+            if have is None:
+                absent.append(name)
+            continue
+        if '==' not in key:
+            continue
+        wanted = key.split('==', 1)[1]
+        if have is not None and same(have, wanted):
+            unchanged += 1
+        elif name in PROTECTED:
+            skipped.append((name, have, wanted))
+        else:
+            todo.append((name, key, have))
+    return todo, skipped, absent, unchanged, direct
+
+
+def run_pip(specs):
+    command = [sys.executable, '-m', 'pip', 'install', '--no-deps', '--no-input',
+               '--disable-pip-version-check'] + specs
+    return subprocess.call(command) == 0
+
+
+def restore_pips(pips):
+    current = installed()
+    todo, skipped, absent, unchanged, direct = build_plan(pips, current)
+    names = {norm(k.split('==')[0]) for k in pips}
+    extras = sorted(n for n in current if n not in names)
+    print('Python packages: ' + str(len(todo)) + ' to change, ' + str(unchanged) + ' unchanged, ' +
+          str(direct) + ' direct references left as they are')
+    for name, spec, have in todo:
+        print('  ' + name + ' (' + (have or 'not installed') + ') -> ' + spec)
+    for name, have, wanted in skipped:
+        print('  skipped ' + name + ': installed ' + str(have) + ', snapshot ' + str(wanted))
+    for name in absent:
+        print('  not installed: ' + name + ' (direct reference, reinstall it from Add-ons)')
+    failed = []
+    specs = [spec for _, spec, _ in todo]
+    if specs and not run_pip(specs):
+        print('Batch install failed, retrying one by one')
+        for name, spec, _ in todo:
+            if not run_pip([spec]):
+                failed.append(name)
+    print('')
+    print('Changed: ' + str(len(todo) - len(failed)) + ' | failed: ' + str(len(failed)) +
+          ' | skipped: ' + str(len(skipped)) + ' | direct references not installed: ' + str(len(absent)))
+    if extras:
+        print(str(len(extras)) + ' installed packages are not in the snapshot and were left in place: ' +
+              ', '.join(extras[:15]) + (' ...' if len(extras) > 15 else ''))
+    if failed:
+        print('Failed: ' + ', '.join(failed))
+    return 1 if failed else 0
+
+
+PRE_RESTORE = r'^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}_pre-restore\.json$'
+PRE_UPDATE = r'^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}_pre-update-.+\.json$'
+KEEP_PRE_RESTORE = 5
+KEEP_PRE_UPDATE = 10
+
+
+def load(path):
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return None
+
+
+def snapshot_files(folder):
+    found = []
+    try:
+        names = os.listdir(folder)
+    except OSError:
+        return []
+    for name in names:
+        path = os.path.join(folder, name)
+        if name.lower().endswith('.json') and os.path.isfile(path):
+            found.append((os.path.getmtime(path), path))
+    found.sort(reverse=True)
+    return [path for _, path in found]
+
+
+def prune(folder, pattern, keep, protected):
+    own = [p for p in snapshot_files(folder) if re.match(pattern, os.path.basename(p))]
+    removed = 0
+    for path in own[keep:]:
+        if path in protected:
+            continue
+        try:
+            os.remove(path)
+            removed += 1
+        except OSError:
+            pass
+    return removed
+
+
+def tidy_restore(target_path, backup_path):
+    target = load(target_path)
+    if target is not None and target == load(backup_path):
+        try:
+            os.remove(backup_path)
+            print('Backup removed: the restore changed nothing')
+        except OSError:
+            pass
+    else:
+        print('Backup kept as an undo point: ' + os.path.basename(backup_path))
+    removed = prune(os.path.dirname(backup_path), PRE_RESTORE, KEEP_PRE_RESTORE, {target_path})
+    if removed:
+        print('Removed ' + str(removed) + ' old restore backup(s)')
+    return 0
+
+
+def tidy_update(new_path):
+    state = load(new_path)
+    if state is None:
+        print('Snapshot file is unreadable: ' + os.path.basename(new_path))
+        return 0
+    folder = os.path.dirname(new_path)
+    others = [p for p in snapshot_files(folder) if p != new_path]
+    if others and load(others[0]) == state:
+        try:
+            os.remove(new_path)
+            print('No new snapshot needed: the state is identical to ' + os.path.basename(others[0]))
+        except OSError:
+            pass
+    else:
+        print('Snapshot saved: ' + os.path.basename(new_path))
+    prune(folder, PRE_UPDATE, KEEP_PRE_UPDATE, set())
+    return 0
+
+
+def snap_update(out_path, cm_cli, user_dir, comfy_dir):
+    env = dict(os.environ, COMFYUI_PATH=comfy_dir, PYTHONIOENCODING='utf-8')
+    code = subprocess.call([sys.executable, cm_cli, 'save-snapshot', '--output', out_path,
+                            '--user-directory', user_dir], env=env)
+    if code != 0 or not os.path.isfile(out_path):
+        print('Snapshot failed, continuing with the update')
+        return 0
+    return tidy_update(out_path)
+
+
+def run_manager_restore(snapshot_path, cm_cli, user_dir):
+    env = dict(os.environ, PYTHONUNBUFFERED='1', PYTHONIOENCODING='utf-8')
+    command = [sys.executable, cm_cli, 'restore-snapshot', snapshot_path, '--user-directory', user_dir]
+    failed_prefix = '[  FAILED   ] '
+    held = []
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
+                               encoding='utf-8', errors='replace', env=env)
+    for line in process.stdout:
+        text = line.rstrip('\r\n')
+        if text.startswith(failed_prefix):
+            held.append(text[len(failed_prefix):])
+        elif text != 'Installation failed for pip packages: []':
+            print(text, flush=True)
+    return process.wait(), held
+
+
+def apply_snapshot(snapshot, snapshot_path, nodes_dir, cm_cli, user_dir):
+    code, held = run_manager_restore(snapshot_path, cm_cli, user_dir)
+    if code != 0:
+        for name in held:
+            print('[  FAILED   ] ' + name)
+        print('ComfyUI-Manager restore failed, exit code ' + str(code))
+        return code
+    problems = restore_nodes(snapshot, nodes_dir)
+    if held and problems:
+        print('ComfyUI-Manager reported FAILED: ' + ', '.join(held))
+    elif held:
+        print('ComfyUI-Manager listed ' + str(len(held)) + ' node(s) as FAILED, the disk check found no problems')
+    return restore_pips(snapshot.get('pips') or {}) or problems
+
+
+def main():
+    mode, first = sys.argv[1], sys.argv[2]
+    args = sys.argv[3:]
+    if mode == 'info':
+        print('Restoring snapshot: ' + os.path.basename(first))
+        print('')
+        return 0
+    if mode == 'tidy-restore':
+        return tidy_restore(first, args[0])
+    if mode == 'tidy-update':
+        return tidy_update(first)
+    if mode == 'snap-update':
+        return snap_update(first, args[0], args[1], args[2])
+    snapshot = load(first)
+    if snapshot is None:
+        print('Cannot read the snapshot: ' + first)
+        return 1
+    if mode == 'core':
+        return restore_core(snapshot, args[0])
+    if mode == 'apply':
+        return apply_snapshot(snapshot, first, args[0], args[1], args[2])
+    print('Unknown mode: ' + mode)
+    return 1
+
+
+if __name__ == '__main__':
+    sys.exit(main())
+'''
+
+
+def snapshot_save():
+    cm = _find_cm_cli()
+    if not cm:
+        return {"ok": False, "error": "ComfyUI-Manager cm-cli not found — install ComfyUI-Manager first."}
+    out = _stamped("manual")
+    code, text = _run_snap([PYTHON_EXEC, cm, "save-snapshot", "--output", out, "--user-directory", str(CM_USER_DIR)])
+    if code != 0:
+        return {"ok": False, "error": text or "save-snapshot failed"}
+    return {"ok": True, "output": text or ("Saved " + os.path.basename(out))}
+
+
+def snapshot_restore(path):
+    cm = _find_cm_cli()
+    if not cm:
+        return {"ok": False, "error": "ComfyUI-Manager cm-cli not found."}
+    script = _restore_script_path()
+    backup = _stamped("pre-restore")
+    steps = [
+        [PYTHON_EXEC, script, "info", path],
+        [PYTHON_EXEC, cm, "save-snapshot", "--output", backup, "--user-directory", str(CM_USER_DIR)],
+        [PYTHON_EXEC, script, "core", path, str(SCRIPT_DIR / "ComfyUI")],
+        [PYTHON_EXEC, script, "apply", path, str(SCRIPT_DIR / "ComfyUI" / "custom_nodes"), cm, str(CM_USER_DIR)],
+        [PYTHON_EXEC, script, "tidy-restore", path, backup],
+    ]
+    log = []
+    for cmd in steps:
+        code, text = _run_snap(cmd)
+        log.append(text or ("exit " + str(code)))
+        if code != 0:
+            return {"ok": False, "error": "Stopped at: " + cmd[2], "output": "\n".join(log)}
+    return {"ok": True, "output": "\n".join(log)}
+
+
+def _snapshots_state():
+    snaps = _list_snapshots() if _find_cm_cli() else []
+    return {
+        "available": _find_cm_cli() is not None,
+        "note": _snap_note(),
+        "items": [
+            {"path": p, "title": _snapshot_title(p)[0], "tag": _snapshot_title(p)[1],
+             "age": _snapshot_age(p), "torch": _snapshot_torch(p)}
+            for p in snaps[:SNAP_MENU_MAX]
+        ],
+    }
+
+
+# ---------------------------------------------------------------------------
 # Window state
 # ---------------------------------------------------------------------------
 def load_state() -> dict:
@@ -434,6 +981,7 @@ class LauncherApi:
                 {"id": "workflows", "name": "Workflows", "path": "ComfyUI/user/default/workflows"},
                 {"id": "models", "name": "Models", "path": "Models"},
             ],
+            "snapshots": _snapshots_state(),
         }
 
     def set_mode(self, mode: str):
@@ -461,6 +1009,12 @@ class LauncherApi:
         except OSError:
             pass
         return KEEP_CACHE_FLAG.exists()
+
+    def save_snapshot(self):
+        return snapshot_save()
+
+    def restore_snapshot(self, path: str):
+        return snapshot_restore(path)
 
     def launch(self, item_id: str, attention: str = ""):
         state = load_state()
@@ -758,6 +1312,13 @@ body {
   transition: 0.2s;
 }
 .update-card:hover { background: rgba(255,255,255,0.04); border-color: rgba(126,232,211,0.25); }
+.snap-card { max-height: 40%; }
+.snap-note { color: var(--muted, #a1b3cc); font-size: 12px; margin: 2px 0 8px; }
+.snap-list { overflow-y: auto; }
+.snap-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; border-radius: 8px; background: rgba(255,255,255,0.03); margin-bottom: 6px; }
+.snap-info { min-width: 0; }
+.snap-name { font-size: 13px; }
+.snap-sub { font-size: 11px; color: var(--muted, #a1b3cc); }
 .update-name { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
 .update-sub { font-size: 11px; color: var(--text-muted); }
 /* Folder bar */
@@ -846,12 +1407,20 @@ body {
     </div>
 
     <div class="right-panel">
-      <div class="card" style="height:100%; display:flex; flex-direction:column;">
+      <div class="card" style="flex:1; display:flex; flex-direction:column;">
         <div class="update-header">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg>
           Update
         </div>
         <div class="update-list" id="update-list"></div>
+      </div>
+      <div class="card snap-card" style="display:flex; flex-direction:column;">
+        <div class="update-header">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73L13 4l-2.5 1.25L7 3l-4 2v14l4 2 2.5-1.25L12 20l4-2a2 2 0 0 0 1-1.73V8z"/></svg>
+          Snapshots
+        </div>
+        <div class="snap-note" id="snap-note"></div>
+        <div class="update-list snap-list" id="snap-list"></div>
       </div>
     </div>
   </div>
@@ -997,6 +1566,46 @@ function renderFolders() {
   `).join('');
 }
 
+function renderSnapshots() {
+  const s = state.snapshots || {available: false, note: '', items: []};
+  const note = document.getElementById('snap-note');
+  const list = document.getElementById('snap-list');
+  if (!note || !list) return;
+  note.textContent = s.note;
+  if (!s.available) { list.innerHTML = ''; return; }
+  list.innerHTML = `
+    <button class="btn btn-primary" style="margin-bottom:8px;" onclick="doSaveSnapshot()">Save snapshot</button>
+    ` + s.items.map(i => `
+      <div class="snap-row">
+        <div class="snap-info">
+          <div class="snap-name">${escapeHtml(i.title)}</div>
+          <div class="snap-sub">${escapeHtml(i.tag)} · ${escapeHtml(i.age)}${i.torch ? ' · torch ' + escapeHtml(i.torch) : ''}</div>
+        </div>
+        <button class="btn btn-ghost" onclick="doRestoreSnapshot('${escapeHtml(i.path)}')">Restore</button>
+      </div>
+    `).join('');
+}
+
+async function refreshSnapshots() {
+  state = await call('get_state');
+  renderSnapshots();
+}
+
+async function doSaveSnapshot() {
+  showToast('Saving snapshot...');
+  const res = await call('save_snapshot');
+  showToast((res && (res.output || res.error)) || 'Save failed');
+  if (res && res.ok) refreshSnapshots();
+}
+
+async function doRestoreSnapshot(path) {
+  if (!window.confirm('Restore snapshot?\n\nComfyUI is switched to the snapshot commit.\nCustom nodes are restored by ComfyUI-Manager and then verified.\nPython packages are set to the snapshot versions without dependency resolution.\nTorch is not changed.\nClose ComfyUI before continuing.\nThe current state is saved as a backup snapshot first.')) return;
+  showToast('Restoring... this can take a few minutes');
+  const res = await call('restore_snapshot', path);
+  showToast((res && (res.output || res.error)) || 'Restore failed');
+  if (res && res.ok) refreshSnapshots();
+}
+
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
@@ -1024,6 +1633,7 @@ async function init() {
   renderItems();
   renderUpdates();
   renderFolders();
+  renderSnapshots();
 }
 
 window.addEventListener('pywebviewready', init);

@@ -20,7 +20,7 @@ import subprocess
 import traceback
 import locale
 
-EZI_VERSION = "3.24.0"
+EZI_VERSION = "3.25.0"
 
 
 def _log_error(label=''):
@@ -1518,6 +1518,49 @@ INJECTED_JS = """
         return 'download';
     }
 
+    /* Find the model subfolder matching a download, based on the workflow's model info */
+    function eziFindModelDir(href, filename) {
+        try {
+            var app = window.app;
+            if (!app || !app.graph) return '';
+            var strip = function(u) { return String(u || '').split('?')[0].split('#')[0]; };
+            var hrefBase = strip(href);
+            var seen = [];
+            var match = function(models) {
+                if (!Array.isArray(models)) return '';
+                for (var i = 0; i < models.length; i++) {
+                    var m = models[i];
+                    if (!m || !m.directory) continue;
+                    if ((m.url && strip(m.url) === hrefBase) || (m.name && m.name === filename)) return String(m.directory);
+                }
+                return '';
+            };
+            var scan = function(graph) {
+                if (!graph || seen.indexOf(graph) !== -1) return '';
+                seen.push(graph);
+                var nodes = graph._nodes || graph.nodes || [];
+                for (var i = 0; i < nodes.length; i++) {
+                    var n = nodes[i];
+                    var r = match(n && n.properties && n.properties.models);
+                    if (r) return r;
+                    if (n && n.subgraph) {
+                        r = scan(n.subgraph);
+                        if (r) return r;
+                    }
+                }
+                if (graph.subgraphs && typeof graph.subgraphs.values === 'function') {
+                    var it = Array.from(graph.subgraphs.values());
+                    for (var j = 0; j < it.length; j++) {
+                        r = scan(it[j]);
+                        if (r) return r;
+                    }
+                }
+                return '';
+            };
+            return scan(app.graph);
+        } catch(e) { return ''; }
+    }
+
     /* Download interceptor — catch <a download> clicks and image/video URLs */
     document.addEventListener('click', function(e) {
         var a = e.target.closest('a[download], a[href$=".png"], a[href$=".jpg"], a[href$=".mp4"], a[href$=".webp"], a[href$=".jpeg"], a[href$=".gif"]');
@@ -1526,7 +1569,7 @@ INJECTED_JS = """
             e.stopPropagation();
             var fname = getFilename(a);
             showToast('Saving ' + fname + '...', 2000);
-            pywebview.api.save_file(a.href, fname);
+            pywebview.api.save_file(a.href, fname, eziFindModelDir(a.href, fname));
             return false;
         }
     }, true);
@@ -1537,7 +1580,7 @@ INJECTED_JS = """
         if (this.hasAttribute('download') && this.href && !this.href.startsWith('blob:')) {
             var fname = getFilename(this);
             showToast('Saving ' + fname + '...', 2000);
-            pywebview.api.save_file(this.href, fname);
+            pywebview.api.save_file(this.href, fname, eziFindModelDir(this.href, fname));
             return;
         }
         return origClick.apply(this, arguments);
@@ -3063,18 +3106,22 @@ def open_in_webview():
             except Exception:
                 return ""
 
-        def save_file(self, url, filename="download"):
-            """Download file from server and open native Save As dialog."""
+        def save_file(self, url, filename="download", directory=""):
+            """Download file from server and open native Save As dialog.
+
+            directory: optional model subfolder (from the workflow's model info)
+            the dialog should open in; falls back to ~/Downloads when empty or invalid.
+            """
             if not url or not isinstance(url, str):
                 return
             # Run in a thread so it doesn't block the webview
             threading.Thread(
-                target=self._do_save, args=(url, filename), daemon=True
+                target=self._do_save, args=(url, filename, directory), daemon=True
             ).start()
 
-        def _do_save(self, url, filename):
+        def _do_save(self, url, filename, directory=""):
             """Actual save logic — runs in background thread."""
-            save_path = self._native_save_dialog(filename)
+            save_path = self._native_save_dialog(filename, directory)
             if not save_path:
                 self._toast('Save cancelled')
                 return
@@ -3093,9 +3140,32 @@ def open_in_webview():
                 self._toast(f'Save failed: {e}')
                 print(f"  Save error: {e}")
 
-        def _native_save_dialog(self, filename):
+        def _model_target_dir(self, directory):
+            """Resolve a model subfolder (relative, from workflow model info) to a real path."""
+            try:
+                directory = str(directory or '').strip().strip('/')
+                if not directory or os.path.isabs(directory):
+                    return None
+                parts = [p for p in directory.split('/') if p]
+                if not parts or any(p in ('.', '..') for p in parts):
+                    return None
+                models = os.path.normpath(os.path.join(SCRIPT_DIR, 'ComfyUI', 'models'))
+                if not os.path.isdir(models):
+                    return None
+                target = os.path.normpath(os.path.join(models, *parts))
+                base = os.path.abspath(models)
+                if not os.path.abspath(target).startswith(base + os.sep):
+                    return None
+                os.makedirs(target, exist_ok=True)
+                return target if os.path.isdir(target) else None
+            except Exception:
+                return None
+
+        def _native_save_dialog(self, filename, directory=""):
             """Open a native Save As dialog. Returns path or None."""
             downloads = os.path.expanduser('~/Downloads')
+            # Open in the model subfolder when the workflow model info gave one
+            start_dir = self._model_target_dir(directory) or downloads
 
             # macOS: use osascript for a real Finder save dialog
             if sys.platform == 'darwin':
@@ -3104,7 +3174,7 @@ def open_in_webview():
                 script = (
                     f'set f to POSIX path of (choose file name with prompt '
                     f'"Save as:" default name "{safe_name}" '
-                    f'default location POSIX file "{downloads}")\n'
+                    f'default location POSIX file "{start_dir}")\n'
                     f'return f'
                 )
                 try:
@@ -3132,7 +3202,7 @@ def open_in_webview():
                 elif ext == '.mp4':
                     ftypes.insert(0, ('Video Files', '*.mp4'))
                 path = filedialog.asksaveasfilename(
-                    initialdir=downloads,
+                    initialdir=start_dir,
                     initialfile=filename,
                     filetypes=ftypes,
                 )
@@ -3141,8 +3211,8 @@ def open_in_webview():
             except Exception:
                 pass
 
-            # Final fallback: save directly to ~/Downloads
-            fallback = os.path.join(downloads, filename)
+            # Final fallback: save directly to ~/Downloads (or model subfolder)
+            fallback = os.path.join(start_dir, filename)
             # Avoid overwriting — add number suffix
             base, ext = os.path.splitext(fallback)
             counter = 1
