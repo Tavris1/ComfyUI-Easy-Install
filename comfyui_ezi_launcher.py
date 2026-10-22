@@ -1179,11 +1179,16 @@ body {
   min-width: 0;
 }
 .right-panel {
-  flex: 0.9;
-  min-width: 240px;
-  max-width: 320px;
+  flex: 1.8;
+  display: flex;
+  gap: 18px;
+  min-width: 0;
+}
+.panel-col {
+  flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 /* Mode tabs */
 .tabs {
@@ -1312,13 +1317,15 @@ body {
   transition: 0.2s;
 }
 .update-card:hover { background: rgba(255,255,255,0.04); border-color: rgba(126,232,211,0.25); }
-.snap-card { max-height: 40%; }
-.snap-note { color: var(--muted, #a1b3cc); font-size: 12px; margin: 2px 0 8px; }
-.snap-list { overflow-y: auto; }
-.snap-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; border-radius: 8px; background: rgba(255,255,255,0.03); margin-bottom: 6px; }
+.snap-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; background: var(--bg); border: 1px solid var(--border); cursor: pointer; transition: 0.2s; font: inherit; color: inherit; }
+.snap-row:hover { background: rgba(255,255,255,0.04); border-color: rgba(126,232,211,0.25); }
+.snap-row:disabled { opacity: 0.5; cursor: not-allowed; }
+.snap-row svg { width: 18px; height: 18px; color: var(--accent); flex-shrink: 0; }
 .snap-info { min-width: 0; }
-.snap-name { font-size: 13px; }
+.snap-name { font-size: 13px; font-weight: 600; }
 .snap-sub { font-size: 11px; color: var(--muted, #a1b3cc); }
+.snap-select { display: block; width: 100%; }
+.snap-select option { background: var(--bg); color: var(--text); }
 .update-name { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
 .update-sub { font-size: 11px; color: var(--text-muted); }
 /* Folder bar */
@@ -1407,20 +1414,19 @@ body {
     </div>
 
     <div class="right-panel">
-      <div class="card" style="flex:1; display:flex; flex-direction:column;">
+      <div class="card panel-col">
         <div class="update-header">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg>
           Update
         </div>
         <div class="update-list" id="update-list"></div>
       </div>
-      <div class="card snap-card" style="display:flex; flex-direction:column;">
+      <div class="card panel-col">
         <div class="update-header">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73L13 4l-2.5 1.25L7 3l-4 2v14l4 2 2.5-1.25L12 20l4-2a2 2 0 0 0 1-1.73V8z"/></svg>
           Snapshots
         </div>
-        <div class="snap-note" id="snap-note"></div>
-        <div class="update-list snap-list" id="snap-list"></div>
+        <div class="update-list" id="snap-list"></div>
       </div>
     </div>
   </div>
@@ -1566,24 +1572,62 @@ function renderFolders() {
   `).join('');
 }
 
+const SNAP_MENU_MAX = 15;
+const SNAP_ICONS = {
+  save: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>',
+  restore: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>',
+  pick: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>',
+};
+
 function renderSnapshots() {
   const s = state.snapshots || {available: false, note: '', items: []};
-  const note = document.getElementById('snap-note');
   const list = document.getElementById('snap-list');
-  if (!note || !list) return;
-  note.textContent = s.note;
-  if (!s.available) { list.innerHTML = ''; return; }
+  if (!list) return;
+  const items = s.items || [];
+  const latest = items.find(i => i.tag !== 'pre-restore');
+  const off = s.available ? '' : ' disabled';
   list.innerHTML = `
-    <button class="btn btn-primary" style="margin-bottom:8px;" onclick="doSaveSnapshot()">Save snapshot</button>
-    ` + s.items.map(i => `
-      <div class="snap-row">
-        <div class="snap-info">
-          <div class="snap-name">${escapeHtml(i.title)}</div>
-          <div class="snap-sub">${escapeHtml(i.tag)} · ${escapeHtml(i.age)}${i.torch ? ' · torch ' + escapeHtml(i.torch) : ''}</div>
-        </div>
-        <button class="btn btn-ghost" onclick="doRestoreSnapshot('${escapeHtml(i.path)}')">Restore</button>
+    <button class="snap-row"${off} onclick="doSaveSnapshot()">
+      ${SNAP_ICONS.save}
+      <div class="snap-info">
+        <div class="snap-name">Save snapshot</div>
+        <div class="snap-sub">Current state, manual</div>
       </div>
-    `).join('');
+    </button>
+    <button class="snap-row"${off} onclick="restoreLatest()">
+      ${SNAP_ICONS.restore}
+      <div class="snap-info">
+        <div class="snap-name">Restore latest</div>
+        <div class="snap-sub">${escapeHtml(latest ? latest.title : 'Only backups left')}</div>
+      </div>
+    </button>
+    <select class="snap-row snap-select"${off} onchange="restoreChosen(this.value)">
+      <option value="">Restore other · Choose from ${Math.min(items.length, SNAP_MENU_MAX)}</option>
+      ${items.map(i => `<option value="${escapeHtml(i.path)}">${escapeHtml(i.title)}</option>`).join('')}
+    </select>
+    <button class="snap-row" onclick="openSnapshotsFolder()">
+      ${ICONS.folder}
+      <div class="snap-info">
+        <div class="snap-name">Snapshots (${items.length})</div>
+        <div class="snap-sub">${escapeHtml(s.available ? 'Open snapshots folder' : s.note)}</div>
+      </div>
+    </button>
+  `;
+}
+
+function restoreLatest() {
+  const items = (state.snapshots && state.snapshots.items) || [];
+  const latest = items.find(i => i.tag !== 'pre-restore');
+  if (latest) doRestoreSnapshot(latest.path);
+}
+
+function restoreChosen(path) {
+  if (path) doRestoreSnapshot(path);
+}
+
+async function openSnapshotsFolder() {
+  const res = await call('open_folder', 'ComfyUI/user/__manager/snapshots');
+  if (res && res.error) showToast(res.error);
 }
 
 async function refreshSnapshots() {
@@ -1659,7 +1703,7 @@ def main():
         title=f"ComfyUI EZi Launcher v{EZI_VERSION}",
         html=HTML,
         js_api=api,
-        width=880,
+        width=1060,
         height=520,
         resizable=False,
         on_top=False,
