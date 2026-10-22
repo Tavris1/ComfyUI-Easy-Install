@@ -3144,7 +3144,7 @@ def open_in_webview():
             """Resolve a model subfolder (relative, from workflow model info) to a real path."""
             try:
                 directory = str(directory or '').strip().strip('/')
-                if not directory or os.path.isabs(directory):
+                if not directory or os.path.isabs(directory) or ':' in directory:
                     return None
                 parts = [p for p in directory.split('/') if p]
                 if not parts or any(p in ('.', '..') for p in parts):
