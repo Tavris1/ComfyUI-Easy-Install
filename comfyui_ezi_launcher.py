@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ComfyUI EZi Launcher v3.24.0 — macOS/Linux port of the Windows launcher UI.
+ComfyUI EZi Launcher v3.25.0 — macOS/Linux port of the Windows launcher UI.
 PyWebView + HTML/CSS/JS single-file application.
 Part of ComfyUI-Easy-Install by Pixaroma / VenimK.
 """
@@ -18,7 +18,7 @@ import time
 import tempfile
 from pathlib import Path
 
-EZI_VERSION = "3.24.0"
+EZI_VERSION = "3.25.0"
 
 # ---------------------------------------------------------------------------
 # Paths and constants
