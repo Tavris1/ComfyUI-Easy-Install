@@ -1,5 +1,5 @@
 @echo off&&cd /D "%~dp0"
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.25.1"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.26.0"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -20,6 +20,43 @@ set "path=%GIT_PATH%;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0;
 
 set "FATAL="
 call :SET_COLORS
+
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "if(([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){exit 10}else{exit 0}"
+if %errorlevel% equ 10 (
+	if /I "%~1"=="CEI_NOADMIN" (
+		cls
+		echo %warning%WARNING:%reset% This installer cannot run with %yellow%Administrator%reset% rights
+		echo %green%Start it with a normal double-click, NOT with %yellow%Run as administrator%reset%
+		echo Press any key to Exit...&Pause>nul
+		exit /b 1
+	)
+	echo %warning%WARNING:%reset% Administrator rights detected. Restarting without them...
+	if exist "%TEMP%\CEI_deelevate.flag" (
+		runas.exe /trustlevel:0x20000 "cmd.exe /c \"\"%~f0\" CEI_NOADMIN\""
+		if errorlevel 1 (
+			echo.
+			echo %red%Failed to restart without Administrator rights%reset%
+			echo %green%Start this file with a normal double-click, NOT with %yellow%Run as administrator%reset%
+			echo Press any key to Exit...&Pause>nul
+			exit /b 1
+		)
+		exit /b 0
+	)
+	(echo.>"%TEMP%\CEI_deelevate.flag") 2>nul
+	"%SystemRoot%\explorer.exe" "%~f0"
+	exit /b 0
+)
+del "%TEMP%\CEI_deelevate.flag" >nul 2>&1
+
+set "CEI_HOME=%~dp0"
+if "%CEI_HOME:~0,2%"=="\\" (
+	cls
+	echo %warning%WARNING:%reset% Network paths ^(UNC^) are not supported
+	echo %green%Copy the entire package to a local drive and run it again.%reset%
+	echo Press any key to Exit...&Pause>nul
+	exit /b 1
+)
+
 call :NVIDIA_DRIVER_CHECK
 if defined FATAL exit /b 1
 
@@ -39,6 +76,10 @@ if not exist "%HLPR_NAME%" (
 	echo Press any key to Exit...&Pause>nul
 	exit /b 1
 )
+
+call :CHECK_LOCATION
+if defined FATAL exit /b 1
+call :CHECK_NON_ASCII
 
 :: Capture the start time ::
 for /f "delims=" %%i in ('powershell -NoProfile -ExecutionPolicy Bypass -command "Get-Date -Format yyyy-MM-dd_HH:mm:ss"') do set start=%%i
@@ -153,7 +194,7 @@ REM call :get_node https://github.com/capitan01R/ComfyUI-Krea2T-Enhancer        
 call :get_node https://github.com/lbouaraba/comfyui-krea2edit               comfyui-krea2edit
 
 :: Patching rgthree-comfy ::
-echo {"patch_recursive_execution": false} > ".\ComfyUI\custom_nodes\rgthree-comfy\rgthree_config.json"
+if exist ".\ComfyUI\custom_nodes\rgthree-comfy" echo {"patch_recursive_execution": false} > ".\ComfyUI\custom_nodes\rgthree-comfy\rgthree_config.json"
 
 :: Check if SoX is already installed - skip silently if found
 where sox.exe >nul 2>&1
@@ -195,7 +236,8 @@ if not exist ".\ComfyUI\custom_nodes\.disabled" mkdir ".\ComfyUI\custom_nodes\.d
 
 :: Extracting helper folders ::
 cd ..\
-powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Microsoft.PowerShell.Archive\Expand-Archive -LiteralPath '%HLPR_NAME%' -DestinationPath '.' -Force"
+tar.exe -xmf "%HLPR_NAME%"
+if errorlevel 1 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Microsoft.PowerShell.Archive\Expand-Archive -LiteralPath '%HLPR_NAME%' -DestinationPath '.' -Force"
 
 cd ComfyUI-Easy-Install
 :: Download media files ::
@@ -203,7 +245,6 @@ set "MEDIA_ZIP=Media-CEI.zip"
 set "MEDIA_URL=https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/assets/%MEDIA_ZIP%"
 set "MEDIA_OK="
 curl.exe -fL --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "%MEDIA_ZIP%" "%MEDIA_URL%" && set "MEDIA_OK=1"
-if not defined MEDIA_OK curl.exe -fL --progress-bar --ssl-no-revoke -k --retry 5 --retry-delay 2 -o "%MEDIA_ZIP%" "%MEDIA_URL%" && set "MEDIA_OK=1"
 if defined MEDIA_OK (
 	if not exist ".\ComfyUI\input" mkdir ".\ComfyUI\input"
 	tar.exe -xmf "%MEDIA_ZIP%" -C ".\ComfyUI\input" || echo %warning%WARNING:%reset% Could not extract %MEDIA_ZIP%
@@ -263,6 +304,49 @@ set   white=[97m
 set   reset=[0m
 GOTO :EOF
 
+:CHECK_LOCATION
+set "CEI_ROOT=%CD%"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$r=[IO.Path]::GetFullPath($env:CEI_ROOT).TrimEnd('\')+'\'; if($r -ieq ($env:SystemDrive+'\')){exit 1}; foreach($d in @($env:SystemRoot,$env:ProgramFiles,${env:ProgramFiles(x86)},$env:ProgramW6432)){if($d -and $r.StartsWith($d.TrimEnd('\')+'\',[StringComparison]::OrdinalIgnoreCase)){exit 1}}; exit 0"
+if errorlevel 1 (
+	cls
+	echo %warning%WARNING:%reset% Cannot install into system folders like %yellow%Program Files, Windows%reset% or system root %yellow%C:\%reset%
+	echo %green%Move this file to another folder and run it again.%reset%
+	echo Press any key to Exit...&Pause>nul
+	set "FATAL=1"
+	goto :eof
+)
+
+set "CEI_TEST=.cei_test_%RANDOM%%RANDOM%"
+(md "%CEI_TEST%") 2>nul
+(echo test>"%CEI_TEST%\write.tmp") 2>nul
+if not exist "%CEI_TEST%\write.tmp" (
+	rd /s /q "%CEI_TEST%" 2>nul
+	cls
+	echo %warning%WARNING:%reset% No permission to create folders/files here
+	echo Move this file to a folder you own, for example in your user folder or on another drive
+	echo %green%Then run it again.%reset%
+	echo Press any key to Exit...&Pause>nul
+	set "FATAL=1"
+	goto :eof
+)
+rd /s /q "%CEI_TEST%" 2>nul
+goto :eof
+
+:CHECK_NON_ASCII
+set "CEI_ROOT=%CD%"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$c=0; if($env:CEI_ROOT -cmatch '[^\x00-\x7F]'){$c+=1}; if($env:USERPROFILE -cmatch '[^\x00-\x7F]'){$c+=2}; exit $c"
+set "CEI_NA=%errorlevel%"
+if %CEI_NA% equ 0 goto :eof
+echo.
+if %CEI_NA% equ 1 echo %red%WARNING: The installation path contains non-English characters. Installation problems are possible.%reset%
+if %CEI_NA% equ 3 echo %red%WARNING: The installation path contains non-English characters. Installation problems are possible.%reset%
+if %CEI_NA% equ 2 echo %red%WARNING: Your Windows user folder name contains non-English characters. Installation problems are possible.%reset%
+if %CEI_NA% equ 3 echo %red%WARNING: Your Windows user folder name contains non-English characters. Installation problems are possible.%reset%
+echo %red%Recommended: use a short English-only path, for example D:\AI\%reset%
+echo.
+timeout /t 3 /nobreak >nul
+goto :eof
+
 :install_git
 :: https://git-scm.com/
 echo %green%::::::::::::::: Installing/Updating%yellow% Git %green%:::::::::::::::%reset%
@@ -291,31 +375,51 @@ if not exist "ComfyUI\requirements.txt" (
 md python_embeded&&cd python_embeded
 
 curl.exe -fL --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "python-3.12.10-embed-amd64.zip" "https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip"
-if errorlevel 1 curl.exe -fL --progress-bar --ssl-no-revoke -k --retry 5 --retry-delay 2 -o "python-3.12.10-embed-amd64.zip" "https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip"
 if errorlevel 1 powershell -NoProfile -ExecutionPolicy Bypass -Command "Try{Start-BitsTransfer -Source 'https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip' -Destination 'python-3.12.10-embed-amd64.zip' -ErrorAction Stop}catch{exit 1}"
 if not exist "python-3.12.10-embed-amd64.zip" (
 echo.
 echo %red%Failed to download python-3.12.10-embed-amd64.zip%reset%
+echo Check your date and time, Windows updates and antivirus HTTPS scanning
 echo Press any key to Exit...&Pause>nul
 set "FATAL=1"
 goto :eof
+)
+
+powershell -NoProfile -ExecutionPolicy Bypass -Command "try{if((Get-FileHash -LiteralPath 'python-3.12.10-embed-amd64.zip' -Algorithm SHA256).Hash -eq '4acbed6dd1c744b0376e3b1cf57ce906f9dc9e95e68824584c8099a63025a3c3'){exit 0}else{exit 1}}catch{exit 1}"
+if errorlevel 1 (
+	erase "python-3.12.10-embed-amd64.zip"
+	echo.
+	echo %red%Python archive checksum does not match%reset%
+	echo The download may be corrupted or modified. Delete the %yellow%ComfyUI-Easy-Install%reset% folder and run this installer again
+	echo Press any key to Exit...&Pause>nul
+	set "FATAL=1"
+	goto :eof
 )
 
 tar.exe -xmf python-3.12.10-embed-amd64.zip
 if errorlevel 1 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath 'python-3.12.10-embed-amd64.zip' -DestinationPath '.' -Force"
 erase python-3.12.10-embed-amd64.zip
 
+if not exist "python.exe" (
+	echo.
+	echo %red%Failed to extract python.exe%reset%
+	echo Your antivirus may have blocked Python files. Check %yellow%Windows Security, Protection history%reset%
+	echo Delete the %yellow%ComfyUI-Easy-Install%reset% folder, allow it in your antivirus and run this installer again
+	echo Press any key to Exit...&Pause>nul
+	set "FATAL=1"
+	goto :eof
+)
+
 curl.exe -fL --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
-if errorlevel 1 curl.exe -fL --progress-bar --ssl-no-revoke -k --retry 5 --retry-delay 2 -o "get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
 if errorlevel 1 powershell -NoProfile -ExecutionPolicy Bypass -Command "Try{Start-BitsTransfer -Source 'https://bootstrap.pypa.io/get-pip.py' -Destination 'get-pip.py' -ErrorAction Stop}catch{exit 1}"
 
 if not exist "get-pip.py" curl.exe -fL --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "get-pip.py" "https://raw.githubusercontent.com/pypa/get-pip/main/public/get-pip.py"
-if not exist "get-pip.py" curl.exe -fL --progress-bar --ssl-no-revoke -k --retry 5 --retry-delay 2 -o "get-pip.py" "https://raw.githubusercontent.com/pypa/get-pip/main/public/get-pip.py"
 if not exist "get-pip.py" powershell -NoProfile -ExecutionPolicy Bypass -Command "Try{Start-BitsTransfer -Source 'https://raw.githubusercontent.com/pypa/get-pip/main/public/get-pip.py' -Destination 'get-pip.py' -ErrorAction Stop}catch{exit 1}"
 
 if not exist "get-pip.py" (
 echo.
 echo %red%Failed to download get-pip.py%reset%
+echo Check your date and time, Windows updates and antivirus HTTPS scanning
 echo Press any key to Exit...&Pause>nul
 set "FATAL=1"
 goto :eof
@@ -336,10 +440,30 @@ echo     files.pythonhosted.org>> pip.ini
 echo     pypi.python.org>> pip.ini
 
 .\python.exe -I get-pip.py %PIPargs% --trusted-host pypi.org --trusted-host files.pythonhosted.org --trusted-host pypi.python.org
+.\python.exe -I -m pip --version >nul 2>&1
+if errorlevel 1 (
+	echo.
+	echo %red%Failed to install pip%reset%
+	echo Your antivirus may have blocked Python files. Check %yellow%Windows Security, Protection history%reset%
+	echo Delete the %yellow%ComfyUI-Easy-Install%reset% folder, allow it in your antivirus and run this installer again
+	echo Press any key to Exit...&Pause>nul
+	set "FATAL=1"
+	goto :eof
+)
 REM .\python.exe -I -m pip config set global.trusted-host "pypi.org files.pythonhosted.org pypi.python.org"
 
 REM .\python.exe -I -m pip install uv==0.9.7 %PIPargs%
 .\python.exe -I -m pip install uv %PIPargs%
+.\python.exe -I -m uv --version >nul 2>&1
+if errorlevel 1 (
+	echo.
+	echo %red%Failed to install uv%reset%
+	echo Your antivirus may have blocked Python files. Check %yellow%Windows Security, Protection history%reset%
+	echo Delete the %yellow%ComfyUI-Easy-Install%reset% folder, allow it in your antivirus and run this installer again
+	echo Press any key to Exit...&Pause>nul
+	set "FATAL=1"
+	goto :eof
+)
 
 if "%CURRENT_CUDA%"=="12.8" (
 	.\python.exe -I -m pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cu128 %PIPargs%
