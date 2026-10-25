@@ -20,7 +20,7 @@ import subprocess
 import traceback
 import locale
 
-EZI_VERSION = "3.25.0"
+EZI_VERSION = "3.25.1"
 
 
 def _log_error(label=''):
@@ -1938,30 +1938,42 @@ INJECTED_JS = """
                 '</div>' +
                 /* TAB: About EZi */
                 '<div id="_cdp_t_about">' +
-                '<div class="title">About EZi</div>' +
-                '<div style="background:#1d1d1d;border:1px solid #2a2a2a;border-radius:12px;padding:24px;text-align:center">' +
+                '<div class="title" style="display:flex;justify-content:space-between;align-items:center;gap:10px">About EZi' +
+                '<span style="display:flex;gap:8px;align-items:center">' +
+                '<span style="font-size:13px;font-weight:600;background:var(--panel-bg,#1d1d1d);border:1px solid var(--border,#2a2a2a);color:var(--fg,#e0e0e0);border-radius:6px;padding:4px 10px">v' + EZI_VERSION + '</span>' +
+                '<a href="https://github.com/Tavris1/ComfyUI-Easy-Install/releases" onclick="pywebview.api.open_url(\\'https://github.com/Tavris1/ComfyUI-Easy-Install/releases\\')" style="display:none;align-items:center;gap:6px" aria-label="Downloads"><img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/Tavris1/95cfc6f0535930f25591dcfe08f34cc1/raw/downloads.json&amp;style=flat-square" alt="Downloads" onload="this.parentElement.style.display=\\'inline-flex\\'" onerror="this.parentElement.style.display=\\'none\\'"></a>' +
+                '</span></div>' +
+                '<div style="background:var(--panel-bg,#1d1d1d);border:1px solid var(--border,#2a2a2a);border-radius:12px;padding:24px;text-align:center">' +
                 '<div style="font-size:28px;margin-bottom:8px">⚡ EZi Desktop</div>' +
-                '<div style="color:#888;margin-bottom:16px">COMFYUI EASY INSTALL</div>' +
+                '<div style="color:var(--muted,#888);margin-bottom:16px">COMFYUI EASY INSTALL</div>' +
                 '<div style="font-size:20px;font-weight:600;margin-bottom:6px">Portable ComfyUI.</div>' +
-                '<div style="color:#aaa;margin-bottom:16px">A dashboard for your packages, environments, and configuration.</div>' +
+                '<div style="color:var(--muted,#888);margin-bottom:16px">It\\'s a simplified way of using ComfyUI.</div>' +
+                '<div style="color:var(--muted,#888);margin-bottom:16px">A dashboard for your packages, environments, and configuration.</div>' +
                 '<div style="display:flex;gap:10px;justify-content:center;margin-bottom:16px">' +
-                '<button onclick="pywebview.api.open_url(\\'https://github.com/Tavris1/ComfyUI-Easy-Install\\')" style="padding:8px 16px;background:#2a2a2a;color:#ccc;border:1px solid #444;border-radius:6px;cursor:pointer">Packages</button>' +
-                '<button onclick="pywebview.api.open_url(\\'https://github.com/Tavris1/ComfyUI-Easy-Install\\')" style="padding:8px 16px;background:#2a2a2a;color:#ccc;border:1px solid #444;border-radius:6px;cursor:pointer">Environments</button>' +
-                '<button onclick="pywebview.api.open_url(\\'https://github.com/Tavris1/ComfyUI-Easy-Install\\')" style="padding:8px 16px;background:#2a2a2a;color:#ccc;border:1px solid #444;border-radius:6px;cursor:pointer">Configuration</button>' +
+                '<button onclick="pywebview.api.open_url(\\'https://github.com/Tavris1/ComfyUI-Easy-Install\\')" style="padding:8px 16px;background:var(--node-bg,#2a2a2a);color:var(--fg,#ccc);border:1px solid var(--border,#444);border-radius:6px;cursor:pointer">Packages</button>' +
+                '<button onclick="pywebview.api.open_url(\\'https://github.com/Tavris1/ComfyUI-Easy-Install\\')" style="padding:8px 16px;background:var(--node-bg,#2a2a2a);color:var(--fg,#ccc);border:1px solid var(--border,#444);border-radius:6px;cursor:pointer">Environments</button>' +
+                '<button onclick="pywebview.api.open_url(\\'https://github.com/Tavris1/ComfyUI-Easy-Install\\')" style="padding:8px 16px;background:var(--node-bg,#2a2a2a);color:var(--fg,#ccc);border:1px solid var(--border,#444);border-radius:6px;cursor:pointer">Configuration</button>' +
                 '</div>' +
-                '<div style="color:#888;font-size:13px">Made with love by <b>Ivo</b>, a.k.a. Tavris1</div>' +
+                '<div style="margin:16px 0;padding:14px;background:var(--input-bg,#111);border:1px solid var(--border,#444);border-radius:8px">' +
+                '<div style="font-size:18px;margin-bottom:6px;color:var(--fg,#e0e0e0)">💛 A Hidden Thank You</div>' +
+                '<div style="color:var(--muted,#888);font-size:13px;margin-bottom:8px">Dedicated to <b style="color:var(--fg,#e0e0e0)">Sebastian Antony</b></div>' +
+                '<div style="color:var(--muted,#888);font-size:12px;margin-bottom:4px">He said this project was an inspiration.</div>' +
+                '<div style="color:var(--muted,#888);font-size:12px;margin-bottom:8px">Little did he know that people like him are the inspiration behind it.</div>' +
+                '<div style="color:var(--muted,#888);font-size:12px">- EZi / ivo</div>' +
+                '</div>' +
+                '<div style="color:var(--muted,#888);font-size:13px">Made with love by <b>Ivo</b>, a.k.a. Tavris1</div>' +
                 '</div>' +
                 '<div style="margin-top:16px;display:flex;gap:10px">' +
-                '<button onclick="pywebview.api.open_url(\\'https://github.com/Tavris1/ComfyUI-Easy-Install\\')" style="flex:1;padding:12px;background:#1d1d1d;border:1px solid #2a2a2a;border-radius:8px;color:#4a9eff;cursor:pointer;text-align:left">🏠 Home Page<br><span style="color:#888;font-size:12px">Explore the project on GitHub</span></button>' +
-                '<button onclick="pywebview.api.open_url(\\'https://github.com/Tavris1/ComfyUI-Easy-Install/releases\\')" style="flex:1;padding:12px;background:#1d1d1d;border:1px solid #2a2a2a;border-radius:8px;color:#4a9eff;cursor:pointer;text-align:left">📥 See what\\'s new<br><span style="color:#888;font-size:12px">Latest release &amp; improvements</span></button>' +
+                '<button onclick="pywebview.api.open_url(\\'https://github.com/Tavris1/ComfyUI-Easy-Install\\')" style="flex:1;padding:12px;background:var(--panel-bg,#1d1d1d);border:1px solid var(--border,#2a2a2a);border-radius:8px;color:var(--accent,#4a9eff);cursor:pointer;text-align:left">🏠 Home Page<br><span style="color:var(--muted,#888);font-size:12px">Explore the project on GitHub</span></button>' +
+                '<button onclick="pywebview.api.open_url(\\'https://github.com/Tavris1/ComfyUI-Easy-Install/releases\\')" style="flex:1;padding:12px;background:var(--panel-bg,#1d1d1d);border:1px solid var(--border,#2a2a2a);border-radius:8px;color:var(--accent,#4a9eff);cursor:pointer;text-align:left">📥 See what\\'s new<br><span style="color:var(--muted,#888);font-size:12px">Latest release &amp; improvements</span></button>' +
                 '</div>' +
                 '<div style="margin-top:20px;text-align:center">' +
                 '<div style="color:#f00;font-size:18px">♥ Like Easy Install?</div>' +
-                '<div style="color:#888;margin:6px 0 12px">Support Ivo and the future of EZi.</div>' +
+                '<div style="color:var(--muted,#888);margin:6px 0 12px">Support Ivo and the future of EZi.</div>' +
                 '<div style="display:flex;gap:10px;justify-content:center">' +
-                '<button onclick="pywebview.api.open_url(\\'https://paypal.me/tavris1\\')" style="padding:10px 20px;background:#2a2a2a;color:#ccc;border:1px solid #444;border-radius:8px;cursor:pointer">PayPal</button>' +
-                '<button onclick="pywebview.api.open_url(\\'https://buymeacoffee.com/tavris1\\')" style="padding:10px 20px;background:#2a2a2a;color:#ccc;border:1px solid #444;border-radius:8px;cursor:pointer">Buy Me a Coffee</button>' +
-                '<button onclick="pywebview.api.open_url(\\'https://github.com/sponsors/Tavris1\\')" style="padding:10px 20px;background:#2a2a2a;color:#ccc;border:1px solid #444;border-radius:8px;cursor:pointer">♥ Sponsor</button>' +
+                '<button onclick="pywebview.api.open_url(\\'https://paypal.me/tavris1\\')" style="padding:10px 20px;background:var(--node-bg,#2a2a2a);color:var(--fg,#ccc);border:1px solid var(--border,#444);border-radius:8px;cursor:pointer">PayPal</button>' +
+                '<button onclick="pywebview.api.open_url(\\'https://buymeacoffee.com/tavris1\\')" style="padding:10px 20px;background:var(--node-bg,#2a2a2a);color:var(--fg,#ccc);border:1px solid var(--border,#444);border-radius:8px;cursor:pointer">Buy Me a Coffee</button>' +
+                '<button onclick="pywebview.api.open_url(\\'https://github.com/sponsors/Tavris1\\')" style="padding:10px 20px;background:var(--node-bg,#2a2a2a);color:var(--fg,#ccc);border:1px solid var(--border,#444);border-radius:8px;cursor:pointer">♥ Sponsor</button>' +
                 '</div>' +
                 '</div>' +
                 '</div>' +
