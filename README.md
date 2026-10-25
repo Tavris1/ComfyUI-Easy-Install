@@ -116,10 +116,8 @@ ComfyUI/frontend versions, UV/PIP caches, and GGUF conversion** from one place.
 -->
 
 > [!IMPORTANT]
-> - Do not run the installer as **Administrator**.
-> - Avoid system folders (`Program Files`, `Windows`, `C:\` root).
-> - Avoid spaces and special characters in folder names.
-> - Make sure your NVIDIA drivers are up to date.
+> - Use a short, English-only path (e.g., `D:\AI\`).
+> - Keep NVIDIA drivers up to date.
 
 1. [**📥 DOWNLOAD LATEST VERSION**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
 2. Extract the ZIP file to a new folder and run **`ComfyUI-Easy-Install.bat`**
