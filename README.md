@@ -31,13 +31,14 @@
 <!--[![GitHub All Releases](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/total.svg)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases)-->
 <!--[![GitHub Downloads Latest](https://img.shields.io/github/downloads/Tavris1/ComfyUI-Easy-Install/latest/total?style=flat&label=⬇+latest&color=orange)](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)-->
 
-  <p align="center">
-    <a href="#%EF%B8%8F-windows-installation">📥 <strong>INSTALL</strong></a> &nbsp;·&nbsp;
-    <a href="#-features">✨ Features</a> &nbsp;·&nbsp;
-    <a href="https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
-    <a href="https://discord.gg/gggpkVgBf3">💬 Pixaroma Discord</a> &nbsp;·&nbsp;
-    <a href="#%EF%B8%8F-support-development">❤️ Support Development</a>
-  </p>
+<p align="center">
+  <a href="#%EF%B8%8F-windows-installation">📥 <strong>INSTALL</strong></a> &nbsp;·&nbsp;
+  <a href="#-features">✨ Features</a> &nbsp;·&nbsp;
+  <a href="#meet-ezi---the-comic-guide">📖 Meet EZi</a> &nbsp;·&nbsp;
+  <a href="https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
+  <a href="https://discord.gg/gggpkVgBf3">💬 Pixaroma Discord</a> &nbsp;·&nbsp;
+  <a href="#%EF%B8%8F-support-development">❤️ Support Development</a>
+</p>
 
 <!-- Dedicated to the **Pixaroma** community  
 [![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fdiscord.com%2Fapi%2Finvites%2FgggpkVgBf3%3Fwith_counts%3Dtrue&query=%24.approximate_member_count&logo=discord&logoColor=white&label=Pixaroma%20Discord&color=FFDF00&suffix=%20users)](https://discord.com/invite/gggpkVgBf3)
@@ -144,9 +145,40 @@ ComfyUI/frontend versions, UV/PIP caches, and GGUF conversion** from one place.
     - **ComfyUI-Manager Security-Level Config** - *Easy configuration of security_level via EZi Desktop > Menu*
     - **Pinned-Packages-Manager** - *Freeze package versions such as NumPy==1.26.4 via EZi Desktop > Menu*
 
-<div align="center">
-
 ---
+
+## Meet EZi - The Comic Guide
+
+New to EZi? Explore this illustrated guide. Click any image to view it full-size.
+
+<table width="100%">
+  <tr>
+    <th width="25%">ComfyUI Made Easy</th>
+    <th width="25%">Install ComfyUI</th>
+    <th width="25%">Meet Your EZi Launcher</th>
+    <th width="25%">Reuse Existing Models</th>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-cover.jpg"><img src="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-cover.jpg" width="100%"></a></td>
+    <td align="center"><a href="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-01.jpg"><img src="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-01.jpg" width="100%"></a></td>
+    <td align="center"><a href="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-02.jpg"><img src="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-02.jpg" width="100%"></a></td>
+    <td align="center"><a href="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-03.jpg"><img src="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-03.jpg" width="100%"></a></td>
+  </tr>
+  <tr>
+    <th width="25%">Install Add-ons</th>
+    <th width="25%">Update and Restore</th>
+    <th width="25%">Know Your System</th>
+    <th width="25%">Make Yourself at Home</th>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-05.jpg"><img src="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-05.jpg" width="100%"></a></td>
+    <td align="center"><a href="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-06.jpg"><img src="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-06.jpg" width="100%"></a></td>
+    <td align="center"><a href="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-07.jpg"><img src="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-07.jpg" width="100%"></a></td>
+    <td align="center"><a href="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-08.jpg"><img src="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-08.jpg" width="100%"></a></td>
+  </tr>
+</table>
+
+<div align="center">
 
 ## ❤️ Support Development
 
