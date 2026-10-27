@@ -145,6 +145,7 @@ ComfyUI/frontend versions, UV/PIP caches, and GGUF conversion** from one place.
     - **ComfyUI-Manager Security-Level Config** - *Easy configuration of security_level via EZi Desktop > Menu*
     - **Pinned-Packages-Manager** - *Freeze package versions such as NumPy==1.26.4 via EZi Desktop > Menu*
 
+
 ---
 
 ## Meet EZi - The Comic Guide
@@ -159,10 +160,10 @@ New to EZi? Explore this illustrated guide. Click any image to view it full-size
     <th width="25%">Reuse Existing Models</th>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-cover.jpg"><img src="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-cover.jpg" width="100%"></a></td>
-    <td align="center"><a href="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-01.jpg"><img src="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-01.jpg" width="100%"></a></td>
-    <td align="center"><a href="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-02.jpg"><img src="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-02.jpg" width="100%"></a></td>
-    <td align="center"><a href="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-03.jpg"><img src="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-03.jpg" width="100%"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/3f0c82ba-dacf-4b85-ae31-9fc51c807923"><img src="https://github.com/user-attachments/assets/3f0c82ba-dacf-4b85-ae31-9fc51c807923" width="100%" alt="EZi Cover"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/4ef934b7-2a96-4afc-9d58-2198e5296d56"><img src="https://github.com/user-attachments/assets/4ef934b7-2a96-4afc-9d58-2198e5296d56" width="100%" alt="Install ComfyUI"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/48aac8a8-b4ee-4ca8-b0fe-d4614d337c7a"><img src="https://github.com/user-attachments/assets/48aac8a8-b4ee-4ca8-b0fe-d4614d337c7a" width="100%" alt="EZi Launcher"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/ce1264a3-f875-477c-b029-3b17a31ed2af"><img src="https://github.com/user-attachments/assets/ce1264a3-f875-477c-b029-3b17a31ed2af" width="100%" alt="Existing Models"></a></td>
   </tr>
   <tr>
     <th width="25%">Install Add-ons</th>
@@ -171,10 +172,10 @@ New to EZi? Explore this illustrated guide. Click any image to view it full-size
     <th width="25%">Make Yourself at Home</th>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-05.jpg"><img src="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-05.jpg" width="100%"></a></td>
-    <td align="center"><a href="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-06.jpg"><img src="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-06.jpg" width="100%"></a></td>
-    <td align="center"><a href="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-07.jpg"><img src="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-07.jpg" width="100%"></a></td>
-    <td align="center"><a href="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-08.jpg"><img src="https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/comic-assets-v1/EZi-page-08.jpg" width="100%"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/11aea3a4-3bba-40fa-b62f-af606a3834d3"><img src="https://github.com/user-attachments/assets/11aea3a4-3bba-40fa-b62f-af606a3834d3" width="100%" alt="Install Add-ons"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/51797556-47e4-47d1-bda5-042d5bcf088c"><img src="https://github.com/user-attachments/assets/51797556-47e4-47d1-bda5-042d5bcf088c" width="100%" alt="Update and Restore"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/acd9bb56-051f-480f-833a-1f34496b7034"><img src="https://github.com/user-attachments/assets/acd9bb56-051f-480f-833a-1f34496b7034" width="100%" alt="Know Your System"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/dd275f1f-7c85-4993-afa1-930bb9891591"><img src="https://github.com/user-attachments/assets/dd275f1f-7c85-4993-afa1-930bb9891591" width="100%" alt="Make Yourself at Home"></a></td>
   </tr>
 </table>
 
