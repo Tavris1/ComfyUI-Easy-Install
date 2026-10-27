@@ -34,7 +34,7 @@
 <p align="center">
   <a href="#%EF%B8%8F-windows-installation">📥 <strong>INSTALL</strong></a> &nbsp;·&nbsp;
   <a href="#-features">✨ Features</a> &nbsp;·&nbsp;
-  <a href="#meet-ezi---the-comic-guide">📖 Meet EZi</a> &nbsp;·&nbsp;
+  <a href="#meet-ezi---the-comic-guide">🎭 Meet EZi</a> &nbsp;·&nbsp;
   <a href="https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
   <a href="https://discord.gg/gggpkVgBf3">💬 Pixaroma Discord</a> &nbsp;·&nbsp;
   <a href="#%EF%B8%8F-support-development">❤️ Support Development</a>
@@ -148,7 +148,7 @@ ComfyUI/frontend versions, UV/PIP caches, and GGUF conversion** from one place.
 
 ---
 
-## Meet EZi - The Comic Guide
+## 🎭 Meet EZi - The Comic Guide
 
 New to EZi? Explore this illustrated guide. Click any image to view it full-size.
 
