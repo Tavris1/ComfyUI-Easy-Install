@@ -1,5 +1,5 @@
 @echo off&&cd /D "%~dp0"
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.26.0"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.27.0"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -240,6 +240,9 @@ tar.exe -xmf "%HLPR_NAME%"
 if errorlevel 1 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Microsoft.PowerShell.Archive\Expand-Archive -LiteralPath '%HLPR_NAME%' -DestinationPath '.' -Force"
 
 cd ComfyUI-Easy-Install
+
+if not exist ".\Add-Ons\Tools\Helper-CEI\keep_cache.flag" type nul > ".\Add-Ons\Tools\Helper-CEI\keep_cache.flag"
+
 :: Download media files ::
 set "MEDIA_ZIP=Media-CEI.zip"
 set "MEDIA_URL=https://github.com/Tavris1/ComfyUI-Easy-Install/releases/download/assets/%MEDIA_ZIP%"
