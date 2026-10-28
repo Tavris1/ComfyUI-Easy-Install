@@ -22,6 +22,50 @@ import locale
 
 EZI_VERSION = "3.25.1"
 
+EZI_AURORA_PALETTE_ID = "ezi_aurora"
+EZI_AURORA_PALETTE_VERSION = 1
+
+EZI_AURORA_PALETTE = {
+    "id": EZI_AURORA_PALETTE_ID,
+    "name": "EZi Aurora",
+    "light_theme": False,
+    "colors": {
+        "node_slot": {
+            "CLIP": "#ffd166", "CLIP_VISION": "#8fd3e0", "CLIP_VISION_OUTPUT": "#c08a64",
+            "CONDITIONING": "#ffa65c", "CONTROL_NET": "#6ee7b7", "IMAGE": "#6cb8ff",
+            "LATENT": "#f29cff", "MASK": "#8ddc9a", "MODEL": "#b49cf0",
+            "STYLE_MODEL": "#c2ffae", "VAE": "#ff7a8a", "NOISE": "#b0bccd",
+            "GUIDER": "#66f0e6", "SAMPLER": "#e8b4c4", "SIGMAS": "#cdf5d0", "TAESD": "#dcc274",
+        },
+        "litegraph_base": {
+            "CLEAR_BACKGROUND_COLOR": "#0b1926", "NODE_TITLE_COLOR": "#a1b3cc",
+            "NODE_SELECTED_TITLE_COLOR": "#ffffff", "NODE_TEXT_COLOR": "#b7c6dc",
+            "NODE_TEXT_HIGHLIGHT_COLOR": "#ffffff", "NODE_DEFAULT_COLOR": "#304b63",
+            "NODE_DEFAULT_BGCOLOR": "#22374b", "NODE_DEFAULT_BOXCOLOR": "#49758a",
+            "NODE_DEFAULT_SHAPE": 2, "NODE_BOX_OUTLINE_COLOR": "#82dfcd",
+            "NODE_BYPASS_BGCOLOR": "#FF00FF", "NODE_ERROR_COLOUR": "#ff3b4e",
+            "DEFAULT_SHADOW_COLOR": "rgba(0,0,0,0.5)", "WIDGET_BGCOLOR": "#0d2433",
+            "WIDGET_OUTLINE_COLOR": "#49758a", "WIDGET_TEXT_COLOR": "#e3ecfb",
+            "WIDGET_SECONDARY_TEXT_COLOR": "#a1b3cc", "WIDGET_DISABLED_TEXT_COLOR": "#5f7893",
+            "LINK_COLOR": "#7fc9bd", "EVENT_LINK_COLOR": "#e0a96d", "CONNECTING_LINK_COLOR": "#9be9d9",
+            "BADGE_FG_COLOR": "#edf3ff", "BADGE_BG_COLOR": "#12303f",
+        },
+        "comfy_base": {
+            "fg-color": "#edf3ff", "bg-color": "#0f2233", "comfy-menu-bg": "#102638",
+            "comfy-menu-secondary-bg": "#122438", "comfy-input-bg": "#09232d",
+            "input-text": "#e3ecfb", "descrip-text": "#a1b3cc", "drag-text": "#c3d1e6",
+            "error-text": "#ff5d6c", "border-color": "#304659",
+            "tr-even-bg-color": "#0d2230", "tr-odd-bg-color": "#162c40",
+            "content-bg": "#304659", "content-fg": "#edf3ff",
+            "content-hover-bg": "#203649", "content-hover-fg": "#ffffff",
+            "bar-shadow": "rgba(4, 12, 20, 0.6) 0 0 0.5rem",
+            "interface-stroke": "#3b566f", "interface-panel-surface": "#102638",
+            "interface-panel-hover-surface": "#203649", "interface-panel-selected-surface": "#304b63",
+            "interface-button-hover-surface": "#304b63",
+        },
+    },
+}
+
 
 def _log_error(label=''):
     """Log exception details to stderr for debugging without crashing."""
@@ -218,6 +262,57 @@ def save_comfy_storage(data):
     state["comfy_storage"] = data
     with open(WINDOW_STATE_FILE, "w") as f:
         json.dump(state, f)
+
+
+def _load_settings():
+    state = load_window_state()
+    settings = state.get("settings", {})
+    return settings if isinstance(settings, dict) else {}
+
+
+def _save_settings(settings):
+    if not isinstance(settings, dict):
+        return
+    state = load_window_state()
+    state["settings"] = settings
+    with open(WINDOW_STATE_FILE, "w") as f:
+        json.dump(state, f)
+
+
+def _ensure_ezi_aurora_palette(settings):
+    try:
+        if not isinstance(settings, dict):
+            return
+        try:
+            done = int(settings.get("ezi_aurora_palette_ver", 0) or 0)
+        except (TypeError, ValueError):
+            done = 0
+        if done >= EZI_AURORA_PALETTE_VERSION:
+            return
+        user_dir = os.path.join(SCRIPT_DIR, "ComfyUI", "user", "default")
+        settings_file = os.path.join(user_dir, "comfy.settings.json")
+        data = {}
+        if os.path.exists(settings_file):
+            with open(settings_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            if not isinstance(data, dict):
+                return
+        palettes = data.get("Comfy.CustomColorPalettes")
+        if palettes is None:
+            palettes = {}
+        if not isinstance(palettes, dict):
+            return
+        palettes[EZI_AURORA_PALETTE_ID] = json.loads(json.dumps(EZI_AURORA_PALETTE))
+        data["Comfy.CustomColorPalettes"] = palettes
+        os.makedirs(user_dir, exist_ok=True)
+        tmp = settings_file + ".ezi.tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=4, ensure_ascii=False)
+        os.replace(tmp, settings_file)
+        settings["ezi_aurora_palette_ver"] = EZI_AURORA_PALETTE_VERSION
+        _save_settings(settings)
+    except Exception:
+        _log_error('_ensure_ezi_aurora_palette')
 
 
 def _installed_frontend_version():
@@ -4307,6 +4402,9 @@ def open_in_webview():
 
 
 def main():
+    settings = _load_settings()
+    _ensure_ezi_aurora_palette(settings)
+
     # In local mode, warn if port is already bound (another instance running)
     if not COMFYUI_REMOTE and is_port_in_use(COMFYUI_PORT):
         print(
