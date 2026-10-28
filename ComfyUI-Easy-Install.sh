@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo 3.25.1
+# Title ComfyUI-Easy-Install  NEXT by ivo 3.27.0
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -65,6 +65,23 @@ if [ -f "$KEEP_CACHE_FLAG" ]; then PIP_NC=""; UV_NC=""; fi
 PIP_ARGS="$PIP_NC --no-warn-script-location --timeout=120 --retries 3 --progress-bar on --root-user-action=ignore --trusted-host pypi.org --trusted-host files.pythonhosted.org --trusted-host pypi.python.org"
 CURL_ARGS="--retry 200 --retry-all-errors"
 UV_ARGS="--system $UV_NC --link-mode=copy"
+
+# Preflight: writable location + ASCII path (port of Windows v3.26.0 checks)
+CEI_TEST=".cei_test_$$"
+mkdir "$CEI_TEST" 2>/dev/null && echo test > "$CEI_TEST/write.tmp" 2>/dev/null
+if [ ! -f "$CEI_TEST/write.tmp" ]; then
+    rm -rf "$CEI_TEST" 2>/dev/null
+    echo -e "${WARNING}WARNING:${RESET} No permission to create folders/files here"
+    echo -e "${GREEN}Move this file to a folder you own and run it again.${RESET}"
+    read -p "Press any key to Exit..."
+    exit 1
+fi
+rm -rf "$CEI_TEST"
+if LC_ALL=C grep -q '[^ -~]' <<< "$(pwd)"; then
+    echo -e "${RED}WARNING: The installation path contains non-English characters. Installation problems are possible.${RESET}"
+    echo -e "${RED}Recommended: use a short English-only path.${RESET}"
+    sleep 3
+fi
 
 # Check for Existing ComfyUI Folder
 if [ -d "ComfyUI-Easy-Install" ]; then
@@ -1035,10 +1052,15 @@ if [ -d "ComfyUI/custom_nodes/rgthree-comfy" ]; then
     echo '{"patch_recursive_execution": false}' > ComfyUI/custom_nodes/rgthree-comfy/rgthree_config.json
 fi
 
-# Install EZi Console Filter (removes [DEPRECATION WARNING] noise)
-if [ -d "Add-Ons/ComfyUI-EZi-Console-Filter" ]; then
-    cp -a "Add-Ons/ComfyUI-EZi-Console-Filter" "ComfyUI/custom_nodes/"
+# Install EZi Console Filter single-file node (removes [DEPRECATION WARNING] noise)
+rm -rf "ComfyUI/custom_nodes/ComfyUI-EZi-Console-Filter" "ComfyUI/custom_nodes/.disabled/ComfyUI-EZi-Console-Filter" 2>/dev/null
+if [ -f "Add-Ons/Tools/Helper-CEI/EZi_Console_Filter.py" ]; then
+    cp -f "Add-Ons/Tools/Helper-CEI/EZi_Console_Filter.py" "ComfyUI/custom_nodes/"
 fi
+
+# Enable the package cache by default (v3.27.0 parity); remove the flag to disable
+mkdir -p "Add-Ons/Tools/Helper-CEI" 2>/dev/null
+touch "Add-Ons/Tools/Helper-CEI/keep_cache.flag" 2>/dev/null || true
 
 # Remove the now-redundant child folder
 rm -rf ComfyUI-Easy-Install
