@@ -152,32 +152,36 @@ ComfyUI/frontend versions, UV/PIP caches, and GGUF conversion** from one place.
 
 New to EZi? Explore this illustrated guide. Click any image to view it full-size.
 
+
+
 <table width="100%">
   <tr>
-    <th width="25%">ComfyUI Made Easy</th>
-    <th width="25%">Install ComfyUI</th>
-    <th width="25%">Meet Your EZi Launcher</th>
-    <th width="25%">Reuse Existing Models</th>
+    <th width="25%">EZi Cover</th>
+    <th width="25%">Page 01</th>
+    <th width="25%">Page 02</th>
+    <th width="25%">Page 03</th>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/user-attachments/assets/3f0c82ba-dacf-4b85-ae31-9fc51c807923"><img src="https://github.com/user-attachments/assets/3f0c82ba-dacf-4b85-ae31-9fc51c807923" width="100%" alt="EZi Cover"></a></td>
-    <td align="center"><a href="https://github.com/user-attachments/assets/4ef934b7-2a96-4afc-9d58-2198e5296d56"><img src="https://github.com/user-attachments/assets/4ef934b7-2a96-4afc-9d58-2198e5296d56" width="100%" alt="Install ComfyUI"></a></td>
-    <td align="center"><a href="https://github.com/user-attachments/assets/48aac8a8-b4ee-4ca8-b0fe-d4614d337c7a"><img src="https://github.com/user-attachments/assets/48aac8a8-b4ee-4ca8-b0fe-d4614d337c7a" width="100%" alt="EZi Launcher"></a></td>
-    <td align="center"><a href="https://github.com/user-attachments/assets/ce1264a3-f875-477c-b029-3b17a31ed2af"><img src="https://github.com/user-attachments/assets/ce1264a3-f875-477c-b029-3b17a31ed2af" width="100%" alt="Existing Models"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/b6554614-b903-4657-bcfe-38e7120d6810"><img src="https://github.com/user-attachments/assets/b6554614-b903-4657-bcfe-38e7120d6810" width="100%" alt="EZi Cover"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/da255d23-663f-496f-8e34-e2a8109f9da9"><img src="https://github.com/user-attachments/assets/da255d23-663f-496f-8e34-e2a8109f9da9" width="100%" alt="EZi Page 01"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/cd01aba6-a169-4a16-8ba6-a2f4073f42f9"><img src="https://github.com/user-attachments/assets/cd01aba6-a169-4a16-8ba6-a2f4073f42f9" width="100%" alt="EZi Page 02"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/71e8a9fa-df5b-442f-b77d-34c1115f3901"><img src="https://github.com/user-attachments/assets/71e8a9fa-df5b-442f-b77d-34c1115f3901" width="100%" alt="EZi Page 03"></a></td>
   </tr>
   <tr>
-    <th width="25%">Install Add-ons</th>
-    <th width="25%">Update and Restore</th>
-    <th width="25%">Know Your System</th>
-    <th width="25%">Make Yourself at Home</th>
+    <th width="25%">Page 05</th>
+    <th width="25%">Page 06</th>
+    <th width="25%">Page 07</th>
+    <th width="25%">Page 08</th>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/user-attachments/assets/11aea3a4-3bba-40fa-b62f-af606a3834d3"><img src="https://github.com/user-attachments/assets/11aea3a4-3bba-40fa-b62f-af606a3834d3" width="100%" alt="Install Add-ons"></a></td>
-    <td align="center"><a href="https://github.com/user-attachments/assets/51797556-47e4-47d1-bda5-042d5bcf088c"><img src="https://github.com/user-attachments/assets/51797556-47e4-47d1-bda5-042d5bcf088c" width="100%" alt="Update and Restore"></a></td>
-    <td align="center"><a href="https://github.com/user-attachments/assets/acd9bb56-051f-480f-833a-1f34496b7034"><img src="https://github.com/user-attachments/assets/acd9bb56-051f-480f-833a-1f34496b7034" width="100%" alt="Know Your System"></a></td>
-    <td align="center"><a href="https://github.com/user-attachments/assets/dd275f1f-7c85-4993-afa1-930bb9891591"><img src="https://github.com/user-attachments/assets/dd275f1f-7c85-4993-afa1-930bb9891591" width="100%" alt="Make Yourself at Home"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/f340d88c-a947-4b5e-bba9-deba90aabc4b"><img src="https://github.com/user-attachments/assets/f340d88c-a947-4b5e-bba9-deba90aabc4b" width="100%" alt="EZi Page 05"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/8a92e883-7af2-4935-a0e9-ae4f50dba5b6"><img src="https://github.com/user-attachments/assets/8a92e883-7af2-4935-a0e9-ae4f50dba5b6" width="100%" alt="EZi Page 06"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/2fe2fbf4-bd2f-4d12-929d-cf355fd19ad3"><img src="https://github.com/user-attachments/assets/2fe2fbf4-bd2f-4d12-929d-cf355fd19ad3" width="100%" alt="EZi Page 07"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/b5bee42d-5340-470a-ad82-b52b4218e90d"><img src="https://github.com/user-attachments/assets/b5bee42d-5340-470a-ad82-b52b4218e90d" width="100%" alt="EZi Page 08"></a></td>
   </tr>
 </table>
+
+
 
 <div align="center">
 
