@@ -20,7 +20,7 @@ import subprocess
 import traceback
 import locale
 
-EZI_VERSION = "3.27.0"
+EZI_VERSION = "3.27.1"
 
 EZI_AURORA_PALETTE_ID = "ezi_aurora"
 EZI_AURORA_PALETTE_VERSION = 1
@@ -649,6 +649,27 @@ def get_comfyui_required_frontend(tag):
     return None
 
 
+def _pip_install_comfyui_requirements():
+    """Install ComfyUI requirements.txt after a version switch. Returns dict."""
+    req_path = os.path.join(SCRIPT_DIR, "ComfyUI", "requirements.txt")
+    if not os.path.isfile(req_path):
+        return {"skipped": "requirements.txt not found"}
+    python = os.path.join(SCRIPT_DIR, "python_embeded", "python")
+    if not os.path.isfile(python):
+        python = sys.executable
+    try:
+        r = subprocess.run(
+            [python, "-I", "-m", "pip", "install", "-r", req_path,
+             "--no-warn-script-location"],
+            capture_output=True, text=True, timeout=300,
+        )
+        if r.returncode == 0:
+            return {"ok": True}
+        return {"error": r.stderr.strip()[-300:]}
+    except Exception as e:
+        return {"error": str(e)}
+
+
 def switch_comfyui_and_frontend(tag, fe_version=None):
     """Switch ComfyUI to a specific tag and optionally/install matching frontend.
     If fe_version is None, auto-detect from requirements.txt."""
@@ -670,6 +691,12 @@ def switch_comfyui_and_frontend(tag, fe_version=None):
         results["comfyui"] = tag
     except Exception as e:
         return {"error": f"ComfyUI switch failed: {e}"}
+
+    # Step 1b: Install ComfyUI requirements for the new tag (parity with EZi v3.27.1)
+    req_result = _pip_install_comfyui_requirements()
+    results["requirements"] = req_result
+    if req_result.get("error"):
+        return {"error": f"Requirements install failed: {req_result['error']}", "partial": results}
 
     # Step 2: Determine frontend version
     if fe_version is None or fe_version == "auto":
