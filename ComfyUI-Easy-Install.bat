@@ -1,5 +1,5 @@
 @echo off&&cd /D "%~dp0"
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.27.2"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.27.3"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -424,19 +424,31 @@ if not exist "python.exe" (
 	goto :eof
 )
 
+set "CEI_PIP_DOWNLOAD_OK="
 curl.exe -fL --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
-if errorlevel 1 powershell -NoProfile -ExecutionPolicy Bypass -Command "Try{Start-BitsTransfer -Source 'https://bootstrap.pypa.io/get-pip.py' -Destination 'get-pip.py' -ErrorAction Stop}catch{exit 1}"
+if not errorlevel 1 set "CEI_PIP_DOWNLOAD_OK=1"
+if defined CEI_PIP_DOWNLOAD_OK goto :cei_get_pip_downloaded
 
-if not exist "get-pip.py" curl.exe -fL --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "get-pip.py" "https://raw.githubusercontent.com/pypa/get-pip/main/public/get-pip.py"
-if not exist "get-pip.py" powershell -NoProfile -ExecutionPolicy Bypass -Command "Try{Start-BitsTransfer -Source 'https://raw.githubusercontent.com/pypa/get-pip/main/public/get-pip.py' -Destination 'get-pip.py' -ErrorAction Stop}catch{exit 1}"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Try{Start-BitsTransfer -Source 'https://bootstrap.pypa.io/get-pip.py' -Destination 'get-pip.py' -ErrorAction Stop;exit 0}catch{exit 1}"
+if not errorlevel 1 set "CEI_PIP_DOWNLOAD_OK=1"
+if defined CEI_PIP_DOWNLOAD_OK goto :cei_get_pip_downloaded
 
-if not exist "get-pip.py" (
-echo.
-echo %red%Failed to download get-pip.py%reset%
-echo Check your date and time, Windows updates and antivirus HTTPS scanning
-echo Press any key to Exit...&Pause>nul
-set "FATAL=1"
-goto :eof
+curl.exe -fL --progress-bar --ssl-no-revoke --retry 5 --retry-delay 2 -o "get-pip.py" "https://raw.githubusercontent.com/pypa/get-pip/main/public/get-pip.py"
+if not errorlevel 1 set "CEI_PIP_DOWNLOAD_OK=1"
+if defined CEI_PIP_DOWNLOAD_OK goto :cei_get_pip_downloaded
+
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Try{Start-BitsTransfer -Source 'https://raw.githubusercontent.com/pypa/get-pip/main/public/get-pip.py' -Destination 'get-pip.py' -ErrorAction Stop;exit 0}catch{exit 1}"
+if not errorlevel 1 set "CEI_PIP_DOWNLOAD_OK=1"
+
+:cei_get_pip_downloaded
+if not exist "get-pip.py" set "CEI_PIP_DOWNLOAD_OK="
+if not defined CEI_PIP_DOWNLOAD_OK (
+    echo.
+    echo %red%Failed to download get-pip.py%reset%
+    echo Check the download errors above, your internet connection and system date and time.
+    echo Press any key to Exit...&Pause>nul
+    set "FATAL=1"
+    goto :eof
 )
 
 echo ../ComfyUI> python312._pth
@@ -453,20 +465,49 @@ echo     pypi.org>> pip.ini
 echo     files.pythonhosted.org>> pip.ini
 echo     pypi.python.org>> pip.ini
 
-.\python.exe -I get-pip.py %PIPargs% --trusted-host pypi.org --trusted-host files.pythonhosted.org --trusted-host pypi.python.org
+:: Extract bundled pip directly without running get-pip.py ::
+echo Installing pip from the bundled copy...
+.\python.exe -I -c "import base64,io,zipfile;src=open('get-pip.py','rb').read().decode('utf-8');assert 'DATA = b'+chr(34)*3 in src, 'Bundled pip DATA marker not found';blob=src.partition('DATA = b'+chr(34)*3)[2].rsplit(chr(34)*3,1)[0];assert blob.strip(), 'Bundled pip DATA is empty';z=zipfile.ZipFile(io.BytesIO(base64.b85decode(b''.join(blob.encode().split()))));assert 'pip/__main__.py' in z.namelist(), 'Bundled archive does not contain pip';assert z.testzip() is None, 'Bundled pip archive is corrupt';z.extractall('Lib/site-packages')"
+if errorlevel 1 (
+    echo.
+    echo %red%Failed to unpack the bundled pip%reset%
+    echo Check the extraction error above. The get-pip.py file may be incomplete or its format may have changed.
+    echo Press any key to Exit...&Pause>nul
+    set "FATAL=1"
+    goto :eof
+)
 .\python.exe -I -m pip --version >nul 2>&1
 if errorlevel 1 (
 	echo.
 	echo %red%Failed to install pip%reset%
-	echo Your antivirus may have blocked Python files. Check %yellow%Windows Security, Protection history%reset%
-	echo Delete the %yellow%ComfyUI-Easy-Install%reset% folder, allow it in your antivirus and run this installer again
+	echo Check the messages above and your internet connection. If your antivirus blocked Python files, see %yellow%Windows Security, Protection history%reset%
+	echo Delete the %yellow%ComfyUI-Easy-Install%reset% folder and run this installer again
 	echo Press any key to Exit...&Pause>nul
 	set "FATAL=1"
 	goto :eof
 )
-REM .\python.exe -I -m pip config set global.trusted-host "pypi.org files.pythonhosted.org pypi.python.org"
+.\python.exe -I -m pip install --upgrade %PIPargs% pip
+if errorlevel 1 (
+    echo.
+    echo %red%Failed to complete pip installation%reset%
+    echo Check the messages above and your internet connection.
+    echo Press any key to Exit...&Pause>nul
+    set "FATAL=1"
+    goto :eof
+)
 
-REM .\python.exe -I -m pip install uv==0.9.7 %PIPargs%
+.\python.exe -I -m pip --version
+if errorlevel 1 (
+    echo.
+    echo %red%Pip verification failed after the upgrade%reset%
+    echo Check the Python error above. Installation has been stopped.
+    echo Press any key to Exit...&Pause>nul
+    set "FATAL=1"
+    goto :eof
+)
+echo %green%Pip is ready.%reset%
+
+:cei_pip_ready
 .\python.exe -I -m pip install uv %PIPargs%
 .\python.exe -I -m uv --version >nul 2>&1
 if errorlevel 1 (
