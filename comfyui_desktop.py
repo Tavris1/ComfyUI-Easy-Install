@@ -1835,6 +1835,19 @@ INJECTED_JS = """
                 '#_cdp_sidebar{width:190px;background:#111;border-right:1px solid var(--border,#2a2a2a);display:flex;flex-direction:column;flex-shrink:0}' +
                 '#_cdp_sidebar .search{padding:10px 10px 8px;border-bottom:1px solid var(--border,#2a2a2a)}' +
                 '#_cdp_sidebar .search input{width:100%;padding:7px 10px;background:var(--input-bg,#1e1e28);border:1px solid var(--border,#333);border-radius:6px;color:var(--fg,#e0e0e0);font-size:12px;outline:none}' +
+                '#_cdp_ts{display:none;align-items:center;gap:4px;margin-bottom:8px;user-select:none}' +
+                '#_cdp_ts.show{display:flex}' +
+                '#_cdp_ts input{width:200px;padding:3px 6px;background:var(--input-bg,#1e1e28);border:1px solid var(--border,#333);border-radius:4px;color:var(--fg,#e0e0e0);font-family:inherit;font-size:12px;outline:none;user-select:text}' +
+                '#_cdp_ts input:focus{border-color:var(--accent,#e8530a)}' +
+                '#_cdp_ts .count{min-width:56px;text-align:center;font-size:11px;color:var(--muted,#888);white-space:nowrap}' +
+                '#_cdp_ts .count.none{color:#ff5555}' +
+                '#_cdp_ts .ts-btn{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:26px;height:22px;padding:0;border:1px solid var(--border,#333);border-radius:4px;background:#222;color:var(--fg,#e0e0e0);cursor:pointer;font-family:inherit;font-size:11px;font-weight:bold;line-height:1;transition:background .15s,color .15s}' +
+                '#_cdp_ts .ts-btn:hover{background:var(--accent-bg,#6e2200);color:var(--text-on-accent,#fff)}' +
+                '#_cdp_ts .ts-btn.on{background:var(--accent,#e8530a);color:var(--text-on-accent,#fff)}' +
+                '::highlight(cdp-search){background-color:rgba(255,214,0,.35);color:inherit}' +
+                '::highlight(cdp-search-cur){background-color:#ff9632;color:#000}' +
+                '#_cdp_log_view .cdp-hl{background:rgba(255,214,0,.35);color:inherit;border-radius:2px}' +
+                '#_cdp_log_view .cdp-hl.cur{background:#ff9632;color:#000}' +
                 '#_cdp_nav_list{flex:1;overflow-y:auto;padding:6px 4px}' +
                 '._cdp_nav{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;margin-bottom:2px;background:none;border:none;border-radius:6px;color:#ccc;font-size:12px;font-weight:500;cursor:pointer;text-align:left;transition:background .15s,color .15s}' +
                 '._cdp_nav:hover{background:#222;color:#fff}' +
@@ -1960,7 +1973,13 @@ INJECTED_JS = """
                     '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">' +
                     '<button id="_cdp_log_save" style="'+btnStyle('#2a3a5a')+'">Save log</button>' +
                     '<button id="_cdp_log_refresh" style="'+btnStyle('#333')+'">Refresh</button>' +
-                    '<button id="_cdp_log_whatsnew" style="'+btnStyle('#3a2a5a')+'">What\\'s new</button></div>' +
+                    '<button id="_cdp_log_whatsnew" style="'+btnStyle('#3a2a5a')+'">What\\'s new</button>' +
+                    '<button id="_cdp_log_find" style="'+btnStyle('#333')+'" title="Find in log (Ctrl+F)">Find</button></div>' +
+                    '<div id="_cdp_ts"><input type="text" id="_cdp_ts_input" placeholder="Find" autocomplete="off" spellcheck="false"><span' +
+                    ' id="_cdp_ts_count" class="count"></span><button type="button" class="ts-btn" id="_cdp_ts_case" title="Match case">Aa' +
+                    '</button><button type="button" class="ts-btn" id="_cdp_ts_prev" title="Previous match (Shift+Enter)">&#x2191;' +
+                    '</button><button type="button" class="ts-btn" id="_cdp_ts_next" title="Next match (Enter)">&#x2193;' +
+                    '</button><button type="button" class="ts-btn" id="_cdp_ts_close" title="Close (Esc)">&#x2715;</button></div>' +
                     '<pre id="_cdp_log_view" style="margin:0;background:#0d0d0d;border:1px solid var(--border,#444);border-radius:5px;padding:8px;font-size:11px;color:#c8c8c8;height:320px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;font-family:monospace">Loading log...</pre>') +
                 '</div>' +
                 /* TAB: Add-ons */
@@ -2720,8 +2739,129 @@ INJECTED_JS = """
             /* ── Log viewer ── */
             try {
             var _logTimer = null;
+            var view = document.getElementById('_cdp_log_view');
+            var bar = document.getElementById('_cdp_ts');
+            var inp = document.getElementById('_cdp_ts_input');
+            var cnt = document.getElementById('_cdp_ts_count');
+            var caseBtn = document.getElementById('_cdp_ts_case');
+            var hl = null;
+            try {
+                if (window.CSS && CSS.highlights && typeof Highlight === 'function') {
+                    hl = { all: new Highlight(), cur: new Highlight() };
+                    CSS.highlights.set('cdp-search', hl.all);
+                    CSS.highlights.set('cdp-search-cur', hl.cur);
+                }
+            } catch (e) { hl = null; }
+            var MAXM = 10000, MAXH = 3000;
+            var matches = [], idx = -1, caseOn = false, isOpen = false;
+            function escText(s) {
+                return String(s).replace(/[&<>"]/g, function(c) {
+                    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];
+                });
+            }
+            function paint() {
+                if (!view) return;
+                var text = view.textContent || '';
+                if (!matches.length) {
+                    view.textContent = text;
+                    return;
+                }
+                if (hl) {
+                    view.textContent = text;
+                    hl.all.clear(); hl.cur.clear();
+                    var node = view.firstChild;
+                    if (!node || node.nodeType !== 3) return;
+                    var limit = Math.min(matches.length, MAXH);
+                    var start = 0;
+                    if (matches.length > MAXH && idx >= 0) start = Math.max(0, Math.min(idx - Math.floor(MAXH / 2), matches.length - MAXH));
+                    for (var i = start; i < start + limit; i++) {
+                        var m = matches[i];
+                        var rg = document.createRange();
+                        rg.setStart(node, m.s); rg.setEnd(node, m.s + m.l);
+                        (i === idx ? hl.cur : hl.all).add(rg);
+                    }
+                    return;
+                }
+                var html = '', last = 0;
+                for (var i = 0; i < matches.length; i++) {
+                    html += escText(text.slice(last, matches[i].s));
+                    html += '<span class="cdp-hl' + (i === idx ? ' cur' : '') + '">' + escText(text.slice(matches[i].s, matches[i].s + matches[i].l)) + '</span>';
+                    last = matches[i].s + matches[i].l;
+                }
+                view.innerHTML = html + escText(text.slice(last));
+            }
+            function updateCount() {
+                if (!cnt) return;
+                cnt.classList.remove('none');
+                if (!inp || !inp.value) { cnt.textContent = ''; return; }
+                if (!matches.length) { cnt.textContent = 'No results'; cnt.classList.add('none'); return; }
+                cnt.textContent = (idx + 1) + '/' + matches.length + (matches.length >= MAXM ? '+' : '');
+            }
+            function reveal() {
+                if (idx < 0 || !matches.length || !view) return;
+                var el = view.querySelector('.cdp-hl.cur');
+                if (el) { try { el.scrollIntoView({ block: 'center' }); } catch (e) {} return; }
+                var node = view.firstChild;
+                if (!node || node.nodeType !== 3) return;
+                var m = matches[idx];
+                var rg = document.createRange();
+                try {
+                    rg.setStart(node, m.s); rg.setEnd(node, m.s + m.l);
+                    var r1 = rg.getBoundingClientRect(), r2 = view.getBoundingClientRect();
+                    if (!r1 || !r2) return;
+                    var top = view.scrollTop + (r1.top - r2.top) - view.clientHeight / 2;
+                    view.scrollTop = Math.max(0, Math.min(top, view.scrollHeight));
+                } catch (e) {}
+            }
+            function compute(keep) {
+                matches = [];
+                if (view && inp && inp.value) {
+                    var nq = caseOn ? inp.value : inp.value.toLowerCase();
+                    var text = view.textContent || '';
+                    if (!caseOn) text = text.toLowerCase();
+                    var p = text.indexOf(nq);
+                    while (p !== -1 && matches.length < MAXM) {
+                        matches.push({ s: p, l: nq.length });
+                        p = text.indexOf(nq, p + nq.length);
+                    }
+                }
+                if (!matches.length) idx = -1;
+                else if (keep && idx >= 0) idx = Math.min(idx, matches.length - 1);
+                else idx = matches.length - 1;
+                paint();
+                updateCount();
+            }
+            function go(d) {
+                if (!matches.length) { compute(false); if (!matches.length) return; }
+                idx = (idx + d + matches.length) % matches.length;
+                paint();
+                updateCount();
+                reveal();
+            }
+            function openSearch() {
+                if (!bar || !inp) return;
+                isOpen = true;
+                bar.classList.add('show');
+                var sel = window.getSelection();
+                if (sel && !sel.isCollapsed && sel.rangeCount && view && view.contains(sel.getRangeAt(0).commonAncestorContainer)) {
+                    var t = sel.toString();
+                    if (t && t.length < 200 && t.split(String.fromCharCode(10)).length < 2) inp.value = t;
+                }
+                inp.focus();
+                inp.select();
+                compute(false);
+                reveal();
+            }
+            function closeSearch() {
+                isOpen = false;
+                if (bar) bar.classList.remove('show');
+                matches = [];
+                idx = -1;
+                paint();
+                updateCount();
+                if (inp) { try { inp.blur(); } catch (e) {} }
+            }
             function refreshLog() {
-                var view = document.getElementById('_cdp_log_view');
                 if (!view) { console.log('[EZi log] view not found'); return; }
                 pywebview.api.get_server_log(300).then(function(raw) {
                     try {
@@ -2729,7 +2869,8 @@ INJECTED_JS = """
                         if (d.error) { console.log('[EZi log] error:', d.error); return; }
                         var lines = d.lines || [];
                         view.textContent = lines.join('\\n') || 'No log lines yet.';
-                        view.scrollTop = view.scrollHeight;
+                        if (isOpen && inp && inp.value) { compute(true); reveal(); }
+                        else { view.scrollTop = view.scrollHeight; }
                     } catch(e) { console.log('[EZi log] parse error:', e); }
                 }).catch(function(err) { console.log('[EZi log] api error:', err); });
             }
@@ -2743,6 +2884,43 @@ INJECTED_JS = """
             document.getElementById('_cdp_log_whatsnew').onclick = function() {
                 pywebview.api.open_whats_new();
             };
+            // Search bindings (Windows #term-search parity)
+            if (bar && inp && cnt && caseBtn) {
+                document.getElementById('_cdp_log_find').onclick = openSearch;
+                document.getElementById('_cdp_ts_prev').onclick = function() { go(-1); inp.focus(); };
+                document.getElementById('_cdp_ts_next').onclick = function() { go(1); inp.focus(); };
+                document.getElementById('_cdp_ts_close').onclick = closeSearch;
+                caseBtn.onclick = function() {
+                    caseOn = !caseOn;
+                    caseBtn.classList.toggle('on', caseOn);
+                    compute(false);
+                    reveal();
+                    inp.focus();
+                };
+                inp.addEventListener('input', function() { compute(false); reveal(); });
+                inp.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        go(e.shiftKey ? -1 : 1);
+                    } else if (e.key === 'Escape') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        closeSearch();
+                    }
+                });
+                // Ctrl+F / Cmd+F opens search on the log tab; F3 repeats the search
+                document.addEventListener('keydown', function(e) {
+                    if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && (e.code === 'KeyF' || e.key === 'f' || e.key === 'F')) {
+                        e.preventDefault();
+                        var logTab = document.querySelector('._cdp_nav[data-tab="log"]');
+                        if (logTab) logTab.click();
+                        openSearch();
+                    } else if (e.key === 'F3' && isOpen) {
+                        e.preventDefault();
+                        go(e.shiftKey ? -1 : 1);
+                    }
+                }, true);
+            }
             // Auto-refresh log while the log tab is active
             function startLogRefresh() {
                 if (_logTimer) return;
