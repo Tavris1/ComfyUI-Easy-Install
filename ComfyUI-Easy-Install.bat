@@ -1,5 +1,5 @@
 @echo off&&cd /D "%~dp0"
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.27.1"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.27.2"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -17,6 +17,7 @@ set "UVargs=--no-cache --link-mode=copy"
 :: Add a path just in case ::
 for /f "delims=" %%G in ('cmd /c "where.exe git.exe 2>nul"') do (set "GIT_PATH=%%~dpG")
 set "path=%GIT_PATH%;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0;%localappdata%\Microsoft\WindowsApps;%path%"
+set "PSModulePath="
 
 set "FATAL="
 call :SET_COLORS
@@ -388,8 +389,18 @@ set "FATAL=1"
 goto :eof
 )
 
-powershell -NoProfile -ExecutionPolicy Bypass -Command "try{if((Get-FileHash -LiteralPath 'python-3.12.10-embed-amd64.zip' -Algorithm SHA256).Hash -eq '4acbed6dd1c744b0376e3b1cf57ce906f9dc9e95e68824584c8099a63025a3c3'){exit 0}else{exit 1}}catch{exit 1}"
-if errorlevel 1 (
+powershell -NoProfile -ExecutionPolicy Bypass -Command "try{$h=(Get-FileHash -LiteralPath 'python-3.12.10-embed-amd64.zip' -Algorithm SHA256 -ErrorAction Stop).Hash}catch{Write-Host $_.Exception.Message;exit 2};if($h -eq '4acbed6dd1c744b0376e3b1cf57ce906f9dc9e95e68824584c8099a63025a3c3'){exit 0}else{Write-Host ('Actual SHA256: '+$h);exit 1}"
+set "HASH_RC=%errorlevel%"
+if %HASH_RC% equ 2 (
+	echo.
+	echo %red%Could not calculate the checksum of python-3.12.10-embed-amd64.zip%reset%
+	echo The download itself may be fine. Check your PowerShell and antivirus settings
+	echo Delete the %yellow%ComfyUI-Easy-Install%reset% folder and run this installer again from a normal CMD window
+	echo Press any key to Exit...&Pause>nul
+	set "FATAL=1"
+	goto :eof
+)
+if %HASH_RC% neq 0 (
 	erase "python-3.12.10-embed-amd64.zip"
 	echo.
 	echo %red%Python archive checksum does not match%reset%
