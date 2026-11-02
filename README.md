@@ -135,7 +135,6 @@ ComfyUI/frontend versions, UV/PIP caches, and GGUF conversion** from one place.
       `Torch 2.9.1+cu130`, `Torch 2.10+cu130`, `Torch 2.11+cu130`, `Torch 2.12.1+cu130` & `Torch 2.13.0+cu130`*
     - **Easy-model2GGUF** - *Convert & quantize models to GGUF (Q2_K–Q8_0) with 5D tensor fixes if available*
     - **Long-Paths-Enabler** - *Enables **Long Paths** in Windows 10/11. Essential for Python/ComfyUI*
-    - **ComfyUI-Version-Switcher** - ***Reversible** rollback to a **previous** ComfyUI version if issues occur*
     - **Toggle-DynamicVRAM** - *Toggles **--disable-dynamic-vram** option in ComfyUI startup files*
     - **Update Easy-Install** - *Updates **Add-ons** and other folders. Creates desktop shortcuts*
     - **EZi Desktop Themes** - *via EZi Desktop > Menu > Advanced*
