@@ -1,16 +1,16 @@
 <p align="center">
 🌍 
 <a href="../README.md">English</a> |
-<a href="README.zh-CN.md#zh-cn">简体中文</a> |
-<a href="README.ja.md#ja">日本語</a> |
+<a href="README.zh-CN.md">简体中文</a> |
+<a href="README.ja.md">日本語</a> |
 <strong>한국어</strong> |
-<a href="README.es.md#es">Español</a> |
-<a href="README.pt-BR.md#pt-br">Português</a> |
-<a href="README.de.md#de">Deutsch</a> |
-<a href="README.fr.md#fr">Français</a> |
-<a href="README.ru.md#ru">Русский</a> |
-<a href="README.tr.md#tr">Türkçe</a> |
-<a href="README.vi.md#vi">Tiếng Việt</a>
+<a href="README.es.md">Español</a> |
+<a href="README.pt-BR.md">Português</a> |
+<a href="README.de.md">Deutsch</a> |
+<a href="README.fr.md">Français</a> |
+<a href="README.ru.md">Русский</a> |
+<a href="README.tr.md">Türkçe</a> |
+<a href="README.vi.md">Tiếng Việt</a>
 </p>
 
 ---
@@ -34,6 +34,7 @@
   <p align="center">
     <a href="#%EF%B8%8F-windows-설치">📥 설치</a> &nbsp;·&nbsp;
     <a href="#-기능">✨ 기능/구성 요소</a> &nbsp;·&nbsp;
+    <a href="#-ezi-알아보기---만화-가이드">🎭 EZi 알아보기</a> &nbsp;·&nbsp;
     <a href="https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
     <a href="https://discord.gg/gggpkVgBf3">💬 Pixaroma Discord</a> &nbsp;·&nbsp;
     <a href="#%EF%B8%8F-개발-지원">❤️ 개발 지원</a>
@@ -83,8 +84,8 @@ ComfyUI/frontend 버전, UV/PIP 캐시 및 GGUF 변환**을 관리할 수 있습
 | [RMBG](https://github.com/1038lab/ComfyUI-RMBG) | | | [iTools](https://github.com/MohammadAboulEla/ComfyUI-iTools) | |
 | [Easy-Sam3](https://github.com/yolain/ComfyUI-Easy-Sam3) | | | [ControlAltAI Nodes](https://github.com/gseth/ControlAltAI-Nodes) | |
 | [SCAIL-Pose](https://github.com/kijai/ComfyUI-SCAIL-Pose) | | | ✨[Pixaroma](https://github.com/pixaroma/ComfyUI-Pixaroma) | |
-| | | | [Krea2T-Enhancer](https://github.com/capitan01R/ComfyUI-Krea2T-Enhancer) | |
 | | | | [Krea2Edit](https://github.com/lbouaraba/comfyui-krea2edit) | |
+| | | | | |
 
 </details>
 
@@ -108,15 +109,16 @@ ComfyUI/frontend 버전, UV/PIP 캐시 및 GGUF 변환**을 관리할 수 있습
 
 ## 🖥️ Windows 설치
 
+<!--
 > [!WARNING]
 > **Windows 11:** ComfyUI에서 **"Bad Image" (`0xc0e90002`)** 오류가 표시되면 **Smart App Control**을 끄고 ComfyUI를 다시 시작하세요.<br>
 > 이렇게 하면 신뢰할 수 없는 앱에 대한 보호가 약화됩니다. 확인하기 전에 Windows 경고를 읽으세요.
 
+-->
+
 > [!IMPORTANT]
-> - 설치 프로그램을 **Administrator**로 실행하지 마세요.
-> - 시스템 폴더(`Program Files`, `Windows`, `C:\` 루트)를 피하세요.
-> - 폴더 이름에 공백과 특수 문자를 사용하지 마세요.
-> - NVIDIA 드라이버가 최신 상태인지 확인하세요.
+> - 짧은 영문 경로를 사용하세요(예: `D:\AI\`).
+> - NVIDIA 드라이버를 최신 상태로 유지하세요.
 
 1. [**📥 DOWNLOAD LATEST VERSION**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
 2. ZIP 파일을 새 폴더에 압축 해제하고 **`ComfyUI-Easy-Install.bat`**을 실행하세요.
@@ -133,7 +135,6 @@ ComfyUI/frontend 버전, UV/PIP 캐시 및 GGUF 변환**을 관리할 수 있습
       `Torch 2.9.1+cu130`, `Torch 2.10+cu130`, `Torch 2.11+cu130`, `Torch 2.12.1+cu130` & `Torch 2.13.0+cu130`*
     - **Easy-model2GGUF** - *모델을 GGUF(Q2_K–Q8_0)로 변환 및 양자화하고, 가능한 경우 5D tensor 수정 적용*
     - **Long-Paths-Enabler** - *Windows 10/11에서 **Long Paths**를 활성화. Python/ComfyUI에 필수적*
-    - **ComfyUI-Version-Switcher** - *문제가 발생할 경우 **이전** ComfyUI 버전으로 **되돌릴 수 있는** 롤백*
     - **Toggle-DynamicVRAM** - *ComfyUI 시작 파일에서 **--disable-dynamic-vram** 옵션 전환*
     - **Update Easy-Install** - ***Add-ons** 및 기타 폴더 업데이트. 바탕 화면 바로 가기 생성*
     - **EZi Desktop Themes** - *EZi Desktop > Menu > Advanced를 통해*
@@ -143,9 +144,40 @@ ComfyUI/frontend 버전, UV/PIP 캐시 및 GGUF 변환**을 관리할 수 있습
     - **ComfyUI-Manager Security-Level Config** - *EZi Desktop > Menu를 통해 security_level을 쉽게 구성*
     - **Pinned-Packages-Manager** - *EZi Desktop > Menu를 통해 NumPy==1.26.4와 같은 패키지 버전 고정*
 
-<div align="center">
-
 ---
+
+## 🎭 EZi 알아보기 - 만화 가이드
+
+EZi가 처음이신가요? 이 그림 가이드를 살펴보세요. 이미지를 클릭하면 크게 볼 수 있습니다.
+
+<table width="100%">
+  <tr>
+    <th width="25%">ComfyUI Made Easy</th>
+    <th width="25%">ComfyUI 설치</th>
+    <th width="25%">Meet Your EZi Launcher</th>
+    <th width="25%">Reuse Existing Models</th>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/user-attachments/assets/b6554614-b903-4657-bcfe-38e7120d6810"><img src="https://github.com/user-attachments/assets/b6554614-b903-4657-bcfe-38e7120d6810" width="100%" alt="EZi Cover"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/da255d23-663f-496f-8e34-e2a8109f9da9"><img src="https://github.com/user-attachments/assets/da255d23-663f-496f-8e34-e2a8109f9da9" width="100%" alt="Install ComfyUI"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/cd01aba6-a169-4a16-8ba6-a2f4073f42f9"><img src="https://github.com/user-attachments/assets/cd01aba6-a169-4a16-8ba6-a2f4073f42f9" width="100%" alt="EZi Launcher"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/71e8a9fa-df5b-442f-b77d-34c1115f3901"><img src="https://github.com/user-attachments/assets/71e8a9fa-df5b-442f-b77d-34c1115f3901" width="100%" alt="Existing Models"></a></td>
+  </tr>
+  <tr>
+    <th width="25%">추가 기능 설치</th>
+    <th width="25%">Update and Restore</th>
+    <th width="25%">Know Your System</th>
+    <th width="25%">Make Yourself at Home</th>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/user-attachments/assets/f340d88c-a947-4b5e-bba9-deba90aabc4b"><img src="https://github.com/user-attachments/assets/f340d88c-a947-4b5e-bba9-deba90aabc4b" width="100%" alt="Install Add-ons"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/8a92e883-7af2-4935-a0e9-ae4f50dba5b6"><img src="https://github.com/user-attachments/assets/8a92e883-7af2-4935-a0e9-ae4f50dba5b6" width="100%" alt="Update and Restore"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/2fe2fbf4-bd2f-4d12-929d-cf355fd19ad3"><img src="https://github.com/user-attachments/assets/2fe2fbf4-bd2f-4d12-929d-cf355fd19ad3" width="100%" alt="Know Your System"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/b5bee42d-5340-470a-ad82-b52b4218e90d"><img src="https://github.com/user-attachments/assets/b5bee42d-5340-470a-ad82-b52b4218e90d" width="100%" alt="Make Yourself at Home"></a></td>
+  </tr>
+</table>
+
+<div align="center">
 
 ## ❤️ 개발 지원
 

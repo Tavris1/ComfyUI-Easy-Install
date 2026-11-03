@@ -2,15 +2,15 @@
 🌍 
 <a href="../README.md">English</a> |
 <strong>简体中文</strong> |
-<a href="README.ja.md#ja">日本語</a> |
-<a href="README.ko.md#ko">한국어</a> |
-<a href="README.es.md#es">Español</a> |
-<a href="README.pt-BR.md#pt-br">Português</a> |
-<a href="README.de.md#de">Deutsch</a> |
-<a href="README.fr.md#fr">Français</a> |
-<a href="README.ru.md#ru">Русский</a> |
-<a href="README.tr.md#tr">Türkçe</a> |
-<a href="README.vi.md#vi">Tiếng Việt</a>
+<a href="README.ja.md">日本語</a> |
+<a href="README.ko.md">한국어</a> |
+<a href="README.es.md">Español</a> |
+<a href="README.pt-BR.md">Português</a> |
+<a href="README.de.md">Deutsch</a> |
+<a href="README.fr.md">Français</a> |
+<a href="README.ru.md">Русский</a> |
+<a href="README.tr.md">Türkçe</a> |
+<a href="README.vi.md">Tiếng Việt</a>
 </p>
 
 ---
@@ -34,6 +34,7 @@
   <p align="center">
     <a href="#%EF%B8%8F-windows-安装">📥 安装</a> &nbsp;·&nbsp;
     <a href="#-功能">✨ 功能/组件</a> &nbsp;·&nbsp;
+    <a href="#-认识-ezi---漫画指南">🎭 认识 EZi</a> &nbsp;·&nbsp;
     <a href="https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
     <a href="https://discord.gg/gggpkVgBf3">💬 Pixaroma Discord</a> &nbsp;·&nbsp;
     <a href="#%EF%B8%8F-支持开发">❤️ 支持开发</a>
@@ -83,8 +84,8 @@ ComfyUI/frontend 版本、UV/PIP 缓存以及 GGUF 转换**。
 | [RMBG](https://github.com/1038lab/ComfyUI-RMBG) | | | [iTools](https://github.com/MohammadAboulEla/ComfyUI-iTools) | |
 | [Easy-Sam3](https://github.com/yolain/ComfyUI-Easy-Sam3) | | | [ControlAltAI Nodes](https://github.com/gseth/ControlAltAI-Nodes) | |
 | [SCAIL-Pose](https://github.com/kijai/ComfyUI-SCAIL-Pose) | | | ✨[Pixaroma](https://github.com/pixaroma/ComfyUI-Pixaroma) | |
-| | | | [Krea2T-Enhancer](https://github.com/capitan01R/ComfyUI-Krea2T-Enhancer) | |
 | | | | [Krea2Edit](https://github.com/lbouaraba/comfyui-krea2edit) | |
+| | | | | |
 
 </details>
 
@@ -108,15 +109,16 @@ ComfyUI/frontend 版本、UV/PIP 缓存以及 GGUF 转换**。
 
 ## 🖥️ Windows 安装
 
+<!--
 > [!WARNING]
 > **Windows 11:** 如果 ComfyUI 显示 **"Bad Image" (`0xc0e90002`)**，请关闭 **Smart App Control** 并重新启动 ComfyUI。<br>
 > 这会降低对不可信应用的防护。确认前请阅读 Windows 警告。
 
+-->
+
 > [!IMPORTANT]
-> - 请勿以 **Administrator** 身份运行安装程序。
-> - 避免安装到系统文件夹（`Program Files`、`Windows`、`C:\` 根目录）。
-> - 文件夹名称中避免使用空格和特殊字符。
-> - 请确保 NVIDIA 驱动程序已更新至最新版本。
+> - 使用简短且仅包含英文字符的路径（例如 `D:\AI\`）。
+> - 保持 NVIDIA 驱动程序为最新版本。
 
 1. [**📥 DOWNLOAD LATEST VERSION**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
 2. 将 ZIP 文件解压到一个新文件夹，然后运行 **`ComfyUI-Easy-Install.bat`**
@@ -133,7 +135,6 @@ ComfyUI/frontend 版本、UV/PIP 缓存以及 GGUF 转换**。
       `Torch 2.9.1+cu130`、`Torch 2.10+cu130`、`Torch 2.11+cu130`、`Torch 2.12.1+cu130` 和 `Torch 2.13.0+cu130`*
     - **Easy-model2GGUF** - *将模型转换并量化为 GGUF（Q2_K–Q8_0），如可用则支持 5D tensor 修复*
     - **Long-Paths-Enabler** - *在 Windows 10/11 中启用 **Long Paths**。对 Python/ComfyUI 至关重要*
-    - **ComfyUI-Version-Switcher** - *如果出现问题，可**可逆地**回退到**之前的** ComfyUI 版本*
     - **Toggle-DynamicVRAM** - *切换 ComfyUI 启动文件中的 **--disable-dynamic-vram** 选项*
     - **Update Easy-Install** - *更新 **Add-ons** 和其他文件夹，并创建桌面快捷方式*
     - **EZi Desktop Themes** - *通过 EZi Desktop > Menu > Advanced*
@@ -143,9 +144,40 @@ ComfyUI/frontend 版本、UV/PIP 缓存以及 GGUF 转换**。
     - **ComfyUI-Manager Security-Level Config** - *通过 EZi Desktop > Menu 轻松配置 security_level*
     - **Pinned-Packages-Manager** - *通过 EZi Desktop > Menu 固定软件包版本，例如 NumPy==1.26.4*
 
-<div align="center">
-
 ---
+
+## 🎭 认识 EZi - 漫画指南
+
+第一次使用 EZi？请查看这份图解指南。点击任意图片可查看大图。
+
+<table width="100%">
+  <tr>
+    <th width="25%">ComfyUI Made Easy</th>
+    <th width="25%">安装 ComfyUI</th>
+    <th width="25%">Meet Your EZi Launcher</th>
+    <th width="25%">Reuse Existing Models</th>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/user-attachments/assets/b6554614-b903-4657-bcfe-38e7120d6810"><img src="https://github.com/user-attachments/assets/b6554614-b903-4657-bcfe-38e7120d6810" width="100%" alt="EZi Cover"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/da255d23-663f-496f-8e34-e2a8109f9da9"><img src="https://github.com/user-attachments/assets/da255d23-663f-496f-8e34-e2a8109f9da9" width="100%" alt="Install ComfyUI"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/cd01aba6-a169-4a16-8ba6-a2f4073f42f9"><img src="https://github.com/user-attachments/assets/cd01aba6-a169-4a16-8ba6-a2f4073f42f9" width="100%" alt="EZi Launcher"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/71e8a9fa-df5b-442f-b77d-34c1115f3901"><img src="https://github.com/user-attachments/assets/71e8a9fa-df5b-442f-b77d-34c1115f3901" width="100%" alt="Existing Models"></a></td>
+  </tr>
+  <tr>
+    <th width="25%">安装附加组件</th>
+    <th width="25%">Update and Restore</th>
+    <th width="25%">Know Your System</th>
+    <th width="25%">Make Yourself at Home</th>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/user-attachments/assets/f340d88c-a947-4b5e-bba9-deba90aabc4b"><img src="https://github.com/user-attachments/assets/f340d88c-a947-4b5e-bba9-deba90aabc4b" width="100%" alt="Install Add-ons"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/8a92e883-7af2-4935-a0e9-ae4f50dba5b6"><img src="https://github.com/user-attachments/assets/8a92e883-7af2-4935-a0e9-ae4f50dba5b6" width="100%" alt="Update and Restore"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/2fe2fbf4-bd2f-4d12-929d-cf355fd19ad3"><img src="https://github.com/user-attachments/assets/2fe2fbf4-bd2f-4d12-929d-cf355fd19ad3" width="100%" alt="Know Your System"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/b5bee42d-5340-470a-ad82-b52b4218e90d"><img src="https://github.com/user-attachments/assets/b5bee42d-5340-470a-ad82-b52b4218e90d" width="100%" alt="Make Yourself at Home"></a></td>
+  </tr>
+</table>
+
+<div align="center">
 
 ## ❤️ 支持开发
 

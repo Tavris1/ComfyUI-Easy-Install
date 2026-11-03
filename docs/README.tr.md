@@ -1,16 +1,16 @@
 <p align="center">
 🌍 
 <a href="../README.md">English</a> |
-<a href="README.zh-CN.md#zh-cn">简体中文</a> |
-<a href="README.ja.md#ja">日本語</a> |
-<a href="README.ko.md#ko">한국어</a> |
-<a href="README.es.md#es">Español</a> |
-<a href="README.pt-BR.md#pt-br">Português</a> |
-<a href="README.de.md#de">Deutsch</a> |
-<a href="README.fr.md#fr">Français</a> |
-<a href="README.ru.md#ru">Русский</a> |
+<a href="README.zh-CN.md">简体中文</a> |
+<a href="README.ja.md">日本語</a> |
+<a href="README.ko.md">한국어</a> |
+<a href="README.es.md">Español</a> |
+<a href="README.pt-BR.md">Português</a> |
+<a href="README.de.md">Deutsch</a> |
+<a href="README.fr.md">Français</a> |
+<a href="README.ru.md">Русский</a> |
 <strong>Türkçe</strong> |
-<a href="README.vi.md#vi">Tiếng Việt</a>
+<a href="README.vi.md">Tiếng Việt</a>
 </p>
 
 ---
@@ -34,6 +34,7 @@
   <p align="center">
     <a href="#%EF%B8%8F-windows-kurulumu">📥 Yükle</a> &nbsp;·&nbsp;
     <a href="#-özellikler">✨ Özellikler/Bileşenler</a> &nbsp;·&nbsp;
+    <a href="#-ezi-ile-tanışın---çizgi-roman-rehberi">🎭 EZi ile Tanışın</a> &nbsp;·&nbsp;
     <a href="https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
     <a href="https://discord.gg/gggpkVgBf3">💬 Pixaroma Discord</a> &nbsp;·&nbsp;
     <a href="#%EF%B8%8F-geliştirmeyi-destekle">❤️ Geliştirmeyi Destekle</a>
@@ -83,8 +84,8 @@ ComfyUI/frontend sürümlerini, UV/PIP önbelleklerini ve GGUF dönüştürmeyi*
 | [RMBG](https://github.com/1038lab/ComfyUI-RMBG) | | | [iTools](https://github.com/MohammadAboulEla/ComfyUI-iTools) | |
 | [Easy-Sam3](https://github.com/yolain/ComfyUI-Easy-Sam3) | | | [ControlAltAI Nodes](https://github.com/gseth/ControlAltAI-Nodes) | |
 | [SCAIL-Pose](https://github.com/kijai/ComfyUI-SCAIL-Pose) | | | ✨[Pixaroma](https://github.com/pixaroma/ComfyUI-Pixaroma) | |
-| | | | [Krea2T-Enhancer](https://github.com/capitan01R/ComfyUI-Krea2T-Enhancer) | |
 | | | | [Krea2Edit](https://github.com/lbouaraba/comfyui-krea2edit) | |
+| | | | | |
 
 </details>
 
@@ -108,15 +109,16 @@ ComfyUI/frontend sürümlerini, UV/PIP önbelleklerini ve GGUF dönüştürmeyi*
 
 ## 🖥️ Windows Kurulumu
 
+<!--
 > [!WARNING]
 > **Windows 11:** ComfyUI **"Bad Image" (`0xc0e90002`)** hatasını gösteriyorsa **Smart App Control** özelliğini kapatın ve ComfyUI'yi yeniden başlatın.<br>
 > Bu, güvenilmeyen uygulamalara karşı korumayı azaltır. Onaylamadan önce Windows uyarısını okuyun.
 
+-->
+
 > [!IMPORTANT]
-> - Yükleyiciyi **Administrator** olarak çalıştırmayın.
-> - Sistem klasörlerinden kaçının (`Program Files`, `Windows`, `C:\` root).
-> - Klasör adlarında boşluk ve özel karakter kullanmaktan kaçının.
-> - NVIDIA sürücülerinizin güncel olduğundan emin olun.
+> - Kısa ve yalnızca İngilizce karakterlerden oluşan bir yol kullanın (ör. `D:\AI\`).
+> - NVIDIA sürücülerini güncel tutun.
 
 1. [**📥 EN SON SÜRÜMÜ İNDİR**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
 2. ZIP dosyasını yeni bir klasöre çıkarın ve **`ComfyUI-Easy-Install.bat`** dosyasını çalıştırın
@@ -133,7 +135,6 @@ ComfyUI/frontend sürümlerini, UV/PIP önbelleklerini ve GGUF dönüştürmeyi*
       `Torch 2.9.1+cu130`, `Torch 2.10+cu130`, `Torch 2.11+cu130`, `Torch 2.12.1+cu130` & `Torch 2.13.0+cu130`*
     - **Easy-model2GGUF** - *Modelleri GGUF'a (Q2_K–Q8_0) dönüştürür ve quantize eder; mevcutsa 5D tensor düzeltmelerini uygular*
     - **Long-Paths-Enabler** - *Windows 10/11'de **Long Paths** özelliğini etkinleştirir. Python/ComfyUI için gereklidir*
-    - **ComfyUI-Version-Switcher** - *Sorun oluşması durumunda **önceki** bir ComfyUI sürümüne **geri alınabilir** rollback sağlar*
     - **Toggle-DynamicVRAM** - *ComfyUI başlangıç dosyalarındaki **--disable-dynamic-vram** seçeneğini açar/kapatır*
     - **Update Easy-Install** - ***Add-ons** ve diğer klasörleri günceller. Masaüstü kısayolları oluşturur*
     - **EZi Desktop Themes** - *EZi Desktop > Menu > Advanced üzerinden*
@@ -143,9 +144,40 @@ ComfyUI/frontend sürümlerini, UV/PIP önbelleklerini ve GGUF dönüştürmeyi*
     - **ComfyUI-Manager Security-Level Config** - *security_level ayarını EZi Desktop > Menu üzerinden kolayca yapılandırır*
     - **Pinned-Packages-Manager** - *NumPy==1.26.4 gibi paket sürümlerini EZi Desktop > Menu üzerinden sabitler*
 
-<div align="center">
-
 ---
+
+## 🎭 EZi ile Tanışın - Çizgi Roman Rehberi
+
+EZi ile yeni mi tanışıyorsunuz? Bu resimli rehbere göz atın. Büyütmek için herhangi bir görsele tıklayın.
+
+<table width="100%">
+  <tr>
+    <th width="25%">ComfyUI Made Easy</th>
+    <th width="25%">ComfyUI Kurulumu</th>
+    <th width="25%">Meet Your EZi Launcher</th>
+    <th width="25%">Reuse Existing Models</th>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/user-attachments/assets/b6554614-b903-4657-bcfe-38e7120d6810"><img src="https://github.com/user-attachments/assets/b6554614-b903-4657-bcfe-38e7120d6810" width="100%" alt="EZi Cover"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/da255d23-663f-496f-8e34-e2a8109f9da9"><img src="https://github.com/user-attachments/assets/da255d23-663f-496f-8e34-e2a8109f9da9" width="100%" alt="Install ComfyUI"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/cd01aba6-a169-4a16-8ba6-a2f4073f42f9"><img src="https://github.com/user-attachments/assets/cd01aba6-a169-4a16-8ba6-a2f4073f42f9" width="100%" alt="EZi Launcher"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/71e8a9fa-df5b-442f-b77d-34c1115f3901"><img src="https://github.com/user-attachments/assets/71e8a9fa-df5b-442f-b77d-34c1115f3901" width="100%" alt="Existing Models"></a></td>
+  </tr>
+  <tr>
+    <th width="25%">Eklentileri Kur</th>
+    <th width="25%">Update and Restore</th>
+    <th width="25%">Know Your System</th>
+    <th width="25%">Make Yourself at Home</th>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/user-attachments/assets/f340d88c-a947-4b5e-bba9-deba90aabc4b"><img src="https://github.com/user-attachments/assets/f340d88c-a947-4b5e-bba9-deba90aabc4b" width="100%" alt="Install Add-ons"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/8a92e883-7af2-4935-a0e9-ae4f50dba5b6"><img src="https://github.com/user-attachments/assets/8a92e883-7af2-4935-a0e9-ae4f50dba5b6" width="100%" alt="Update and Restore"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/2fe2fbf4-bd2f-4d12-929d-cf355fd19ad3"><img src="https://github.com/user-attachments/assets/2fe2fbf4-bd2f-4d12-929d-cf355fd19ad3" width="100%" alt="Know Your System"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/b5bee42d-5340-470a-ad82-b52b4218e90d"><img src="https://github.com/user-attachments/assets/b5bee42d-5340-470a-ad82-b52b4218e90d" width="100%" alt="Make Yourself at Home"></a></td>
+  </tr>
+</table>
+
+<div align="center">
 
 ## ❤️ Geliştirmeyi Destekle
 

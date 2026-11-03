@@ -1,16 +1,16 @@
 <p align="center">
 🌍 
 <a href="../README.md">English</a> |
-<a href="README.zh-CN.md#zh-cn">简体中文</a> |
-<a href="README.ja.md#ja">日本語</a> |
-<a href="README.ko.md#ko">한국어</a> |
-<a href="README.es.md#es">Español</a> |
-<a href="README.pt-BR.md#pt-br">Português</a> |
+<a href="README.zh-CN.md">简体中文</a> |
+<a href="README.ja.md">日本語</a> |
+<a href="README.ko.md">한국어</a> |
+<a href="README.es.md">Español</a> |
+<a href="README.pt-BR.md">Português</a> |
 <strong>Deutsch</strong> |
-<a href="README.fr.md#fr">Français</a> |
-<a href="README.ru.md#ru">Русский</a> |
-<a href="README.tr.md#tr">Türkçe</a> |
-<a href="README.vi.md#vi">Tiếng Việt</a>
+<a href="README.fr.md">Français</a> |
+<a href="README.ru.md">Русский</a> |
+<a href="README.tr.md">Türkçe</a> |
+<a href="README.vi.md">Tiếng Việt</a>
 </p>
 
 ---
@@ -34,6 +34,7 @@
   <p align="center">
     <a href="#%EF%B8%8F-windows-installation">📥 Installieren</a> &nbsp;·&nbsp;
     <a href="#-funktionen">✨ Funktionen/Komponenten</a> &nbsp;·&nbsp;
+    <a href="#-ezi-kennenlernen---der-comic-guide">🎭 EZi kennenlernen</a> &nbsp;·&nbsp;
     <a href="https://github.com/Tavris1/ComfyUI-Easy-Install/tree/MAC-Linux">🍎 macOS/Linux</a> &nbsp;·&nbsp;
     <a href="https://discord.gg/gggpkVgBf3">💬 Pixaroma Discord</a> &nbsp;·&nbsp;
     <a href="#%EF%B8%8F-entwicklung-unterstützen">❤️ Entwicklung unterstützen</a>
@@ -83,8 +84,8 @@ ComfyUI-/Frontend-Versionen, UV/PIP-Caches und GGUF-Konvertierung** an einem Ort
 | [RMBG](https://github.com/1038lab/ComfyUI-RMBG) | | | [iTools](https://github.com/MohammadAboulEla/ComfyUI-iTools) | |
 | [Easy-Sam3](https://github.com/yolain/ComfyUI-Easy-Sam3) | | | [ControlAltAI Nodes](https://github.com/gseth/ControlAltAI-Nodes) | |
 | [SCAIL-Pose](https://github.com/kijai/ComfyUI-SCAIL-Pose) | | | ✨[Pixaroma](https://github.com/pixaroma/ComfyUI-Pixaroma) | |
-| | | | [Krea2T-Enhancer](https://github.com/capitan01R/ComfyUI-Krea2T-Enhancer) | |
 | | | | [Krea2Edit](https://github.com/lbouaraba/comfyui-krea2edit) | |
+| | | | | |
 
 </details>
 
@@ -108,15 +109,16 @@ ComfyUI-/Frontend-Versionen, UV/PIP-Caches und GGUF-Konvertierung** an einem Ort
 
 ## 🖥️ Windows-Installation
 
+<!--
 > [!WARNING]
 > **Windows 11:** Wenn ComfyUI **"Bad Image" (`0xc0e90002`)** anzeigt, deaktivieren Sie **Smart App Control** und starten Sie ComfyUI erneut.<br>
 > Dadurch wird der Schutz vor nicht vertrauenswürdigen Apps reduziert. Lesen Sie die Windows-Warnung, bevor Sie bestätigen.
 
+-->
+
 > [!IMPORTANT]
-> - Führen Sie den Installer nicht als **Administrator** aus.
-> - Vermeiden Sie Systemordner (`Program Files`, `Windows`, `C:\` root).
-> - Vermeiden Sie Leerzeichen und Sonderzeichen in Ordnernamen.
-> - Stellen Sie sicher, dass Ihre NVIDIA-Treiber aktuell sind.
+> - Verwenden Sie einen kurzen Pfad nur mit englischen Zeichen (z. B. `D:\AI\`).
+> - Halten Sie die NVIDIA-Treiber aktuell.
 
 1. [**📥 NEUESTE VERSION HERUNTERLADEN**](https://github.com/Tavris1/ComfyUI-Easy-Install/releases/latest/download/ComfyUI-Easy-Install.zip)
 2. Entpacken Sie die ZIP-Datei in einen neuen Ordner und führen Sie **`ComfyUI-Easy-Install.bat`** aus
@@ -133,7 +135,6 @@ ComfyUI-/Frontend-Versionen, UV/PIP-Caches und GGUF-Konvertierung** an einem Ort
       `Torch 2.9.1+cu130`, `Torch 2.10+cu130`, `Torch 2.11+cu130`, `Torch 2.12.1+cu130` & `Torch 2.13.0+cu130`*
     - **Easy-model2GGUF** – *Modelle in GGUF (Q2_K–Q8_0) konvertieren und quantisieren, mit 5D-Tensor-Fixes, falls verfügbar*
     - **Long-Paths-Enabler** – *Aktiviert **Long Paths** in Windows 10/11. Wichtig für Python/ComfyUI*
-    - **ComfyUI-Version-Switcher** – ***Reversibler** Rollback auf eine **frühere** ComfyUI-Version, falls Probleme auftreten*
     - **Toggle-DynamicVRAM** – *Schaltet die Option **--disable-dynamic-vram** in den ComfyUI-Startdateien ein bzw. aus*
     - **Update Easy-Install** – *Aktualisiert **Add-ons** und andere Ordner. Erstellt Desktop-Verknüpfungen*
     - **EZi Desktop Themes** – *über EZi Desktop > Menu > Advanced*
@@ -143,9 +144,40 @@ ComfyUI-/Frontend-Versionen, UV/PIP-Caches und GGUF-Konvertierung** an einem Ort
     - **ComfyUI-Manager Security-Level Config** – *Einfache Konfiguration von security_level über EZi Desktop > Menu*
     - **Pinned-Packages-Manager** – *Friert Paketversionen wie NumPy==1.26.4 über EZi Desktop > Menu ein*
 
-<div align="center">
-
 ---
+
+## 🎭 EZi kennenlernen - Der Comic-Guide
+
+Neu bei EZi? Entdecken Sie diese bebilderte Anleitung. Klicken Sie auf ein Bild, um es in voller Größe anzusehen.
+
+<table width="100%">
+  <tr>
+    <th width="25%">ComfyUI Made Easy</th>
+    <th width="25%">ComfyUI installieren</th>
+    <th width="25%">Meet Your EZi Launcher</th>
+    <th width="25%">Reuse Existing Models</th>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/user-attachments/assets/b6554614-b903-4657-bcfe-38e7120d6810"><img src="https://github.com/user-attachments/assets/b6554614-b903-4657-bcfe-38e7120d6810" width="100%" alt="EZi Cover"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/da255d23-663f-496f-8e34-e2a8109f9da9"><img src="https://github.com/user-attachments/assets/da255d23-663f-496f-8e34-e2a8109f9da9" width="100%" alt="Install ComfyUI"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/cd01aba6-a169-4a16-8ba6-a2f4073f42f9"><img src="https://github.com/user-attachments/assets/cd01aba6-a169-4a16-8ba6-a2f4073f42f9" width="100%" alt="EZi Launcher"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/71e8a9fa-df5b-442f-b77d-34c1115f3901"><img src="https://github.com/user-attachments/assets/71e8a9fa-df5b-442f-b77d-34c1115f3901" width="100%" alt="Existing Models"></a></td>
+  </tr>
+  <tr>
+    <th width="25%">Add-ons installieren</th>
+    <th width="25%">Update and Restore</th>
+    <th width="25%">Know Your System</th>
+    <th width="25%">Make Yourself at Home</th>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/user-attachments/assets/f340d88c-a947-4b5e-bba9-deba90aabc4b"><img src="https://github.com/user-attachments/assets/f340d88c-a947-4b5e-bba9-deba90aabc4b" width="100%" alt="Install Add-ons"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/8a92e883-7af2-4935-a0e9-ae4f50dba5b6"><img src="https://github.com/user-attachments/assets/8a92e883-7af2-4935-a0e9-ae4f50dba5b6" width="100%" alt="Update and Restore"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/2fe2fbf4-bd2f-4d12-929d-cf355fd19ad3"><img src="https://github.com/user-attachments/assets/2fe2fbf4-bd2f-4d12-929d-cf355fd19ad3" width="100%" alt="Know Your System"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/b5bee42d-5340-470a-ad82-b52b4218e90d"><img src="https://github.com/user-attachments/assets/b5bee42d-5340-470a-ad82-b52b4218e90d" width="100%" alt="Make Yourself at Home"></a></td>
+  </tr>
+</table>
+
+<div align="center">
 
 ## ❤️ Entwicklung unterstützen
 
