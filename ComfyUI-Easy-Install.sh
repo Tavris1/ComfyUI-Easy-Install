@@ -848,9 +848,14 @@ get_node() {
                 if [ "$GIT_FOLDER" = "comfyui-rmbg" ] && [ "$RMBG_DECORD_BUILT" = "true" ]; then
                     # Native Decord was built above; keep its requirement so dependencies are satisfied
                     grep -vi "onnxruntime-gpu" "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" | \
+                    grep -vi "onnxruntime-openvino" | \
                     grep -vi "triton" > "/tmp/requirements_temp.txt" 2>/dev/null || true
                 else
+                    # onnxruntime-openvino has no Apple Silicon wheel (only manylinux_2_28_x86_64
+                    # and win_amd64 on PyPI), so the whole batch fails to resolve on macOS.
+                    # CPU onnxruntime is installed below, which is what the nodes actually use.
                     grep -vi "onnxruntime-gpu" "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" | \
+                    grep -vi "onnxruntime-openvino" | \
                     grep -vi "decord" | \
                     grep -vi "triton" > "/tmp/requirements_temp.txt" 2>/dev/null || true
                 fi
