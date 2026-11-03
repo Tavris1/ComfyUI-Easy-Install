@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo 3.27.1
+# Title ComfyUI-Easy-Install  NEXT by ivo 3.27.3
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -244,7 +244,7 @@ install_comfyui() {
         fi
 
         if [ "$(uname -s)" = "Darwin" ] && command -v brew >/dev/null 2>&1; then
-            echo "Ensuring Homebrew python@3.12 is available..."
+            echo "Ensuring Homebrew python@3.12 is available..." >&2
             brew_install_noconfirm python@3.12 >/dev/null || true
             for candidate in \
                 "$(brew --prefix 2>/dev/null)/opt/python@3.12/bin/python3.12" \
@@ -311,6 +311,32 @@ EOL
         if ! curl -L "$PYTHON_SRC_URL" -o Python-${PYTHON_VER}.tgz; then
             echo -e "${RED}Failed to download Python ${PYTHON_VER} source${RESET}"
             exit 1
+        fi
+
+        # Checksum gate (port of Windows Get-FileHash): unpack only after the download
+        # matches the hash python.org publishes for 3.12.10.
+        PYTHON_SRC_SHA256="15d9c623abfd2165fe816ea1fb385d6ed8cf3c664661ab357f1782e3036a6dac"
+        if command -v shasum >/dev/null 2>&1; then
+            HASH_TOOL="shasum -a 256"
+        elif command -v sha256sum >/dev/null 2>&1; then
+            HASH_TOOL="sha256sum"
+        else
+            HASH_TOOL=""
+        fi
+        if [ -n "$HASH_TOOL" ]; then
+            ACTUAL_HASH=$($HASH_TOOL "Python-${PYTHON_VER}.tgz" 2>/dev/null | cut -d' ' -f1)
+            if [ "$ACTUAL_HASH" != "$PYTHON_SRC_SHA256" ]; then
+                rm -f "Python-${PYTHON_VER}.tgz"
+                echo -e "${RED}Python archive checksum does not match${RESET}"
+                echo -e "Actual SHA-256: ${YELLOW}${ACTUAL_HASH}${RESET}"
+                echo -e "The download may be corrupted or modified${RESET}"
+                echo -e "Delete the ${BOLD}ComfyUI-Easy-Install${RESET} folder and run this script again"
+                read -p "Press any key to Exit..."
+                exit 1
+            fi
+            echo -e "${GREEN}✓${RESET} Python source checksum verified"
+        else
+            echo -e "${YELLOW}No SHA-256 tool available (shasum/sha256sum), skipping the checksum check${RESET}"
         fi
 
         echo "Installing system dependencies for Python build..."
@@ -457,6 +483,17 @@ EOL
         "$PYTHON_CMD" -m pip install $PIP_NC --timeout=30 --retries=2 --upgrade pip 2>/dev/null || echo -e "${YELLOW}pip upgrade skipped (timeout or network issue)${RESET}"
     fi
 
+    # Post-install gates (Windows v3.27.1 parity): fail clearly if pip is not usable.
+    # The soft skip above only skips the pip upgrade, not the pip install itself.
+    if ! "$PYTHON_CMD" -m pip --version >/dev/null 2>&1; then
+        echo -e "${RED}Failed to install pip${RESET}"
+        echo "Check your date and time and the network connection"
+        echo "Delete the ${BOLD}ComfyUI-Easy-Install${RESET} folder and run this script again"
+        read -p "Press any key to Exit..."
+        exit 1
+    fi
+    echo -e "${GREEN}✓${RESET} pip verified"
+
     # Set the full path to the embedded Python
     EMBEDDED_PYTHON="$PYTHON_CMD"
     
@@ -489,6 +526,13 @@ EOL
     
     echo -e "${YELLOW}[1/6]${RESET} Installing uv package manager..."
     "$EMBEDDED_PYTHON" -m pip install uv $PIP_ARGS
+    if ! "$EMBEDDED_PYTHON" -m uv --version >/dev/null 2>&1 && ! command -v uv >/dev/null 2>&1; then
+        echo -e "${RED}Failed to install uv${RESET}"
+        echo "Check your date and time and the network connection"
+        echo "Delete the ${BOLD}ComfyUI-Easy-Install${RESET} folder and run this script again"
+        read -p "Press any key to Exit..."
+        exit 1
+    fi
     echo -e "${GREEN}✓${RESET} uv installed"
     
     # Detect NVIDIA driver on Linux before attempting CUDA install
@@ -804,9 +848,14 @@ get_node() {
                 if [ "$GIT_FOLDER" = "comfyui-rmbg" ] && [ "$RMBG_DECORD_BUILT" = "true" ]; then
                     # Native Decord was built above; keep its requirement so dependencies are satisfied
                     grep -vi "onnxruntime-gpu" "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" | \
+                    grep -vi "onnxruntime-openvino" | \
                     grep -vi "triton" > "/tmp/requirements_temp.txt" 2>/dev/null || true
                 else
+                    # onnxruntime-openvino has no Apple Silicon wheel (only manylinux_2_28_x86_64
+                    # and win_amd64 on PyPI), so the whole batch fails to resolve on macOS.
+                    # CPU onnxruntime is installed below, which is what the nodes actually use.
                     grep -vi "onnxruntime-gpu" "./ComfyUI/custom_nodes/${GIT_FOLDER}/requirements.txt" | \
+                    grep -vi "onnxruntime-openvino" | \
                     grep -vi "decord" | \
                     grep -vi "triton" > "/tmp/requirements_temp.txt" 2>/dev/null || true
                 fi
