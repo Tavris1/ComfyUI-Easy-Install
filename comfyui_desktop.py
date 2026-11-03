@@ -20,7 +20,7 @@ import subprocess
 import traceback
 import locale
 
-EZI_VERSION = "3.27.1"
+EZI_VERSION = "3.27.3"
 
 EZI_AURORA_PALETTE_ID = "ezi_aurora"
 EZI_AURORA_PALETTE_VERSION = 1
