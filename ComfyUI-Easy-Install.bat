@@ -1,5 +1,5 @@
 @echo off&&cd /D "%~dp0"
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.27.3"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.28.0"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -147,9 +147,9 @@ REM .\python_embeded\python.exe -I -m uv pip install requests==2.31.0 urllib3==2
 .\python_embeded\python.exe -I -m uv pip install -r ".\ComfyUI\manager_requirements.txt" %UVargs%
 
 if "%CURRENT_CUDA%"=="12.8" (
-    .\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.4.3-cu128-win-20261017/llama_cpp_python-0.4.3+cu128-cp312-cp312-win_amd64.whl %UVargs%
+    .\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.4.5-cu128-win-20261025/llama_cpp_python-0.4.5+cu128-cp312-cp312-win_amd64.whl %UVargs%
 ) else (
-    .\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.4.3-cu130-win-20261017/llama_cpp_python-0.4.3+cu130-cp312-cp312-win_amd64.whl %UVargs%
+    .\python_embeded\python.exe -I -m uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.4.5-cu130-win-20261025/llama_cpp_python-0.4.5+cu130-cp312-cp312-win_amd64.whl %UVargs%
 
 )
 
