@@ -178,6 +178,7 @@ New to EZi? Explore this illustrated guide. Click any image to view it full-size
   </tr>
 </table>-->
 
+
 <table width="100%">
   <tr>
     <th width="16.66%">Install ComfyUI</th>
@@ -188,7 +189,7 @@ New to EZi? Explore this illustrated guide. Click any image to view it full-size
     <th width="16.66%">Your System</th>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/user-attachments/assets/da255d23-663f-496f-8e34-e2a8109f9da9"><img src="https://github.com/user-attachments/assets/da255d23-663f-496f-8e34-e2a8109f9da9" width="100%" alt="Install ComfyUI"></a></td>
+    <td align="center"><a href="https://github.com/user-attachments/assets/74c2c772-00ed-453b-aa68-7d6bea6d18b6"><img src="https://github.com/user-attachments/assets/74c2c772-00ed-453b-aa68-7d6bea6d18b6" width="100%" alt="Install ComfyUI"></a></td>
     <td align="center"><a href="https://github.com/user-attachments/assets/cd01aba6-a169-4a16-8ba6-a2f4073f42f9"><img src="https://github.com/user-attachments/assets/cd01aba6-a169-4a16-8ba6-a2f4073f42f9" width="100%" alt="EZi Launcher"></a></td>
     <td align="center"><a href="https://github.com/user-attachments/assets/71e8a9fa-df5b-442f-b77d-34c1115f3901"><img src="https://github.com/user-attachments/assets/71e8a9fa-df5b-442f-b77d-34c1115f3901" width="100%" alt="Existing Models"></a></td>
     <td align="center"><a href="https://github.com/user-attachments/assets/f340d88c-a947-4b5e-bba9-deba90aabc4b"><img src="https://github.com/user-attachments/assets/f340d88c-a947-4b5e-bba9-deba90aabc4b" width="100%" alt="Install Add-ons"></a></td>
@@ -196,6 +197,7 @@ New to EZi? Explore this illustrated guide. Click any image to view it full-size
     <td align="center"><a href="https://github.com/user-attachments/assets/2fe2fbf4-bd2f-4d12-929d-cf355fd19ad3"><img src="https://github.com/user-attachments/assets/2fe2fbf4-bd2f-4d12-929d-cf355fd19ad3" width="100%" alt="Know Your System"></a></td>
   </tr>
 </table>
+
 
 <div align="center">
 
