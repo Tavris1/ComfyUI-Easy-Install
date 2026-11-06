@@ -632,7 +632,7 @@ EOL
     # Install llama-cpp-python (platform-specific) - JamePeng's fork
     if [ "$(uname)" = "Darwin" ]; then
         # macOS version - install from source with Metal support
-        echo -e "${YELLOW}Installing llama-cpp-python v0.3.40 with Metal support for macOS...${RESET}"
+        echo -e "${YELLOW}Installing llama-cpp-python v0.4.5 with Metal support for macOS...${RESET}"
         CMAKE_ARGS="-DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_APPLE_SILICON_PROCESSOR=arm64 -DGGML_METAL=on" uv pip install --upgrade --force-reinstall "llama-cpp-python @ git+https://github.com/JamePeng/llama-cpp-python.git" $UV_ARGS
     else
         # Linux version - try different CUDA versions
