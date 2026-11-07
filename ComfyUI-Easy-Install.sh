@@ -636,18 +636,21 @@ EOL
         CMAKE_ARGS="-DCMAKE_OSX_ARCHITECTURES=arm64 -DCMAKE_APPLE_SILICON_PROCESSOR=arm64 -DGGML_METAL=on" uv pip install --upgrade --force-reinstall "llama-cpp-python @ git+https://github.com/JamePeng/llama-cpp-python.git" $UV_ARGS
     else
         # Linux version - try different CUDA versions
-        # Note: JamePeng v0.3.40 has no cu130 Linux build; cu128 is the closest
-        echo -e "${YELLOW}Installing llama-cpp-python v0.3.40 with CUDA support for Linux...${RESET}"
-        
-        # Try CUDA 12.8 first (no cu130 Linux build for v0.3.40)
-        uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.40-cu128-linux-20260607/llama_cpp_python-0.3.40+cu128-cp312-cp312-linux_x86_64.whl $UV_ARGS || {
-            # Fallback to CUDA 12.6
-            uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.3.40-cu126-linux-20260607/llama_cpp_python-0.3.40+cu126-cp312-cp312-linux_x86_64.whl $UV_ARGS || {
-                # Final fallback to source build
-                echo -e "${YELLOW}Falling back to source build with CUDA...${RESET}"
-                CMAKE_ARGS="-DGGML_CUDA=on" uv pip install --upgrade --force-reinstall "llama-cpp-python @ git+https://github.com/JamePeng/llama-cpp-python.git" $UV_ARGS || {
-                    echo -e "${YELLOW}Final fallback to CPU-only llama-cpp-python...${RESET}"
-                    CMAKE_ARGS="-DGGML_BLAS=ON -DGGML_BLAS_VENDOR=OpenBLAS" uv pip install --upgrade --force-reinstall "llama-cpp-python @ git+https://github.com/JamePeng/llama-cpp-python.git" $UV_ARGS
+        # Note: JamePeng v0.4.5 has cu130, cu128 and cu126 Linux release folders (asset names confirmed 2026-10-25)
+        echo -e "${YELLOW}Installing llama-cpp-python v0.4.5 with CUDA support for Linux...${RESET}"
+
+        # Try CUDA 13.0 first
+        uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.4.5-cu130-linux-20261025/llama_cpp_python-0.4.5+cu130-cp312-cp312-linux_x86_64.whl $UV_ARGS || {
+            # Fallback to CUDA 12.8
+            uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.4.5-cu128-linux-20261025/llama_cpp_python-0.4.5+cu128-cp312-cp312-linux_x86_64.whl $UV_ARGS || {
+                # Fallback to CUDA 12.6
+                uv pip install https://github.com/JamePeng/llama-cpp-python/releases/download/v0.4.5-cu126-linux-20261025/llama_cpp_python-0.4.5+cu126-cp312-cp312-linux_x86_64.whl $UV_ARGS || {
+                    # Final fallback to source build
+                    echo -e "${YELLOW}Falling back to source build with CUDA...${RESET}"
+                    CMAKE_ARGS="-DGGML_CUDA=on" uv pip install --upgrade --force-reinstall "llama-cpp-python @ git+https://github.com/JamePeng/llama-cpp-python.git" $UV_ARGS || {
+                        echo -e "${YELLOW}Final fallback to CPU-only llama-cpp-python...${RESET}"
+                        CMAKE_ARGS="-DGGML_BLAS=ON -DGGML_BLAS_VENDOR=OpenBLAS" uv pip install --upgrade --force-reinstall "llama-cpp-python @ git+https://github.com/JamePeng/llama-cpp-python.git" $UV_ARGS
+                    }
                 }
             }
         }
