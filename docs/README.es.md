@@ -131,8 +131,8 @@ versiones de ComfyUI/frontend, cachés de UV/PIP y conversión GGUF** desde un s
     - **FlashAttention** - *Instala FlashAttention v2.8.3*
     - **InsightFace** - *Instala InsightFace*
     - **Trellis2+Pixal3D @visualbruno** - *Instala Trellis 2.0 + Pixal3D y el modelo (requiere `Torch 2.8.0+cu128`)*
-    - **Torch-Pack** - *Cambio rápido entre: `Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`,  
-      `Torch 2.9.1+cu130`, `Torch 2.10+cu130`, `Torch 2.11+cu130`, `Torch 2.12.1+cu130` & `Torch 2.13.0+cu130`*
+    - **Torch-Pack** - *Cambio rápido entre: `Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`, `Torch 2.9.1+cu130`,  
+      `Torch 2.10+cu130`, `Torch 2.11+cu130`, `Torch 2.12.1+cu130`, `Torch 2.13+cu130` & `Torch 2.14.1+cu130`*
     - **Easy-model2GGUF** - *Convierte y cuantiza modelos a GGUF (Q2_K–Q8_0) con correcciones de tensor 5D si están disponibles*
     - **Long-Paths-Enabler** - *Activa **Long Paths** en Windows 10/11. Esencial para Python/ComfyUI*
     - **Toggle-DynamicVRAM** - *Activa o desactiva la opción **--disable-dynamic-vram** en los archivos de inicio de ComfyUI*
