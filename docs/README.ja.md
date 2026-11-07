@@ -131,8 +131,8 @@ ComfyUI/frontend バージョン、UV/PIP キャッシュ、GGUF 変換**を1か
     - **FlashAttention** - *FlashAttention v2.8.3 をインストール*
     - **InsightFace** - *InsightFace をインストール*
     - **Trellis2+Pixal3D @visualbruno** - *Trellis 2.0 + Pixal3D とモデルをインストール（`Torch 2.8.0+cu128` が必要）*
-    - **Torch-Pack** - *以下を素早く切り替え：`Torch 2.7.1+cu128`、`Torch 2.8.0+cu128`、  
-      `Torch 2.9.1+cu130`、`Torch 2.10+cu130`、`Torch 2.11+cu130`、`Torch 2.12.1+cu130`、`Torch 2.13.0+cu130`*
+    - **Torch-Pack** - *以下を素早く切り替え：`Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`, `Torch 2.9.1+cu130`,  
+      `Torch 2.10+cu130`, `Torch 2.11+cu130`, `Torch 2.12.1+cu130`, `Torch 2.13+cu130` & `Torch 2.14.1+cu130`*
     - **Easy-model2GGUF** - *モデルを GGUF（Q2_K–Q8_0）に変換・量子化し、利用可能な場合は 5D tensor 修正を適用*
     - **Long-Paths-Enabler** - *Windows 10/11 で **Long Paths** を有効化。Python/ComfyUI に不可欠*
     - **Toggle-DynamicVRAM** - *ComfyUI 起動ファイル内の **--disable-dynamic-vram** オプションを切り替え*
