@@ -131,8 +131,8 @@ ComfyUI/frontend sürümlerini, UV/PIP önbelleklerini ve GGUF dönüştürmeyi*
     - **FlashAttention** - *FlashAttention v2.8.3'ü yükler*
     - **InsightFace** - *InsightFace'i yükler*
     - **Trellis2+Pixal3D @visualbruno** - *Trellis 2.0 + Pixal3D ve modeli yükler (`Torch 2.8.0+cu128` gereklidir)*
-    - **Torch-Pack** - *Şunlar arasında hızlı geçiş sağlar:`Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`,  
-      `Torch 2.9.1+cu130`, `Torch 2.10+cu130`, `Torch 2.11+cu130`, `Torch 2.12.1+cu130` & `Torch 2.13.0+cu130`*
+    - **Torch-Pack** - *Şunlar arasında hızlı geçiş sağlar:`Torch 2.7.1+cu128`, `Torch 2.8.0+cu128`, `Torch 2.9.1+cu130`,  
+      `Torch 2.10+cu130`, `Torch 2.11+cu130`, `Torch 2.12.1+cu130`, `Torch 2.13+cu130` & `Torch 2.14.1+cu130`*
     - **Easy-model2GGUF** - *Modelleri GGUF'a (Q2_K–Q8_0) dönüştürür ve quantize eder; mevcutsa 5D tensor düzeltmelerini uygular*
     - **Long-Paths-Enabler** - *Windows 10/11'de **Long Paths** özelliğini etkinleştirir. Python/ComfyUI için gereklidir*
     - **Toggle-DynamicVRAM** - *ComfyUI başlangıç dosyalarındaki **--disable-dynamic-vram** seçeneğini açar/kapatır*
