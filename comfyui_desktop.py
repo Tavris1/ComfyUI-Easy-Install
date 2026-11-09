@@ -7,6 +7,14 @@ Part of ComfyUI-Easy-Install by Pixaroma / VenimK
 
 import os
 import sys
+
+if sys.platform.startswith("linux"):
+    # GTK draws a white client-side header bar on Linux; let the window
+    # manager paint the titlebar instead (set GTK_CSD=1 to restore it).
+    os.environ.setdefault("GTK_CSD", "0")
+    # WebKitGTK's DMA-BUF renderer flickers/goes blank on some GPU drivers.
+    os.environ.setdefault("WEBKIT_DISABLE_DMABUF_RENDERER", "1")
+
 import time
 import signal
 import socket
