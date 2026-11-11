@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Title ComfyUI-Easy-Install  NEXT by ivo 3.30.0
+# Title ComfyUI-Easy-Install  NEXT by ivo 3.30.1
 # Pixaroma Community Edition
 # macOS and Linux conversion by VenimK
 
@@ -1097,12 +1097,6 @@ rm -rf .git .gitignore .devin .DS_Store
 
 # Copy all child contents into parent (child has ComfyUI/, python_embeded/, Add-Ons/, run scripts, etc.)
 cp -a ComfyUI-Easy-Install/. .
-
-# Patch rgthree-comfy: disable recursive execution to avoid workflow loops
-if [ -d "ComfyUI/custom_nodes/rgthree-comfy" ]; then
-    mkdir -p ComfyUI/custom_nodes/rgthree-comfy
-    echo '{"patch_recursive_execution": false}' > ComfyUI/custom_nodes/rgthree-comfy/rgthree_config.json
-fi
 
 # Install EZi Console Filter single-file node (removes [DEPRECATION WARNING] noise)
 rm -rf "ComfyUI/custom_nodes/ComfyUI-EZi-Console-Filter" "ComfyUI/custom_nodes/.disabled/ComfyUI-EZi-Console-Filter" 2>/dev/null
