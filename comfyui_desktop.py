@@ -3342,6 +3342,10 @@ def open_in_webview():
                     pass
                 return None
 
+            path = self._pick_via_window_dialog()
+            if path:
+                return path
+
             # Linux: tkinter fallback
             try:
                 import tkinter as tk
@@ -3360,9 +3364,24 @@ def open_in_webview():
                 )
                 root.destroy()
                 return path if path else None
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"  File dialog failed: {e}")
             return None
+
+        def _pick_via_window_dialog(self):
+            """open_file() result shape differs between pywebview versions."""
+            picker = getattr(getattr(self, '_window', None), 'open_file', None)
+            if not picker:
+                return None
+            try:
+                result = picker()
+            except Exception as e:
+                print(f"  Window dialog failed: {e}")
+                return None
+            if isinstance(result, dict):
+                result = result.get('paths') or result.get('filenames')
+            path = result if isinstance(result, str) else (result[0] if result else None)
+            return path if path and os.path.isfile(path) else None
 
         def write_clipboard(self, text):
             """Copy text to system clipboard (Mac: pbcopy, Linux: xclip/xsel)."""
