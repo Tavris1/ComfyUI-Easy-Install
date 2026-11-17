@@ -1,5 +1,5 @@
 @echo off&&cd /D "%~dp0"
-set "CEI_Title=ComfyUI-Easy-Install by ivo v3.30.1"
+set "CEI_Title=ComfyUI-Easy-Install by ivo v3.30.2"
 Title %CEI_Title%
 :: Pixaroma Community Edition ::
 
@@ -272,14 +272,14 @@ if exist "%SOX_ZIP%" (
     del "%SOX_ZIP%"
 )
 
-if exist "%SOX_DIR%\sox.exe" (
-    set "path=%path%;%SOX_DIR%"
-    powershell -NoProfile -ExecutionPolicy Bypass -Command "$d=$env:SOX_DIR; $p=[Environment]::GetEnvironmentVariable('Path','User'); if(-not (($p -split ';') -contains $d)){[Environment]::SetEnvironmentVariable('Path', ([string]$p).TrimEnd(';')+';'+$d, 'User')}"
-    echo %green%SoX installed successfully.%reset%
-) else (
-    echo %warning%WARNING:%reset% Could not install SoX. You can install it manually later from %yellow%https://sourceforge.net/projects/sox/%reset%
-    call :warn "SoX could not be installed - it can be installed manually later"
-)
+if not exist "%SOX_DIR%\sox.exe" goto SoXFailed
+set "path=%path%;%SOX_DIR%"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$d=$env:SOX_DIR; $p=[Environment]::GetEnvironmentVariable('Path','User'); if(-not (($p -split ';') -contains $d)){[Environment]::SetEnvironmentVariable('Path', ([string]$p).TrimEnd(';')+';'+$d, 'User')}"
+echo %green%SoX installed successfully.%reset%
+goto SkipSoX
+:SoXFailed
+echo %warning%WARNING:%reset% Could not install SoX. You can install it manually later from %yellow%https://sourceforge.net/projects/sox/%reset%
+call :warn "SoX could not be installed - it can be installed manually later"
 :SkipSoX
 :: Reset errorlevel ::
 cd .\
