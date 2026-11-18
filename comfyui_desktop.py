@@ -28,7 +28,7 @@ import subprocess
 import traceback
 import locale
 
-EZI_VERSION = "3.30.1"
+EZI_VERSION = "3.30.2"
 
 EZI_AURORA_PALETTE_ID = "ezi_aurora"
 EZI_AURORA_PALETTE_VERSION = 1
@@ -858,9 +858,10 @@ def get_manager_security_level():
     """Read security_level from ComfyUI-Manager config.ini."""
     import configparser
     try:
-        cfg = configparser.ConfigParser()
+        # Manager's config.ini can hold duplicate keys: strict parsing raises there.
+        cfg = configparser.ConfigParser(strict=False, interpolation=None)
         if os.path.isfile(MANAGER_CONFIG_PATH):
-            cfg.read(MANAGER_CONFIG_PATH)
+            cfg.read(MANAGER_CONFIG_PATH, encoding="utf-8")
             return cfg.get("default", "security_level", fallback="weak")
     except Exception:
         pass
@@ -874,9 +875,9 @@ def set_manager_security_level(level):
     if level not in valid:
         return {"error": f"Invalid level '{level}'. Must be one of: {sorted(valid)}"}
     try:
-        cfg = configparser.ConfigParser()
+        cfg = configparser.ConfigParser(strict=False, interpolation=None)
         if os.path.isfile(MANAGER_CONFIG_PATH):
-            cfg.read(MANAGER_CONFIG_PATH)
+            cfg.read(MANAGER_CONFIG_PATH, encoding="utf-8")
         if not cfg.has_section("default"):
             cfg.add_section("default")
         cfg.set("default", "security_level", level)
