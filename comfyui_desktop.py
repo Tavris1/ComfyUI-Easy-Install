@@ -28,7 +28,7 @@ import subprocess
 import traceback
 import locale
 
-EZI_VERSION = "3.30.2"
+EZI_VERSION = "3.30.3"
 
 EZI_AURORA_PALETTE_ID = "ezi_aurora"
 EZI_AURORA_PALETTE_VERSION = 1
@@ -3199,6 +3199,46 @@ INJECTED_JS = """
             }
             hideAll();
         });
+    })();
+
+    /* ── Focus restore on window re-activation (Windows v3.30.3 parity) ── */
+    // Windows hooks Form.Activated and calls CoreWebView2Controller.MoveFocus
+    // once the mouse button is released, so keyboard shortcuts go back to the
+    // graph instead of the shell. On Unix the settings panel is a DOM overlay:
+    // the same idea applies to focus left on a closed panel or on <body>.
+    (function() {
+        var _mouseDown = false;
+        document.addEventListener('mousedown', function() { _mouseDown = true; });
+        document.addEventListener('mouseup', function() { _mouseDown = false; });
+        document.addEventListener('mouseleave', function() { _mouseDown = false; });
+
+        function _focusTarget() {
+            var c = document.getElementById('graph-canvas');
+            var host = c ? (c.closest('.comfyui-body') || c.parentElement || c) : document.body;
+            try { if (host && !host.getAttribute('tabindex')) host.setAttribute('tabindex', '-1'); } catch(e) {}
+            return host;
+        }
+
+        function _restoreComfyFocus() {
+            try {
+                if (document.getElementById('_cdp_overlay')) return;   // panel open: leave focus alone
+                if (_mouseDown) return;                                // Windows GetAsyncKeyState guard
+                var ae = document.activeElement;
+                if (ae) {
+                    var tag = (ae.tagName || '').toUpperCase();
+                    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || ae.isContentEditable) return;
+                    if (ae.id === 'graph-canvas') return;              // already on the graph
+                    var cls = (ae.className || '').toString();
+                    var stale = (ae.id || '').indexOf('_cdp_') === 0 || cls.indexOf('_cdp_') >= 0 || cls.indexOf('px-') >= 0;
+                    if (ae !== document.body && !stale) return;        // deliberate focus elsewhere
+                }
+                var t = _focusTarget();
+                if (t && t.focus) t.focus({ preventScroll: true });
+            } catch(e) {}
+        }
+
+        // Same 80 ms delay Windows uses, so a drag that ends on re-activation is not stolen from
+        window.addEventListener('focus', function() { setTimeout(_restoreComfyFocus, 80); });
     })();
 })();
 """
